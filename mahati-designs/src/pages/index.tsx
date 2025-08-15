@@ -1,5 +1,6 @@
 
 
+import Image from "next/image";
 import Button from "../components/Button";
 import Card from "../components/card";
 import Dropdown from "../components/Dropdown";
@@ -128,7 +129,10 @@ export default function Home() {
   return (
     <Container>
       <Sidebar>
-        <SidebarTitle>Mahati Components</SidebarTitle>
+        <SidebarTitle style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <Image src="/mahatilog.jpg" alt="Mahati Logo" width={56} height={56} style={{ borderRadius: 12 }} />
+          <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginTop: 4, letterSpacing: 1 }}>Mahati UI</span>
+        </SidebarTitle>
         <SidebarList>
           <SidebarItem onClick={() => scrollToSection("button-section")}>Button</SidebarItem>
           <SidebarItem onClick={() => scrollToSection("card-section")}>Card</SidebarItem>
@@ -144,7 +148,7 @@ export default function Home() {
         </SidebarList>
       </Sidebar>
       <Content>
-        <h1 style={{ fontSize: "2.2rem", color: "#135f9b", marginBottom: 32, fontWeight: 700 }}>Mahati Design System Library</h1>
+        
         <div id="button-section">
           <SectionTitle>Button</SectionTitle>
           <Row>
