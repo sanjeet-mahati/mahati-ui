@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^0.2.3",
     "@module-federation/nextjs-mf": "^8.8.22",
     "font-awesome": "^4.7.0",
     "next": "15.2.4",
