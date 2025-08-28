@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Table from '../components/StyledTable';
+import Table from '../components/Table';
 
 describe('Table', () => {
   it('renders table headers and data', () => {

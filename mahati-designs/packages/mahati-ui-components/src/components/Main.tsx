@@ -1,3 +1,4 @@
+'use client';
 import styled from "styled-components";
 
 const Main = styled.main`
@@ -10,3 +11,4 @@ const Main = styled.main`
   background-color: #f9f9f9;
 `;
 export default Main;
+

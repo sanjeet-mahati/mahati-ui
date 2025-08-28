@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Button from "../components/Button";
-import Card from "../components/card";
+import Card from "../components/Card";
 import Dropdown from "../components/Dropdown";
 import FormContainer from "../components/FormContainer";
 import Input from "../components/Input";
@@ -11,7 +11,7 @@ import Label from "../components/Label";
 import Paragraph from "../components/Paragraph";
 import Row from "../components/Row";
 import Spinner from "../components/Spinner";
-import Table from "../components/StyledTable";
+import Table from "../components/Table";
 import TabbedInterface from "../components/TabedInterface";
 import Tooltip from "../components/Tooltip";
 import { required } from "../components/validators";
