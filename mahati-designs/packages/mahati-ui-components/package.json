@@ -1,22 +1,32 @@
 {
-  "name": "mahati-ui-components",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "@mahatisystems/mahati-ui-components",
+  "version": "1.0.3",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "dev": "tsup --config tsup.config.ts --watch"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "styled-components": "^6.0.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^19.1.10",
+    "@types/node": "^20.14.9",
     "autoprefixer": "^10.4.21",
-    "tailwindcss": "^4.1.12",
-    "tsup": "^8.5.0"
-  },
-  "scripts": {
-    "build": "npx tsup src/index.tsx --dts --format esm,cjs --out-dir dist"
+    "postcss": "^8.5.6",
+    "postcss-import": "^16.1.0",
+    "postcss-load-config": "^6.0.1",
+    "postcss-modules": "^6.0.0",
+    "tailwindcss": "^3.4.17",
+    "tsup": "^8.5.0",
+    "typescript": "^5.5.3"
   }
 }

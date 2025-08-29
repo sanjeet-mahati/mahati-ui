@@ -1,11 +1,26 @@
+'use client';
 import React, { useState } from "react";
-import styles from "./Tooltip.module.css"; // Assuming you use CSS Modules
+import styles from "../styles/Tooltip.module.css";
 
-const Tooltip = ({ text, position = "top", children }) => {
+export interface TooltipProps {
+  text: string;
+  position?: "top" | "right" | "bottom" | "left";
+  children: React.ReactNode;
+}
+
+const Tooltip: React.FC<TooltipProps> = ({ text, position = "top", children }) => {
   const [visible, setVisible] = useState(false);
 
-  const showTooltip = () => setVisible(true);
-  const hideTooltip = () => setVisible(false);
+  const showTooltip = () => {
+    console.log("Showing tooltip");
+    setVisible(true);
+  };
+  
+  const hideTooltip = () => {
+    console.log("Hiding tooltip");
+    setVisible(false);
+  };
+
 
   return (
     <div

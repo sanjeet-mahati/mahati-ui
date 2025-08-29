@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from "react";
 import styled from "styled-components";
 
@@ -14,7 +15,7 @@ const DropdownButton = styled.button`
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+ border-radius: 4px;
   cursor: pointer;
   text-align: left;
   

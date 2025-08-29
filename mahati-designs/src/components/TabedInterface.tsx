@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+'use client';
+import React, { JSX, useState } from "react";
 import styled from "styled-components";
 
 const TabContainer = styled.div`
