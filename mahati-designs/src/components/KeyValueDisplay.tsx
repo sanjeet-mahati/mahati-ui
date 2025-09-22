@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 interface KeyValueDisplayProps {
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
 }
 
 const Container = styled.div`

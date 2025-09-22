@@ -34,28 +34,28 @@ const PageInfo = styled.div`margin-top: 8px; font-size: 13px;`;
 
 interface TableProps {
   headers: { label: string; key: string }[];
-  data: { [key: string]: any }[];
+  data: { [key: string]: unknown }[];
   page?: number;
   setPage?: (page: number) => void;
   limit?: number;
-  setLimit?: (limit: number) => void;
+  setLimit?: (limit: number)=>void;
   totalCount?: number;
   highlightRowColor?: string;
-  actions?: (row: any) => React.ReactNode;
+  actions?: (row: unknown) => React.ReactNode;
 }
 
 const Table: React.FC<TableProps> = ({
   headers,
   data,
-  page,
+  page=0,
   setPage,
-  limit,
+  limit=0,
   setLimit,
-  totalCount,
+  totalCount=0,
   highlightRowColor,
   actions,
 }) => {
-  const totalPages = Math.ceil(totalCount / limit);
+  const totalPages = Math.ceil(totalCount/ limit) || 0;
 
   const renderPageNumbers = () => {
     const pages = [];
@@ -65,18 +65,27 @@ const Table: React.FC<TableProps> = ({
 
     // Always show first
     pages.push(
-      <PageButton key={1} onClick={() => setPage(1)} disabled={page === 1}>
-        1
-      </PageButton>
+  <PageButton
+  key={1}
+  onClick={() => setPage?.(1)}
+  disabled={page === 1}
+>
+  1
+</PageButton>
+
     );
 
     if (page > siblings + 2) pages.push(<span key="start-ellipsis">...</span>);
 
     for (let i = Math.max(2, page - siblings); i <= Math.min(totalPages - 1, page + siblings); i++) {
       pages.push(
-        <PageButton key={i} onClick={() => setPage(i)} disabled={page === i}>
-          {i}
-        </PageButton>
+          <PageButton
+  key={1}
+  onClick={() => setPage?.(1)}
+  disabled={page === 1}
+>
+  1
+</PageButton>
       );
     }
 
@@ -84,13 +93,13 @@ const Table: React.FC<TableProps> = ({
 
     if (totalPages > 1)
       pages.push(
-        <PageButton
-          key={totalPages}
-          onClick={() => setPage(totalPages)}
-          disabled={page === totalPages}
-        >
-          {totalPages}
-        </PageButton>
+     <PageButton
+  key={1}
+  onClick={() =>setPage?.(1)}
+  disabled={page === 1}
+>
+  1
+</PageButton>
       );
 
     return pages;
@@ -114,9 +123,9 @@ const Table: React.FC<TableProps> = ({
                 <TableRow key={rowIndex} className={highlightRowColor}>
                   {headers.map((header, cellIdx) => (
                     <TableData key={cellIdx}>
-                      {typeof row[header.key] === 'boolean'
-                        ? row[header.key] ? 'Yes' : 'No'
-                        : row[header.key] ?? '-'}
+                      {typeof row[header?.key] === 'boolean'
+                        ? row[header?.key] ? 'Yes' : 'No'
+                        : row[header?.key] ?? '-'}
                     </TableData>
                   ))}
                   {actions && <TableData>{actions(row)}</TableData>}
@@ -134,19 +143,19 @@ const Table: React.FC<TableProps> = ({
       {(totalPages > 1 || totalCount <= limit) && (
         <PaginationContainer>
           <ButtonContainer>
-            <PageButton onClick={() => setPage(page - 1)} disabled={page === 1}>
+            <PageButton onClick={() => setPage?.(1)(page - 1)} disabled={page === 1}>
               Previous
             </PageButton>
             {renderPageNumbers()}
-            <PageButton onClick={() => setPage(page + 1)} disabled={page === totalPages}>
+            <PageButton onClick={() => setPage?.(1)(page + 1)} disabled={page === totalPages}>
               Next
             </PageButton>
 
             <PageSizeSelect
               value={limit}
               onChange={(e) => {
-                setPage(1);
-                setLimit(Number(e.target.value));
+               setPage?.(1)
+                setLimit?.(Number(e.target.value));
               }}
             >
               {[5, 10, 15].map((size) => (
