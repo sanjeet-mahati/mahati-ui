@@ -63,7 +63,10 @@ const KeyValueDisplay: React.FC<KeyValueDisplayProps> = ({ data }) => {
       {Object.entries(data).map(([key, value]) => (
         <Item key={key}>
           <Key>{key}</Key>
-          <Value isBold={key === "SegmentName"}>{value || "N/A"}</Value>
+    <Value isBold={key === "SegmentName"}>
+  {value !== undefined && value !== null ? String(value) : "N/A"}
+</Value>
+
         </Item>
       ))}
     </Container>

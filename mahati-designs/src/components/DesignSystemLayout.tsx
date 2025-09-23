@@ -6,7 +6,7 @@ import {
   SidebarList,
   SidebarItem,
   Content
-} from "../styles/DesignSystemLayout";
+} from "../styles/design-system.css";
 
 const sections = [
   

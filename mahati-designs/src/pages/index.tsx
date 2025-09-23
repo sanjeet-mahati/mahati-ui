@@ -115,7 +115,7 @@ export default function Home() {
   const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
 
   // Example Input validation
-  const handleInputChange = (e:unknown) => {
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setInputError(required(e.target.value));
   };
