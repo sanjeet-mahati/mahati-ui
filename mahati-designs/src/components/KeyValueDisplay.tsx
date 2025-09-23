@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 interface KeyValueDisplayProps {
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
 }
 
 const Container = styled.div`
@@ -63,7 +63,10 @@ const KeyValueDisplay: React.FC<KeyValueDisplayProps> = ({ data }) => {
       {Object.entries(data).map(([key, value]) => (
         <Item key={key}>
           <Key>{key}</Key>
-          <Value isBold={key === "SegmentName"}>{value || "N/A"}</Value>
+    <Value isBold={key === "SegmentName"}>
+  {value !== undefined && value !== null ? String(value) : "N/A"}
+</Value>
+
         </Item>
       ))}
     </Container>

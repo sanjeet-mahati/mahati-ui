@@ -1,14 +1,14 @@
 'use client';
 import React from "react";
 import styled from "styled-components";
-
+ 
 const TableContainer = styled.div`margin-top: 10px;`;
 const StyledTable = styled.table`width: 100%; border-collapse: collapse;`;
 const TableHeader = styled.th`padding: 12px; background: #135f9b; color: white; text-align: left;`;
 const TableRow = styled.tr`&:nth-child(even) { background-color: #f9f9f9; } &:hover { background-color: #f1f1f1; }`;
 const TableData = styled.td`padding: 10px; border-bottom: 1px solid #ccc;`;
 const EmptyState = styled.td`text-align: center; padding: 20px; color: #999;`;
-
+ 
 const PaginationContainer = styled.div`margin-top: 15px; display: flex; flex-direction: column; align-items: center;`;
 const ButtonContainer = styled.div`display: flex; gap: 6px; align-items: center; flex-wrap: wrap;`;
 const PageButton = styled.button`
@@ -18,7 +18,7 @@ const PageButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-
+ 
   &:disabled {
     background: #ccc;
     cursor: not-allowed;
@@ -31,71 +31,80 @@ const PageSizeSelect = styled.select`
   border: 1px solid #aaa;
 `;
 const PageInfo = styled.div`margin-top: 8px; font-size: 13px;`;
-
+ 
 interface TableProps {
   headers: { label: string; key: string }[];
-  data: { [key: string]: any }[];
-  page: number;
-  setPage: (page: number) => void;
-  limit: number;
-  setLimit: (limit: number) => void;
-  totalCount: number;
+  data: { [key: string]: unknown }[];
+  page?: number;
+  setPage?: (page: number) => void;
+  limit?: number;
+  setLimit?: (limit: number)=>void;
+  totalCount?: number;
   highlightRowColor?: string;
-  actions?: (row: any) => React.ReactNode;
+  actions?: (row: unknown) => React.ReactNode;
 }
-
+ 
 const Table: React.FC<TableProps> = ({
   headers,
   data,
-  page,
+  page=0,
   setPage,
-  limit,
+  limit=0,
   setLimit,
-  totalCount,
+  totalCount=0,
   highlightRowColor,
   actions,
 }) => {
-  const totalPages = Math.ceil(totalCount / limit);
-
+  const totalPages = Math.ceil(totalCount/ limit) || 0;
+ 
   const renderPageNumbers = () => {
     const pages = [];
     const siblings = 1;
-
+ 
     if (totalPages <= 1) return null;
-
+ 
     // Always show first
     pages.push(
-      <PageButton key={1} onClick={() => setPage(1)} disabled={page === 1}>
-        1
-      </PageButton>
+  <PageButton
+  key={1}
+  onClick={() => setPage?.(1)}
+  disabled={page === 1}
+>
+  1
+</PageButton>
+ 
     );
-
+ 
     if (page > siblings + 2) pages.push(<span key="start-ellipsis">...</span>);
-
+ 
     for (let i = Math.max(2, page - siblings); i <= Math.min(totalPages - 1, page + siblings); i++) {
       pages.push(
-        <PageButton key={i} onClick={() => setPage(i)} disabled={page === i}>
-          {i}
-        </PageButton>
+          <PageButton
+            key={i}
+            onClick={() => setPage?.(i)}
+            disabled={page === i}
+          >
+            {i}
+          </PageButton>
       );
     }
-
+ 
     if (page < totalPages - siblings - 1) pages.push(<span key="end-ellipsis">...</span>);
-
+ 
     if (totalPages > 1)
       pages.push(
-        <PageButton
-          key={totalPages}
-          onClick={() => setPage(totalPages)}
-          disabled={page === totalPages}
-        >
-          {totalPages}
-        </PageButton>
+     <PageButton
+  key={1}
+  onClick={() =>setPage?.(1)}
+  disabled={page === 1}
+>
+  1
+</PageButton>
       );
-
+ 
     return pages;
   };
-
+ 
   return (
     <>
       <TableContainer>
@@ -115,8 +124,8 @@ const Table: React.FC<TableProps> = ({
                   {headers.map((header, cellIdx) => (
                     <TableData key={cellIdx}>
                       {typeof row[header.key] === 'boolean'
-                        ? row[header.key] ? 'Yes' : 'No'
-                        : row[header.key] ?? '-'}
+                        ? (row[header.key] as boolean) ? 'Yes' : 'No'
+                        : String(row[header.key] ?? '-')}
                     </TableData>
                   ))}
                   {actions && <TableData>{actions(row)}</TableData>}
@@ -130,23 +139,23 @@ const Table: React.FC<TableProps> = ({
           </tbody>
         </StyledTable>
       </TableContainer>
-
+ 
       {(totalPages > 1 || totalCount <= limit) && (
         <PaginationContainer>
           <ButtonContainer>
-            <PageButton onClick={() => setPage(page - 1)} disabled={page === 1}>
+            <PageButton onClick={() => setPage?.(page - 1)} disabled={page === 1}>
               Previous
             </PageButton>
             {renderPageNumbers()}
-            <PageButton onClick={() => setPage(page + 1)} disabled={page === totalPages}>
+            <PageButton onClick={() => setPage?.(page + 1)} disabled={page === totalPages}>
               Next
             </PageButton>
-
+ 
             <PageSizeSelect
               value={limit}
               onChange={(e) => {
-                setPage(1);
-                setLimit(Number(e.target.value));
+               setPage?.(1)
+                setLimit?.(Number(e.target.value));
               }}
             >
               {[5, 10, 15].map((size) => (
@@ -164,5 +173,6 @@ const Table: React.FC<TableProps> = ({
     </>
   );
 };
-
+ 
 export default Table;
+ 
