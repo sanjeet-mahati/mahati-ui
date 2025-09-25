@@ -12,7 +12,7 @@ export { default as MahatiKeyValueDisplay } from './components/KeyValueDisplay';
 export { default as MahatiLabel } from './components/Label';
 export { default as MahatiMain } from './components/Main';
 export { default as MahatiTable } from './components/Table';
-export { default as MahatiTabbedInterface } from './components/TabedInterface';
+export { default as MahatiTabbedInterface } from './components/TabbedInterface';
 export { default as MahatiSpinner } from './components/Spinner';
 export { default as MahatiSection } from './components/Section';
 export { default as MahatiRow } from './components/Row';
