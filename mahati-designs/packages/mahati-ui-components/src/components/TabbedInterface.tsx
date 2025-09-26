@@ -27,7 +27,7 @@ const Tab = styled.div<{ $active: boolean }>`
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  border-bottom: ${({ $active }) => ($active ? "6px solid #55b382" : "none")};
+  border-bottom: ${({ $active }) => ($active ? "6px solid red" : "none")};
   color: ${({ $active }) => ($active ? "#dcffed" : "#fff")};
   transition: color 0.3s, border-bottom 0.3s;
 

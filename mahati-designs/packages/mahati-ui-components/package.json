@@ -1,6 +1,6 @@
 {
   "name": "@mahatisystems/mahati-ui-components",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -15,8 +15,8 @@
     "*.css"
   ],
   "peerDependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
