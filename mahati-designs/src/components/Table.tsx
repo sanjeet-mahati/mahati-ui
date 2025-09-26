@@ -98,7 +98,7 @@ const Table: React.FC<TableProps> = ({
   onClick={() =>setPage?.(1)}
   disabled={page === 1}
 >
-  1
+  {totalPages+1}
 </PageButton>
       );
  
@@ -227,7 +227,7 @@ const Table: React.FC<TableProps> = ({
             </PageSizeSelect>
           </ButtonContainer>
           <PageInfo>
-            Page {page} of {totalPages} (Total: {totalCount} items)
+            Page {page+1} of {totalPages+1} (Total: {totalCount} items)
           </PageInfo>
         </PaginationContainer>
       )}
