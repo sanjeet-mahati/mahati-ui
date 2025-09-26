@@ -17,7 +17,8 @@ import Tooltip from "../components/Tooltip";
 import { required } from "../components/validators";
 import { useState } from "react";
 import styled from "styled-components";
-
+import button from "./components/button";
+import { useRouter } from "next/router"; // add this
 
 
 const Container = styled.div`
@@ -28,7 +29,7 @@ const Container = styled.div`
 
 const Sidebar = styled.aside`
   width: 260px;
-background: linear-gradient(to right, #1e73be, #28a97d);
+  background: #135f9b;
   color: #fff;
   padding: 40px 24px 24px 24px;
   display: flex;
@@ -92,7 +93,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
   const [activeSection, setActiveSection] = useState("basic");
-
+const router = useRouter();
 
   // Example Table Data
   const tableHeaders = [
@@ -125,93 +126,36 @@ export default function Home() {
   const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
 
   // Example Input validation
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setInputError(required(e.target.value));
   };
 
   // For sidebar navigation (scroll to section)
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  const handleNavigation = (path: string, id: string) => {
     setActiveSection(id);
+    router.push(path); // navigate to that route
   };
-  //
-        //   <SidebarList>
-        //   <SidebarItem onClick={() => scrollToSection("button-section")}>Button</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("card-section")}>Card</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("dropdown-section")}>Dropdown</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("form-section")}>Form & Input</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("keyvalue-section")}>KeyValueDisplay</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("paragraph-section")}>Paragraph</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("row-section")}>Row</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("spinner-section")}>Spinner</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("table-section")}>Table</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("tabbed-section")}>TabbedInterface</SidebarItem>
-        //   <SidebarItem onClick={() => scrollToSection("tooltip-section")}>Tooltip</SidebarItem>
-        // </SidebarList>
-  //
+const sections = [
+    { id: "button-section", name: "Button", path: "/components/button" },
+    { id: "card-section", name: "Card", path: "/components/card" },
+  ];
+//
 
-  const sections = [
-    { 'id': "button-section", 'name': "Button" },
-    { 'id': "card-section", 'name': "Card" },
-    // {'id':"",'name':""},
-    // {'id':"",'name':""},
-    // {'id':"",'name':""},
-    // {'id':"",'name':""},
-    // {'id':"",'name':""},
-  ]
-  //
-
-  //
+//
   return (
     <Container>
       <Sidebar>
-        <SidebarTitle
-          style={{
-            display: "flex",
-            flexDirection: "row", // horizontal layout
-            alignItems: "center", // vertical centering
-            gap: 8,
-          }}
-        >
-          <Image
-            src="/mahatilog.jpg"
-            alt="Mahati Logo"
-            width={56}
-            height={56}
-            style={{ borderRadius: 12 }}
-          />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span
-              style={{
-                fontSize: 20,
-                fontWeight: 700,
-                color: "#fff",
-                letterSpacing: 1,
-              }}
-            >
-              Mahati UI
-            </span>
-            <span
-              style={{
-                fontSize: 16,
-                fontWeight: 600,
-                color: "#fff",
-                marginTop: 2,
-              }}
-            >
-              v1.0
-            </span>
-          </div>
+        <SidebarTitle style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <Image src="/mahatilog.jpg" alt="Mahati Logo" width={56} height={56} style={{ borderRadius: 12 }} />
+          <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginTop: 4, letterSpacing: 1 }}>Mahati UI</span>
         </SidebarTitle>
-
-        <SidebarList>
+      <SidebarList>
           {sections.map((section) => (
             <SidebarItem
               key={section.id}
               isActive={activeSection === section.id}
-              onClick={() => scrollToSection(section.id)}
+        onClick={() => handleNavigation(section.path, section.id)}
             >
               {section.name}
             </SidebarItem>
@@ -219,7 +163,7 @@ export default function Home() {
         </SidebarList>
       </Sidebar>
       <Content>
-
+        
         <div id="button-section">
           <SectionTitle>Button</SectionTitle>
           <Row>
