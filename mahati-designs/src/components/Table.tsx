@@ -4,7 +4,7 @@ import styled from "styled-components";
  
 const TableContainer = styled.div`margin-top: 10px;`;
 const StyledTable = styled.table`width: 100%; border-collapse: collapse;`;
-const TableHeader = styled.th`padding: 12px; background: #135f9b; color: white; text-align: left;`;
+const TableHeader = styled.th`padding: 12px; background: "linear-gradient(to right, #1e73be, #28a97d)"`;
 const TableRow = styled.tr`&:nth-child(even) { background-color: #f9f9f9; } &:hover { background-color: #f1f1f1; }`;
 const TableData = styled.td`padding: 10px; border-bottom: 1px solid #ccc;`;
 const EmptyState = styled.td`text-align: center; padding: 20px; color: #999;`;
@@ -13,7 +13,7 @@ const PaginationContainer = styled.div`margin-top: 15px; display: flex; flex-dir
 const ButtonContainer = styled.div`display: flex; gap: 6px; align-items: center; flex-wrap: wrap;`;
 const PageButton = styled.button`
   padding: 6px 12px;
-  background: #135f9b;
+background: linear-gradient(to right, #1e73be, #28a97d);
   color: white;
   border: none;
   border-radius: 4px;
@@ -109,8 +109,8 @@ const Table: React.FC<TableProps> = ({
     <>
       <TableContainer>
         <StyledTable>
-          <thead>
-            <tr>
+          <thead style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
+            <tr style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
               {headers.map((header, idx) => (
                 <TableHeader key={idx}>{header.label}</TableHeader>
               ))}

@@ -1,73 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import Button from "../../components/Button";
 import Card from "../../components/Card";
-import Link from "next/link";
-
-const Container = styled.div`
-  display: flex;
-  min-height: 100vh;
-  background: #f8fafc;
-`;
-
-const Sidebar = styled.aside`
-  width: 280px;
-  background: linear-gradient(to right, #1e73be, #28a97d);
-  padding: 24px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-`;
-
-const SidebarTitle = styled.h2`
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const BackLink = styled(Link)`
-  color: white;
-  text-decoration: none;
-  font-size: 0.875rem;
-  margin-bottom: 16px;
-  display: inline-block;
-  
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const SidebarList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const SidebarItem = styled.li<{ isActive?: boolean }>`
-  color: ${props => props.isActive ? '#58a6ff' : 'white'};
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  margin-bottom: 4px;
-  font-size: 0.9rem;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #58a6ff;
-  }
-`;
-
-const Content = styled.main`
-  flex: 1;
-  padding: 48px;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
 
 const PageHeader = styled.div`
   margin-bottom: 48px;
@@ -128,69 +61,91 @@ const CodeBlock = styled.pre`
 `;
 
 export default function CardPage() {
-  const [activeSection, setActiveSection] = useState("card-examples");
-
-  const sections = [
-    { id: "card-examples", name: "Card Examples" },
-  ];
-
-  const scrollToSection = (id: string) => {
-    setActiveSection(id);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <Container>
-      <Sidebar>
-        <SidebarTitle>Mahati UI</SidebarTitle>
-        <BackLink href="/">← Back to Home</BackLink>
-        <SidebarList>
-          {sections.map((section) => (
-            <SidebarItem
-              key={section.id}
-              isActive={activeSection === section.id}
-              onClick={() => scrollToSection(section.id)}
-            >
-              {section.name}
-            </SidebarItem>
-          ))}
-        </SidebarList>
-      </Sidebar>
+    <>
+      <PageHeader>
+        <PageTitle>Card</PageTitle>
 
-      <Content>
-        <PageHeader>
-          <PageTitle>Card</PageTitle>
+      </PageHeader>
 
-        </PageHeader>
+      <Section id="basic">
+        <SectionTitle>Basic Card</SectionTitle>
+        <SectionDescription>
+          Simple card layouts with title, content, and optional actions.
+        </SectionDescription>
+        <DemoGrid>
+          <Card
+            title="Card Title"
+            content="This is a basic card with some content. Cards are great for organizing information."
+          />
+          <Card
+            title="With Image"
+            image="https://via.placeholder.com/400x200"
+            content="This card includes an image header for visual appeal."
+          />
+          <Card
+            title="Interactive Card"
+            content="Click anywhere on this card to interact with it."
+            onClick={() => alert('Card clicked!')}
+          />
+        </DemoGrid>
+        {/* <CodeBlock>{`<Card
+  title="Card Title"
+  content="This is a basic card with some content."
+/>
 
-        <Section id="card-examples">
-          <SectionTitle>Card Examples</SectionTitle>
-          <SectionDescription>
-            Demonstrating the composable Card component with different structures.
-          </SectionDescription>
-          <DemoGrid>
-            <Card>
-              This is a simple card with only body content. Perfect for quick notes or messages.
-            </Card>
-            <Card header="Card with Header">
-              This card includes a header slot, ideal for titles or headings. The header can be a simple string.
-            </Card>
-            <Card
-              header={<h3>Profile Settings</h3>}
-              footer={
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                  <Button>Cancel</Button>
-                  <Button variant="primary">Save Changes</Button>
-                </div>
-              }
-            >
-              This card uses both the header and footer slots, which can contain any React node, including other components like Buttons.
-            </Card>
-          </DemoGrid>
-       
-        </Section>
-      </Content>
-    </Container>
+<Card
+  title="With Image"
+  image="https://via.placeholder.com/400x200"
+  content="This card includes an image header."
+/>
+
+<Card
+  title="Interactive Card"
+  content="Click anywhere on this card."
+  onClick={() => alert('Card clicked!')}
+/>`}</CodeBlock> */}
+      </Section>
+
+      <Section id="advanced">
+        <SectionTitle>Advanced Card</SectionTitle>
+        <SectionDescription>
+          Cards with actions, hover effects, and complex layouts.
+        </SectionDescription>
+        <DemoGrid>
+          <Card
+            title="Product Card"
+            content="Premium wireless headphones with noise cancellation."
+            footer={
+              <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                <button style={{ flex: 1, padding: '8px', cursor: 'pointer' }}>
+                  Add to Cart
+                </button>
+                <button style={{ padding: '8px', cursor: 'pointer' }}>♥</button>
+              </div>
+            }
+          />
+          <Card
+            title="User Profile"
+          src="/mahatilog.jpg"
+            content="John Doe • Software Engineer"
+            footer={
+              <div style={{ marginTop: '16px', fontSize: '0.875rem', color: '#718096' }}>
+                <span>Followers: 1.2k</span> • <span>Following: 345</span>
+              </div>
+            }
+          />
+        </DemoGrid>
+        {/* <CodeBlock>{`<Card
+  title="Product Card"
+  content="Premium wireless headphones..."
+  footer={
+    <div>
+      <button>Add to Cart</button>
+    </div>
+  }
+/>`}</CodeBlock> */}
+      </Section>
+    </>
   );
 }
