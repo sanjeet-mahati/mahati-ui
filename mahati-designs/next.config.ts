@@ -1,7 +1,6 @@
-import type { NextConfig } from 'next';
-const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {}, // enable Turbopack features
+// next.config.js
+module.exports = {
+  compiler: {
+    styledComponents: true,
   },
 };
-export default nextConfig;

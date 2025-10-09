@@ -1,4 +1,3 @@
-// pages/_document.tsx
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -19,7 +18,7 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: (App) => (props) =>
+          enhanceApp: (App: any) => (props) =>
             sheet.collectStyles(<App {...props} />),
         });
 
@@ -42,7 +41,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head />
-        <body className="antialiased">
+        <body>
           <Main />
           <NextScript />
         </body>
