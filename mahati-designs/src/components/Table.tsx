@@ -4,7 +4,7 @@ import styled from "styled-components";
  
 const TableContainer = styled.div`margin-top: 10px;`;
 const StyledTable = styled.table`width: 100%; border-collapse: collapse;`;
-const TableHeader = styled.th`padding: 12px; background: #135f9b; color: white; text-align: left;`;
+const TableHeader = styled.th`padding: 12px; background: "linear-gradient(to right, #1e73be, #28a97d)"`;
 const TableRow = styled.tr`&:nth-child(even) { background-color: #f9f9f9; } &:hover { background-color: #f1f1f1; }`;
 const TableData = styled.td`padding: 10px; border-bottom: 1px solid #ccc;`;
 const EmptyState = styled.td`text-align: center; padding: 20px; color: #999;`;
@@ -13,7 +13,7 @@ const PaginationContainer = styled.div`margin-top: 15px; display: flex; flex-dir
 const ButtonContainer = styled.div`display: flex; gap: 6px; align-items: center; flex-wrap: wrap;`;
 const PageButton = styled.button`
   padding: 6px 12px;
-  background: #135f9b;
+background: linear-gradient(to right, #1e73be, #28a97d);
   color: white;
   border: none;
   border-radius: 4px;
@@ -98,7 +98,7 @@ const Table: React.FC<TableProps> = ({
   onClick={() =>setPage?.(1)}
   disabled={page === 1}
 >
-  1
+  {totalPages+1}
 </PageButton>
       );
  
@@ -109,8 +109,8 @@ const Table: React.FC<TableProps> = ({
     <>
       <TableContainer>
         <StyledTable>
-          <thead>
-            <tr>
+          <thead style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
+            <tr style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
               {headers.map((header, idx) => (
                 <TableHeader key={idx}>{header.label}</TableHeader>
               ))}
@@ -123,9 +123,70 @@ const Table: React.FC<TableProps> = ({
                 <TableRow key={rowIndex} className={highlightRowColor}>
                   {headers.map((header, cellIdx) => (
                     <TableData key={cellIdx}>
-                      {typeof row[header.key] === 'boolean'
-                        ? (row[header.key] as boolean) ? 'Yes' : 'No'
-                        : String(row[header.key] ?? '-')}
+                      {(() => {
+                        const value = row[header.key];
+                       
+                        // Handle JSX/React elements
+                        if (React.isValidElement(value)) {
+                          return value;
+                        }
+ 
+                        // Handle functions that return JSX
+                        if (typeof value === 'function') {
+                          try {
+                            const result = value();
+                            if (React.isValidElement(result)) {
+                              return result;
+                            }
+                          } catch (e) {
+                            console.warn('Error executing function in table cell:', e);
+                          }
+                        }
+ 
+                        // Handle HTML strings
+                        if (typeof value === 'string' && (
+                          value.trim().startsWith('<') &&
+                          value.trim().endsWith('>')
+                        )) {
+                          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+                        }
+ 
+                        // Handle arrays (join them)
+                        if (Array.isArray(value)) {
+                          if (value.some(item => React.isValidElement(item))) {
+                            return <>{value}</>;
+                          }
+                          return value.join(', ');
+                        }
+ 
+                        // Handle dates
+                        if (value instanceof Date) {
+                          return value.toLocaleString();
+                        }
+ 
+                        // Handle booleans
+                        if (typeof value === 'boolean') {
+                          return value ? 'Yes' : 'No';
+                        }
+ 
+                        // Handle null/undefined
+                        if (value === null || value === undefined) {
+                          return '-';
+                        }
+ 
+                        // Handle numbers
+                        if (typeof value === 'number') {
+                          return value.toString();
+                        }
+ 
+                        // Handle objects
+                        if (typeof value === 'object') {
+                          return JSON.stringify(value);
+                        }
+ 
+                        // Default to string
+                        return String(value);
+                      })()}
                     </TableData>
                   ))}
                   {actions && <TableData>{actions(row)}</TableData>}
@@ -166,7 +227,7 @@ const Table: React.FC<TableProps> = ({
             </PageSizeSelect>
           </ButtonContainer>
           <PageInfo>
-            Page {page} of {totalPages} (Total: {totalCount} items)
+            Page {page+1} of {totalPages+1} (Total: {totalCount} items)
           </PageInfo>
         </PaginationContainer>
       )}
@@ -175,4 +236,3 @@ const Table: React.FC<TableProps> = ({
 };
  
 export default Table;
- 

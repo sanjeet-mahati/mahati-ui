@@ -98,7 +98,7 @@ const Table: React.FC<TableProps> = ({
   onClick={() =>setPage?.(1)}
   disabled={page === 1}
 >
-  1
+  {totalPages+1}
 </PageButton>
       );
  
@@ -123,9 +123,70 @@ const Table: React.FC<TableProps> = ({
                 <TableRow key={rowIndex} className={highlightRowColor}>
                   {headers.map((header, cellIdx) => (
                     <TableData key={cellIdx}>
-                      {typeof row[header.key] === 'boolean'
-                        ? (row[header.key] as boolean) ? 'Yes' : 'No'
-                        : String(row[header.key] ?? '-')}
+                      {(() => {
+                        const value = row[header.key];
+                       
+                        // Handle JSX/React elements
+                        if (React.isValidElement(value)) {
+                          return value;
+                        }
+ 
+                        // Handle functions that return JSX
+                        if (typeof value === 'function') {
+                          try {
+                            const result = value();
+                            if (React.isValidElement(result)) {
+                              return result;
+                            }
+                          } catch (e) {
+                            console.warn('Error executing function in table cell:', e);
+                          }
+                        }
+ 
+                        // Handle HTML strings
+                        if (typeof value === 'string' && (
+                          value.trim().startsWith('<') &&
+                          value.trim().endsWith('>')
+                        )) {
+                          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+                        }
+ 
+                        // Handle arrays (join them)
+                        if (Array.isArray(value)) {
+                          if (value.some(item => React.isValidElement(item))) {
+                            return <>{value}</>;
+                          }
+                          return value.join(', ');
+                        }
+ 
+                        // Handle dates
+                        if (value instanceof Date) {
+                          return value.toLocaleString();
+                        }
+ 
+                        // Handle booleans
+                        if (typeof value === 'boolean') {
+                          return value ? 'Yes' : 'No';
+                        }
+ 
+                        // Handle null/undefined
+                        if (value === null || value === undefined) {
+                          return '-';
+                        }
+ 
+                        // Handle numbers
+                        if (typeof value === 'number') {
+                          return value.toString();
+                        }
+ 
+                        // Handle objects
+                        if (typeof value === 'object') {
+                          return JSON.stringify(value);
+                        }
+ 
+                        // Default to string
+                        return String(value);
+                      })()}
                     </TableData>
                   ))}
                   {actions && <TableData>{actions(row)}</TableData>}
@@ -166,7 +227,7 @@ const Table: React.FC<TableProps> = ({
             </PageSizeSelect>
           </ButtonContainer>
           <PageInfo>
-            Page {page} of {totalPages} (Total: {totalCount} items)
+            Page {page+1} of {totalPages+1} (Total: {totalCount} items)
           </PageInfo>
         </PaginationContainer>
       )}
@@ -175,4 +236,3 @@ const Table: React.FC<TableProps> = ({
 };
  
 export default Table;
- 
