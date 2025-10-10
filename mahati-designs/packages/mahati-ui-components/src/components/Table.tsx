@@ -58,6 +58,13 @@ flex-shrink: 0;
 const TableData = styled.td`
   padding: 10px;
   border-bottom: 1px solid #ccc;
+  color: #000;
+
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 `;
 
 const EmptyState = styled.td`
