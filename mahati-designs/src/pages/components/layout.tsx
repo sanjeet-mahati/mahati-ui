@@ -90,15 +90,22 @@ const sections = [
     { id: "date-time-sorting", name: "Date & Time Sorting" },
   ],
     },
-  {
-    id: "modal",
-    name: "Modal",
-    path: "/components/modal",
+    {
+    id: "forminput",
+    name: "FormInput",
+    path: "/components/FormInputDemo",
     submenu: [
-      { id: "basic", name: "Basic Modal" },
-      { id: "sizes", name: "Modal Sizes" },
+      { id: "basicInputField", name: "Basic Input Field" },
+      { id: "inputStatesField", name: "Input States Field" },
+      { id: "floatingLabel", name: "Floating Label" },
+      { id: "variousInputSizes", name: "Various Input Size" },
+      { id: "basicForm", name: "Basic Form" },
+      { id: "restPassword", name: "Reset Password" },
+      { id: "formWithValidation", name: "Form with Validation" },
+      { id: "fullFeaturedForm", name: "Full Featured Form" },
+      { id: "loginForm", name: "Login Form" },
     ],
-  },
+  }
 ];
 
 interface LayoutProps {
