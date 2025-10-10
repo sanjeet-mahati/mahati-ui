@@ -1,122 +1,221 @@
-'use client';
+"use client";
 import React from "react";
 import styled from "styled-components";
- 
-const TableContainer = styled.div`margin-top: 10px;`;
-const StyledTable = styled.table`width: 100%; border-collapse: collapse;`;
-const TableHeader = styled.th`padding: 12px; background: "linear-gradient(to right, #1e73be, #28a97d)"`;
-const TableRow = styled.tr`&:nth-child(even) { background-color: #f9f9f9; } &:hover { background-color: #f1f1f1; }`;
-const TableData = styled.td`padding: 10px; border-bottom: 1px solid #ccc;`;
-const EmptyState = styled.td`text-align: center; padding: 20px; color: #999;`;
- 
-const PaginationContainer = styled.div`margin-top: 15px; display: flex; flex-direction: column; align-items: center;`;
-const ButtonContainer = styled.div`display: flex; gap: 6px; align-items: center; flex-wrap: wrap;`;
+
+const HEADER_BG = "linear-gradient(to right, #1e73be, #28a97d)";
+
+const TableContainer = styled.div`
+  margin-top: 10px;
+  border-radius: 10px;
+
+border: 1px solid #1761A3;
+
+background: #FFF;
+  overflow: hidden; /* clip children to keep rounded corners */
+
+`;
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+const StyledThead = styled.thead`
+  background: ${HEADER_BG};
+`;
+
+const TableHeader = styled.th`
+  background: transparent;
+  color: #fff;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  height: 50px;
+
+  &:first-child {
+    border-top-left-radius: 10px;
+  }
+  &:last-child {
+    border-top-right-radius: 10px;
+  }
+`;
+
+
+const TableRow = styled.tr`
+width: 706px;
+height: 57px;
+flex-shrink: 0;
+  &:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  &:hover {
+    background-color: #f1f1f1;
+    .
+  }
+`;
+
+const TableData = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+`;
+
+const EmptyState = styled.td`
+  text-align: center;
+  padding: 20px;
+  color: #999;
+`;
+
+/* ==== Centered pagination ==== */
+const PaginationContainer = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+`;
+
 const PageButton = styled.button`
   padding: 6px 12px;
-background: linear-gradient(to right, #1e73be, #28a97d);
+  background: ${HEADER_BG};
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
- 
+
   &:disabled {
     background: #ccc;
     cursor: not-allowed;
   }
 `;
+
 const PageSizeSelect = styled.select`
   margin-left: 10px;
   padding: 6px;
   border-radius: 4px;
   border: 1px solid #aaa;
 `;
-const PageInfo = styled.div`margin-top: 8px; font-size: 13px;`;
- 
+
+const PageInfoInline = styled.span`
+  margin-left: 10px;
+  font-size: 13px;
+`;
+
 interface TableProps {
   headers: { label: string; key: string }[];
   data: { [key: string]: unknown }[];
   page?: number;
   setPage?: (page: number) => void;
   limit?: number;
-  setLimit?: (limit: number)=>void;
+  setLimit?: (limit: number) => void;
   totalCount?: number;
   highlightRowColor?: string;
   actions?: (row: unknown) => React.ReactNode;
 }
- 
+
 const Table: React.FC<TableProps> = ({
   headers,
   data,
-  page=0,
+  page,
   setPage,
-  limit=0,
+  limit,
   setLimit,
-  totalCount=0,
+  totalCount,
   highlightRowColor,
   actions,
 }) => {
-  const totalPages = Math.ceil(totalCount/ limit) || 0;
- 
+  const hasValidLimit = typeof limit === "number" && limit > 0;
+  const hasValidTotal = typeof totalCount === "number" && totalCount >= 0;
+  const isPaginated = !!(hasValidLimit && hasValidTotal && setPage && setLimit);
+
+  const totalPages = isPaginated
+    ? Math.max(1, Math.ceil((totalCount as number) / (limit as number)))
+    : 0;
+  const currentPage = isPaginated
+    ? typeof page === "number" && page > 0
+      ? page
+      : 1
+    : 1;
+
+  const goToPage = (p: number) => {
+    if (!isPaginated) return;
+    const clamped = Math.max(1, Math.min(totalPages, p));
+    setPage!(clamped);
+  };
+
   const renderPageNumbers = () => {
-    const pages = [];
+    if (!isPaginated || totalPages <= 1) return null;
+
+    const pages: React.ReactNode[] = [];
     const siblings = 1;
- 
-    if (totalPages <= 1) return null;
- 
-    // Always show first
+
     pages.push(
-  <PageButton
-  key={1}
-  onClick={() => setPage?.(1)}
-  disabled={page === 1}
->
-  1
-</PageButton>
- 
+      <PageButton key={1} onClick={() => goToPage(1)} disabled={currentPage === 1}>
+        1
+      </PageButton>
     );
- 
-    if (page > siblings + 2) pages.push(<span key="start-ellipsis">...</span>);
- 
-    for (let i = Math.max(2, page - siblings); i <= Math.min(totalPages - 1, page + siblings); i++) {
+
+    if (currentPage > siblings + 2) {
+      pages.push(<span key="start-ellipsis">...</span>);
+    }
+
+    const start = Math.max(2, currentPage - siblings);
+    const end = Math.min(totalPages - 1, currentPage + siblings);
+
+    for (let i = start; i <= end; i++) {
       pages.push(
-          <PageButton
-            key={i}
-            onClick={() => setPage?.(i)}
-            disabled={page === i}
-          >
-            {i}
-          </PageButton>
+        <PageButton key={i} onClick={() => goToPage(i)} disabled={currentPage === i}>
+          {i}
+        </PageButton>
       );
     }
- 
-    if (page < totalPages - siblings - 1) pages.push(<span key="end-ellipsis">...</span>);
- 
-    if (totalPages > 1)
+
+    if (currentPage < totalPages - siblings - 1) {
+      pages.push(<span key="end-ellipsis">...</span>);
+    }
+
+    if (totalPages > 1) {
       pages.push(
-     <PageButton
-  key={1}
-  onClick={() =>setPage?.(1)}
-  disabled={page === 1}
->
-  {totalPages+1}
-</PageButton>
+        <PageButton
+          key={totalPages}
+          onClick={() => goToPage(totalPages)}
+          disabled={currentPage === totalPages}
+        >
+          {totalPages}
+        </PageButton>
       );
- 
+    }
+
     return pages;
   };
- 
+
   return (
     <>
       <TableContainer>
         <StyledTable>
-          <thead style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
-            <tr style={{background: "linear-gradient(to right, #1e73be, #28a97d)"}}>
+          <StyledThead>
+            <tr>
               {headers.map((header, idx) => (
                 <TableHeader key={idx}>{header.label}</TableHeader>
               ))}
               {actions && <TableHeader>Actions</TableHeader>}
             </tr>
-          </thead>
+          </StyledThead>
+
           <tbody>
             {data.length > 0 ? (
               data.map((row, rowIndex) => (
@@ -125,66 +224,43 @@ const Table: React.FC<TableProps> = ({
                     <TableData key={cellIdx}>
                       {(() => {
                         const value = row[header.key];
-                       
-                        // Handle JSX/React elements
-                        if (React.isValidElement(value)) {
-                          return value;
-                        }
- 
-                        // Handle functions that return JSX
-                        if (typeof value === 'function') {
+
+                        if (React.isValidElement(value)) return value;
+
+                        if (typeof value === "function") {
                           try {
                             const result = value();
-                            if (React.isValidElement(result)) {
-                              return result;
-                            }
+                            if (React.isValidElement(result)) return result;
                           } catch (e) {
-                            console.warn('Error executing function in table cell:', e);
+                            console.warn("Error executing function in table cell:", e);
                           }
                         }
- 
-                        // Handle HTML strings
-                        if (typeof value === 'string' && (
-                          value.trim().startsWith('<') &&
-                          value.trim().endsWith('>')
-                        )) {
-                          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+
+                        if (
+                          typeof value === "string" &&
+                          value.trim().startsWith("<") &&
+                          value.trim().endsWith(">")
+                        ) {
+                          // ✅ wrap raw HTML safely in span, not div
+                          return <span dangerouslySetInnerHTML={{ __html: value }} />;
                         }
- 
-                        // Handle arrays (join them)
+
                         if (Array.isArray(value)) {
-                          if (value.some(item => React.isValidElement(item))) {
+                          if (value.some((item) => React.isValidElement(item)))
                             return <>{value}</>;
-                          }
-                          return value.join(', ');
+                          return value.join(", ");
                         }
- 
-                        // Handle dates
-                        if (value instanceof Date) {
-                          return value.toLocaleString();
-                        }
- 
-                        // Handle booleans
-                        if (typeof value === 'boolean') {
-                          return value ? 'Yes' : 'No';
-                        }
- 
-                        // Handle null/undefined
-                        if (value === null || value === undefined) {
-                          return '-';
-                        }
- 
-                        // Handle numbers
-                        if (typeof value === 'number') {
-                          return value.toString();
-                        }
- 
-                        // Handle objects
-                        if (typeof value === 'object') {
-                          return JSON.stringify(value);
-                        }
- 
-                        // Default to string
+
+                        if (value instanceof Date) return value.toLocaleString();
+
+                        if (typeof value === "boolean") return value ? "Yes" : "No";
+
+                        if (value === null || value === undefined) return "-";
+
+                        if (typeof value === "number") return value.toString();
+
+                        if (typeof value === "object") return JSON.stringify(value);
+
                         return String(value);
                       })()}
                     </TableData>
@@ -194,29 +270,33 @@ const Table: React.FC<TableProps> = ({
               ))
             ) : (
               <tr>
-                <EmptyState colSpan={headers.length + (actions ? 1 : 0)}>No data available</EmptyState>
+                <EmptyState colSpan={headers.length + (actions ? 1 : 0)}>
+                  No data available
+                </EmptyState>
               </tr>
             )}
           </tbody>
         </StyledTable>
       </TableContainer>
- 
-      {(totalPages > 1 || totalCount <= limit) && (
+
+      {isPaginated && (
         <PaginationContainer>
           <ButtonContainer>
-            <PageButton onClick={() => setPage?.(page - 1)} disabled={page === 1}>
+            <PageButton onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
               Previous
             </PageButton>
+
             {renderPageNumbers()}
-            <PageButton onClick={() => setPage?.(page + 1)} disabled={page === totalPages}>
+
+            <PageButton onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
               Next
             </PageButton>
- 
+
             <PageSizeSelect
               value={limit}
               onChange={(e) => {
-               setPage?.(1)
-                setLimit?.(Number(e.target.value));
+                setPage!(1);
+                setLimit!(Number(e.target.value));
               }}
             >
               {[5, 10, 15].map((size) => (
@@ -225,14 +305,15 @@ const Table: React.FC<TableProps> = ({
                 </option>
               ))}
             </PageSizeSelect>
+
+            <PageInfoInline>
+              Page {currentPage} of {totalPages} (Total: {totalCount} items)
+            </PageInfoInline>
           </ButtonContainer>
-          <PageInfo>
-            Page {page+1} of {totalPages+1} (Total: {totalCount} items)
-          </PageInfo>
         </PaginationContainer>
       )}
     </>
   );
 };
- 
+
 export default Table;

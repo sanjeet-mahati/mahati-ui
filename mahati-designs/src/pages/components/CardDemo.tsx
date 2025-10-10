@@ -44,7 +44,7 @@ const SectionDescription = styled.p`
 
 const DemoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 32px;
 `;
@@ -60,12 +60,42 @@ const CodeBlock = styled.pre`
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 `;
 
+const Button = styled.button`
+  flex: 1;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid #1761A3;
+  background: rgba(77, 175, 131, 0.10);
+  border-radius: 6px;
+  color: #1761A3;
+  font-weight: 500;
+  
+  &:hover {
+    background: rgba(77, 175, 131, 0.20);
+  }
+`;
+
+const IconButton = styled.button`
+  padding: 8px 12px;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  color: #718096;
+  
+  &:hover {
+    background: #f7fafc;
+  }
+`;
+
 export default function CardPage() {
   return (
     <>
       <PageHeader>
         <PageTitle>Card</PageTitle>
-
+        <PageDescription>
+          Display content in a structured container with consistent styling and interactive elements.
+        </PageDescription>
       </PageHeader>
 
       <Section id="basic">
@@ -76,11 +106,11 @@ export default function CardPage() {
         <DemoGrid>
           <Card
             title="Card Title"
-            content="This is a basic card with some content. Cards are great for organizing information."
+            content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. There are many variations of passages."
           />
           <Card
             title="With Image"
-            image="https://via.placeholder.com/400x200"
+            image="https://via.placeholder.com/268x175"
             content="This card includes an image header for visual appeal."
           />
           <Card
@@ -89,22 +119,6 @@ export default function CardPage() {
             onClick={() => alert('Card clicked!')}
           />
         </DemoGrid>
-        {/* <CodeBlock>{`<Card
-  title="Card Title"
-  content="This is a basic card with some content."
-/>
-
-<Card
-  title="With Image"
-  image="https://via.placeholder.com/400x200"
-  content="This card includes an image header."
-/>
-
-<Card
-  title="Interactive Card"
-  content="Click anywhere on this card."
-  onClick={() => alert('Card clicked!')}
-/>`}</CodeBlock> */}
       </Section>
 
       <Section id="advanced">
@@ -118,16 +132,14 @@ export default function CardPage() {
             content="Premium wireless headphones with noise cancellation."
             footer={
               <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-                <button style={{ flex: 1, padding: '8px', cursor: 'pointer' }}>
-                  Add to Cart
-                </button>
-                <button style={{ padding: '8px', cursor: 'pointer' }}>♥</button>
+                <Button>Add to Cart</Button>
+                <IconButton>♥</IconButton>
               </div>
             }
           />
           <Card
             title="User Profile"
-          src="/mahatilog.jpg"
+            src="/mahatilog.jpg"
             content="John Doe • Software Engineer"
             footer={
               <div style={{ marginTop: '16px', fontSize: '0.875rem', color: '#718096' }}>
@@ -136,15 +148,6 @@ export default function CardPage() {
             }
           />
         </DemoGrid>
-        {/* <CodeBlock>{`<Card
-  title="Product Card"
-  content="Premium wireless headphones..."
-  footer={
-    <div>
-      <button>Add to Cart</button>
-    </div>
-  }
-/>`}</CodeBlock> */}
       </Section>
     </>
   );

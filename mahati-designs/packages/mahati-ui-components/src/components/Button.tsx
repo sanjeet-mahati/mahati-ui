@@ -1,33 +1,73 @@
-'use client';
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-interface ButtonProps {
+const variants = {
+  primary: {
+    color: "#1e73be",
+    textColor: "#ffffff",
+  },
+  success: {
+    color: "#28a97d",
+    textColor: "#ffffff",
+  },
+  danger: {
+    color: "#e53e3e",
+    textColor: "#ffffff",
+  },
+};
+
+export interface ButtonProps {
   color?: string;
   textColor?: string;
   size?: "small" | "medium" | "large";
   isLoading?: boolean;
   danger?: boolean;
-  type?: "button" | "submit" | "reset" |"primary" ;
+  variant?: "primary" | "success" | "danger";
+  type?: "button" | "submit" | "reset";
+  radius?: string | number; // 👈 new
 }
-const Button = styled.button.attrs<ButtonProps>((props) => ({
-  type: props.type || "button" // default to button unless overridden
-}))<ButtonProps>`
 
+const Button = styled.button.attrs<ButtonProps>((props) => ({
+  type: props.type || "button",
+}))<ButtonProps>`
   padding: ${(props) =>
-    props.size === "large" ? "15px" : props.size === "small" ? "5px" : "10px"};
+    props.size === "large"
+      ? "12px 20px"
+      : props.size === "small"
+      ? "6px 12px"
+      : "10px 16px"};
   margin-top: 10px;
-  background-color: ${(props) =>
-    props.color === "none" ? "transparent" : props.color || "#55b382"};
   color: ${(props) => props.textColor || "#ffffff"};
   border: none;
-  border-radius: 4px;
+  border-radius: ${(props) =>
+    typeof props.radius === "number" ? `${props.radius}px` : props.radius || "6px"};
   cursor: pointer;
-  display: flex;
-  justify-content: center;
+
+  display: inline-flex;
   align-items: center;
-  font-weight: bolder;
+  justify-content: center;
+  gap: 8px; /* 👈 space between icon & text */
 
+  font-weight: 600;
+  font-size: 14px;
 
+  /* --- VARIANT STYLES --- */
+  ${({ variant, color, danger }) => {
+    const currentVariant = danger ? "danger" : variant;
+    if (color) {
+      return css`
+        background-color: ${color};
+      `;
+    }
+    if (currentVariant && variants[currentVariant]) {
+      return css`
+        background-color: ${variants[currentVariant].color};
+        color: ${variants[currentVariant].textColor};
+      `;
+    }
+    return css`
+      background-color: #55b382;
+    `; // Default
+  }}
 
   &:disabled {
     background-color: #ccc;
@@ -36,10 +76,10 @@ const Button = styled.button.attrs<ButtonProps>((props) => ({
 
   ${({ isLoading }) =>
     isLoading &&
-    `
-    pointer-events: none;
-  `}
+    css`
+      pointer-events: none;
+      opacity: 0.8;
+    `}
 `;
-
 
 export default Button;
