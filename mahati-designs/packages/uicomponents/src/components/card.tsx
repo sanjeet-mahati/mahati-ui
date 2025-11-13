@@ -1,11 +1,76 @@
-import styled from "styled-components";
+"use client";
 
-const Card = styled.div`
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-top: 20px;
-  text-align: center;
-`;
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+// const cardVariants = cva(
+//   "rounded-lg transition-colors transition-shadow",
+//   {
+//     variants: {
+//       variant: {
+//         default: "bg-primary text-primary-foreground hover:bg-primary/90",
+//         elevated: "bg-white shadow-md",
+//         outline: "bg-slate-50 border border-slate-200",
+//         subtle: "bg-slate-50",
+//       },
+//       size: {
+//         default: "p-6",
+//         sm: "p-4",
+//         lg: "p-8",
+//       },
+//     },
+//     defaultVariants: {
+//       variant: "default",
+//       size: "default",
+//     },
+//   }
+// );
+
+const cardVariants = cva(
+  "rounded-lg transition-colors transition-shadow",
+  {
+    variants: {
+      variant: {
+        // Use a light background with dark text so headers are readable
+        default: "bg-white text-slate-800 border border-slate-200 shadow-sm hover:shadow-md",
+        elevated: "bg-white shadow-md",
+        outline: "bg-slate-50 border border-slate-200",
+        subtle: "bg-slate-50",
+      },
+      size: {
+        default: "p-6",
+        sm: "p-4",
+        lg: "p-8",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  asChild?: boolean;
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+    return (
+      <Comp
+        ref={ref}
+        className={cn(cardVariants({ variant, size }), className)}
+        {...props}
+      />
+    );
+  }
+);
+Card.displayName = "Card";
+
+export { Card, cardVariants };
 export default Card;

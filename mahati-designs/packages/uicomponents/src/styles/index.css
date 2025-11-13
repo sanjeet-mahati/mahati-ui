@@ -1,17 +1,12 @@
 
-/* Import common styles FIRST */
+/* @import '../app/installations/drupal/drupal.css'; */
 @import './common-styles.css';
 @import './common.css';
-@import './design-system.css';
 
-/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-/* Theme variables */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -20,10 +15,10 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --primary: 221.2 83.2% 53.3%; /* Blue for default buttons */
+    --primary-foreground: 210 40% 98%; /* White text for primary */
+    --secondary: 142.1 76.2% 36.3%; /* Green for secondary buttons */
+    --secondary-foreground: 210 40% 98%; /* White text for secondary */
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 0 0% 96.1%;
@@ -60,18 +55,10 @@
   }
 }
 
-/* Custom utilities using CSS variables */
-@layer utilities {
-  .bg-background {
-    background-color: hsl(var(--background));
-  }
-  .text-foreground {
-    color: hsl(var(--foreground));
-  }
-}
-
-/* Apply to body */
 @layer base {
+  * {
+    /* @apply border; */
+  }
   body {
     @apply bg-background text-foreground;
   }

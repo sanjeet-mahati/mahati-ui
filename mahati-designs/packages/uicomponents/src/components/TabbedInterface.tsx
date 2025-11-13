@@ -268,5 +268,5 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
     </TabContainer>
   );    
 };
-
-export default TabbedInterface;
+TabbedInterface.displayName = "TabbedInterface";
+export {TabbedInterface};

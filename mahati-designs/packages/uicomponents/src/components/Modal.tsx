@@ -1,123 +1,72 @@
-// src/components/MahatiModal.tsx
-'use client';
+"use client";
+
 import React from 'react';
-import styled, { css } from 'styled-components';
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
-  open: boolean;
+  isOpen: boolean;
   onClose: () => void;
   title?: string;
-  width?: string | number;
-  height?: string | number;
-  children?: React.ReactNode;
-  radius?: string | number;
-  showCloseButton?: boolean;
-  isFloating?: boolean;
+  children: React.ReactNode;
+  className?: string;
 }
 
-const Overlay = styled.div<{ open: boolean }>`
-  display: ${({ open }) => (open ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  z-index: 999;
-`;
-
-const ModalContainer = styled.div<{
-  width?: string | number;
-  height?: string | number;
-  radius?: string | number;
-}>`
-  background: #fff;
-  border-radius: ${({ radius }) =>
-    typeof radius === 'number' ? `${radius}px` : radius || '16px'};
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: ${({ width }) =>
-    typeof width === 'number' ? `${width}px` : width || '420px'};
-  height: ${({ height }) =>
-    typeof height === 'number' ? `${height}px` : height || 'auto'};
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 0.2s ease-in-out;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
-const Header = styled.div`
-  background: linear-gradient(to right, #1e73be, #28a97d);
-  color: #fff;
-  padding: 12px 20px;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Body = styled.div`
-`;
-
-const CloseButton = styled.button`
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  line-height: 1;
-`;
-
-const Modal: React.FC<ModalProps> = ({
-  open,
-  onClose,
-  title,
-  width,
-  height,
-  radius,
-  showCloseButton = true,
+const Modal: React.FC<ModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  title, 
   children,
-  isFloating = false,
+  className 
 }) => {
-  const modalContent = (
-    <ModalContainer width={width} height={height} radius={radius}>
-      {title && (
-        <Header>
-          <span>{title}</span>
-          {showCloseButton && <CloseButton onClick={onClose}>×</CloseButton>}
-        </Header>
-      )}
-      <Body>{children}</Body>
-    </ModalContainer>
-  );
-
-  if (isFloating) {
-    return open ? modalContent : null;
-  }
+  if (!isOpen) return null;
 
   return (
-    <Overlay open={open}>
-      <ModalContainer width={width} height={height} radius={radius}>
-        {title && (
-          <Header>
-            <span>{title}</span>
-            {showCloseButton && <CloseButton onClick={onClose}>×</CloseButton>}
-          </Header>
-        )}
-        <Body>{children}</Body>
-      </ModalContainer>
-    </Overlay>
+    <div className="fixed inset-0 z-50">
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" 
+        onClick={onClose}
+      />
+      
+      {/* Modal Content */}
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <div 
+            className={cn(
+              "relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6",
+              className
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-500"
+            >
+              <span className="sr-only">Close</span>
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Title */}
+            {title && (
+              <div className="mb-4">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  {title}
+                </h3>
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="mt-2 text-black">
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-
-export default Modal;
+Modal.displayName = "Modal";
+export {Modal};
