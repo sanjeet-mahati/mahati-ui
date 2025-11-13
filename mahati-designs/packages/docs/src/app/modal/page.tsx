@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {MCard,MModal} from "@/components";
+import {MCard,MahatiModal} from "@/components";
 
 export default function CardPage() {
   const [isBasicModalOpen, setIsBasicModalOpen] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isForMahatiModalOpen, setIsForMahatiModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
@@ -61,7 +61,7 @@ export default function CardPage() {
           <MCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsFormModalOpen(true)}
+              onClick={() => setIsForMahatiModalOpen(true)}
             >
               Open Form Modal
             </button>
@@ -154,11 +154,11 @@ export default function CardPage() {
         </section>
 
         {/* Modals */}
-        <MModal isOpen={isBasicModalOpen} onClose={() => setIsBasicModalOpen(false)} title="Basic Modal">
+        <MahatiModal isOpen={isBasicModalOpen} onClose={() => setIsBasicModalOpen(false)} title="Basic Modal">
           <p>This is a basic modal with simple content.</p>
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isConfirmationModalOpen} onClose={() => setIsConfirmationModalOpen(false)} title="Confirmation Modal">
+        <MahatiModal isOpen={isConfirmationModalOpen} onClose={() => setIsConfirmationModalOpen(false)} title="Confirmation Modal">
           <p>Are you sure you want to proceed?</p>
           <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" onClick={() => alert('Confirmed!')}>
             Yes
@@ -166,40 +166,40 @@ export default function CardPage() {
           <button className="mt-4 ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" onClick={() => setIsConfirmationModalOpen(false)}>
             No
           </button>
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isFormModalOpen} onClose={() => setIsFormModalOpen(false)} title="Form Modal">
+        <MahatiModal isOpen={isForMahatiModalOpen} onClose={() => setIsForMahatiModalOpen(false)} title="Form Modal">
           <form>
             <label className="block mb-2">Name:</label>
             <input type="text" className="border rounded p-2 w-full mb-4" />
             <label className="block mb-2">Email:</label>
             <input type="email" className="border rounded p-2 w-full mb-4" />
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => setIsFormModalOpen(false)}>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => setIsForMahatiModalOpen(false)}>
               Submit
             </button>
           </form>
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} title="Image Modal">
+        <MahatiModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} title="Image Modal">
           <Image src="/logo.png" alt="Company Logo" width={300} height={300} className="object-contain" />
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isNotificationModalOpen} onClose={() => setIsNotificationModalOpen(false)} title="Notification Modal">
+        <MahatiModal isOpen={isNotificationModalOpen} onClose={() => setIsNotificationModalOpen(false)} title="Notification Modal">
           <p>This is a notification message!</p>
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isLoadingModalOpen} onClose={() => setIsLoadingModalOpen(false)} title="Loading Modal">
+        <MahatiModal isOpen={isLoadingModalOpen} onClose={() => setIsLoadingModalOpen(false)} title="Loading Modal">
           <p>Loading, please wait...</p>
           <div className="loader"></div> {/* You can add a spinner here */}
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isFullScreenModalOpen} onClose={() => setIsFullScreenModalOpen(false)} title="Full-Screen Modal">
+        <MahatiModal isOpen={isFullScreenModalOpen} onClose={() => setIsFullScreenModalOpen(false)} title="Full-Screen Modal">
           <div className="h-screen flex items-center justify-center">
             <h1 className="text-4xl">This is a full-screen modal!</h1>
           </div>
-        </MModal>
+        </MahatiModal>
 
-        <MModal isOpen={isScrollableModalOpen} onClose={() => setIsScrollableModalOpen(false)} title="Scrollable Modal">
+        <MahatiModal isOpen={isScrollableModalOpen} onClose={() => setIsScrollableModalOpen(false)} title="Scrollable Modal">
           <div className="max-h-60 overflow-y-auto">
             <p>Content goes here...</p>
             {/* Add more content to make it scrollable */}
@@ -211,7 +211,7 @@ export default function CardPage() {
             <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui erat, auctor sed, placerat at, egestas sed, neque. Praesent in mauris eu fermentum.</p>
             <p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, orci. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis.</p>
           </div>
-        </MModal>
+        </MahatiModal>
       </main>
     </div>
   );

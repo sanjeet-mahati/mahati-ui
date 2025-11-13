@@ -989,7 +989,7 @@
 
 // interface FormData { firstName: string; lastName: string; email: string; password: string; phone: string; message: string; }
 
-// export default function FormInputDemoPage() {
+// export default function ForMahatiInputDemoPage() {
 //   const [basicForm, setBasicForm] = useState({ name: "", email: "", message: "" });
 //   const [validationForm, setValidationForm] = useState({ email: "", password: "", confirmPassword: "" });
 //   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});

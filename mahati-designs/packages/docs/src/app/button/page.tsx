@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MButton } from '@/components';
+import { MahatiButton } from '@/components';
 
 export default function ButtonPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,32 +36,32 @@ export default function ButtonPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="default">Default Button</MButton>
+            <MahatiButton variant="default">Default Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">Default</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="secondary">Secondary Button</MButton>
+            <MahatiButton variant="secondary">Secondary Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">Secondary</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="outline">Outline Button</MButton>
+            <MahatiButton variant="outline">Outline Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">Outline</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="destructive">Destructive Button</MButton>
+            <MahatiButton variant="destructive">Destructive Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">Destructive</span>
           </div>
         </div>
         
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
-{`<MButton variant="default">Default Button</MButton>
-<MButton variant="secondary">Secondary Button</MButton>
-<MButton variant="outline">Outline Button</MButton>
-<MButton variant="destructive">Destructive Button</MButton>`}
+{`<MahatiButton variant="default">Default Button</MahatiButton>
+<MahatiButton variant="secondary">Secondary Button</MahatiButton>
+<MahatiButton variant="outline">Outline Button</MahatiButton>
+<MahatiButton variant="destructive">Destructive Button</MahatiButton>`}
           </pre>
         </div>
       </section>
@@ -79,44 +79,44 @@ export default function ButtonPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="default">Default</MButton>
+            <MahatiButton variant="default">Default</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="default"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="destructive">Destructive</MButton>
+            <MahatiButton variant="destructive">Destructive</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="destructive"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="outline">Outline</MButton>
+            <MahatiButton variant="outline">Outline</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="outline"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="secondary">Secondary</MButton>
+            <MahatiButton variant="secondary">Secondary</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="secondary"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="ghost">Ghost</MButton>
+            <MahatiButton variant="ghost">Ghost</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="ghost"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="link">Link</MButton>
+            <MahatiButton variant="link">Link</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="link"</span>
           </div>
         </div>
         
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
-{`<MButton variant="default">Default</MButton>
-<MButton variant="destructive">Destructive</MButton>
-<MButton variant="outline">Outline</MButton>
-<MButton variant="secondary">Secondary</MButton>
-<MButton variant="ghost">Ghost</MButton>
-<MButton variant="link">Link</MButton>`}
+{`<MahatiButton variant="default">Default</MahatiButton>
+<MahatiButton variant="destructive">Destructive</MahatiButton>
+<MahatiButton variant="outline">Outline</MahatiButton>
+<MahatiButton variant="secondary">Secondary</MahatiButton>
+<MahatiButton variant="ghost">Ghost</MahatiButton>
+<MahatiButton variant="link">Link</MahatiButton>`}
           </pre>
         </div>
       </section>
@@ -134,37 +134,37 @@ export default function ButtonPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton size="sm">Small Button</MButton>
+            <MahatiButton size="sm">Small Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">size="sm"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton size="default">Default Button</MButton>
+            <MahatiButton size="default">Default Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">size="default"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton size="lg">Large Button</MButton>
+            <MahatiButton size="lg">Large Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">size="lg"</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton size="icon">
+            <MahatiButton size="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14"/>
                 <path d="m12 5 7 7-7 7"/>
               </svg>
-            </MButton>
+            </MahatiButton>
             <span className="text-sm text-gray-700 font-medium">size="icon"</span>
           </div>
         </div>
         
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
-{`<MButton size="sm">Small Button</MButton>
-<MButton size="default">Default Button</MButton>
-<MButton size="lg">Large Button</MButton>
-<MButton size="icon">Icon</MButton>`}
+{`<MahatiButton size="sm">Small Button</MahatiButton>
+<MahatiButton size="default">Default Button</MahatiButton>
+<MahatiButton size="lg">Large Button</MahatiButton>
+<MahatiButton size="icon">Icon</MahatiButton>`}
           </pre>
         </div>
       </section>
@@ -182,7 +182,7 @@ export default function ButtonPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton onClick={handleLoadingDemo} disabled={isLoading}>
+            <MahatiButton onClick={handleLoadingDemo} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -194,28 +194,28 @@ export default function ButtonPage() {
               ) : (
                 "Click to Load"
               )}
-            </MButton>
+            </MahatiButton>
             <span className="text-sm text-gray-700 font-medium">Loading State</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton disabled>Disabled Button</MButton>
+            <MahatiButton disabled>Disabled Button</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">disabled={true}</span>
           </div>
           
           <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-            <MButton variant="destructive">Danger Action</MButton>
+            <MahatiButton variant="destructive">Danger Action</MahatiButton>
             <span className="text-sm text-gray-700 font-medium">variant="destructive"</span>
           </div>
         </div>
         
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
-{`<MButton disabled={isLoading}>
+{`<MahatiButton disabled={isLoading}>
   {isLoading ? "Loading..." : "Click"}
-</MButton>
-<MButton disabled>Disabled Button</MButton>
-<MButton variant="destructive">Danger Action</MButton>`}
+</MahatiButton>
+<MahatiButton disabled>Disabled Button</MahatiButton>
+<MahatiButton variant="destructive">Danger Action</MahatiButton>`}
           </pre>
         </div>
       </section>
@@ -235,39 +235,39 @@ export default function ButtonPage() {
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-2">Small Variants</h4>
             <div className="flex gap-2 flex-wrap">
-              <MButton size="sm" variant="default">Default</MButton>
-              <MButton size="sm" variant="secondary">Secondary</MButton>
-              <MButton size="sm" variant="outline">Outline</MButton>
-              <MButton size="sm" variant="ghost">Ghost</MButton>
+              <MahatiButton size="sm" variant="default">Default</MahatiButton>
+              <MahatiButton size="sm" variant="secondary">Secondary</MahatiButton>
+              <MahatiButton size="sm" variant="outline">Outline</MahatiButton>
+              <MahatiButton size="sm" variant="ghost">Ghost</MahatiButton>
             </div>
           </div>
           
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-2">Default Size Variants</h4>
             <div className="flex gap-2 flex-wrap">
-              <MButton variant="default">Default</MButton>
-              <MButton variant="secondary">Secondary</MButton>
-              <MButton variant="outline">Outline</MButton>
-              <MButton variant="ghost">Ghost</MButton>
+              <MahatiButton variant="default">Default</MahatiButton>
+              <MahatiButton variant="secondary">Secondary</MahatiButton>
+              <MahatiButton variant="outline">Outline</MahatiButton>
+              <MahatiButton variant="ghost">Ghost</MahatiButton>
             </div>
           </div>
           
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-2">Large Variants</h4>
             <div className="flex gap-2 flex-wrap">
-              <MButton size="lg" variant="default">Default</MButton>
-              <MButton size="lg" variant="secondary">Secondary</MButton>
-              <MButton size="lg" variant="outline">Outline</MButton>
-              <MButton size="lg" variant="ghost">Ghost</MButton>
+              <MahatiButton size="lg" variant="default">Default</MahatiButton>
+              <MahatiButton size="lg" variant="secondary">Secondary</MahatiButton>
+              <MahatiButton size="lg" variant="outline">Outline</MahatiButton>
+              <MahatiButton size="lg" variant="ghost">Ghost</MahatiButton>
             </div>
           </div>
         </div>
         
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
-{`<MButton size="sm" variant="default">Small Default</MButton>
-<MButton size="lg" variant="outline">Large Outline</MButton>
-<MButton variant="ghost">Default Size Ghost</MButton>`}
+{`<MahatiButton size="sm" variant="default">Small Default</MahatiButton>
+<MahatiButton size="lg" variant="outline">Large Outline</MahatiButton>
+<MahatiButton variant="ghost">Default Size Ghost</MahatiButton>`}
           </pre>
         </div>
       </section>
@@ -344,9 +344,9 @@ export default function ButtonPage() {
         <div className="mb-6">
           <h4 className="text-lg font-medium text-gray-800 mb-3">Form Actions</h4>
           <div className="flex gap-3 flex-wrap items-center">
-            <MButton type="submit" variant="default">Save Changes</MButton>
-            <MButton variant="outline" type="button">Cancel</MButton>
-            <MButton variant="destructive">Delete</MButton>
+            <MahatiButton type="submit" variant="default">Save Changes</MahatiButton>
+            <MahatiButton variant="outline" type="button">Cancel</MahatiButton>
+            <MahatiButton variant="destructive">Delete</MahatiButton>
           </div>
         </div>
 
@@ -354,8 +354,8 @@ export default function ButtonPage() {
         <div className="mb-6">
           <h4 className="text-lg font-medium text-gray-800 mb-3">Call-to-Action</h4>
           <div className="flex gap-3 flex-wrap items-center">
-            <MButton size="lg" variant="default">Get Started</MButton>
-            <MButton size="lg" variant="outline">Learn More</MButton>
+            <MahatiButton size="lg" variant="default">Get Started</MahatiButton>
+            <MahatiButton size="lg" variant="outline">Learn More</MahatiButton>
           </div>
         </div>
 
@@ -363,28 +363,28 @@ export default function ButtonPage() {
         <div className="mb-6">
           <h4 className="text-lg font-medium text-gray-800 mb-3">Action Group</h4>
           <div className="flex gap-2">
-            <MButton variant="outline" size="sm">Edit</MButton>
-            <MButton variant="outline" size="sm">Duplicate</MButton>
-            <MButton variant="outline" size="sm">Archive</MButton>
-            <MButton variant="destructive" size="sm">Delete</MButton>
+            <MahatiButton variant="outline" size="sm">Edit</MahatiButton>
+            <MahatiButton variant="outline" size="sm">Duplicate</MahatiButton>
+            <MahatiButton variant="outline" size="sm">Archive</MahatiButton>
+            <MahatiButton variant="destructive" size="sm">Delete</MahatiButton>
           </div>
         </div>
 
         <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
           <pre className="text-sm font-mono">
 {`// Form Actions
-<MButton type="submit">Save Changes</MButton>
-<MButton variant="outline">Cancel</MButton>
-<MButton variant="destructive">Delete</MButton>
+<MahatiButton type="submit">Save Changes</MahatiButton>
+<MahatiButton variant="outline">Cancel</MahatiButton>
+<MahatiButton variant="destructive">Delete</MahatiButton>
 
 // Call-to-Action
-<MButton size="lg">Get Started</MButton>
-<MButton size="lg" variant="outline">Learn More</MButton>
+<MahatiButton size="lg">Get Started</MahatiButton>
+<MahatiButton size="lg" variant="outline">Learn More</MahatiButton>
 
 // Action Group
-<MButton variant="outline" size="sm">Edit</MButton>
-<MButton variant="outline" size="sm">Duplicate</MButton>
-<MButton variant="destructive" size="sm">Delete</MButton>`}
+<MahatiButton variant="outline" size="sm">Edit</MahatiButton>
+<MahatiButton variant="outline" size="sm">Duplicate</MahatiButton>
+<MahatiButton variant="destructive" size="sm">Delete</MahatiButton>`}
           </pre>
         </div>
       </section>

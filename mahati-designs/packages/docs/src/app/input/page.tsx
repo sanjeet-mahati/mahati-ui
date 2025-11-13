@@ -2,7 +2,7 @@
 
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import {MFormContainer,MInput} from '@/components';
+import {MahatiFormContainer,MahatiInput} from '@/components';
 
 
 import {
@@ -158,7 +158,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({
   return (
     <FloatingStyles>
       <div className={`input-float size-${size}`}>
-        <MInput
+        <MahatiInput
           className={`input${hasError ? " error" : ""}`}
           type={type}
           name={name}
@@ -281,7 +281,7 @@ const FloatingIconInput: React.FC<FloatingIconInputProps> = ({
         <span className="icon-left" aria-hidden>
           <span style={{ width: 18, height: 18, display: "inline-flex" }}>{icon}</span>
         </span>
-        <MInput
+        <MahatiInput
           className={`input${hasError ? " error" : ""}`}
           type={type}
           name={name}
@@ -363,7 +363,7 @@ const PasswordToggleInput: React.FC<PasswordToggleInputProps> = ({
         <span className="icon-left" aria-hidden>
           <HiLockClosed style={{ width: 18, height: 18 }} />
         </span>
-        <MInput
+        <MahatiInput
           className={`input${hasError ? " error" : ""}`}
           type={show ? "text" : "password"}
           name={name}
@@ -460,7 +460,7 @@ const AvatarInput: React.FC<AvatarInputProps> = ({
             )}
           </div>
           <div className="input-float">
-            <MInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
+            <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
         </div>
@@ -502,7 +502,7 @@ const AvatarPlaceholderInput: React.FC<AvatarPlaceholderInputProps> = ({
             </div>
           )}
           <div className="input-float">
-            <MInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
+            <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
         </div>
@@ -531,7 +531,7 @@ const AvatarRingInput: React.FC<AvatarRingInputProps> = ({
             {avatarText}
           </div>
           <div className="input-float">
-            <MInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
+            <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
         </div>
@@ -563,7 +563,7 @@ const AvatarRingGapInput: React.FC<AvatarRingGapInputProps> = ({
             <div className="avatar-inner">{avatarText}</div>
           </div>
           <div className="input-float">
-            <MInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
+            <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
         </div>
@@ -596,7 +596,7 @@ const AvatarImageInput: React.FC<AvatarImageInputProps> = ({
             {avatarUrl ? <img src={avatarUrl} alt="" /> : <div style={{ width: '100%', height: '100%', background: '#d1d5db' }} />}
           </div>
           <div className="input-float">
-            <MInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
+            <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
         </div>
@@ -634,7 +634,7 @@ type RoundedBasicInputProps = { radiusClass: RadiusClass; placeholder?: string; 
 
 const RoundedBasicInput: React.FC<RoundedBasicInputProps> = ({ radiusClass, placeholder, value, onChange }) => (
   <RadiusUtilStyles>
-    <MInput className={`input-base ${radiusClass}`} type="text" placeholder={placeholder} value={value} onChange={onChange} />
+    <MahatiInput className={`input-base ${radiusClass}`} type="text" placeholder={placeholder} value={value} onChange={onChange} />
   </RadiusUtilStyles>
 );
 
@@ -669,7 +669,7 @@ const AvatarImageRoundedInput: React.FC<AvatarImageRoundedInputProps> = ({
     <div className="column">
       <div className={`row ${avatarSide === "right" ? "reverse" : ""}`}>
         <div className="avatar-img" aria-hidden><img src={avatarUrl} alt="" /></div>
-        <MInput className={`input-base ${radiusClass}`} type="text" placeholder={placeholder} value={value} onChange={onChange} />
+        <MahatiInput className={`input-base ${radiusClass}`} type="text" placeholder={placeholder} value={value} onChange={onChange} />
       </div>
     </div>
   </AvatarImageRoundedStyles>
@@ -774,7 +774,7 @@ const InlineFileInput: React.FC<InlineFileInputProps> = ({
         </button>
         <div className="file-text" onClick={openDialog} title={text}>{text}</div>
       </InlineFileWrap>
-      <MInput ref={inputRef} type="file" style={{ display: 'none' }} multiple={multiple} onChange={handleChange} />
+      <MahatiInput ref={inputRef} type="file" style={{ display: 'none' }} multiple={multiple} onChange={handleChange} />
     </>
   );
 };
@@ -870,7 +870,7 @@ const DragDropFileInput: React.FC<DragDropFileInputProps> = ({
         <div className="hint">{sub}</div>
       </DragDropZone>
 
-      <MInput
+      <MahatiInput
         ref={hiddenInputRef}
         type="file"
         style={{ display: 'none' }}
@@ -929,7 +929,7 @@ const ImageHeader: React.FC<ImageHeaderProps> = ({
   </ImageHeaderWrap>
 );
 
-const BGFormContainer = styled(MFormContainer)<{ $bg: string; $opacity: number }>`
+const BGFormContainer = styled(MahatiFormContainer)<{ $bg: string; $opacity: number }>`
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -989,7 +989,7 @@ const CompactFormArea = styled.div`
 
 interface FormData { firstName: string; lastName: string; email: string; password: string; phone: string; message: string; }
 
-export default function FormInputDemoPage() {
+export default function ForMahatiInputDemoPage() {
   const [basicForm, setBasicForm] = useState({ name: "", email: "", message: "" });
   const [validationForm, setValidationForm] = useState({ email: "", password: "", confirmPassword: "" });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -1219,7 +1219,7 @@ export default function FormInputDemoPage() {
                 <div className="hint">You can choose one or multiple files</div>
               </FileBox>
 
-              <MInput ref={fileInputRef} type="file" multiple style={{ display: 'none' }} onChange={onFilesChange} />
+              <MahatiInput ref={fileInputRef} type="file" multiple style={{ display: 'none' }} onChange={onFilesChange} />
 
               {files.length > 0 && (
                 <>
@@ -1355,7 +1355,7 @@ export default function FormInputDemoPage() {
         <SectionTitle>Form with Image Header</SectionTitle>
         <SectionDescription>Same FormContainer pattern—image sits at the very top; control size, alignment, and gap.</SectionDescription>
 
-        <MFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
+        <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
           <CompactFormArea>
             <ImageHeader
               src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&q=80"
@@ -1373,13 +1373,13 @@ export default function FormInputDemoPage() {
               <SubmitButton type="submit">Submit Button</SubmitButton>
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="basic-form">
         <SectionTitle>Basic Form Container</SectionTitle>
         <SectionDescription>A simple form using the FormContainer with basic input fields.</SectionDescription>
-        <MFormContainer onSubmit={(e) => e.preventDefault()}>
+        <MahatiFormContainer onSubmit={(e) => e.preventDefault()}>
           <CompactFormArea>
             <FormDemo>
               <FloatingInput name="name" label="Your Name" value={basicForm.name} onChange={handleBasicFormChange} />
@@ -1388,13 +1388,13 @@ export default function FormInputDemoPage() {
               <SubmitButton type="submit">Submit Form</SubmitButton>
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="reset-password">
         <SectionTitle>Reset Password</SectionTitle>
         <SectionDescription>Enter your account email and choose a new password.</SectionDescription>
-        <MFormContainer onSubmit={handleResetSubmit} style={{ padding: 24 }}>
+        <MahatiFormContainer onSubmit={handleResetSubmit} style={{ padding: 24 }}>
           <CompactFormArea>
             <FormDemo>
               <FloatingInput type="email" name="resetEmail" label="Email address" value={resetEmail} onChange={(e) => { setResetEmail(e.target.value); if (resetErrors.email) setResetErrors(p => ({ ...p, email: "" })); }} hasError={!!resetErrors.email} errorMessage={resetErrors.email} autoComplete="email" />
@@ -1405,13 +1405,13 @@ export default function FormInputDemoPage() {
               {resetStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="form-with-validation">
         <SectionTitle>Form with Validation</SectionTitle>
         <SectionDescription>Real-time validation with error messages and form submission handling.</SectionDescription>
-        <MFormContainer onSubmit={handleValidationSubmit} style={{ padding: 24 }}>
+        <MahatiFormContainer onSubmit={handleValidationSubmit} style={{ padding: 24 }}>
           <CompactFormArea>
             {validationStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
             <FormDemo>
@@ -1424,13 +1424,13 @@ export default function FormInputDemoPage() {
               {validationStatus === "success" && <SuccessMessage>✅ Form submitted successfully!</SuccessMessage>}
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="form-with-icons">
         <SectionTitle>Form with Icons</SectionTitle>
         <SectionDescription>Same validation rules, with icons/visibility toggles.</SectionDescription>
-        <MFormContainer onSubmit={handleIconFormSubmit} style={{ padding: 24 }}>
+        <MahatiFormContainer onSubmit={handleIconFormSubmit} style={{ padding: 24 }}>
           <CompactFormArea>
             {/* keep error at top if needed */}
             {iconStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
@@ -1445,13 +1445,13 @@ export default function FormInputDemoPage() {
               {iconStatus === "success" && <SuccessMessage>✅ 🎊 Form submitted successfully with icons!</SuccessMessage>}
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="full-featured-form">
         <SectionTitle>Full Featured Form</SectionTitle>
         <SectionDescription>A complete registration form showcasing all input types and form functionality.</SectionDescription>
-        <MFormContainer onSubmit={handleFullFormSubmit} style={{ paddingTop: 56, paddingBottom: 78, paddingLeft: 24, paddingRight: 24 }}>
+        <MahatiFormContainer onSubmit={handleFullFormSubmit} style={{ paddingTop: 56, paddingBottom: 78, paddingLeft: 24, paddingRight: 24 }}>
           <CompactFormArea>
             <FormDemo>
               <FloatingInput name="firstName" label="First Name" value={fullForm.firstName} onChange={handleFullFormChange} autoComplete="given-name" />
@@ -1465,20 +1465,20 @@ export default function FormInputDemoPage() {
               {fullStatus === "success" && (<SuccessMessage>✅ Registration completed successfully! Welcome aboard.</SuccessMessage>)}
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="login-form">
         <SectionTitle>Login Form Example</SectionTitle>
         <SectionDescription>A typical login form implementation with remember me.</SectionDescription>
-        <MFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
+        <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
           <CompactFormArea>
             <FormDemo>
               <FloatingIconInput type="email" name="loginEmail" label="Email address" autoComplete="email" icon={<HiUserIcon />} />
               <PasswordToggleInput name="loginPassword" label="Password" autoComplete="current-password" />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, width: 260 }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.875rem' }}>
-                  <MInput type="checkbox" /> Remember me
+                  <MahatiInput type="checkbox" /> Remember me
                 </label>
                 <a href="#reset-password" onClick={(e) => { e.preventDefault(); document.getElementById('reset-password')?.scrollIntoView({ behavior: "smooth", block: "start" }); }} style={{ color: '#1e73be', textDecoration: 'none', fontSize: '.875rem' }}>
                   Forgot password?
@@ -1493,7 +1493,7 @@ export default function FormInputDemoPage() {
               </div>
             </FormDemo>
           </CompactFormArea>
-        </MFormContainer>
+        </MahatiFormContainer>
       </Section>
 
       <Section id="login-form-bg">
@@ -1531,7 +1531,7 @@ export default function FormInputDemoPage() {
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, width: 260 }}>
                         <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.875rem' }}>
-                          <MInput type="checkbox" /> Remember me
+                          <MahatiInput type="checkbox" /> Remember me
                         </label>
                         <a
                           href="#reset-password"

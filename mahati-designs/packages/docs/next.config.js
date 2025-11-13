@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@mahatisystems/mahati-ui"],
+  transpilePackages: ["@mahatisystems/mahati-ui-components"],
 }

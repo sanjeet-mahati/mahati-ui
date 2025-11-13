@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {MTable,MButton} from "@/components";
+import {MahatiTable,MahatiButton} from "@/components";
 
 
 /** ============================ Types & Data ============================ */
@@ -158,7 +158,7 @@ const SortableTable: React.FC<{
   const clickableHeaders = headers.map((h) => ({
     ...h,
     label: (
-      <MButton
+      <MahatiButton
         type="button"
         onClick={() => {
           if (!sortable) return;
@@ -171,11 +171,11 @@ const SortableTable: React.FC<{
       >
         <span>{h.label}</span>
         <span className="text-xs text-slate-500 group-hover:text-slate-700">{indicator((h as any).key)}</span>
-      </MButton>
+      </MahatiButton>
     ),
   }));
 
-  return <MTable headers={clickableHeaders} data={sorted} />;
+  return <MahatiTable headers={clickableHeaders} data={sorted} />;
 };
 
 /** ============================ Page ============================ */
@@ -196,8 +196,8 @@ export default function TabDemoTailwindCSS() {
   const { page, setPage, limit, setLimit, search, onSearch, onReset, total, slice } = useSearchPaginate(peopleAll, 10);
 
   /** -------- Custom cells & actions (editable, add row/col) -------- */
-  const LS_HEADERS = "mahati.customTable.headers.v2";
-  const LS_ROWS = "mahati.customTable.rows.v2";
+  const LS_HEADERS = "mahati.custoMahatiTable.headers.v2";
+  const LS_ROWS = "mahati.custoMahatiTable.rows.v2";
   const [scriptHeaders, setScriptHeaders] = useState<{ label: string; key: string }[]>([]);
   const [scriptRows, setScriptRows] = useState<Person[]>([]);
   const [initialized, setInitialized] = useState(false);
@@ -318,7 +318,7 @@ export default function TabDemoTailwindCSS() {
     setDraftRow(null);
   };
 
-  const customTableData = scriptRows.map((r) => {
+  const custoMahatiTableData = scriptRows.map((r) => {
     const isEditing = r.id === editingRowId;
     const cells: Record<string, any> = {};
     scriptHeaders.forEach(({ key, label }) => {
@@ -464,7 +464,7 @@ export default function TabDemoTailwindCSS() {
   const perColHeadersClickable = perColHeaders.map((h) => ({
     ...h,
     label: (
-      <MButton
+      <MahatiButton
         type="button"
         onClick={() => toggleColAlign(h.key)}
         className="inline-flex items-center gap-2 text-left"
@@ -474,7 +474,7 @@ export default function TabDemoTailwindCSS() {
         <span className="text-xs opacity-80">
           {colAlign[h.key] === "left" ? "↤" : colAlign[h.key] === "center" ? "↔" : "↦"}
         </span>
-      </MButton>
+      </MahatiButton>
     ),
   }));
 
@@ -577,7 +577,7 @@ export default function TabDemoTailwindCSS() {
     { label: "ID", key: "id" },
     ...scriptHeaders.map((h) => ({
       label: (
-        <MButton
+        <MahatiButton
           type="button"
           className="inline-flex items-center gap-2"
           title="Click to sort"
@@ -591,7 +591,7 @@ export default function TabDemoTailwindCSS() {
           <span className="text-xs text-slate-500">
             {aioSort?.key === h.key ? (aioSort.direction === "asc" ? "↑" : "↓") : "↕"}
           </span>
-        </MButton>
+        </MahatiButton>
       ),
       key: h.key,
     })),
@@ -616,7 +616,7 @@ export default function TabDemoTailwindCSS() {
           <SectionTitle>Basic Table</SectionTitle>
           <SectionDescription>A minimal example with static data and no pagination controls.</SectionDescription>
           <DemoGrid>
-            <MTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+            <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
           </DemoGrid>
         </Section>
         
@@ -630,7 +630,7 @@ export default function TabDemoTailwindCSS() {
               placeholder="Search…"
               className="w-64 rounded-md border border-slate-300 px-3 py-2 text-sm"
             />
-            <MButton onClick={onReset}>Reset</MButton>
+            <MahatiButton onClick={onReset}>Reset</MahatiButton>
             <div className="ml-auto flex items-center gap-2 text-sm text-slate-600">
               <span>Rows per page:</span>
               <select
@@ -652,7 +652,7 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MTable
+            <MahatiTable
               headers={basicHeaders}
               data={slice}
               page={page}
@@ -675,18 +675,18 @@ export default function TabDemoTailwindCSS() {
         <Section id="custom-cells">
           <SectionTitle>Custom Cells &amp; Actions</SectionTitle>
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MButton variant="primary" onClick={handleAddRow}>
+            <MahatiButton variant="primary" onClick={handleAddRow}>
               + Add Row
-            </MButton>
-            <MButton onClick={handleAddColumn}>+ Add Column</MButton>
-            <MButton variant="danger" onClick={resetDemo}>
+            </MahatiButton>
+            <MahatiButton onClick={handleAddColumn}>+ Add Column</MahatiButton>
+            <MahatiButton variant="danger" onClick={resetDemo}>
               Reset Demo
-            </MButton>
+            </MahatiButton>
           </div>
           <DemoGrid>
-            <MTable
+            <MahatiTable
               headers={scriptHeaders}
-              data={customTableData}
+              data={custoMahatiTableData}
               actions={(row) => {
                 const rId = Number((row as any).id);
                 const source = scriptRows.find((r) => r.id === rId);
@@ -695,21 +695,21 @@ export default function TabDemoTailwindCSS() {
                   <div className="flex items-center gap-2">
                     {!isEditing ? (
                       <>
-                        <MButton size="small" onClick={() => source && startEdit(source)}>
+                        <MahatiButton size="small" onClick={() => source && startEdit(source)}>
                           Edit
-                        </MButton>
-                        <MButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
+                        </MahatiButton>
+                        <MahatiButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
                           Delete
-                        </MButton>
+                        </MahatiButton>
                       </>
                     ) : (
                       <>
-                        <MButton size="small" variant="primary" onClick={saveEdit}>
+                        <MahatiButton size="small" variant="primary" onClick={saveEdit}>
                           Save
-                        </MButton>
-                        <MButton size="small" onClick={cancelEdit}>
+                        </MahatiButton>
+                        <MahatiButton size="small" onClick={cancelEdit}>
                           Cancel
-                        </MButton>
+                        </MahatiButton>
                       </>
                     )}
                   </div>
@@ -733,7 +733,7 @@ export default function TabDemoTailwindCSS() {
           <SectionDescription>Wrap the original Table to show visible cell edges.</SectionDescription>
           <DemoGrid>
             <div className="[&_table]:border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200 rounded-lg bg-white p-2">
-              <MTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
+              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
             </div>
           </DemoGrid>
         </Section>
@@ -746,20 +746,20 @@ export default function TabDemoTailwindCSS() {
           </SectionDescription>
 
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
+            <MahatiButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
               Left
-            </MButton>
-            <MButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
+            </MahatiButton>
+            <MahatiButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
               Center
-            </MButton>
-            <MButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
+            </MahatiButton>
+            <MahatiButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
               Right
-            </MButton>
+            </MahatiButton>
           </div>
 
           <DemoGrid>
             <div className={aioAlign === "left" ? "text-left" : aioAlign === "center" ? "text-center" : "text-right"}>
-              <MTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
             </div>
           </DemoGrid>
         </Section>
@@ -771,7 +771,7 @@ export default function TabDemoTailwindCSS() {
             Starts left-aligned. Click a column header to cycle that column’s <em>cell</em> alignment: Left → Center → Right → Left.
           </SectionDescription>
           <DemoGrid>
-            <MTable headers={perColHeadersClickable} data={perColData} />
+            <MahatiTable headers={perColHeadersClickable} data={perColData} />
           </DemoGrid>
         </Section>
 
@@ -784,7 +784,7 @@ export default function TabDemoTailwindCSS() {
 
           <div className="mb-3 flex items-center">
             <div className="relative" ref={pickerRef}>
-              <MButton
+              <MahatiButton
                 type="button"
                 onClick={() => setPickerOpen((o) => !o)}
                 aria-haspopup="menu"
@@ -792,7 +792,7 @@ export default function TabDemoTailwindCSS() {
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm hover:bg-slate-50"
               >
                 Columns ({visibleKeys.length}/{visibilityHeaders.length})
-              </MButton>
+              </MahatiButton>
 
               {pickerOpen && (
                 <div
@@ -817,16 +817,16 @@ export default function TabDemoTailwindCSS() {
                     ))}
                   </div>
                   <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2">
-                    <MButton size="small" onClick={selectAll}>
+                    <MahatiButton size="small" onClick={selectAll}>
                       Select All
-                    </MButton>
-                    <MButton size="small" onClick={clearAll}>
+                    </MahatiButton>
+                    <MahatiButton size="small" onClick={clearAll}>
                       Clear All
-                    </MButton>
+                    </MahatiButton>
                     <div className="ml-auto">
-                      <MButton size="small" variant="primary" onClick={() => setPickerOpen(false)}>
+                      <MahatiButton size="small" variant="primary" onClick={() => setPickerOpen(false)}>
                         Done
-                      </MButton>
+                      </MahatiButton>
                     </div>
                   </div>
                 </div>
@@ -835,7 +835,7 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MTable
+            <MahatiTable
               headers={filteredHeaders}
               data={useMemo(() => {
                 return visibilityData.map((row) => {
@@ -859,27 +859,27 @@ export default function TabDemoTailwindCSS() {
           </SectionDescription>
 
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
+            <MahatiButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
               Left
-            </MButton>
-            <MButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
+            </MahatiButton>
+            <MahatiButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
               Center
-            </MButton>
-            <MButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
+            </MahatiButton>
+            <MahatiButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
               Right
-            </MButton>
+            </MahatiButton>
 
             <span className="mx-2 h-6 w-px bg-slate-200" />
 
-            <MButton size="small" onClick={handleAddColumn}>
+            <MahatiButton size="small" onClick={handleAddColumn}>
               + Add Column
-            </MButton>
-            <MButton size="small" onClick={handleAddRow}>
+            </MahatiButton>
+            <MahatiButton size="small" onClick={handleAddRow}>
               + Add Row
-            </MButton>
-            <MButton size="small" variant="danger" onClick={resetDemo}>
+            </MahatiButton>
+            <MahatiButton size="small" variant="danger" onClick={resetDemo}>
               Reset
-            </MButton>
+            </MahatiButton>
           </div>
 
           <div
@@ -887,7 +887,7 @@ export default function TabDemoTailwindCSS() {
               aioAlign === "left" ? "text-left" : aioAlign === "center" ? "text-center" : "text-right"
             } [&_table]:border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200`}
           >
-            <MTable
+            <MahatiTable
               headers={aioHeaders}
               data={sortedAioRows.map((row) => {
                 const out: Record<string, any> = { id: row.id };
@@ -933,21 +933,21 @@ export default function TabDemoTailwindCSS() {
                   <div className="flex items-center gap-2">
                     {!isEditing ? (
                       <>
-                        <MButton size="small" onClick={() => source && startEdit(source)}>
+                        <MahatiButton size="small" onClick={() => source && startEdit(source)}>
                           Edit
-                        </MButton>
-                        <MButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
+                        </MahatiButton>
+                        <MahatiButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
                           Delete
-                        </MButton>
+                        </MahatiButton>
                       </>
                     ) : (
                       <>
-                        <MButton size="small" variant="primary" onClick={saveEdit}>
+                        <MahatiButton size="small" variant="primary" onClick={saveEdit}>
                           Save
-                        </MButton>
-                        <MButton size="small" onClick={cancelEdit}>
+                        </MahatiButton>
+                        <MahatiButton size="small" onClick={cancelEdit}>
                           Cancel
-                        </MButton>
+                        </MahatiButton>
                       </>
                     )}
                   </div>
