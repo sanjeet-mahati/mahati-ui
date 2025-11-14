@@ -56,14 +56,7 @@ export default function ButtonPage() {
           </div>
         </div>
         
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`<MahatiButton variant="default">Default Button</MahatiButton>
-<MahatiButton variant="secondary">Secondary Button</MahatiButton>
-<MahatiButton variant="outline">Outline Button</MahatiButton>
-<MahatiButton variant="destructive">Destructive Button</MahatiButton>`}
-          </pre>
-        </div>
+    
       </section>
 
       {/* Button Variants Section */}
@@ -109,16 +102,7 @@ export default function ButtonPage() {
           </div>
         </div>
         
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`<MahatiButton variant="default">Default</MahatiButton>
-<MahatiButton variant="destructive">Destructive</MahatiButton>
-<MahatiButton variant="outline">Outline</MahatiButton>
-<MahatiButton variant="secondary">Secondary</MahatiButton>
-<MahatiButton variant="ghost">Ghost</MahatiButton>
-<MahatiButton variant="link">Link</MahatiButton>`}
-          </pre>
-        </div>
+   
       </section>
 
       {/* Button Sizes Section */}
@@ -159,14 +143,7 @@ export default function ButtonPage() {
           </div>
         </div>
         
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`<MahatiButton size="sm">Small Button</MahatiButton>
-<MahatiButton size="default">Default Button</MahatiButton>
-<MahatiButton size="lg">Large Button</MahatiButton>
-<MahatiButton size="icon">Icon</MahatiButton>`}
-          </pre>
-        </div>
+    
       </section>
 
       {/* Button States Section */}
@@ -209,15 +186,7 @@ export default function ButtonPage() {
           </div>
         </div>
         
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`<MahatiButton disabled={isLoading}>
-  {isLoading ? "Loading..." : "Click"}
-</MahatiButton>
-<MahatiButton disabled>Disabled Button</MahatiButton>
-<MahatiButton variant="destructive">Danger Action</MahatiButton>`}
-          </pre>
-        </div>
+      
       </section>
 
       {/* Combining Variants Section */}
@@ -263,13 +232,7 @@ export default function ButtonPage() {
           </div>
         </div>
         
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`<MahatiButton size="sm" variant="default">Small Default</MahatiButton>
-<MahatiButton size="lg" variant="outline">Large Outline</MahatiButton>
-<MahatiButton variant="ghost">Default Size Ghost</MahatiButton>`}
-          </pre>
-        </div>
+     
       </section>
 
       {/* Props Section */}
@@ -370,23 +333,6 @@ export default function ButtonPage() {
           </div>
         </div>
 
-        <div className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto">
-          <pre className="text-sm font-mono">
-{`// Form Actions
-<MahatiButton type="submit">Save Changes</MahatiButton>
-<MahatiButton variant="outline">Cancel</MahatiButton>
-<MahatiButton variant="destructive">Delete</MahatiButton>
-
-// Call-to-Action
-<MahatiButton size="lg">Get Started</MahatiButton>
-<MahatiButton size="lg" variant="outline">Learn More</MahatiButton>
-
-// Action Group
-<MahatiButton variant="outline" size="sm">Edit</MahatiButton>
-<MahatiButton variant="outline" size="sm">Duplicate</MahatiButton>
-<MahatiButton variant="destructive" size="sm">Delete</MahatiButton>`}
-          </pre>
-        </div>
       </section>
     </div>
   );

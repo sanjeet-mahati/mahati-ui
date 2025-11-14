@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
 import Image from "next/image";
-import {MCard} from "@/components";
+import { MahatiCard } from "@/components";
 
 export default function CardPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -13,6 +12,7 @@ export default function CardPage() {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <main className="flex-1 p-12 max-w-4xl mx-auto">
+
         {/* Basic Card */}
         <section 
           id="basic-card"
@@ -20,22 +20,31 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Basic Card</h2>
-          <MCard className="max-w-sm">
-            <p className="text-slate-600">This is a basic card with simple content.</p>
-          </MCard>
+          <MahatiCard variant="default" size="default" className="max-w-sm">
+            <p className="text-slate-600">This is a basic card with simple cardContent.</p>
+          </MahatiCard>
         </section>
 
-        {/* Card with Title */}
+        {/* Card with Title and Arrow Toggle */}
         <section 
           id="card-with-title"
           data-section-id="card-with-title"
           className="mb-12 scroll-mt-20"
         >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Card with Title</h2>
-          <MCard className="max-w-sm">
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">Card Title</h3>
-            <p className="text-slate-600">Card content with a title header.</p>
-          </MCard>
+          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Card with Arrow Toggle</h2>
+          <MahatiCard 
+            variant="figma" 
+            size="figma"
+            backgroundColor="#8ea1b0ff"
+            title="Collapsible Card"
+            collapsible={true}
+            cardContent={
+              <p className="text-slate-600">
+                Click the arrow button to hide/show this cardContent. 
+                The button has a smooth animation and matches the card's color scheme.
+              </p>
+            }
+          />
         </section>
 
         {/* Card with Image */}
@@ -45,7 +54,7 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Card with Image</h2>
-          <MCard className="max-w-sm overflow-hidden">
+          <MahatiCard variant="elevated" className="max-w-sm overflow-hidden p-0">
             <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
               <Image 
                 src="/logo.png" 
@@ -55,11 +64,11 @@ export default function CardPage() {
                 className="object-contain"
               />
             </div>
-            <div className="p-4">
+            <div className="p-6">
               <h3 className="text-xl font-semibold text-slate-800 mb-2">Company Profile</h3>
               <p className="text-slate-600">Leading technology solutions provider.</p>
             </div>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Interactive Card */}
@@ -69,62 +78,47 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Interactive Card</h2>
-          <MCard 
+          <MahatiCard 
+            variant="default"
             className="max-w-sm cursor-pointer transform transition-transform duration-200 hover:-translate-y-1"
             onClick={() => alert('Card clicked!')}
           >
             <h3 className="text-xl font-semibold text-slate-800 mb-2">Click Me</h3>
             <p className="text-slate-600">This card is interactive. Click to trigger an action.</p>
-          </MCard>
+          </MahatiCard>
         </section>
 
-        {/* Collapsible Card */}
+        {/* Multiple Figma Cards */}
         <section 
-          id="collapsible-card"
-          data-section-id="collapsible-card"
+          id="figma-grid"
+          data-section-id="figma-grid"
           className="mb-12 scroll-mt-20"
         >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Collapsible Card</h2>
-          <MCard className="max-w-sm">
-            <button 
-              className="w-full flex justify-between items-center p-4"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-            >
-              <h3 className="text-xl font-semibold text-slate-800">Collapsible Content</h3>
-              <span className="transform transition-transform duration-200">
-                {isCollapsed ? '▼' : '▲'}
-              </span>
-            </button>
-            {!isCollapsed && (
-              <div className="p-4 border-t">
-                <p className="text-slate-600">This content can be hidden/shown.</p>
-              </div>
-            )}
-          </MCard>
+          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Figma Card Grid</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <MahatiCard 
+              variant="figma" 
+              size="figma"
+              title="Feature 1"
+              collapsible={true}
+              cardContent={<p className="text-slate-600">First feature description</p>}
+            />
+            <MahatiCard 
+              variant="figma" 
+              size="figma"
+              title="Feature 2"
+              collapsible={true}
+              cardContent={<p className="text-slate-600">Second feature description</p>}
+            />
+            <MahatiCard 
+              variant="figma" 
+              size="figma"
+              title="Feature 3"
+              collapsible={true}
+              cardContent={<p className="text-slate-600">Third feature description</p>}
+            />
+          </div>
         </section>
-
-        {/* Advanced Card */}
-        {/* <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Advanced Card</h2>
-          <MCard className="max-w-sm">
-            <div className="p-4 border-b">
-              <h3 className="text-xl font-semibold text-slate-800">Advanced Features</h3>
-            </div>
-            <div className="p-4">
-              <ul className="space-y-2">
-                <li className="flex items-center text-slate-600">
-                  <span className="mr-2">✓</span> Feature 1
-                </li>
-                <li className="flex items-center text-slate-600">
-                  <span className="mr-2">✓</span> Feature 2
-                </li>
-                <li className="flex items-center text-slate-600">
-                  <span className="mr-2">✓</span> Feature 3
-                </li>
-              </ul>
-            </div>
-          </MCard>
-        </section> */}
 
         {/* Product Card */}
         <section 
@@ -133,7 +127,7 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Product Card</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard variant="elevated" className="max-w-sm p-0 overflow-hidden">
             <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
               <Image 
                 src="/logo.png"
@@ -143,7 +137,7 @@ export default function CardPage() {
                 className="object-contain"
               />
             </div>
-            <div className="p-4">
+            <div className="p-6">
               <h3 className="text-xl font-semibold text-slate-800 mb-2">Enterprise Solution</h3>
               <p className="text-slate-600 mb-4">Advanced enterprise software solution.</p>
               <div className="flex justify-between items-center">
@@ -153,75 +147,10 @@ export default function CardPage() {
                 </button>
               </div>
             </div>
-          </MCard>
+          </MahatiCard>
         </section>
 
-        {/* User Profile Card */}
-        <section 
-          id="user-profile-card"
-          data-section-id="user-profile-card"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">User Profile</h2>
-          <MCard className="max-w-sm">
-            <div className="flex items-center p-4">
-              <div className="relative h-16 w-16 rounded-full overflow-hidden bg-white flex items-center justify-center p-2">
-                <Image 
-                  src="/logo.png"
-                  alt="Profile Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-xl font-semibold text-slate-800">Company Name</h3>
-                <p className="text-slate-600">Technology Solutions</p>
-                <p className="text-sm text-slate-500">contact@company.com</p>
-              </div>
-            </div>
-          </MCard>
-        </section>
-
-        {/* Special Offer Card */}
-        <section 
-          id="special-offer-card"
-          data-section-id="special-offer-card"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Special Offer</h2>
-          <MCard 
-            className={`max-w-sm transform transition-all duration-300 ${
-              isHovered ? 'scale-105 shadow-xl' : ''
-            }`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <div className="relative">
-              <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full">
-                Special
-              </div>
-              <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
-                <Image 
-                  src="/logo.png"
-                  alt="Special offer"
-                  width={120}
-                  height={120}
-                  className="object-contain"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-slate-800 mb-2">Enterprise Package</h3>
-                <p className="text-slate-600 mb-4">Limited time offer on enterprise solutions!</p>
-                <button className="w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                  Get Started
-                </button>
-              </div>
-            </div>
-          </MCard>
-        </section>
-
-        {/* Spinning Card */}
+        {/* Spinning Cards */}
         <section 
           id="spinning-cards"
           data-section-id="spinning-cards"
@@ -230,7 +159,7 @@ export default function CardPage() {
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Spinning Cards</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Continuous Spinning Card */}
-            <MCard className="max-w-sm perspective-1000">
+            <MahatiCard variant="subtle" className="max-w-sm perspective-1000 p-0 overflow-hidden">
               <div className="animate-spin-slow preserve-3d">
                 <div className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
                   <h3 className="text-xl font-semibold text-white mb-2">3D Spinning Card</h3>
@@ -242,44 +171,38 @@ export default function CardPage() {
                   </div>
                 </div>
               </div>
-            </MCard>
+            </MahatiCard>
 
             {/* Flip Card */}
-            <MCard 
-              className="max-w-sm cursor-pointer perspective-1000 h-[200px]"
-              onClick={() => setIsFlipped(!isFlipped)}
-            >
-              <div className={`relative w-full h-full transition-transform duration-500 preserve-3d 
-                ${isFlipped ? 'rotate-y-180' : ''}`}
-              >
-                {/* Front */}
-                <div className="absolute w-full h-full backface-hidden">
-                  <div className="p-6 h-full bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg">
-                    <h3 className="text-xl font-semibold text-white mb-2">Front Side</h3>
-                    <p className="text-white/90">Click me to flip! 🔄</p>
-                    <div className="absolute bottom-4 right-4">
-                      <span className="text-white/70 text-3xl">↻</span>
-                    </div>
+            <MahatiCard
+              className="max-w-sm cursor-pointer h-[200px]"
+              flippable={true}
+              cardContent={
+                <div className="flex flex-col justify-between h-full">
+                  <div>
+                    <h3 className="text-xl font-semibold text-slate-800 mb-2">
+                      Front Side
+                    </h3>
+                    <p className="text-slate-600">Click me to flip! 🔄</p>
+                  </div>
+                  <div className="self-end">
+                    <span className="text-slate-400 text-3xl">↻</span>
                   </div>
                 </div>
-                {/* Back */}
-                <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                  <div className="p-6 h-full bg-gradient-to-br from-amber-500 to-red-500 rounded-lg">
-                    <h3 className="text-xl font-semibold text-white mb-2">Back Side</h3>
-                    <p className="text-white/90">Click again to flip back! 🔄</p>
-                    <div className="absolute bottom-4 right-4">
-                      <span className="text-white/70 text-3xl">↺</span>
-                    </div>
+               }
+              cardBackContent={
+                <div className="p-6 h-full flex flex-col justify-between bg-slate-100">
+                  <div>
+                    <h3 className="text-xl font-semibold text-slate-800 mb-2">
+                      Back Side
+                    </h3>
+                    <p className="text-slate-600">
+                      Here is the back content!
+                    </p>
                   </div>
                 </div>
-              </div>
-            </MCard>
-          </div>
-          <div className="mt-4 p-4 bg-slate-100 rounded-lg">
-            <p className="text-slate-600 text-sm">
-              <span className="font-semibold">💡 Note:</span> The left card continuously spins in 3D space, 
-              while the right card flips 180° when clicked.
-            </p>
+               }
+            />
           </div>
         </section>
       </main>

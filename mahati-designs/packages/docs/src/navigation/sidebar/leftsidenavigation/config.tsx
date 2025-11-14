@@ -198,13 +198,24 @@ export const NavItems = (): NavItem[]  => {
         },
       ],
     },
-    {
-      name: 'Dropdown',
-      href: '/dropdown',
-      icon: <FontAwesomeIcon icon={faSquareCaretDown} size="lg"/>,
-      active: pathname === '/navigationcomponent/',
-      position: 'top',
-    },
+  {
+  name: 'Dropdown',
+  href: '/dropdown',
+  icon: <FontAwesomeIcon icon={faSquareCaretDown} size="lg" />,
+  active: pathname === '/dropdown',
+  position: 'top',
+  subItems: [
+    { name: 'Basic', href: '/dropdown#basic', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Outline', href: '/dropdown#outline', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Pill', href: '/dropdown#pill', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Dark', href: '/dropdown#dark', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Underline', href: '/dropdown#underline', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Shadow', href: '/dropdown#shadow', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Glass', href: '/dropdown#glass', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Gradient', href: '/dropdown#gradient', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  ],
+},
+
      {
       name: 'Tooltip',
       href: '/tooltip',
