@@ -1,6 +1,6 @@
 {
-  "name": "@mahatisystems/mahati-ui-components-components",
-  "version": "0.1.0",
+  "name": "@mahatisystems/mahati-ui-components",
+  "version": "0.1.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
