@@ -337,7 +337,7 @@ export const NavItems = (): NavItem[]  => {
 
     {
       name: 'Table with talwindcss',
-      href: '/tableTailwindCSSDemo',
+      href: '/table',
       icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
       active: pathname === '/tableTailwindCSSDemo',
       position: 'top',

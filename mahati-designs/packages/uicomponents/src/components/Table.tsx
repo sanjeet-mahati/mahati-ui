@@ -1,223 +1,8 @@
+
 "use client";
+
 import React, { useState } from "react";
-import styled from "styled-components";
 import { ArrowDownOnSquareIcon, ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
-const HEADER_BG = "linear-gradient(to right, #1e73be, #28a97d)";
-
-const TableContainer = styled.div`
-  margin-top: 6px;
-  border-radius: 10px;
-  border: 1px solid #1761A3;
-  background: #FFF;
-  overflow: hidden;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const StyledThead = styled.thead`
-  background: ${HEADER_BG};
-`;
-
-const TableHeader = styled.th`
-  background: transparent;
-  color: #fff;
-  font-family: Poppins;
-  font-size: 14px;
-  font-weight: 700;
-  text-align: left;
-  height: 50px;
-  padding: 10px;
-
-  &:first-child {
-    border-top-left-radius: 10px;
-  }
-  &:last-child {
-    border-top-right-radius: 10px;
-  }
-`;
-
-const TableRow = styled.tr`
-  width: 706px;
-  height: 57px;
-  flex-shrink: 0;
-  &:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  &:hover {
-    background-color: #f1f1f1;
-  }
-`;
-
-const TableData = styled.td`
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  color: #000;
-  font-family: Poppins;
-  font-size: 14px;
-  font-weight: 500;
-`;
-
-const EmptyState = styled.td`
-  text-align: center;
-  padding: 20px;
-  color: #999;
-`;
-
-const PaginationWrapper = styled.div<{ align: "left" | "center" | "right" }>`
-  margin: 10px 0;
-  display: flex;
-  justify-content: ${({ align }) =>
-    align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center"};
-  width: 100%;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-`;
-
-const PageSizeSelect = styled.select`
-  margin-left: 10px;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #aaa;
-`;
-const NoDataContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem; /* Adds space between the text and the button */
-  padding: 40px;
-  color: #666;
-  border: 1px dashed #ddd;
-  border-radius: 8px;
-  margin: 20px 0;
-`;
-
-const PageInfoInline = styled.span`
-  margin-left: 10px;
-  font-size: 13px;
-`;
-
-const SearchInput = styled.input`
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(to right, #1e73be, #28a97d) border-box;
-  color: #1761A3;
-  font-size: 14px;
-  font-family: Poppins;
-  width: 220px;
-  transition: all 0.2s ease;
-
-  &::placeholder {
-    color: #999;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 6px rgba(40, 169, 125, 0.4);
-  }
-`;
-
-const SearchSelect = styled.select`
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(to right, #1e73be, #28a97d) border-box;
-  font-size: 14px;
-  font-family: Poppins;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 6px rgba(40, 169, 125, 0.4);
-  }
-`;
-
-const SearchInputWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const ClearButton = styled.button`
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  border-radius: 50%;
-  transition: color 0.2s, background-color 0.2s;
-
-  &:hover {
-    color: #333;
-    background-color: #f1f1f1;
-  }
-`;
-
-const PageButton = styled.button`
-  background: linear-gradient(to right, #1e73be, #28a97d);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  font-family: Poppins;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-`;
-
-const TopControls = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const SearchGroup = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 6px;
-  gap: 6px;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  padding-top: 6px;
-  margin-top: 6px;
-  gap: 8px;
-`;
 
 interface TableProps {
   headers: { label: string; key: string }[];
@@ -240,7 +25,7 @@ interface TableProps {
   onDownloadPDF?: (data: any[], headers: any[]) => void;
   onDownloadExcel?: (data: any[], headers: any[]) => void;
   searchable?: boolean;
-  searchTerm?: string; // <-- CHANGE 1: Added prop to receive search term from parent
+  searchTerm?: string;
   onSearch?: (term: string, mode: "startsWith" | "includes") => void;
   searchModeOptions?: ("startsWith" | "includes")[];
   onResetSearch?: () => void;
@@ -261,24 +46,23 @@ const Table: React.FC<TableProps> = ({
   onDownloadPDF,
   onDownloadExcel,
   searchable = false,
-  searchTerm = "", // <-- CHANGE 2: Destructure prop and remove internal state
+  searchTerm = "",
   onResetSearch,
   onSearch,
   searchModeOptions = ["includes", "startsWith"],
 }) => {
-  const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(
-    searchModeOptions[0]
-  );
+  const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(searchModeOptions[0]);
+
   const isPaginated = paginationRequired;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Let the parent component handle the state update
     onSearch?.(e.target.value, searchMode);
   };
 
   const totalPages = isPaginated
     ? Math.max(1, Math.ceil((totalCount || 0) / (limit || 1)))
     : 0;
+
   const currentPage = isPaginated
     ? typeof page === "number" && page > 0
       ? page
@@ -291,20 +75,29 @@ const Table: React.FC<TableProps> = ({
     setPage?.(clamped);
   };
 
-const renderPageNumbers = () => {
+  const renderPageNumbers = () => {
     if (!isPaginated || totalPages <= 1) return null;
 
     const pages: React.ReactNode[] = [];
     const siblings = 1;
 
     pages.push(
-      <PageButton key={1} onClick={() => goToPage(1)} disabled={currentPage === 1}>
+      <button
+        key={1}
+        onClick={() => goToPage(1)}
+        disabled={currentPage === 1}
+        className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+      >
         1
-      </PageButton>
+      </button>
     );
 
     if (currentPage > siblings + 2) {
-      pages.push(<span key="start-ellipsis">...</span>);
+      pages.push(
+        <span key="start-ellipsis" className="px-1 text-sm text-slate-500">
+          ...
+        </span>
+      );
     }
 
     const start = Math.max(2, currentPage - siblings);
@@ -312,25 +105,35 @@ const renderPageNumbers = () => {
 
     for (let i = start; i <= end; i++) {
       pages.push(
-        <PageButton key={i} onClick={() => goToPage(i)} disabled={currentPage === i}>
+        <button
+          key={i}
+          onClick={() => goToPage(i)}
+          disabled={currentPage === i}
+          className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+        >
           {i}
-        </PageButton>
+        </button>
       );
     }
 
     if (currentPage < totalPages - siblings - 1) {
-      pages.push(<span key="end-ellipsis">...</span>);
+      pages.push(
+        <span key="end-ellipsis" className="px-1 text-sm text-slate-500">
+          ...
+        </span>
+      );
     }
 
     if (totalPages > 1) {
       pages.push(
-        <PageButton
+        <button
           key={totalPages}
           onClick={() => goToPage(totalPages)}
           disabled={currentPage === totalPages}
+          className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {totalPages}
-        </PageButton>
+        </button>
       );
     }
 
@@ -340,124 +143,157 @@ const renderPageNumbers = () => {
   const renderPagination = () => {
     if (!isPaginated) return null;
 
-    const align = paginationPosition.includes("left")
-      ? "left"
-      : paginationPosition.includes("right")
-      ? "right"
-      : "center";
+    const align =
+      paginationPosition.includes("left")
+        ? "justify-start"
+        : paginationPosition.includes("right")
+        ? "justify-end"
+        : "justify-center";
 
     return (
-      <PaginationWrapper align={align}>
-        <ButtonContainer>
-          <PageButton onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+      <div className={`my-2 flex w-full ${align}`}>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
             Previous
-          </PageButton>
+          </button>
 
           {renderPageNumbers()}
 
-          <PageButton
+          <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
+            className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
-          </PageButton>
+          </button>
 
-          <PageSizeSelect
+          <select
             value={limit}
             onChange={(e) => {
               setPage?.(1);
               setLimit?.(Number(e.target.value));
             }}
+            className="ml-2 rounded-md border border-slate-300 px-2 py-1 text-sm text-slate-700"
           >
             {[5, 10, 15].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>
             ))}
-          </PageSizeSelect>
+          </select>
 
-          <PageInfoInline>
+          <span className="ml-2 text-xs text-slate-600">
             Page {currentPage} of {totalPages} (Total: {totalCount} items)
-          </PageInfoInline>
-        </ButtonContainer>
-      </PaginationWrapper>
+          </span>
+        </div>
+      </div>
     );
   };
 
-   return (
+  return (
     <>
       {(searchable || onDownloadExcel || onDownloadPDF) && (
-        <TopControls>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           {searchable && (
-            <SearchGroup>
-              <SearchInputWrapper>
-                <SearchInput
+            <div className="flex items-center gap-2">
+              <div className="relative flex items-center">
+                <input
                   type="text"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={handleChange}
-                  style={{ paddingRight: '32px' }}
+                  className="w-56 rounded-lg border border-transparent bg-white px-3 py-2 pr-8 text-sm font-medium text-[#1761A3] shadow-sm outline-none ring-1 ring-transparent transition focus:border-transparent focus:ring-2 focus:ring-emerald-400"
                 />
                 {searchTerm && (
-                  <ClearButton onClick={onResetSearch} aria-label="Clear search">
-                    <XMarkIcon style={{ width: 16, height: 16 }} />
-                  </ClearButton>
+                  <button
+                    onClick={onResetSearch}
+                    aria-label="Clear search"
+                    className="absolute right-2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                  </button>
                 )}
-              </SearchInputWrapper>
-              <SearchSelect
+              </div>
+              <select
                 value={searchMode}
                 onChange={(e) => setSearchMode(e.target.value as any)}
+                className="rounded-lg border border-transparent bg-white px-2 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none ring-1 ring-transparent transition hover:bg-slate-50 focus:border-transparent focus:ring-2 focus:ring-emerald-400"
               >
                 {searchModeOptions.map((mode) => (
                   <option key={mode} value={mode}>
                     {mode === "startsWith" ? "Starts With" : "Includes"}
                   </option>
                 ))}
-              </SearchSelect>
-            </SearchGroup>
+              </select>
+            </div>
           )}
 
           {(onDownloadPDF || onDownloadExcel) && (
-            <ButtonGroup>
+            <div className="mt-1 flex items-center gap-2">
               {onDownloadPDF && (
-                <PageButton onClick={() => onDownloadPDF(data, headers)}>
-                  <ArrowDownOnSquareIcon />
-                </PageButton>
+                <button
+                  onClick={() => onDownloadPDF(data, headers)}
+                  className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                >
+                  <ArrowDownOnSquareIcon className="h-5 w-5" />
+                </button>
               )}
               {onDownloadExcel && (
-                <PageButton onClick={() => onDownloadExcel(data, headers)}>
-                  <ArrowDownOnSquareIcon />
-                  Excel
-                </PageButton>
+                <button
+                  onClick={() => onDownloadExcel(data, headers)}
+                  className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                >
+                  <ArrowDownOnSquareIcon className="h-5 w-5" />
+                  <span>Excel</span>
+                </button>
               )}
-            </ButtonGroup>
+            </div>
           )}
-        </TopControls>
+        </div>
       )}
 
       {paginationPosition.startsWith("top") && data.length > 0 && renderPagination()}
 
-      <TableContainer>
-        <StyledTable>
-          <StyledThead>
+      <div className="mt-1 overflow-hidden rounded-xl border border-[#1761A3] bg-white">
+        <table className="w-full border-collapse">
+          <thead className="bg-gradient-to-r from-[#1e73be] to-[#28a97d]">
             <tr>
               {headers.map((header, idx) => (
-                <TableHeader key={idx}>{header.label}</TableHeader>
+                <th
+                  key={idx}
+                  className={`h-[50px] px-3 py-2 text-left text-sm font-bold text-white first:rounded-tl-xl last:rounded-tr-xl`}
+                >
+                  {header.label}
+                </th>
               ))}
-              {actions && <TableHeader>Actions</TableHeader>}
+              {actions && (
+                <th className="h-[50px] px-3 py-2 text-left text-sm font-bold text-white">
+                  Actions
+                </th>
+              )}
             </tr>
-          </StyledThead>
+          </thead>
 
           <tbody>
             {data.length > 0 ? (
               data.map((row, rowIndex) => (
-                <TableRow key={rowIndex} className={highlightRowColor}>
+                <tr
+                  key={rowIndex}
+                  className={`h-[57px] border-b border-slate-200 text-sm text-slate-900 even:bg-slate-50 hover:bg-slate-100 ${
+                    highlightRowColor || ""
+                  }`}
+                >
                   {headers.map((header, cellIdx) => (
-                    <TableData key={cellIdx}>
+                    <td key={cellIdx} className="px-3 py-2">
                       {(() => {
                         const value = row[header.key];
 
                         if (React.isValidElement(value)) return value;
+
                         if (typeof value === "function") {
                           try {
                             const result = value();
@@ -466,50 +302,71 @@ const renderPageNumbers = () => {
                             console.warn("Error executing function in table cell:", e);
                           }
                         }
+
                         if (
                           typeof value === "string" &&
                           value.trim().startsWith("<") &&
                           value.trim().endsWith(">")
                         ) {
-                          return <span dangerouslySetInnerHTML={{ __html: value }} />;
+                          return (
+                            <span
+                              dangerouslySetInnerHTML={{ __html: value }}
+                            />
+                          );
                         }
+
                         if (Array.isArray(value)) {
-                          if (value.some((item) => React.isValidElement(item)))
+                          if (value.some((item) => React.isValidElement(item))) {
                             return <>{value}</>;
+                          }
                           return value.join(", ");
                         }
+
                         if (value instanceof Date) return value.toLocaleString();
                         if (typeof value === "boolean") return value ? "Yes" : "No";
                         if (value === null || value === undefined) return "-";
                         if (typeof value === "number") return value.toString();
                         if (typeof value === "object") return JSON.stringify(value);
+
                         return String(value);
                       })()}
-                    </TableData>
+                    </td>
                   ))}
-                  {actions && <TableData>{actions(row)}</TableData>}
-                </TableRow>
+                  {actions && (
+                    <td className="px-3 py-2">
+                      {actions(row)}
+                    </td>
+                  )}
+                </tr>
               ))
             ) : (
               <tr>
-                <EmptyState colSpan={headers.length + (actions ? 1 : 0)}>
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
+                <td
+                  colSpan={headers.length + (actions ? 1 : 0)}
+                  className="px-4 py-6 text-center text-slate-500"
+                >
+                  <div className="flex items-center justify-center gap-4">
                     <span>No records found.</span>
                     {onResetSearch && (
-                      <PageButton onClick={onResetSearch} >Reset<ArrowPathIcon /></PageButton>
+                      <button
+                        onClick={onResetSearch}
+                        className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                      >
+                        <span>Reset</span>
+                        <ArrowPathIcon className="h-5 w-5" />
+                      </button>
                     )}
                   </div>
-                </EmptyState>
+                </td>
               </tr>
             )}
           </tbody>
-        </StyledTable>
-      </TableContainer>
+        </table>
+      </div>
 
       {paginationPosition.startsWith("bottom") && data.length > 0 && renderPagination()}
     </>
   );
-
 };
 
 Table.displayName = "Table";
