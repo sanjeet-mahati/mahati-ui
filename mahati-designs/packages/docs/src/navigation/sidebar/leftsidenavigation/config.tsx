@@ -223,7 +223,7 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/tooltip',
       position: 'top',
     },
-     {
+    {
       name: 'Form',
       href: '/form',
       icon: <FontAwesomeIcon icon={faHandPointer} size="lg" />,
@@ -334,6 +334,17 @@ export const NavItems = (): NavItem[]  => {
         { name: 'All-in-One', href: '/table#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
       ]
     },
+
+    {
+      name: 'Table with talwindcss',
+      href: '/tableTailwindCSSDemo',
+      icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
+      active: pathname === '/tableTailwindCSSDemo',
+      position: 'top',
+    },
+
+
+
     {
       name: 'Tab',
       href: '/tab',
@@ -351,6 +362,17 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Gradient', href: '/tab#gradient-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
+
+
+     {
+      name: 'Tab Tailwind CSS',
+      href: '/tabTailwindCSSDemo',
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/tabTailwindCSSDemo',
+      position: 'top',
+     },
+
+
     // {
     //   name: 'Tooltip',
     //   href: '/Tooltip',

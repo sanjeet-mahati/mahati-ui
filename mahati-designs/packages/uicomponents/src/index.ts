@@ -5,8 +5,14 @@ export { Card as MahatiCard }from './components/Card';
 export { Modal as MahatiModal }from './components/Modal';
 export { FormContainer as MahatiFormContainer }from './components/FormContainer';
 export { Input as MahatiInput } from './components/Input';
-export  { TabbedInterface as MahatiTabbedInterface }  from './components/TabbedInterface';
+// export  { TabbedInterface as MahatiTabbedInterface }  from './components/TabbedInterface';
+export  { TabbedInterface as MahatiTabbedInterface }  from './components/TabedInterfaceTailwindCSS';
+
 export  { Table as MahatiTable }  from './components/Table';
+export  { TableTailwind as MahatiTableTailwind }  from './components/TableTailwindCSS';
+// export  { Tooltip as MahatiTooltip }  from './components/TooltipTailwindCSS';
+    
+
 export  { Dropdown as MahatiDropdown } from './components/Dropdown';
 // export * from './components/Tooltip';
 // export * from './components/validators';

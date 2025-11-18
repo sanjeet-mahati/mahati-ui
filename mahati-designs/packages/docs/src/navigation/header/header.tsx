@@ -15,6 +15,7 @@ export default function Header() {
                 <div className=" h-10 px-15 py-2 mb-6 ">
                     <img
                         src="/mahatilog.jpg"
+                        // src="../../../public/resources/images/mahatilog.jpg"
                         alt="Mahati System Logo"
                         className="h-12 w-auto object-contain"
                     />

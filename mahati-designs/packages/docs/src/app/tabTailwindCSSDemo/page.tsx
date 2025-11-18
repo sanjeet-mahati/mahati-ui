@@ -2,6 +2,7 @@
 
 import React from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
+// import {TabbedInterface} from "../../../../uicomponents/src/components/TabedInterfaceTailwindCSS";
 import {MahatiTabbedInterface} from "@/components";
 
 interface Tab {
@@ -12,8 +13,8 @@ interface Tab {
 }
 
 
-const Section: React.FC<React.PropsWithChildren<{ id?: string; "data-section-id"?: string; className?: string }>> = ({ id, "data-section-id": dataSectionId, className, children }) => (
-  <section id={id} data-section-id={dataSectionId} className={`mb-12 rounded-xl border border-gray-200 bg-white p-8 shadow-sm ${className || ''}`}>
+const Section: React.FC<React.PropsWithChildren<{ id?: string }>> = ({ id, children }) => (
+  <section id={id} className="mb-12 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
     {children}
   </section>
 );
@@ -83,18 +84,14 @@ export default function TabDemoTailwindCSS() {
       {/* Page Header */}
       <header className="mb-12">
         <h1 className="mb-4 text-5xl font-bold text-gray-900">Tabs</h1>
-        <p className="max-w-3xl text-xl leading-relaxed text-gray-600">
+        <p className=" text-xl leading-relaxed text-gray-600">
           Tabs are a UI navigation pattern that allows users to switch between multiple sections or views of related
           content without leaving the current page.
         </p>
       </header>
 
       {/* BASIC TABS */}
-      <Section 
-        id="basic-tabs"
-        data-section-id="basic-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="basic">
         <SectionTitle>Basic Tabs</SectionTitle>
         <SectionDescription>Simple horizontal tabs at the top of content.</SectionDescription>
         <DemoGrid>
@@ -109,11 +106,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* OUTLINE TABS */}
-      <Section 
-        id="outline-tabs"
-        data-section-id="outline-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="outline">
         <SectionTitle>Outline Tabs</SectionTitle>
         <SectionDescription>
           Tabs are separated by thin borders, with the active tab highlighted using a border color
@@ -124,11 +117,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* PILL TABS */}
-      <Section 
-        id="pill-tabs"
-        data-section-id="pill-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="pill">
         <SectionTitle>Pill Tabs</SectionTitle>
         <SectionDescription>
           Rounded “button-like” tabs for a modern, soft look.
@@ -148,11 +137,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* DARK TABS */}
-      <Section 
-        id="dark-tabs"
-        data-section-id="dark-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="dark">
         <SectionTitle>Dark Tabs</SectionTitle>
         <SectionDescription>
           Ideal for dark-themed dashboards.
@@ -165,11 +150,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* UNDERLINE TABS */}
-      <Section 
-        id="underline-tabs"
-        data-section-id="underline-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="underline">
         <SectionTitle>Underline Tabs</SectionTitle>
         <SectionDescription>
           Instead of changing background color or using borders, the active tab is highlighted by a smooth underline
@@ -183,11 +164,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* SHADOW TABS */}
-      <Section 
-        id="shadow-tabs"
-        data-section-id="shadow-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="shadow">
         <SectionTitle>Shadow Tabs</SectionTitle>
         <SectionDescription>
           A soft, elevated tab design that uses shadows to create depth. Feels tactile and clickable, suitable for
@@ -199,11 +176,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* GLASS TABS */}
-      <Section 
-        id="glass-tabs"
-        data-section-id="glass-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="glass">
         <SectionTitle>Glass Tabs</SectionTitle>
         <SectionDescription>
           A frosted glass style using transparency, blur, and light shadows. Feels futuristic and minimal — perfect for
@@ -215,11 +188,7 @@ export default function TabDemoTailwindCSS() {
       </Section>
 
       {/* GRADIENT TABS */}
-      <Section 
-        id="gradient-tabs"
-        data-section-id="gradient-tabs"
-        className="scroll-mt-20"
-      >
+      <Section id="gradient">
         <SectionTitle>Gradient Tabs</SectionTitle>
         <SectionDescription>
           Vibrant and visually striking. The active tab has a gradient background for a dynamic, high-impact effect.
@@ -231,3 +200,4 @@ export default function TabDemoTailwindCSS() {
     </>
   );
 }
+    
