@@ -86,7 +86,10 @@ const Table: React.FC<TableProps> = ({
         key={1}
         onClick={() => goToPage(1)}
         disabled={currentPage === 1}
-        className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+        style={{
+          background: currentPage === 1 ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+        }}
       >
         1
       </button>
@@ -109,7 +112,10 @@ const Table: React.FC<TableProps> = ({
           key={i}
           onClick={() => goToPage(i)}
           disabled={currentPage === i}
-          className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: currentPage === i ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+          }}
         >
           {i}
         </button>
@@ -130,7 +136,10 @@ const Table: React.FC<TableProps> = ({
           key={totalPages}
           onClick={() => goToPage(totalPages)}
           disabled={currentPage === totalPages}
-          className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: currentPage === totalPages ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+          }}
         >
           {totalPages}
         </button>
@@ -156,7 +165,10 @@ const Table: React.FC<TableProps> = ({
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+            style={{
+              background: currentPage === 1 ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+            }}
           >
             Previous
           </button>
@@ -166,7 +178,10 @@ const Table: React.FC<TableProps> = ({
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+            style={{
+              background: currentPage === totalPages ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+            }}
           >
             Next
           </button>
@@ -237,7 +252,10 @@ const Table: React.FC<TableProps> = ({
               {onDownloadPDF && (
                 <button
                   onClick={() => onDownloadPDF(data, headers)}
-                  className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                  className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                  style={{
+                    background: 'linear-gradient(to right, #1e73be, #28a97d)'
+                  }}
                 >
                   <ArrowDownOnSquareIcon className="h-5 w-5" />
                 </button>
@@ -245,7 +263,10 @@ const Table: React.FC<TableProps> = ({
               {onDownloadExcel && (
                 <button
                   onClick={() => onDownloadExcel(data, headers)}
-                  className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                  className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                  style={{
+                    background: 'linear-gradient(to right, #1e73be, #28a97d)'
+                  }}
                 >
                   <ArrowDownOnSquareIcon className="h-5 w-5" />
                   <span>Excel</span>
@@ -260,7 +281,11 @@ const Table: React.FC<TableProps> = ({
 
       <div className="mt-1 overflow-hidden rounded-xl border border-[#1761A3] bg-white">
         <table className="w-full border-collapse">
-          <thead className="bg-gradient-to-r from-[#1e73be] to-[#28a97d]">
+          <thead 
+            style={{
+              background: 'linear-gradient(to right, #1e73be, #28a97d)'
+            }}
+          >
             <tr>
               {headers.map((header, idx) => (
                 <th
@@ -350,7 +375,10 @@ const Table: React.FC<TableProps> = ({
                     {onResetSearch && (
                       <button
                         onClick={onResetSearch}
-                        className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#1e73be] to-[#28a97d] px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                        className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                        style={{
+                          background: 'linear-gradient(to right, #1e73be, #28a97d)'
+                        }}
                       >
                         <span>Reset</span>
                         <ArrowPathIcon className="h-5 w-5" />
