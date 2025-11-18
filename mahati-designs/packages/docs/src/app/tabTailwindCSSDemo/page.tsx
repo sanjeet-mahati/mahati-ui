@@ -2,8 +2,7 @@
 
 import React from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
-// import {TabbedInterface} from "../../../../uicomponents/src/components/TabedInterfaceTailwindCSS";
-import {MahatiTabbedInterface} from "@/components";
+import {MahatiTabbedInterface} from "@/components"
 
 interface Tab {
   id?: string;
