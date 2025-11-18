@@ -1,272 +1,169 @@
-'use client';
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+"use client";
 
-interface Tab {
+import React, { useState, useId } from "react";
+
+export interface Tab {
+  id?: string;
   label: string;
-  content: React.ReactNode;
   icon?: React.ReactNode;
+  content: React.ReactNode;
+  disabled?: boolean;
 }
 
-interface TabbedInterfaceProps {
+export interface MahatiTabbedInterfaceProps {
   tabs: Tab[];
-  variant?: 
-    | 'underline'
-    | 'pill'
-    | 'outline'
-    | 'filled'
-    | 'gradient'
-    | 'shadow'
-    | 'glass'
-    | 'dark';
-  onTabChange?: (label: string) => void;
+  variant?: "basic" | "pill" | "dark" | "underline" | "shadow" | "glass" | "gradient" | "square";
+  defaultActiveTab?: number;
+  className?: string;
+  onTabChange?: (tabIndex: number) => void;
 }
 
-const fade = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const TabContainer = styled.div<{ variant: string }>`
-  background: ${(p) =>
-    p.variant === 'dark'
-      ? '#45484fff'
-      : p.variant === 'glass'
-      ? 'rgba(255, 255, 255, 0.1)'
-      : '#fff'};
-  border: ${(p) =>
-    p.variant === 'dark'
-      ? '1px solid #2d3748'
-      : p.variant === 'glass'
-      ? '1px solid rgba(255, 255, 255, 0.3)'
-      : '1px solid #b8d1f3'};
-  border-radius: 10px;
-  padding: 30px;
-  mwidth:100%;
-  box-sizing: border-box;
-  transition: height 0.4s ease;
-  overflow: hidden;
-  font-family: "Poppins";
-  margin: 40px auto;
-  color: ${(p) => (p.variant === 'dark' ? '#f7fafc' : '#1a202c')};
-  backdrop-filter: ${(p) => (p.variant === 'glass' ? 'blur(12px)' : 'none')};
-`;
-
-const TabHeader = styled.div<{ variant: string }>`
-  display: flex;
-  justify-content: space-around;
-  position: relative;
-  margin-bottom: 20px;
-
-  ${(p) =>
-    p.variant === 'underline' &&
-    css`
-      border-bottom: 2px solid #e0e0e0;
-    `}
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: center;
-  }
-`;
-
-const TabButton = styled.div<{ active?: boolean; variant: string }>`
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  text-align: center;
-
-  svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  /* ========== VARIATION STYLES ========== */
-
-  /* Underline */
-  ${(p) =>
-    p.variant === 'underline' &&
-    css`
-      color: ${p.active ? '#1761A3' : '#4A5568'};
-      position: relative;
-    `}
-
-  /* Pill */
-  ${(p) =>
-    p.variant === 'pill' &&
-    css`
-      color: ${p.active ? '#fff' : '#1761A3'};
-      background: ${p.active ? '#1761A3' : 'transparent'};
-      padding: 8px 16px;
-      border-radius: 50px;
-    `}
-
-  /* Outline */
-  ${(p) =>
-    p.variant === 'outline' &&
-    css`
-      color: ${p.active ? '#1761A3' : '#333'};
-      border: 2px solid ${p.active ? '#1761A3' : 'transparent'};
-      background: ${p.active ? '#F3F8FF' : 'transparent'};
-    `}
-
-  /* Filled */
-  ${(p) =>
-    p.variant === 'filled' &&
-    css`
-      background: ${p.active ? '#1761A3' : '#EAF3FD'};
-      color: ${p.active ? '#fff' : '#1761A3'};
-    `}
-
-  /* Gradient */
-  ${(p) =>
-    p.variant === 'gradient' &&
-    css`
-      background: ${p.active
-        ? 'linear-gradient(90deg, #1761A3, #4DAF83)'
-        : '#F0F4F8'};
-      color: ${p.active ? '#fff' : '#1761A3'};
-    `}
-
-  /* Shadow */
-  ${(p) =>
-    p.variant === 'shadow' &&
-    css`
-      background: ${p.active ? '#fff' : '#F8FAFD'};
-      box-shadow: ${p.active
-        ? '0 4px 10px rgba(23, 97, 163, 0.3)'
-        : '0 2px 4px rgba(0, 0, 0, 0.05)'};
-      color: ${p.active ? '#1761A3' : '#666'};
-    `}
-
-  /* Glass */
-  ${(p) =>
-    p.variant === 'glass' &&
-    css`
-      background: ${p.active
-        ? 'rgba(23, 97, 163, 0.4)'
-        : 'rgba(255, 255, 255, 0.15)'};
-      color: ${p.active ? '#fff' : '#1761A3'};
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(12px);
-      &:hover {
-        background: rgba(23, 97, 163, 0.6);
-      }
-    `}
-
-  /* Dark */
-  ${(p) =>
-    p.variant === 'dark' &&
-    css`
-      color: ${p.active ? '#90cdf4' : '#cbd5e0'};
-      background: transparent;
-      border-bottom: ${p.active ? '3px solid #63b3ed' : 'none'};
-      &:hover {
-        color: #63b3ed;
-      }
-    `}
-`;
-
-const TabLine = styled.div<{ index: number; count: number; variant: string }>`
-  ${(p) =>
-    p.variant === 'underline' &&
-    css`
-      position: absolute;
-      bottom: -1px;
-      left: ${(p.index * 100) / p.count}%;
-      height: 3px;
-      width: ${100 / p.count}%;
-      background: linear-gradient(90deg, #1761A3, #4DAF83);
-      border-radius: 12px;
-      transition: left 0.3s ease;
-      @media (max-width: 600px) {
-        display: none;
-      }
-    `}
-`;
-
-const TabContent = styled.div`
-  position: relative;
-  min-height: 180px;
-  transition: height 0.3s ease;
-`;
-
-const TabPane = styled.div<{ active?: boolean }>`
-  display: ${(p) => (p.active ? 'block' : 'none')};
-  position: ${(p) => (p.active ? 'relative' : 'absolute')};
-  animation: ${fade} 0.3s ease;
-
-  h3 {
-    color: #1761A3;
-    margin-bottom: 10px;
-  }
-
-  p {
-    font-size: 16px;
-    color: #000;
-    line-height: 1.6;
-    font-weight: 500;
-  }
-`;
-
-
-const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
+const TabbedInterface: React.FC<MahatiTabbedInterfaceProps> = ({
   tabs,
-  variant = 'underline',
-    onTabChange,
+  variant = "basic",
+  defaultActiveTab = 0,
+  className = "",
+  onTabChange,
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState(defaultActiveTab);
+  const id = useId(); // For accessibility
+  const PRIMARY_COLOR = "#1e73be";
+  const ACCENT_COLOR = "#4DAF83"; // Used in gradient for underline
 
-  useEffect(() => {
-    const activePane = contentRef.current?.querySelector('.active') as HTMLElement;
-    if (activePane) {
-      contentRef.current!.style.height = activePane.offsetHeight + 'px';
+  const handleTabClick = (index: number) => {
+    if (tabs[index]?.disabled) return;
+    setActiveTab(index);
+    onTabChange?.(index);
+  };
+
+  const getTabButtonStyles = (index: number) => {
+    const isActive = index === activeTab;
+    const baseStyles = "flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap flex-shrink-0";
+    const disabledStyles = "opacity-50 cursor-not-allowed";
+    
+    if (tabs[index]?.disabled) {
+      return `${baseStyles} ${disabledStyles} text-gray-500`;
     }
-  }, [activeIndex]);
+
+    switch (variant) {
+      case "basic":
+        return `${baseStyles} ${
+          isActive
+            ? `text-[${PRIMARY_COLOR}] border-b-2 border-[${PRIMARY_COLOR}]`
+            : "text-gray-600 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
+        }`;
+
+      case "underline":
+        return `${baseStyles} relative ${ // Make button relative for absolute underline span
+          isActive
+            ? `text-[${PRIMARY_COLOR}]`
+            : "text-gray-600 hover:text-gray-800"
+        }`;
+
+      case "pill":
+        return `${baseStyles} rounded-full font-semibold text-[14px] leading-normal ${
+          isActive
+            ? `bg-white text-[${PRIMARY_COLOR}] border border-gray-400 shadow-md`
+            : `bg-[#EEF4F7] text-[${PRIMARY_COLOR}] border border-[rgba(38,118,154,0.45)] hover:bg-blue-100`
+        }`;
+
+      case "square":
+        return `${baseStyles} rounded-[6px] border border-[rgba(38,118,154,0.45)] font-semibold text-[14px] leading-normal ${
+          isActive
+            ? `bg-white text-[${PRIMARY_COLOR}]`
+            : "bg-[#EEF4F7] text-gray-600 hover:bg-gray-200"
+        }`;
+
+      case "dark":
+        return `${baseStyles} rounded-lg ${
+          isActive
+            ? "bg-gray-700 text-white shadow-md"
+            : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
+        }`;
+
+      case "shadow":
+        return `${baseStyles} rounded-lg ${
+          isActive
+            ? `bg-white text-[${PRIMARY_COLOR}] shadow-lg`
+            : "bg-gray-50 text-gray-600 shadow-sm hover:bg-white"
+        }`;
+
+      case "glass":
+        return `${baseStyles} rounded-lg border border-white/30 backdrop-blur-lg ${
+          isActive
+            ? `bg-[${PRIMARY_COLOR}]/40 text-white shadow-md`
+            : `bg-white/20 text-[${PRIMARY_COLOR}] hover:bg-[${PRIMARY_COLOR}]/50 hover:text-white`
+        }`;
+
+      case "gradient":
+        return `${baseStyles} rounded-lg ${
+          isActive
+            ? `bg-gradient-to-r from-[${PRIMARY_COLOR}] to-[${ACCENT_COLOR}] text-white shadow-md`
+            : `bg-gray-100 text-[${PRIMARY_COLOR}] hover:bg-gray-200`
+        }`;
+
+      default: // Fallback for any unhandled variants or 'basic' if not explicitly defined above
+        return `${baseStyles} ${
+          isActive
+            ? `text-[${PRIMARY_COLOR}]`
+            : "text-gray-600 hover:text-gray-800"
+        }`;
+    }
+  };
+
+  const getUnderlineBarClasses = (index: number) => {
+    const isActive = index === activeTab;
+    if (variant === "underline") {
+      return `absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[${PRIMARY_COLOR}] to-[${ACCENT_COLOR}] transition-all duration-300 ease-out ${
+        isActive ? "w-full" : "w-0"
+      }`;
+    }
+    return "hidden";
+  };
 
   return (
-    <TabContainer variant={variant}>
-      <TabHeader variant={variant}>
+    <div className={`w-full bg-[#EEF4F7] rounded-lg border border-gray-200 shadow-sm ${className}`}>
+      {/* Tab Headers - Inside the same box */}
+      <div className="flex flex-row overflow-x-auto scrollbar-hide space-x-4 p-4" role="tablist">
         {tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={activeIndex === index}
-            onClick={() => {setActiveIndex(index)
-
-               onTabChange?.(tab.label); 
-            }// ✅ trigger parent callback
-            }
-            variant={variant}
+          <button
+            key={tab.id || `tab-${id}-${index}`} // Use useId for unique keys
+            className={getTabButtonStyles(index)}
+            onClick={() => handleTabClick(index)}
+            disabled={tab.disabled}
+            aria-selected={index === activeTab}
+            aria-controls={`${id}-tabpanel-${index}`}
+            role="tab"
+            type="button"
           >
-            {tab.icon && tab.icon}
-            {tab.label}
-          </TabButton>
+            {tab.icon && <span className="flex-shrink-0 w-4 h-4">{tab.icon}</span>}
+            <span className="truncate">{tab.label}</span>
+            {variant === "underline" && <span className={getUnderlineBarClasses(index)} />}
+          </button>
         ))}
-        <TabLine index={activeIndex} count={tabs.length} variant={variant} />
-      </TabHeader>
+      </div>
 
-      <TabContent ref={contentRef}>
-        {tabs.map((tab, index) => (
-          <TabPane
-            key={index}
-            active={activeIndex === index}
-            className={activeIndex === index ? 'active' : ''}
-          >
-            {tab.content}
-          </TabPane>
-        ))}
-      </TabContent>
-    </TabContainer>
-  );    
+      {/* Divider Line */}
+      <div className="h-[2px] flex-shrink-0 bg-[#D9D9D9]" />
+
+      {/* Tab Content - Inside the same box */}
+      <div 
+        id={`${id}-tabpanel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`${id}-tab-${activeTab}`}
+        className="p-6 animate-fade-in bg-white"
+  
+      >
+        {tabs[activeTab]?.content || (
+          <div className="text-center text-gray-500 py-8">
+            No content available for this tab
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
+
+
 TabbedInterface.displayName = "TabbedInterface";
 export {TabbedInterface};

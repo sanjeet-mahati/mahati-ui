@@ -335,13 +335,13 @@ export const NavItems = (): NavItem[]  => {
       ]
     },
 
-    {
-      name: 'Table with talwindcss',
-      href: '/tableTailwindCSSDemo',
-      icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
-      active: pathname === '/tableTailwindCSSDemo',
-      position: 'top',
-    },
+    // {
+    //   name: 'Table with talwindcss',
+    //   href: '/table',
+    //   icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
+    //   active: pathname === '/tableTailwindCSSDemo',
+    //   position: 'top',
+    // },
 
 
 
@@ -353,7 +353,7 @@ export const NavItems = (): NavItem[]  => {
       position: 'top',
       subItems: [
         { name: 'Basic Tabs', href: '/tab#basic-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Outline', href: '/tab#outline-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Square', href: '/tab#square-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Pill', href: '/tab#pill-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Dark', href: '/tab#dark-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Underline', href: '/tab#underline-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
@@ -364,13 +364,13 @@ export const NavItems = (): NavItem[]  => {
     },
 
 
-     {
-      name: 'Tab Tailwind CSS',
-      href: '/tabTailwindCSSDemo',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-      active: pathname === '/tabTailwindCSSDemo',
-      position: 'top',
-     },
+    //  {
+    //   name: 'Tab Tailwind CSS',
+    //   href: '/tabTailwindCSSDemo',
+    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+    //   active: pathname === '/tabTailwindCSSDemo',
+    //   position: 'top',
+    //  },
 
 
     // {

@@ -111,7 +111,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                     "mb-4": open && mainContent, // Only add margin if content is visible
                   })}
                 >
-                  <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
+                  <h4 className="text-xl font-semibold text-slate-800">{title}</h4>
 
                   {collapsible && (
                     <button

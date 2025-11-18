@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 
 export interface TooltipProps {
+  key?:string;
   text: string;
   position?: "top" | "right" | "bottom" | "left";
   children: React.ReactNode;
@@ -9,6 +10,7 @@ export interface TooltipProps {
 }
 
 const Tooltip: React.FC<TooltipProps> = ({
+  key,
   text,
   position = "top",
   children,
