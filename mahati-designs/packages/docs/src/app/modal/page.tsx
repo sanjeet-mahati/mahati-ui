@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {MCard,MahatiModal} from "@/components";
+import {MahatiCard,MahatiModal} from "@/components";
 
-export default function CardPage() {
+export default function ModalPage() {
   const [isBasicModalOpen, setIsBasicModalOpen] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isForMahatiModalOpen, setIsForMahatiModalOpen] = useState(false);
@@ -15,6 +15,8 @@ export default function CardPage() {
   const [isScrollableModalOpen, setIsScrollableModalOpen] = useState(false);
 
   return (
+
+
     <div className="flex min-h-screen bg-slate-50">
       <main className="flex-1 p-12 max-w-4xl mx-auto">
         {/* Basic Modal Trigger */}
@@ -24,14 +26,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Basic Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsBasicModalOpen(true)}
             >
               Open Basic Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Confirmation Modal Trigger */}
@@ -41,14 +43,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Confirmation Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsConfirmationModalOpen(true)}
             >
               Open Confirmation Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Form Modal Trigger */}
@@ -58,14 +60,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Form Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsForMahatiModalOpen(true)}
             >
               Open Form Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Image Modal Trigger */}
@@ -75,14 +77,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Image Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsImageModalOpen(true)}
             >
               Open Image Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Notification Modal Trigger */}
@@ -92,14 +94,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Notification Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsNotificationModalOpen(true)}
             >
               Open Notification Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Loading Modal Trigger */}
@@ -109,14 +111,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Loading Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsLoadingModalOpen(true)}
             >
               Open Loading Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Full-Screen Modal Trigger */}
@@ -126,14 +128,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Full-Screen Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsFullScreenModalOpen(true)}
             >
               Open Full-Screen Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Scrollable Modal Trigger */}
@@ -143,14 +145,14 @@ export default function CardPage() {
           className="mb-12 scroll-mt-20"
         >
           <h2 className="text-3xl font-semibold text-slate-800 mb-4">Scrollable Modal</h2>
-          <MCard className="max-w-sm">
+          <MahatiCard className="max-w-sm">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               onClick={() => setIsScrollableModalOpen(true)}
             >
               Open Scrollable Modal
             </button>
-          </MCard>
+          </MahatiCard>
         </section>
 
         {/* Modals */}
