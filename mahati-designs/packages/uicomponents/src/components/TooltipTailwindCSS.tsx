@@ -29,7 +29,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   variant = "default",
   className = "",
   textColor = "text-gray-800",
-  backgroundColor = "bg-[rgba(23,97,163,1)] bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]",
+  backgroundColor = "bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]",
   image,
   animation
 }) => {
