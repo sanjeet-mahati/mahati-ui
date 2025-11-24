@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -7,13 +6,13 @@ import { ArrowDownOnSquareIcon, ArrowPathIcon, XMarkIcon } from "@heroicons/reac
 interface TableProps {
   headers: { label: string; key: string }[];
   data: { [key: string]: unknown }[];
+
+  // Pagination
   page?: number;
   setPage?: (page: number) => void;
   limit?: number;
   setLimit?: (limit: number) => void;
   totalCount?: number;
-  highlightRowColor?: string;
-  actions?: (row: unknown) => React.ReactNode;
   paginationRequired?: boolean;
   paginationPosition?:
     | "top-left"
@@ -22,18 +21,50 @@ interface TableProps {
     | "bottom-left"
     | "bottom-center"
     | "bottom-right";
+
+  // Row styling & actions
+  highlightRowColor?: string;
+  actions?: (row: unknown) => React.ReactNode;
+
+  // Downloads
   onDownloadPDF?: (data: any[], headers: any[]) => void;
   onDownloadExcel?: (data: any[], headers: any[]) => void;
+
+  // Search
   searchable?: boolean;
   searchTerm?: string;
-  onSearch?: (term: string, mode: "startsWith" | "includes") => void;
+  onSearch?: (term: string, mode?: "startsWith" | "includes") => void;
   searchModeOptions?: ("startsWith" | "includes")[];
   onResetSearch?: () => void;
+
+  // SUMMARY DRAWER (row-expanding)
+  /**
+   * summary = "single"  => only one row summary open at a time
+   * summary = "multi"   => multiple rows can be expanded
+   * undefined / omitted => no summary drawers
+   */
+  summary?: "single" | "multi";
+  /** which key in data row contains the summary text/content (default: "summary") */
+  summaryKey?: string;
+  /** which key in data row contains title field, e.g. name (default: "name") */
+  summaryTitleField?: string;
+
+  // SUMMARY COLUMN (truncated summary text in a dedicated column)
+  /**
+   * When true, any cell whose header.key === (summaryColumnKey || summaryKey)
+   * will be rendered as a truncated summary column with ellipsis and hover full text.
+   */
+  summaryColumn?: boolean;
+  /** Key to treat as summary column; falls back to summaryKey if not provided */
+  summaryColumnKey?: string;
+  /** Max length before truncating summary column text (default: 120) */
+  summaryColumnMaxLength?: number;
 }
 
 const Table: React.FC<TableProps> = ({
   headers,
   data,
+
   page,
   setPage,
   limit,
@@ -45,13 +76,26 @@ const Table: React.FC<TableProps> = ({
   paginationPosition = "bottom-center",
   onDownloadPDF,
   onDownloadExcel,
+
   searchable = false,
   searchTerm = "",
   onResetSearch,
   onSearch,
   searchModeOptions = ["includes", "startsWith"],
+
+  summary,
+  summaryKey = "summary",
+  summaryTitleField = "name",
+
+  summaryColumn = false,
+  summaryColumnKey,
+  summaryColumnMaxLength = 10,
 }) => {
   const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(searchModeOptions[0]);
+
+  // Summary drawer state
+  const [expandedRowIndex, setExpandedRowIndex] = useState<number | null>(null); // for "single"
+  const [expandedRowIndexes, setExpandedRowIndexes] = useState<Set<number>>(new Set()); // for "multi"
 
   const isPaginated = paginationRequired;
 
@@ -88,7 +132,7 @@ const Table: React.FC<TableProps> = ({
         disabled={currentPage === 1}
         className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
         style={{
-          background: currentPage === 1 ? '#ccc' : 'linear-gradient(to right, #1e73beee, #28a97d)'
+          background: currentPage === 1 ? "#ccc" : "linear-gradient(to right, #1e73beee, #28a97d)",
         }}
       >
         1
@@ -114,7 +158,7 @@ const Table: React.FC<TableProps> = ({
           disabled={currentPage === i}
           className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
           style={{
-            background: currentPage === i ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+            background: currentPage === i ? "#ccc" : "linear-gradient(to right, #1e73be, #28a97d)",
           }}
         >
           {i}
@@ -138,7 +182,8 @@ const Table: React.FC<TableProps> = ({
           disabled={currentPage === totalPages}
           className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
           style={{
-            background: currentPage === totalPages ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
+            background:
+              currentPage === totalPages ? "#ccc" : "linear-gradient(to right, #1e73be, #28a97d)",
           }}
         >
           {totalPages}
@@ -167,8 +212,9 @@ const Table: React.FC<TableProps> = ({
             disabled={currentPage === 1}
             className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
             style={{
-            background: currentPage === 1 ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
-          }}
+              background:
+                currentPage === 1 ? "#ccc" : "linear-gradient(to right, #1e73be, #28a97d)",
+            }}
           >
             Previous
           </button>
@@ -180,8 +226,9 @@ const Table: React.FC<TableProps> = ({
             disabled={currentPage === totalPages}
             className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
             style={{
-            background: currentPage === totalPages ? '#ccc' : 'linear-gradient(to right, #1e73be, #28a97d)'
-          }}
+              background:
+                currentPage === totalPages ? "#ccc" : "linear-gradient(to right, #1e73be, #28a97d)",
+            }}
           >
             Next
           </button>
@@ -254,7 +301,7 @@ const Table: React.FC<TableProps> = ({
                   onClick={() => onDownloadPDF(data, headers)}
                   className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
                   style={{
-                    background: 'linear-gradient(to right, #1e73be, #28a97d)'
+                    background: "linear-gradient(to right, #1e73be, #28a97d)",
                   }}
                 >
                   <ArrowDownOnSquareIcon className="h-5 w-5" />
@@ -265,7 +312,7 @@ const Table: React.FC<TableProps> = ({
                   onClick={() => onDownloadExcel(data, headers)}
                   className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
                   style={{
-                    background: 'linear-gradient(to right, #1e73be, #28a97d)'
+                    background: "linear-gradient(to right, #1e73be, #28a97d)",
                   }}
                 >
                   <ArrowDownOnSquareIcon className="h-5 w-5" />
@@ -281,16 +328,16 @@ const Table: React.FC<TableProps> = ({
 
       <div className="mt-1 overflow-hidden rounded-xl border border-[#1761A3] bg-white">
         <table className="w-full border-collapse">
-          <thead 
+          <thead
             style={{
-              background: 'linear-gradient(to right, #1e73be, #28a97d)'
+              background: "linear-gradient(to right, #1e73be, #28a97d)",
             }}
           >
             <tr>
               {headers.map((header, idx) => (
                 <th
                   key={idx}
-                  className={`h-[50px] px-3 py-2 text-left text-sm font-bold text-white first:rounded-tl-xl last:rounded-tr-xl`}
+                  className="h-[50px] px-3 py-2 text-left text-sm font-bold text-white first:rounded-tl-xl last:rounded-tr-xl"
                 >
                   {header.label}
                 </th>
@@ -305,65 +352,198 @@ const Table: React.FC<TableProps> = ({
 
           <tbody>
             {data.length > 0 ? (
-              data.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className={`h-[57px] border-b border-slate-200 text-sm text-slate-900 even:bg-slate-50 hover:bg-slate-100 ${
-                    highlightRowColor || ""
-                  }`}
-                >
-                  {headers.map((header, cellIdx) => (
-                    <td key={cellIdx} className="px-3 py-2">
-                      {(() => {
-                        const value = row[header.key];
+              data.map((row, rowIndex) => {
+                const isExpandable = !!summary;
+                const isExpanded =
+                  summary === "single"
+                    ? expandedRowIndex === rowIndex
+                    : summary === "multi"
+                    ? expandedRowIndexes.has(rowIndex)
+                    : false;
 
-                        if (React.isValidElement(value)) return value;
+                const handleRowClick = () => {
+                  if (!summary) return;
+                  if (summary === "single") {
+                    setExpandedRowIndex((prev) => (prev === rowIndex ? null : rowIndex));
+                  } else if (summary === "multi") {
+                    setExpandedRowIndexes((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(rowIndex)) {
+                        next.delete(rowIndex);
+                      } else {
+                        next.add(rowIndex);
+                      }
+                      return next;
+                    });
+                  }
+                };
 
-                        if (typeof value === "function") {
-                          try {
-                            const result = value();
-                            if (React.isValidElement(result)) return result;
-                          } catch (e) {
-                            console.warn("Error executing function in table cell:", e);
-                          }
-                        }
+                const handleCloseDrawer = (e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  if (summary === "single") {
+                    setExpandedRowIndex(null);
+                  } else if (summary === "multi") {
+                    setExpandedRowIndexes((prev) => {
+                      const next = new Set(prev);
+                      next.delete(rowIndex);
+                      return next;
+                    });
+                  }
+                };
 
-                        if (
-                          typeof value === "string" &&
-                          value.trim().startsWith("<") &&
-                          value.trim().endsWith(">")
-                        ) {
-                          return (
-                            <span
-                              dangerouslySetInnerHTML={{ __html: value }}
-                            />
-                          );
-                        }
+                const titleValue = (row as any)[summaryTitleField];
+                const summaryValue = (row as any)[summaryKey];
 
-                        if (Array.isArray(value)) {
-                          if (value.some((item) => React.isValidElement(item))) {
-                            return <>{value}</>;
-                          }
-                          return value.join(", ");
-                        }
+                const summaryColKeyToUse = summaryColumnKey || summaryKey;
 
-                        if (value instanceof Date) return value.toLocaleString();
-                        if (typeof value === "boolean") return value ? "Yes" : "No";
-                        if (value === null || value === undefined) return "-";
-                        if (typeof value === "number") return value.toString();
-                        if (typeof value === "object") return JSON.stringify(value);
+                return (
+                  <React.Fragment key={rowIndex}>
+                    <tr
+                      onClick={isExpandable ? handleRowClick : undefined}
+                      className={`h-[57px] border-b border-slate-200 text-sm text-slate-900 even:bg-slate-50 hover:bg-slate-100 ${
+                        isExpandable ? "cursor-pointer transition-colors" : ""
+                      } ${highlightRowColor || ""} ${isExpanded ? "bg-[#1e73be80]" : ""}`}
+                    //   } ${highlightRowColor || ""} ${isExpanded ? "bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]" : ""}`}
+                      style={
+                        isExpanded
+                          ? {
+                              backgroundColor: "rgba(30, 190, 145, 0.2)",
+                            //   backgroundColor: "linear-gradient(to right, #1e73beee, #28a97d)",
+                            //   'linear-gradient(to right, #1e73beee, #28a97d)'
+                            }
+                          : undefined
+                      }
+                    >
+                      {headers.map((header, cellIdx) => (
+                        <td key={cellIdx} className="px-3 py-2">
+                          {(() => {
+                            const value = row[header.key];
 
-                        return String(value);
-                      })()}
-                    </td>
-                  ))}
-                  {actions && (
-                    <td className="px-3 py-2">
-                      {actions(row)}
-                    </td>
-                  )}
-                </tr>
-              ))
+                            // === SUMMARY COLUMN HANDLING ===
+                            if (
+                              summaryColumn &&
+                              header.key === summaryColKeyToUse
+                            ) {
+                              if (value == null) {
+                                return "-";
+                              }
+
+                              // If it's already a React element, just wrap it but still clamp height
+                              if (React.isValidElement(value)) {
+                                return (
+                                  <div className="text-sm leading-relaxed text-slate-600 break-words whitespace-normal line-clamp-2">
+                                    {value}
+                                  </div>
+                                );
+                              }
+
+                              let fullText: string;
+                              if (typeof value === "string") {
+                                fullText = value;
+                              } else if (typeof value === "object") {
+                                fullText = JSON.stringify(value);
+                              } else {
+                                fullText = String(value);
+                              }
+
+                              const truncated =
+                                fullText.length <= summaryColumnMaxLength
+                                  ? fullText
+                                  : fullText
+                                      .substring(0, summaryColumnMaxLength)
+                                      .trim() + " ....";
+
+                              return (
+                                <div
+                                  className="text-sm leading-relaxed text-slate-600 break-words whitespace-normal line-clamp-2"
+                                  title={fullText}
+                                >
+                                  {truncated}
+                                </div>
+                              );
+                            }
+                            // === END SUMMARY COLUMN HANDLING ===
+
+                            if (React.isValidElement(value)) return value;
+
+                            if (typeof value === "function") {
+                              try {
+                                const result = value();
+                                if (React.isValidElement(result)) return result;
+                              } catch (e) {
+                                console.warn("Error executing function in table cell:", e);
+                              }
+                            }
+
+                            if (
+                              typeof value === "string" &&
+                              value.trim().startsWith("<") &&
+                              value.trim().endsWith(">")
+                            ) {
+                              return <span dangerouslySetInnerHTML={{ __html: value }} />;
+                            }
+
+                            if (Array.isArray(value)) {
+                              if (value.some((item) => React.isValidElement(item))) {
+                                return <>{value}</>;
+                              }
+                              return value.join(", ");
+                            }
+
+                            if (value instanceof Date) return value.toLocaleString();
+                            if (typeof value === "boolean") return value ? "Yes" : "No";
+                            if (value === null || value === undefined) return "-";
+                            if (typeof value === "number") return value.toString();
+                            if (typeof value === "object") return JSON.stringify(value);
+
+                            return String(value);
+                          })()}
+                        </td>
+                      ))}
+                      {actions && <td className="px-3 py-2">{actions(row)}</td>}
+                    </tr>
+
+                    {isExpandable && isExpanded && (
+                      <tr className="border-b border-blue-200">
+                        <td
+                          colSpan={headers.length + (actions ? 1 : 0)}
+                          className="bg-gradient-to-r from-blue-25 to-blue-50 px-3 py-4"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-1">
+                              <div className="mb-2 flex items-start justify-between">
+                                <h4 className="text-sm font-semibold text-slate-800">
+                                  {titleValue
+                                    ? `Summary for ${String(titleValue)}`
+                                    : "Summary"}
+                                </h4>
+                                <button
+                                  onClick={handleCloseDrawer}
+                                  className="ml-2 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full hover:bg-blue-200 transition-colors"
+                                  aria-label="Close summary"
+                                >
+                                  <XMarkIcon className="h-4 w-4 text-slate-600" />
+                                </button>
+                              </div>
+                              <p className="text-sm leading-relaxed text-slate-600">
+                                {summaryValue == null
+                                  ? "-"
+                                  : React.isValidElement(summaryValue)
+                                  ? summaryValue
+                                  : typeof summaryValue === "string"
+                                  ? summaryValue
+                                  : typeof summaryValue === "object"
+                                  ? JSON.stringify(summaryValue)
+                                  : String(summaryValue)}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })
             ) : (
               <tr>
                 <td
@@ -377,7 +557,7 @@ const Table: React.FC<TableProps> = ({
                         onClick={onResetSearch}
                         className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
                         style={{
-                          background: 'linear-gradient(to right, #1e73b, #28a97d)'
+                          background: "linear-gradient(to right, #1e73b, #28a97d)",
                         }}
                       >
                         <span>Reset</span>
@@ -396,6 +576,11 @@ const Table: React.FC<TableProps> = ({
     </>
   );
 };
+
+// export default Table;
+
+
+// export default Table;
 
 // export default Table;
 Table.displayName = "Table";

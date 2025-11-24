@@ -1,13 +1,10 @@
-
-    
+// tabdemotailwindcss.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {MahatiTable,MahatiButton} from "@/components";
-
-
-/** ============================ Types & Data ============================ */
+import {MahatiTableTailwind} from "@/components";
+import {MahatiButton} from "@/components";
 
 type Align = "left" | "center" | "right";
 
@@ -19,7 +16,7 @@ type Person = {
   active: boolean | string;
   createdAt: string;
   url: string;
-  dob: string; // MM/DD/YYYY
+  dob: string;
   [key: string]: any;
 };
 
@@ -53,40 +50,28 @@ const PEOPLE: Person[] = [
 
 const Currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
-/** ============================ UI Helpers (Tailwind-only) ============================ */
-
-const Section: React.FC<React.PropsWithChildren<{ id?: string; className?: string }>> = ({
-  id,
-  className,
-  children,
-}) => (
-  <section id={id} data-section-id={id} className={`mb-12 rounded-xl border border-slate-200 bg-white p-8 shadow-sm scroll-mt-20 ${className ?? ""}`}>
-    {children}
-  </section>
-);
-
-const SectionTitle: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <h2 className="mb-3 text-2xl font-semibold text-slate-800">{children}</h2>
-);
-
-const SectionDescription: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <p className="mb-6 leading-relaxed text-slate-500">{children}</p>
-);
-
-const DemoGrid: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <div className="grid grid-cols-1 gap-6">{children}</div>
-);
-
-/** ============================ Utilities ============================ */
-
 const toKey = (label: string, existing: Set<string>) => {
   let base = label.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");
   if (!base) base = "field";
-  let k = base;
-  let i = 1;
+  let k = base, i = 1;
   while (existing.has(k)) k = `${base}_${i++}`;
   return k;
 };
+
+const Section: React.FC<React.PropsWithChildren<{ id?: string; className?: string }>> = ({ id, className, children }) => (
+  <section id={id} className={`mb-12 rounded-xl border border-slate-200 bg-white p-8 shadow-sm ${className ?? ""}`}>
+    {children}
+  </section>
+);
+const SectionTitle: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <h2 className="mb-3 text-2xl font-semibold text-slate-800">{children}</h2>
+);
+const SectionDescription: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <p className="mb-6 leading-relaxed text-slate-500">{children}</p>
+);
+const DemoGrid: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <div className="grid grid-cols-1 gap-6">{children}</div>
+);
 
 const useSearchPaginate = (rows: Person[], defaultLimit = 10) => {
   const [page, setPage] = useState(1);
@@ -115,15 +100,12 @@ const useSearchPaginate = (rows: Person[], defaultLimit = 10) => {
   return { page, setPage, limit, setLimit, search, onSearch, onReset, total, slice };
 };
 
-/** ============================ Sortable Wrapper (Tailwind-only) ============================ */
-
 const SortableTable: React.FC<{
   headers: { label: React.ReactNode; key: string }[];
   data: any[];
   sortable?: boolean;
 }> = ({ headers, data, sortable = true }) => {
   const [sort, setSort] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
-
   const sorted = useMemo(() => {
     if (!sort || !sortable) return data;
     const { key, direction } = sort;
@@ -134,8 +116,7 @@ const SortableTable: React.FC<{
       return (hh || 0) * 60 + (mm || 0);
     };
     return [...data].sort((a: any, b: any) => {
-      let av = a[key],
-        bv = b[key];
+      let av = a[key], bv = b[key];
       const k = key.toLowerCase();
       if (k.includes("date")) {
         av = av ? new Date(av).getTime() : 0;
@@ -153,36 +134,35 @@ const SortableTable: React.FC<{
     });
   }, [data, sort, sortable]);
 
-  const indicator = (key: string) => (sort?.key === key ? (sort.direction === "asc" ? "↑" : "↓") : "↕");
+  const indicator = (key: string) =>
+    sort?.key === key ? (sort.direction === "asc" ? "↑" : "↓") : "↕";
 
   const clickableHeaders = headers.map((h) => ({
     ...h,
     label: (
-      <MahatiButton
+      <button
         type="button"
         onClick={() => {
           if (!sortable) return;
           let direction: "asc" | "desc" = "asc";
-          if (sort && sort.key === (h as any).key && sort.direction === "asc") direction = "desc";
-          setSort({ key: (h as any).key, direction });
+          if (sort && sort.key === h.key && sort.direction === "asc") direction = "desc";
+          setSort({ key: h.key, direction });
         }}
         className={`group inline-flex items-center gap-2 ${sortable ? "cursor-pointer" : "cursor-default"}`}
         title={sortable ? "Sort" : undefined}
       >
         <span>{h.label}</span>
-        <span className="text-xs text-slate-500 group-hover:text-slate-700">{indicator((h as any).key)}</span>
-      </MahatiButton>
+        <span className="text-xs text-slate-500 group-hover:text-slate-700">{indicator(h.key)}</span>
+      </button>
     ),
   }));
 
-  return <MahatiTable headers={clickableHeaders} data={sorted} />;
+  return <MahatiTableTailwind headers={clickableHeaders} data={sorted} />;
 };
 
-/** ============================ Page ============================ */
-
 export default function TabDemoTailwindCSS() {
+  // ====== Shared datasets & headers ======
   const peopleAll = PEOPLE;
-
   const basicHeaders = [
     { label: "ID", key: "id" },
     { label: "Name", key: "name" },
@@ -192,12 +172,12 @@ export default function TabDemoTailwindCSS() {
     { label: "Date", key: "createdAt" },
   ];
 
-  /** -------- Paginated + Search -------- */
+  // ====== Paginated + Search ======
   const { page, setPage, limit, setLimit, search, onSearch, onReset, total, slice } = useSearchPaginate(peopleAll, 10);
 
-  /** -------- Custom cells & actions (editable, add row/col) -------- */
-  const LS_HEADERS = "mahati.custoMahatiTable.headers.v2";
-  const LS_ROWS = "mahati.custoMahatiTable.rows.v2";
+  // ====== Custom cells & actions (editable, add row/col) ======
+  const LS_HEADERS = "mahati.customTable.headers.v2";
+  const LS_ROWS = "mahati.customTable.rows.v2";
   const [scriptHeaders, setScriptHeaders] = useState<{ label: string; key: string }[]>([]);
   const [scriptRows, setScriptRows] = useState<Person[]>([]);
   const [initialized, setInitialized] = useState(false);
@@ -318,7 +298,7 @@ export default function TabDemoTailwindCSS() {
     setDraftRow(null);
   };
 
-  const custoMahatiTableData = scriptRows.map((r) => {
+  const customTableData = scriptRows.map((r) => {
     const isEditing = r.id === editingRowId;
     const cells: Record<string, any> = {};
     scriptHeaders.forEach(({ key, label }) => {
@@ -389,7 +369,7 @@ export default function TabDemoTailwindCSS() {
     return cells;
   });
 
-  /** -------- Date/Time sorting demo data -------- */
+  // ===== Date/Time sorting demo data =====
   const taskHeaders = [
     { label: "ID", key: "id" },
     { label: "Task", key: "task" },
@@ -407,10 +387,10 @@ export default function TabDemoTailwindCSS() {
   ];
   const tasksDataPrepared = tasksData.map((t) => ({ ...t, dueDate: new Date(t.dueDate) }));
 
-  /** -------- Alignment Controls (whole table) -------- */
+  // ===== Alignment Controls =====
   const [aioAlign, setAioAlign] = useState<Align>("left");
 
-  /** -------- Per-column alignment -------- */
+  // ===== Per-column alignment =====
   const perColHeaders = [
     { label: "ID", key: "id" },
     { label: "Name", key: "name" },
@@ -464,7 +444,7 @@ export default function TabDemoTailwindCSS() {
   const perColHeadersClickable = perColHeaders.map((h) => ({
     ...h,
     label: (
-      <MahatiButton
+      <button
         type="button"
         onClick={() => toggleColAlign(h.key)}
         className="inline-flex items-center gap-2 text-left"
@@ -474,11 +454,11 @@ export default function TabDemoTailwindCSS() {
         <span className="text-xs opacity-80">
           {colAlign[h.key] === "left" ? "↤" : colAlign[h.key] === "center" ? "↔" : "↦"}
         </span>
-      </MahatiButton>
+      </button>
     ),
   }));
 
-  /** -------- Column visibility -------- */
+  // ===== Column visibility =====
   const visibilityHeaders = [
     { label: "ID", key: "id" },
     { label: "Name", key: "name" },
@@ -540,86 +520,27 @@ export default function TabDemoTailwindCSS() {
 
   const filteredHeaders = visibilityHeaders.filter((h) => visibleKeys.includes(h.key));
 
-  /** -------- All-in-one sort (Tailwind-only) -------- */
-  const [aioSort, setAioSort] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
-  const sortedAioRows = useMemo(() => {
-    const rows = [...scriptRows];
-    if (!aioSort) return rows;
-    const { key, direction } = aioSort;
-    const dir = direction === "asc" ? 1 : -1;
-    const toMinutes = (t: string) => {
-      if (!t) return 0;
-      const [hh, mm] = t.split(":").map(Number);
-      return (hh || 0) * 60 + (mm || 0);
-    };
-    rows.sort((a: any, b: any) => {
-      let av = a[key],
-        bv = b[key];
-      const k = key.toLowerCase();
-      if (k.includes("date")) {
-        av = av ? new Date(av).getTime() : 0;
-        bv = bv ? new Date(bv).getTime() : 0;
-      } else if (k.includes("time")) {
-        av = toMinutes(av);
-        bv = toMinutes(bv);
-      } else if (typeof av === "string" && typeof bv === "string") {
-        av = av.toLowerCase();
-        bv = bv.toLowerCase();
-      }
-      if (av < bv) return -1 * dir;
-      if (av > bv) return 1 * dir;
-      return 0;
-    });
-    return rows;
-  }, [scriptRows, aioSort]);
-
-  const aioHeaders: { label: React.ReactNode; key: string }[] = [
-    { label: "ID", key: "id" },
-    ...scriptHeaders.map((h) => ({
-      label: (
-        <MahatiButton
-          type="button"
-          className="inline-flex items-center gap-2"
-          title="Click to sort"
-          onClick={() => {
-            let direction: "asc" | "desc" = "asc";
-            if (aioSort && aioSort.key === h.key && aioSort.direction === "asc") direction = "desc";
-            setAioSort({ key: h.key, direction });
-          }}
-        >
-          <span>{h.label}</span>
-          <span className="text-xs text-slate-500">
-            {aioSort?.key === h.key ? (aioSort.direction === "asc" ? "↑" : "↓") : "↕"}
-          </span>
-        </MahatiButton>
-      ),
-      key: h.key,
-    })),
-  ];
-
-  /** ============================ Render ============================ */
-
+  // ===== Render =====
   return (
     <div className="min-h-screen bg-slate-50">
       <main className="mx-auto max-w-6xl px-6 py-12">
-        {/* Page Header */}
         <header className="mb-12">
           <h1 className="mb-4 text-5xl font-bold text-slate-900">Table</h1>
-          <p className="max-w-3xl text-lg leading-relaxed text-slate-500">
+          <p className=" text-lg leading-relaxed text-slate-500">
             Basic, paginated, bordered, sortable, editable tables, per-table alignment controls, per-column alignment,
             a column visibility demo, and an all-in-one demo — all fed by the same dataset.
           </p>
         </header>
 
         {/* BASIC */}
-        <Section id="basic-table">
+        <Section id="basic">
           <SectionTitle>Basic Table</SectionTitle>
           <SectionDescription>A minimal example with static data and no pagination controls.</SectionDescription>
           <DemoGrid>
-            <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+            <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 8)} />
           </DemoGrid>
         </Section>
-        
+
         {/* PAGINATED */}
         <Section id="paginated">
           <SectionTitle>Paginated Table</SectionTitle>
@@ -652,7 +573,7 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MahatiTable
+            <MahatiTableTailwind
               headers={basicHeaders}
               data={slice}
               page={page}
@@ -662,9 +583,9 @@ export default function TabDemoTailwindCSS() {
               totalCount={total}
               paginationRequired
               paginationPosition="bottom-center"
-              searchable
-              searchTerm={search}
-              onSearch={onSearch}
+            //   searchable
+            //   searchTerm={search}
+            //   onSearch={onSearch}
               onResetSearch={onReset}
               onDownloadPDF={() => alert("PDF download triggered!")}
             />
@@ -672,21 +593,25 @@ export default function TabDemoTailwindCSS() {
         </Section>
 
         {/* CUSTOM CELLS & ACTIONS */}
-        <Section id="custom-cells">
+        <Section id="custom">
           <SectionTitle>Custom Cells &amp; Actions</SectionTitle>
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton variant="primary" onClick={handleAddRow}>
+            <MahatiButton onClick={handleAddRow}>
               + Add Row
             </MahatiButton>
-            <MahatiButton onClick={handleAddColumn}>+ Add Column</MahatiButton>
-            <MahatiButton variant="danger" onClick={resetDemo}>
+            <MahatiButton onClick={handleAddColumn}>
+                + Add Column
+            </MahatiButton>
+            <MahatiButton variant="danger" onClick={resetDemo}
+                className="bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
+            >
               Reset Demo
             </MahatiButton>
           </div>
           <DemoGrid>
-            <MahatiTable
+            <MahatiTableTailwind
               headers={scriptHeaders}
-              data={custoMahatiTableData}
+              data={customTableData}
               actions={(row) => {
                 const rId = Number((row as any).id);
                 const source = scriptRows.find((r) => r.id === rId);
@@ -695,19 +620,19 @@ export default function TabDemoTailwindCSS() {
                   <div className="flex items-center gap-2">
                     {!isEditing ? (
                       <>
-                        <MahatiButton size="small" onClick={() => source && startEdit(source)}>
+                        <MahatiButton size="md" onClick={() => source && startEdit(source)}>
                           Edit
                         </MahatiButton>
-                        <MahatiButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
+                        <MahatiButton className="" size="md" variant="danger" onClick={() => source && deleteRow(source.id)}>
                           Delete
                         </MahatiButton>
                       </>
                     ) : (
                       <>
-                        <MahatiButton size="small" variant="primary" onClick={saveEdit}>
+                        <MahatiButton size="md" variant="danger" onClick={saveEdit}>
                           Save
                         </MahatiButton>
-                        <MahatiButton size="small" onClick={cancelEdit}>
+                        <MahatiButton size="md" onClick={cancelEdit}>
                           Cancel
                         </MahatiButton>
                       </>
@@ -720,7 +645,7 @@ export default function TabDemoTailwindCSS() {
         </Section>
 
         {/* DATE & TIME SORTING */}
-        <Section id="sorting">
+        <Section id="date-time-sorting">
           <SectionTitle>Date &amp; Time Sorting</SectionTitle>
           <DemoGrid>
             <SortableTable headers={taskHeaders} data={tasksDataPrepared} />
@@ -733,45 +658,45 @@ export default function TabDemoTailwindCSS() {
           <SectionDescription>Wrap the original Table to show visible cell edges.</SectionDescription>
           <DemoGrid>
             <div className="[&_table]:border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200 rounded-lg bg-white p-2">
-              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
+              <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 10)} />
             </div>
           </DemoGrid>
         </Section>
 
         {/* ALIGNMENT CONTROLS (ALL CELLS) */}
-        <Section id="global-alignment">
+        <Section id="alignment-controls">
           <SectionTitle>Alignment Controls (Left / Center / Right)</SectionTitle>
           <SectionDescription>
             This table starts left-aligned. Use the buttons to change alignment of <em>all cells</em> in this table only.
           </SectionDescription>
 
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
               Left
             </MahatiButton>
-            <MahatiButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
               Center
             </MahatiButton>
-            <MahatiButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
               Right
             </MahatiButton>
           </div>
 
           <DemoGrid>
             <div className={aioAlign === "left" ? "text-left" : aioAlign === "center" ? "text-center" : "text-right"}>
-              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+              <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 8)} />
             </div>
           </DemoGrid>
         </Section>
 
         {/* PER-COLUMN ALIGNMENT */}
-        <Section id="column-alignment">
+        <Section id="per-column-alignment">
           <SectionTitle>Per-Column Alignment (Click Header to Cycle)</SectionTitle>
           <SectionDescription>
             Starts left-aligned. Click a column header to cycle that column’s <em>cell</em> alignment: Left → Center → Right → Left.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTable headers={perColHeadersClickable} data={perColData} />
+            <MahatiTableTailwind headers={perColHeadersClickable} data={perColData} />
           </DemoGrid>
         </Section>
 
@@ -784,7 +709,7 @@ export default function TabDemoTailwindCSS() {
 
           <div className="mb-3 flex items-center">
             <div className="relative" ref={pickerRef}>
-              <MahatiButton
+              <button
                 type="button"
                 onClick={() => setPickerOpen((o) => !o)}
                 aria-haspopup="menu"
@@ -792,7 +717,7 @@ export default function TabDemoTailwindCSS() {
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm hover:bg-slate-50"
               >
                 Columns ({visibleKeys.length}/{visibilityHeaders.length})
-              </MahatiButton>
+              </button>
 
               {pickerOpen && (
                 <div
@@ -817,14 +742,14 @@ export default function TabDemoTailwindCSS() {
                     ))}
                   </div>
                   <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2">
-                    <MahatiButton size="small" onClick={selectAll}>
+                    <MahatiButton size="md" onClick={selectAll}>
                       Select All
                     </MahatiButton>
-                    <MahatiButton size="small" onClick={clearAll}>
+                    <MahatiButton size="md" onClick={clearAll}>
                       Clear All
                     </MahatiButton>
-                    <div className="ml-auto">
-                      <MahatiButton size="small" variant="primary" onClick={() => setPickerOpen(false)}>
+                    <div className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white">
+                      <MahatiButton size="md" variant="destructive" onClick={() => setPickerOpen(false)}>
                         Done
                       </MahatiButton>
                     </div>
@@ -835,9 +760,10 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MahatiTable
-              headers={filteredHeaders}
+            <MahatiTableTailwind
+              headers={visibilityHeaders.filter((h) => visibleKeys.includes(h.key))}
               data={useMemo(() => {
+                // Build rows picking only visible keys
                 return visibilityData.map((row) => {
                   const obj: Record<string, any> = {};
                   visibilityHeaders.forEach((h) => {
@@ -850,114 +776,56 @@ export default function TabDemoTailwindCSS() {
           </DemoGrid>
         </Section>
 
-        {/* ALL-IN-ONE (Tailwind-only; no resizers) */}
+        {/* ALL-IN-ONE (minus resizers to keep Tailwind-only) */}
         <Section id="all-in-one">
           <SectionTitle>All-in-One Table (Everything Demo)</SectionTitle>
           <SectionDescription>
-            Combines: sortable headers, pagination (on your Table if enabled), editable rows & actions, add column/row,
-            per-table alignment controls, and visible borders — all in one table.
+            Combines: sortable headers, pagination, editable rows & actions, add column/row, per-table alignment
+            controls, and visible borders — all in one table.
           </SectionDescription>
 
+          {/* alignment + actions */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton size="small" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "left" ? "primary" : undefined} onClick={() => setAioAlign("left")}>
               Left
             </MahatiButton>
-            <MahatiButton size="small" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "center" ? "primary" : undefined} onClick={() => setAioAlign("center")}>
               Center
             </MahatiButton>
-            <MahatiButton size="small" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
+            <MahatiButton className="bg-primary text-white" size="md" variant={aioAlign === "right" ? "primary" : undefined} onClick={() => setAioAlign("right")}>
               Right
             </MahatiButton>
 
             <span className="mx-2 h-6 w-px bg-slate-200" />
 
-            <MahatiButton size="small" onClick={handleAddColumn}>
+            <MahatiButton size="md" onClick={handleAddColumn}>
               + Add Column
             </MahatiButton>
-            <MahatiButton size="small" onClick={handleAddRow}>
+            <MahatiButton size="md" onClick={handleAddRow}>
               + Add Row
             </MahatiButton>
-            <MahatiButton size="small" variant="danger" onClick={resetDemo}>
+            <MahatiButton size="lg" variant="danger" onClick={resetDemo}
+                className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
+            >
               Reset
             </MahatiButton>
           </div>
 
-          <div
-            className={`rounded-lg bg-white p-2 ${
-              aioAlign === "left" ? "text-left" : aioAlign === "center" ? "text-center" : "text-right"
-            } [&_table]:border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200`}
-          >
-            <MahatiTable
-              headers={aioHeaders}
-              data={sortedAioRows.map((row) => {
-                const out: Record<string, any> = { id: row.id };
-                scriptHeaders.forEach((h) => {
-                  const value = (row as any)[h.key];
-                  if (h.key === "role") {
-                    out[h.key] = (
-                      <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-xs">
-                        {String(value ?? "")}
-                      </span>
-                    );
-                  } else if (h.key === "active") {
-                    const on = typeof value === "boolean" ? value : String(value) === "true";
-                    out[h.key] = (
-                      <span className={`font-semibold ${on ? "text-green-600" : "text-red-500"}`}>
-                        {on ? "Active" : "Inactive"}
-                      </span>
-                    );
-                  } else if (h.key === "name") {
-                    out[h.key] = (
-                      <a
-                        href={(row as any).url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sky-700 hover:underline"
-                      >
-                        {String(value ?? "")}
-                      </a>
-                    );
-                  } else if (typeof value === "string" && h.key.toLowerCase().includes("date")) {
-                    out[h.key] = value ? new Date(value).toLocaleString() : "-";
-                  } else {
-                    out[h.key] = String(value ?? "");
-                  }
-                });
-                return out;
-              })}
-              actions={(row) => {
-                const rId = Number((row as any).id);
-                const source = scriptRows.find((r) => r.id === rId);
-                const isEditing = source?.id === editingRowId;
-                return (
-                  <div className="flex items-center gap-2">
-                    {!isEditing ? (
-                      <>
-                        <MahatiButton size="small" onClick={() => source && startEdit(source)}>
-                          Edit
-                        </MahatiButton>
-                        <MahatiButton size="small" variant="danger" onClick={() => source && deleteRow(source.id)}>
-                          Delete
-                        </MahatiButton>
-                      </>
-                    ) : (
-                      <>
-                        <MahatiButton size="small" variant="primary" onClick={saveEdit}>
-                          Save
-                        </MahatiButton>
-                        <MahatiButton size="small" onClick={cancelEdit}>
-                          Cancel
-                        </MahatiButton>
-                      </>
-                    )}
-                  </div>
-                );
-              }}
+          <div className={`${aioAlign === "left" ? "text-left" : aioAlign === "center" ? "text-center" : "text-right"} rounded-lg bg-white p-2 [&_table]:border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200`}>
+            {/* Sortable headers + pagination with scriptRows */}
+            <SortableTable
+              headers={[
+                { label: "ID", key: "id" },
+                ...scriptHeaders,
+              ]}
+              data={scriptRows}
             />
           </div>
 
-          <div className="mt-3 text-sm text-slate-600">
-            <span className="font-medium">Rows:</span> {scriptRows.length}
+          {/* Simple pager for scriptRows (optional) */}
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+            <span className="font-medium">Rows:</span>
+            <span>{scriptRows.length}</span>
           </div>
         </Section>
       </main>

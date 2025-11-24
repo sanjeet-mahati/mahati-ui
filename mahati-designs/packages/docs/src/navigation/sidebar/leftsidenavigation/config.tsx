@@ -341,6 +341,21 @@ export const NavItems = (): NavItem[]  => {
       icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
       active: pathname === '/tableTailwindCSSDemo',
       position: 'top',
+      // subItems: [
+      //   { name: 'Basic Table', href: '/tableTailwindCSSDemo#basic-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Paginated', href: '/tableTailwindCSSDemo#paginated', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Custom Cells', href: '/tableTailwindCSSDemo#custom-cells', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Sorting', href: '/tableTailwindCSSDemo#sorting', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Bordered', href: '/tableTailwindCSSDemo#bordered', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Global Alignment', href: '/tableTailwindCSSDemo#global-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Column Alignment', href: '/tableTailwindCSSDemo#column-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Column Visibility', href: '/tableTailwindCSSDemo#column-visibility', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'All-in-One', href: '/tableTailwindCSSDemo#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Expandable Rows with Summary', href: '/tableTailwindCSSDemo#expandable-rows-with-summary', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Expandable Multiple Rows with Summary', href: '/tableTailwindCSSDemo#expandable-multiple-rows-with-summary', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      //   { name: 'Text Wrap Column Table', href: '/tableTailwindCSSDemo#text-wrap-column-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        
+      // ]
     },
 
 
