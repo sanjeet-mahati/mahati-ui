@@ -1,72 +1,144 @@
 "use client";
 
-import React from 'react';
-import { cn } from "@/lib/utils";
-
-interface ModalProps {
+import React, { useEffect } from "react";
+import { X } from "lucide-react";
+import { Button } from "./Button";
+type MahatiModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  children: React.ReactNode;
+  subtitle?: string;
+  children?: React.ReactNode;
   className?: string;
-}
 
-const Modal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title, 
+  primaryAction?: {
+    label?: string;
+    onClick?: () => void;
+    disabled?: boolean;
+  };
+  secondaryAction?: {
+    label?: string;
+    onClick?: () => void;
+  };
+
+  headerIcon?: React.ReactNode;
+  showDivider?: boolean;
+};
+
+export default function Modal({
+  isOpen,
+  onClose,
+  title,
+  subtitle,
   children,
-  className 
-}) => {
+  className = "",
+  primaryAction,
+  secondaryAction,
+  headerIcon,
+  showDivider = true,
+}: MahatiModalProps) {
+  // ESC key close
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <>
       {/* Overlay */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" 
+      <div
+        className="fixed inset-0 bg-black/50"
         onClick={onClose}
       />
-      
-      {/* Modal Content */}
-      <div className="fixed inset-0 overflow-y-auto">
+<hr className="my-4 border-red-300" />
+      {/* Modal container */}
+      <div className="fixed inset-0 overflow-y-auto z-50">
         <div className="flex min-h-full items-center justify-center p-4">
-          <div 
-            className={cn(
-              "relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6",
-              className
-            )}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-500"
-            >
-              <span className="sr-only">Close</span>
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+         <div
+  role="dialog"
+  aria-modal="true"
+  className="relative w-[562px] shrink-0 bg-white rounded-[14px] shadow-xl pb-[10px] pt-5 transform transition-all"
+  onClick={(e) => e.stopPropagation()}
+>
 
-            {/* Title */}
-            {title && (
-              <div className="mb-4">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  {title}
-                </h3>
+            {/* Close button */}
+          <button
+  onClick={onClose}
+  aria-label="Close dialog"
+  className="absolute top-4 right-4 text-slate-500 hover:text-slate-700"
+>
+  <X size={20} />
+</button>
+
+            {/* Header */}
+            <div className="mb-4 px-6">
+              <div className="flex items-start gap-3">
+               <div className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-[6px]">
+                  {headerIcon ?? <span className="text-sm"></span>}
+                </div>
+                <div>
+                  {title && (
+                    <h3 className="text-[20px] font-semibold text-slate-900 leading-6">
+                      {title}
+                    </h3>
+                  )}
+                  {subtitle && (
+                    <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            {showDivider && (
+              <div className="mx-6 h-px shrink-0 [background:linear-gradient(90deg,#1761A3_0%,#4DAF83_100%)] rounded-lg"></div>
+            )}
+
+            {/* Body */}
+            <div className="px-6">{children}</div>
+
+            {/* Footer */}
+           <div className="mt-6 mx-6 h-px shrink-0 bg-[linear-gradient(90deg,#1761A3_0%,#4DAF83_100%)] rounded-lg"></div>
+
+            {(primaryAction || secondaryAction) && (
+              <div className="pt-4 flex justify-end gap-3 px-6 pb-4" style={{float:"right",marginBottom:"10px"}}>
+                {secondaryAction && (
+                  <Button
+                    onClick={secondaryAction.onClick}
+                    variant="outline"
+                    type="button"
+                  >
+                    {secondaryAction.label ?? "Cancel"}
+                  </Button>
+                )}
+
+                {primaryAction && (
+                  <Button
+                    onClick={primaryAction.onClick}
+                    disabled={primaryAction.disabled}
+                    variant="default"
+                    className={
+                      primaryAction.disabled
+                        ? "bg-blue-300 cursor-not-allowed"
+                        : "default"
+                    }
+                    type="button"
+                  >
+                    {primaryAction.label ?? "Save"}
+                  </Button>
+                )}
               </div>
             )}
-
-            {/* Content */}
-            <div className="mt-2 text-black">
-              {children}
-            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
-};
+}
+
 Modal.displayName = "Modal";
-export {Modal};
+export { Modal };

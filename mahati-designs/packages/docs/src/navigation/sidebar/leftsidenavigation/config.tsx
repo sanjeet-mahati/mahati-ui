@@ -361,16 +361,34 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Glass', href: '/tab#glass-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Gradient', href: '/tab#gradient-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
+    },    {
+      name: 'Chart',
+      href: '/chart',
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/chart',
+      position: 'top',
+      subItems: [
+      
+        { name: 'Chart with dropdown', href: '/chart#chart-with-dropdown', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Basic Charts', href: '/chart#basic-charts', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Chart Variants', href: '/chart#chart-variants', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Chart Sizes', href: '/chart#chart-sizes', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Combining Variants', href: '/chart#combining-variants', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Props', href: '/chart#props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Examples', href: '/chart#examples', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+      ]
     },
 
 
     //  {
+    // {
     //   name: 'Tab Tailwind CSS',
     //   href: '/tabTailwindCSSDemo',
     //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
     //   active: pathname === '/tabTailwindCSSDemo',
     //   position: 'top',
     //  },
+    // },
 
 
     // {
