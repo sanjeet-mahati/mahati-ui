@@ -1,10 +1,26 @@
-// app/dashboard/page.tsx (COMPLETE FIXED VERSION)
 "use client";
-import { MahatiAnalyticsWidget } from "@/components";
-import { useState, useMemo } from "react";
-import type { ChartData, DetailItem } from "../../../../uicomponents/src/components/MahatiPieAnalyticsWidget";
+import React, { useState } from 'react';
+import { ChartData } from 'chart.js';
+import { MahatiChartAnalyticsWidget } from '@/components';
 
-const initialDoughnutData: ChartData = {
+// Chart data configurations
+const pieChartData: ChartData<'doughnut'> = {
+  labels: [
+    'Total amount still outstanding',
+    'Average amount collected per business day',
+    'Total fee waiting to be settled',
+    'Total fee processed and settled',
+    'Total amount already collected'
+  ],
+  datasets: [{
+    data: [50, 7, 10, 20, 13],
+    backgroundColor: ['#7DCFAF', '#F28A18', '#2094F3', '#909592', '#BCC6CB'],
+    borderColor: '#ffffff',
+    borderWidth: 4
+  }]
+};
+
+const doughnutData: ChartData<'doughnut'> = {
   labels: ["Outstanding", "Collected", "Pending"],
   datasets: [{
     data: [40, 35, 25],
@@ -14,8 +30,7 @@ const initialDoughnutData: ChartData = {
   }]
 };
 
-// ✅ FIXED: Line chart now has 3 datasets for 3 lines
-const lineChartData: ChartData = {
+const lineChartData: ChartData<'line'> = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
     {
@@ -42,7 +57,7 @@ const lineChartData: ChartData = {
   ]
 };
 
-const barChartData: ChartData = {
+const barChartData: ChartData<'bar'> = {
   labels: ['Q1', 'Q2', 'Q3', 'Q4'],
   datasets: [{
     data: [250, 310, 280, 400],
@@ -52,163 +67,89 @@ const barChartData: ChartData = {
   }]
 };
 
-export default function Dashboard() {
-  const [chartType, setChartType] = useState<'doughnut' | 'line' | 'bar'>('line'); // Changed default to 'line'
-  const [chartData, setChartData] = useState<ChartData>(lineChartData); // Changed default to lineChartData
+const chartDataMap = { pie: pieChartData, doughnut: doughnutData, line: lineChartData, bar: barChartData };
 
-  const isDoughnut = chartType === 'doughnut';
+// --- Create alternate data to show when filters are applied ---
+const pieChartDataClient: ChartData<'doughnut'> = {
+  labels: [ 'Client Outstanding', 'Client Collected', 'Client Pending' ],
+  datasets: [{
+    data: [25, 45, 30], // Different data for demonstration
+    backgroundColor: ['#7DCFAF', '#F28A18', '#2094F3'],
+    borderColor: '#ffffff',
+    borderWidth: 4
+  }]
+};
 
-  // This is a mock function. In a real app, you'd fetch data based on filters.
-  const handleApplyFilters = (filters: Record<string, string>) => {
-    console.log("Applying filters:", filters);
+const chartDataMapClient = { ...chartDataMap, pie: pieChartDataClient };
+// ---
 
-    if (chartType === 'line') {
-      // For line charts, update all 3 datasets
-      const newData = {
-        ...chartData,
-        datasets: chartData.datasets.map(dataset => ({
-          ...dataset,
-          data: Array.from({ length: 6 }, () => Math.floor(Math.random() * 100)),
-        })),
-      };
-      setChartData(newData);
-    } else if (chartType === 'doughnut') {
-      // For doughnut, update the single dataset
-      const newData = {
-        ...chartData,
-        datasets: [{
-          ...chartData.datasets[0],
-          data: [
-            Math.floor(Math.random() * 100),
-            Math.floor(Math.random() * 100),
-            Math.floor(Math.random() * 100),
-          ],
-        }],
-      };
-      setChartData(newData);
-    } else if (chartType === 'bar') {
-      // For bar charts
-      const newData = {
-        ...chartData,
-        datasets: [{
-          ...chartData.datasets[0],
-          data: Array.from({ length: 4 }, () => Math.floor(Math.random() * 500)),
-        }],
-      };
-      setChartData(newData);
-    }
+// Define different stats for each chart type
+const quickStatsData = {
+  pie: {
+    totalVolume: { value: '$33,850.00', change: '+2%', description: 'Increased by $290 from yesterday' },
+    transactions: { value: '2,230', description: 'Total Transactions from yesterday' },
+  },
+  doughnut: {
+    totalVolume: { value: '$45,120.00', change: '+5%', description: 'Increased by $1,200 from yesterday' },
+    transactions: { value: '3,100', description: 'Total Transactions from yesterday' },
+  },
+  line: {
+    totalVolume: { value: '$98,500.00', change: '-1%', description: 'Decreased by $500 from yesterday' },
+    transactions: { value: '8,450', description: 'Total Transactions from yesterday' },
+  },
+  bar: {
+    totalVolume: { value: '$12,300.00', change: '+10%', description: 'Increased by $1,100 from yesterday' },
+    transactions: { value: '1,200', description: 'Total Transactions from yesterday' },
+  }
+};
+
+export default function MahatiChart() {
+  const [activeChartData, setActiveChartData] = useState(chartDataMap);
+  const [currentStats, setCurrentStats] = useState(quickStatsData.pie);
+
+  const handleChartTypeChange = (chartType: 'pie' | 'doughnut' | 'line' | 'bar') => {
+    setCurrentStats(quickStatsData[chartType]);
   };
 
-  // Dynamically calculate details based on current chartData
-  const currentDetails: DetailItem[] = useMemo(() => {
-    if (chartType === 'line') {
-      // For line charts, calculate percentages from the latest month's values
-      const latestValues = chartData.datasets.map(dataset => dataset.data[dataset.data.length - 1]);
-      const total = latestValues.reduce((sum, val) => sum + val, 0);
-      
-      return chartData.datasets.map((dataset, index) => {
-        const latestValue = dataset.data[dataset.data.length - 1];
-        const percentage = total > 0 ? ((latestValue / total) * 100).toFixed(0) : 0;
-        const label = dataset.label || chartData.labels[index] || `Series ${index + 1}`;
-        const color = typeof dataset.borderColor === 'string' ? dataset.borderColor : '#CBD5E1';
-        
-        let description = "";
-        if (label === "Outstanding") description = "Amount pending";
-        if (label === "Collected") description = "Amount collected";
-        if (label === "Pending") description = "Pending settlement";
-
-        return {
-          label,
-          value: `${percentage}%`,
-          description,
-          color,
-        };
-      });
-    } else {
-      // For doughnut/pie charts, calculate percentages
-      const total = isDoughnut ? chartData.datasets[0].data.reduce((sum, val) => sum + val, 0) : 0;
-      return chartData.labels.map((label, index) => {
-        const value = chartData.datasets[0].data[index];
-        const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : 0;
-        const colors = chartData.datasets[0].backgroundColor;
-        const color = Array.isArray(colors) ? colors[index] : colors;
-        
-        let description = "";
-        if (label === "Outstanding") description = "Amount pending";
-        if (label === "Collected") description = "Amount collected";
-        if (label === "Pending") description = "Pending settlement";
-
-        return {
-          label,
-          value: `${percentage}%`,
-          description,
-          color,
-        };
-      });
-    }
-  }, [chartData, chartType, isDoughnut]);
-
-  const handleChartTypeChange = (type: 'doughnut' | 'line' | 'bar') => {
-    setChartType(type);
-    if (type === 'doughnut') setChartData(initialDoughnutData);
-    if (type === 'line') setChartData(lineChartData);
-    if (type === 'bar') setChartData(barChartData);
-  }
+  const handleApplyFilters = (filters: Record<string, string>) => {
+    //console.log("Applying filters:", filters);
+    // Example logic: If Relationship is 'Client', show different data. Otherwise, show default.
+    // if (filters.Relationship === 'Client') {
+    //   setActiveChartData(chartDataMapClient);
+    // } else {
+    //   setActiveChartData(chartDataMap);
+    // }
+    //alert('Filters applied! The data for the Pie chart will change if you selected "Client".');
+    setActiveChartData(chartDataMapClient);
+  };
 
   return (
-    <div>
-      <div className="mb-4 flex gap-2 p-6">
-        <button 
-          onClick={() => handleChartTypeChange('doughnut')} 
-          className={`px-4 py-2 rounded ${chartType === 'doughnut' ? 'bg-teal-500 text-white' : 'bg-gray-200'}`}
-        >
-          Doughnut Chart
-        </button>
-        <button 
-          onClick={() => handleChartTypeChange('line')} 
-          className={`px-4 py-2 rounded ${chartType === 'line' ? 'bg-teal-500 text-white' : 'bg-gray-200'}`}
-        >
-          Line Chart
-        </button>
-        <button 
-          onClick={() => handleChartTypeChange('bar')} 
-          className={`px-4 py-2 rounded ${chartType === 'bar' ? 'bg-teal-500 text-white' : 'bg-gray-200'}`}
-        >
-          Bar Chart
-        </button>
-      </div>
-
-      <MahatiAnalyticsWidget
-        title="Collection Status"
-        subtitle="Overview of collection performance"
-        filters={[
-          { key: "Relationship", label: "Relationship", options: ["All", "Partner", "Client"] },
-          { key: "DebtCollector", label: "Debt Collector", options: ["All", "Collector A", "Collector B"] },
-          { key: "CollectionAgency", label: "Collection Agency", options: ["All", "Agency A", "Agency B"] },
-          { key: "Periodicity", label: "Periodicity", options: ["12 months", "30 days", "7 days"] },
-        ]}
-        selectedFilters={{ Periodicity: "12 months" }}
-        onFilterChange={(k, v) => console.log("filter", k, v)}
-        onApply={handleApplyFilters}
-        chartData={chartData}
-        chartType={chartType}
-        centerLabel="Total"
-        centerValue="$33,850"
-        hoverTooltipText="Click to view breakdown"
-        details={currentDetails}
-        topDropdownOptions={["This month", "Last 30 days", "Custom"]}
-        onTopDropdownSelect={(v) => console.log("top dropdown", v)}
-        actionMenu={[
-          { label: "Export PNG", onClick: () => console.log("export png") },
-          { label: "Share", onClick: () => console.log("share") },
-        ]}
-        quickInsights={[
-          { title: "Aggregating Amount", value: "$33,850" }, 
-          { title: "Outstanding Amount", value: "$19,000" }
-        ]}
-        totalVolume={{ value: "$33,850", change: "↑ 5.2%" }}
-        transactions={{ value: "2,230", subtitle: "From yesterday" }}
-      />
-    </div>
+    <MahatiChartAnalyticsWidget 
+    title="Mahati Systems UI Components"
+    chartTypes={['pie', 'doughnut', 'line', 'bar'] as const}
+    initialChartType={'pie' as const}
+    filters={[
+      { id: 'Relationship', label: 'Relationship', options: ['Partner', 'Client'] },
+      { id: 'DebtCollector', label: 'Debt Collector', options: ['Collector B', 'Collector A'] },
+      { id: 'CollectionAgency', label: 'Collection Agency', options: ['Agency B', 'Agency A'] },
+      { id: 'Periodicity', label: 'Periodicity', options: ['12 months', '30 days', '7 days'] },
+    ]}
+    initialFilters={{
+      Relationship: 'Partner',
+      DebtCollector: 'Collector B',
+      CollectionAgency: 'Agency B',
+      Periodicity: '12 months'
+    }}
+    chartDataMap={activeChartData}
+    onApplyFilters={handleApplyFilters}
+    quickStats={currentStats}
+    onChartTypeChange={handleChartTypeChange}
+    actionButtons={[
+      { label: 'Remove Chart', style: 'danger' as const, onClick: () => alert('Remove Chart clicked!') },
+      { label: 'Add Chart', style: 'primary' as const, onClick: () => alert('Add Chart clicked!') },
+      { label: 'Save Layout', style: 'success' as const, onClick: () => alert('Save Layout clicked!') },
+    ]}
+  
+    />
   );
 }

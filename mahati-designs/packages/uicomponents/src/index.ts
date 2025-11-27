@@ -4,7 +4,7 @@ export { Button as MahatiButton } from './components/Button';
 export { Card as MahatiCard }from './components/Card';
 export { Modal as MahatiModal }from './components/Modal';
 export { ChartInterface as MahatiChart }from './components/ChartInterface';
-export {  MahatiAnalyticsWidget }from './components/MahatiPieAnalyticsWidget';
+export {  MahatiChartAnalyticsWidget }from './components/MahatiChartAnalyticsWidget';
 export { FormContainer as MahatiFormContainer }from './components/FormContainer';
 export { Input as MahatiInput } from './components/Input';
 // export  { TabbedInterface as MahatiTabbedInterface }  from './components/TabbedInterface';
