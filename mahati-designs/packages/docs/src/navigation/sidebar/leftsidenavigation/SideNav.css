@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-accent {
+    background-color: #135f9b; /* Blue background */
+  }
+}
+
+.sidebar-container {
+  @apply pr-2;
+}
+
+.sidebar {
+  @apply border-r transition-all duration-300 ease-in-out transform hidden sm:flex h-full;
+  /* background-color: #135f9b; */
+  background: linear-gradient(to right, #1e73be, #28a97d); /* for gradient */
+}
+
+.sidebar-expanded {
+  @apply w-[210px];
+}
+
+.sidebar-collapsed {
+  @apply w-[80px];
+}
+
+.sidebar-aside {
+  @apply flex h-full flex-col w-full break-words px-2 overflow-x-hidden;
+}
+
+.nav-container {
+  @apply mt-4 ml-2 flex flex-col space-y-1 py-1;
+}
+
+.nav-list {
+  @apply flex flex-col space-y-2;
+}
+
+.nav-item {
+  @apply space-y-1 hover:bg-[#1564a1] rounded-lg;
+}
+
+.nav-link {
+  @apply h-full relative flex items-center whitespace-nowrap rounded-md text-sm;
+}
+
+.nav-link-active {
+  @apply font-normal text-sm bg-[#6496bc] shadow-sm text-white dark:bg-[#6496bc] dark:text-white; /* Text white */
+}
+
+.nav-link-inactive {
+  @apply hover:bg-[#6496bc] hover:text-neutral-700 text-white dark:text-white dark:hover:bg-[#6496bc] dark:hover:text-white; /* Text white */
+}
+
+.nav-link-content {
+  @apply relative font-normal text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-500 w-full;
+}
+
+.nav-link-content-collapsed {
+  @apply relative font-normal text-sm p-2 flex flex-row items-center space-x-2 rounded-md duration-100;
+}
+
+.nav-link-subitem {
+  @apply pl-4 text-sm;
+  background-color: #6496bc;
+}
+
+.nav-link-content-text {
+  @apply flex-1;
+}
+
+.chevron-icon {
+  @apply transition-transform duration-200 text-[14px]; /* Enforce 14px size for chevrons */
+}
+
+.chevron-open {
+  @apply rotate-180;
+}
+
+.chevron-closed {
+  @apply rotate-0;
+}
+
+.submenu-container {
+  @apply flex flex-col space-y-1;
+}
+
+.subitem-indent {
+  @apply ml-2;
+}
+
+.bottom-section {
+  @apply sticky bottom-5 mt-auto whitespace-nowrap mb-4 transition duration-200 block;
+}
+
+.toggle-button-container {
+  /* @apply mt-[calc(calc(90vh)-40px)] relative; */
+}
+
+.toggle-button {
+  @apply absolute top-4 right-[-12px] flex h-6 w-6 items-center justify-center border border-muted-foreground/20 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-accent ease-in-out;
+}
+
+.tooltip-content {
+  @apply px-3 py-1.5 text-xs;
+}
+
+/* New rule to enforce consistent icon size */
+.sidebar .nav-link-content svg,
+.sidebar .nav-link-content-collapsed svg,
+.toggle-button svg {
+  @apply w-[14px] h-[14px] text-white; /* Fixed size matching 'sm' (14px) and matching text color */
+}

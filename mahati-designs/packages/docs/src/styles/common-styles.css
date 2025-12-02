@@ -1,0 +1,796 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Define CSS custom properties for breadcrumb tooltips */
+  :root {
+    --breadcrumb-tooltip-max-width: 300px;
+    --breadcrumb-tooltip-padding: 0.15rem;
+    --breadcrumb-tooltip-margin-top: 0.5rem;
+  }
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For All the Pages.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+  
+  
+  /* Define CSS custom properties for breadcrumb tooltips */
+  :root {
+    --breadcrumb-tooltip-max-width: 300px;
+    --breadcrumb-tooltip-padding: 0.15rem;
+    --breadcrumb-tooltip-margin-top: 0.5rem;
+  }
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For All the Pages.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+  
+  
+  .page-container {
+    @apply container mx-auto p-6 dark:bg-gray-800;
+    @apply container mx-auto p-6 dark:bg-gray-800;
+  }
+
+  .page-header {
+    @apply flex flex-row items-start py-1 gap-2 ; 
+    
+  }
+
+  .page-blog-header {
+    @apply flex flex-col items-start py-1 gap-2 !important; 
+    
+    @apply flex flex-row items-start py-1 gap-2 ; 
+    
+  }
+
+  .page-blog-header {
+    @apply flex flex-col items-start py-1 gap-2 !important; 
+    
+  }
+
+  .page-logo {
+    @apply h-10 md:h-20 w-20 object-contain;
+    @apply h-10 md:h-20 w-20 object-contain;
+  }
+
+  .page-title {
+    @apply break-keep text-2xl md:text-3xl  font-semibold mt-4 mb-2;
+  }
+
+  .page-subtitle{
+    @apply text-sm md:text-lg  font-bold  ;
+    
+    @apply break-keep text-2xl md:text-3xl  font-semibold mt-4 mb-2;
+  }
+
+  .page-subtitle{
+    @apply text-sm md:text-lg  font-bold  ;
+    
+  }
+
+  .page-content {
+    @apply grid gap-6;
+  }
+
+  .page-section {
+    @apply bg-gray-100 p-4 rounded-lg shadow-lg dark:bg-gray-600;
+    @apply bg-gray-100 p-4 rounded-lg shadow-lg dark:bg-gray-600;
+  }
+
+  .page-subheading {
+    @apply text-xl font-semibold mb-4;
+  }
+
+  .page-para-text {
+    @apply text-sm/7  mb-6;
+  }
+
+  .page-para-text {
+    @apply text-sm/7  mb-6;
+  }
+
+  .page-text {
+    @apply text-sm/7  mb-4;
+    @apply text-sm/7  mb-4;
+  }
+
+  .page-list {
+    @apply text-sm/7  list-disc px-5 ml-5 mt-2;
+    @apply text-sm/7  list-disc px-5 ml-5 mt-2;
+  }
+
+  .page-list-item {
+    @apply text-sm/7  mb-2;
+    @apply text-sm/7  mb-2;
+  }
+
+  .page-sublist {
+    @apply list-disc px-5 mt-2;
+  }
+
+  .page-sublist-item {
+    @apply  mb-2;
+  }
+
+  .page-sub-sublist-item {
+    @apply  mb-2;
+  }
+
+  .page-sub-sublist-item {
+    @apply mb-2;
+  }
+
+  .page-prerequisite {
+    @apply text-base px-5 font-semibold mt-5 mb-10;
+    @apply text-base px-5 font-semibold mt-5 mb-10;
+  }
+
+  .page-ordered-list {
+    @apply list-decimal text-sm/7 px-20 mt-2;
+    @apply list-decimal text-sm/7 px-20 mt-2;
+  }
+
+  .page-code-block {
+    @apply  bg-gray-300/80 p-3 w-auto rounded-lg shadow-lg mt-2 mb-5 whitespace-pre-wrap text-sm/5 ;
+    @apply  bg-gray-300/80 p-3 w-auto rounded-lg shadow-lg mt-2 mb-5 whitespace-pre-wrap text-sm/5 ;
+  }
+
+  .page-hr {
+    @apply my-4 border-t border-gray-300;
+  }
+
+  .page-subtext {
+    @apply px-5;
+  }
+
+  .page-link {
+    @apply underline inline-block px-2 border-b-2 border-transparent rounded-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-blue-600/100 dark:text-blue-600/100;
+  }
+  /* background-color: #135f9b; */
+
+
+  /* For Highlighting a particular word or sentence */
+  .page-content-highlight {
+    content: " ";
+    @apply inline-block px-2 rounded-xl dark:text-white;
+    background-color: #e5d2ad5b;
+    
+  }
+
+
+
+  /* For Blog Section */
+  .page-blog-editor {
+    @apply flex flex-row text-xl py-2 ;
+    /* @apply text-xl md:text-sm italic font-bold font-serif mt-4 mb-4; */
+  }
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Bread Crumbs.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* Breadcrumb Styles */
+  /* .breadcrumb {
+    @apply flex items-center font-serif py-1 mt-4 px-6 bg-gray-100 dark:bg-gray-800 rounded-xl font-serif;
+  }
+
+  .breadcrumb-list {
+    @apply flex flex-wrap list-none p-0 m-0;
+  }
+
+  .breadcrumb-item {
+    @apply flex items-center text-sm text-gray-600 dark:text-gray-300;
+  }
+
+  .breadcrumb-item:not(:last-child)::after {
+    content: '/';
+    @apply mx-2 text-gray-400 dark:text-gray-500;
+  }
+
+  .breadcrumb-link {
+    @apply text-blue-600 hover:underline dark:text-blue-400;
+  }
+
+  .breadcrumb-current {
+    @apply font-semibold text-gray-800 dark:text-gray-100;
+  } */
+
+
+
+
+  /* Breadcrumb Styles  with ICONS*/
+   .breadcrumb {
+    @apply flex items-center  py-2 px-4 mt-2;
+  }
+
+  .breadcrumb-list {
+    @apply flex flex-wrap list-none p-0 m-0;
+  }
+
+  .breadcrumb-item {
+    @apply flex items-center text-sm text-gray-600 dark:text-gray-300;
+  }
+
+  .breadcrumb-item:not(:last-child)::after {
+    content: '>';
+    @apply mx-2 text-gray-400 dark:text-gray-500 text-lg;
+  }
+
+  .breadcrumb-link {
+    @apply text-blue-600 hover:underline dark:text-blue-400 flex items-center;
+  }
+
+  .breadcrumb-link svg {
+    @apply w-4 h-4 inline-block align-middle;
+  }
+
+  .breadcrumb-current {
+    @apply font-semibold text-gray-800 dark:text-gray-100 flex items-center;
+  }
+
+  .breadcrumb-current svg {
+    @apply w-4 h-4 inline-block align-middle;
+  }
+
+  
+
+
+  /* Breadcrumb-Specific Tooltip Styles */
+  /* Breadcrumb-Specific Tooltip Styles */
+  .breadcrumb [data-tooltip]:hover::after {
+    @apply top-full bottom-auto mt-[var(--breadcrumb-tooltip-margin-top)] mb-0 text-sm;
+    width: min-content;
+    max-width: var(--breadcrumb-tooltip-max-width);
+    padding: var(--breadcrumb-tooltip-padding);
+    white-space: nowrap;
+    background-color: #1572ba;
+    text-align: center;
+  }
+
+  .breadcrumb [data-tooltip]:hover::before {
+    @apply top-[calc(100%+0.15rem)] bottom-auto border-b-4 border-b-[#1572ba] border-t-0 border-x-4 border-x-transparent;
+  }
+
+  
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For ToolTip and Arrow.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  
+  /* Tooltip Styles */
+  
+
+  [data-tooltip] {
+    @apply relative;
+  }
+
+  [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    @apply absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 text-gray-300 text-sm p-2 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 delay-300 z-10 max-w-md max-h-40 overflow-y-auto whitespace-normal;
+    background-color: #1572ba;
+  }
+
+  [data-tooltip]:hover::after {
+    @apply opacity-100;
+  }
+
+  [data-tooltip]:hover::before {
+    content: '';
+    @apply absolute bottom-[calc(100%-0.2rem)] left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-4 border-t-[#1572ba] border-x-4 border-x-transparent opacity-0 transition-opacity duration-200 delay-300;
+  }
+
+  [data-tooltip]:hover::before {
+    @apply opacity-100;
+  }
+
+
+  /* Arrow Styles */
+  .page-link[data-tooltip]:hover::before {
+    content: '';
+    @apply absolute bottom-[calc(100%-0.2rem)] left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-4 border-t-[var(--tooltip-bg)] border-x-4 border-x-transparent opacity-0 transition-opacity duration-200 delay-300;
+  }
+
+  .page-link[data-tooltip]:hover::before {
+    @apply opacity-100;
+  }
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Multi-Media Card.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  /* box-shadow: 0 4px 6px -1px var(#1573bab5); */
+
+  /* .multimedia-card {
+    @apply bg-white rounded-lg shadow-xl p-4 mx-auto font-serif overflow-hidden;
+  }
+  .multimedia-card {
+    box-shadow: 0 4px 6px -1px #318acec0;
+  }
+  .multimedia-card:hover {
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+  } */
+
+
+
+  /* Multimedia Card Styles */
+  .multimedia-card {
+    @apply bg-white rounded-xl shadow-xl p-1 mx-auto  overflow-hidden;
+  }
+  .multimedia-card {
+    box-shadow: 0 4px 6px -1px #318acec0;
+  }
+  .multimedia-card:hover {
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+  }
+
+  .multimedia-card-dynamic {
+    width: var(--card-width, 384px);
+    height: var(--card-height, 216px); /* Adjusted to 16:9 aspect ratio */
+    left: var(--card-left, 0px);
+    top: var(--card-top, 10px);
+    min-height: 380px;
+    max-height: 490px;
+    /* min-width: 200px;
+    max-width: 384px; */
+  }
+
+  .multimedia-content {
+    @apply w-full h-full object-contain;
+  }
+
+  .multimedia-caption {
+    @apply text-center text-gray-600 text-sm mt-2   break-words;
+  }
+
+  .multimedia-control-button {
+    @apply w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition-colors text-center leading-none;
+  }
+
+  .multimedia-control-button svg {
+    @apply w-4 h-4;
+  }
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Table.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  
+
+  /* Table Styles */
+  /* .table-container {
+    @apply overflow-x-auto mt-4;
+  }
+
+  .table {
+    @apply w-full text-sm text-gray-700 dark:text-gray-200 border-collapse;
+  }
+
+  .table-header {
+    @apply bg-gray-200 dark:bg-gray-700 text-left font-semibold text-gray-800 dark:text-gray-100 py-3 px-4 border-b-2 border-gray-300 dark:border-gray-600;
+  }
+
+  .table-cell {
+    @apply py-3 px-4 border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors;
+  } */
+
+  .table-container {
+    @apply overflow-x-auto mt-4;
+  }
+
+  .table {
+    @apply w-full text-sm text-gray-700 dark:text-gray-200 border-collapse;
+  }
+
+  .table-header {
+    @apply bg-gray-200 dark:bg-gray-700 text-left font-semibold text-gray-800 dark:text-gray-100 py-3 px-4 border-b-2 border-gray-300 dark:border-gray-600;
+  }
+
+  .table-cell {
+    /* @apply py-3 px-4 border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors; */
+    @apply py-3 px-4 border-b border-gray-200 dark:border-gray-600 transition-colors;
+  }
+
+  /* Accordion Styles */
+  .accordion-panel {
+    /* @apply grid grid-cols-8 gap-2 text-sm; */
+    @apply grid grid-cols-8 gap-2 text-sm bg-gray-200 dark:bg-gray-700 p-4;
+  }
+
+  .accordion-panel div {
+    @apply py-2;
+  }
+
+  .accordion-panel strong {
+    @apply font-semibold;
+  }
+
+  /* Hover Styles */
+  .table-cell.hovered-row {
+    background-color: #a0e0a082; /* Light green for the row */
+  }
+
+  .table-cell.hovered-cell {
+    background-color: #ffffff; /* White for the hovered cell */
+  }
+
+  /* Animation Support */
+  .border-b {
+    border-bottom-width: 1px;
+  }
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Card Large size.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  /* .help-card:hover {
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+  }
+ */
+
+
+  /* Help Section Styles */
+  .help-container {
+    @apply container max-w-7xl mx-auto px-4;
+  }
+
+  .help-heading {
+    @apply text-2xl font-bold mb-12 text-center;
+  }
+
+  .help-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 gap-8;
+  }
+
+  .help-card {
+    /*     
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 ; /* Replaced dark:bg-dark/50 with dark:bg-gray-800 */
+    /*  */
+    /* @apply bg-gray-100 dark:bg-gray-800 rounded-xl shadow-md p-1 max-w-xs w-full min-w-[200px] min-h-[320px] mx-auto relative; Changed max-w-md to max-w-sm, min-h-[400px] to min-h-[320px] */
+    /* @apply bg-gray-100 dark:bg-gray-600 rounded-xl shadow-md p-1 max-w-xs w-full min-w-[200px] min-h-[320px] mx-auto relative flex flex-col; Changed max-w-md to max-w-sm, min-h-[400px] to min-h-[320px] */
+
+    @apply bg-gray-100 dark:bg-gray-500 rounded-xl shadow-md p-1 max-w-xs w-full min-w-[200px] min-h-[320px] mx-auto relative flex flex-col;
+    
+  }
+
+  .help-card:hover {
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+  }
+
+  .help-image-container {
+    /* @apply relative w-full aspect-video overflow-hidden; */
+    @apply relative w-full aspect-video mb-4 overflow-hidden flex items-center justify-center rounded-sm;
+    /* @apply relative w-full h-24 md:h-20 mb-4 overflow-hidden flex items-center justify-center; */
+  }
+
+  .help-image {
+    /* @apply object-cover h-10 md:h-full w-full ; */
+    /* @apply object-contain h-20 md:h-24 w-40; */
+    /* @apply object-contain h-20 md:h-40 w-40; */
+    @apply max-w-full max-h-full object-contain;
+  }
+
+  .help-icon {
+    @apply h-5 md:h-10 w-10 text-primary; /* Matches help-image dimensions */
+  }
+
+  .help-video {
+    @apply object-cover w-full h-full; /* Added for video support */
+  }
+
+  .help-title {
+    @apply px-1  text-sm/7 font-semibold ;
+  }
+
+  .help-description {
+    @apply px-1 py-1 text-sm/5 text-gray-600 dark:text-gray-300 mb-1;
+  }
+
+  .help-tech-container {
+    @apply flex flex-wrap gap-2 mb-4;
+  }
+
+  .help-tech-keywords {
+    @apply px-3 py-1 bg-primary/10 text-primary rounded-full text-sm;
+  }
+
+  .help-links {
+    @apply flex px-2 mb-4 gap-4 mt-auto;
+
+  }
+
+  .help-link {
+    @apply flex items-center mt-2 gap-2 text-sm hover:text-primary transition-colors;
+  }
+
+  /* .help-link {
+    @apply flex gap-4;
+  } */
+
+  .help-link-icon {
+    @apply flex items-center gap-2 text-sm hover:text-primary transition-colors;
+  }
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Card Small size.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  .help-container-small {
+    @apply container max-w-7xl mx-auto px-4;
+  }
+
+  .help-heading-small {
+    @apply text-2xl font-bold mb-12 text-center;
+  }
+
+  .help-grid-small {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-8;
+  }
+
+  .help-card-small {
+    /*     
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 ; /* Replaced dark:bg-dark/50 with dark:bg-gray-800 */
+    /*  */
+    /* @apply bg-gray-100 dark:bg-gray-800 rounded-xl shadow-md p-1 max-w-xs w-full min-w-[200px] min-h-[320px] mx-auto relative; Changed max-w-md to max-w-sm, min-h-[400px] to min-h-[320px] */
+    /* @apply bg-gray-100 dark:bg-gray-800 rounded-xl shadow-md p-1 max-w-[14rem] w-full min-w-[140px] min-h-[260px] mx-auto relative; */
+    /* @apply bg-gray-100 dark:bg-gray-800 rounded-xl shadow-md p-1 max-w-[14rem] w-full min-w-[140px] min-h-[260px] mx-auto relative flex flex-col; */
+
+    @apply bg-gray-100 dark:bg-gray-500 rounded-xl shadow-md p-1 max-w-[14rem] w-full min-w-[140px] min-h-[260px] mx-auto relative flex flex-col;
+
+    
+  }
+
+  .help-card-small:hover {
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+  }
+
+  .help-image-container-small {
+    /* @apply relative w-full aspect-video overflow-hidden; */
+    @apply relative w-full aspect-video mb-4 overflow-hidden flex items-center justify-center rounded-sm;
+    /* @apply relative w-full h-24 md:h-20 mb-4 overflow-hidden flex items-center justify-center; */
+    /* @apply relative w-full h-16 mb-4 overflow-hidden flex items-center justify-center rounded-sm; */
+  }
+
+  .help-image-small {
+    /* @apply object-cover h-10 md:h-full w-full ; */
+    /* @apply object-contain h-20 md:h-24 w-40; */
+    /* @apply object-contain h-20 md:h-40 w-40; */
+    @apply max-w-full max-h-full object-contain;
+  }
+
+  .help-icon-small {
+    /* @apply h-5 md:h-10 w-10 text-primary; Matches help-image dimensions */
+    @apply h-4 md:h-8 w-8 text-primary;
+  }
+
+  .help-video-small {
+    @apply object-cover w-full h-full; /* Added for video support */
+  }
+
+  .help-title-small {
+    /* @apply px-1  text-sm/7 font-semibold ; */
+    @apply px-1 text-xs/6 font-semibold;
+  }
+
+  .help-description-small {
+    /* @apply px-1 py-1 text-sm/5 text-gray-600 dark:text-gray-300 mb-1; */
+    @apply px-1 py-1 text-xs/5 text-gray-600 dark:text-gray-300 mb-1;
+  }
+
+  .help-tech-container-small {
+    @apply flex flex-wrap gap-2 mb-4;
+  }
+
+  .help-tech-keywords-small {
+    /* @apply px-3 py-1 bg-primary/10 text-primary rounded-full text-sm; */
+    @apply px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs;
+  }
+
+  .help-links-small {
+    /* @apply flex px-2 mb-4 gap-4; */
+    /* @apply flex px-2 mb-4 gap-2; */
+    @apply flex px-2 mb-4 gap-2 mt-auto;
+
+
+  }
+
+  .help-link-small {
+    /* @apply flex items-center mt-2 gap-2 text-sm hover:text-primary transition-colors; */
+    @apply flex items-center mt-2 gap-2 text-xs hover:text-primary transition-colors;
+  }
+
+  /* .help-link {
+    @apply flex gap-4;
+  } */
+
+  .help-link-icon-small {
+    /* @apply flex items-center gap-2 text-sm hover:text-primary transition-colors; */
+    @apply flex items-center gap-2 text-xs hover:text-primary transition-colors;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  For Contact Form.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+  /* Contact Section Styles */
+  .contact-container {
+    @apply container max-w-7xl mx-auto py-8;
+    /* background-color: #a6d2c3; */
+    /* @apply bg-gray-100 p-4 rounded-lg shadow-lg dark:bg-gray-600; */
+        
+  }
+
+  .contact-heading {
+    @apply text-2xl md:text-3xl font-semibold mb-20 text-center;
+    /* @apply break-keep text-2xl md:text-3xl  font-semibold mt-4 mb-2; */
+
+  }
+
+  .contact-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-12;
+  }
+
+  .contact-info-container {
+    /* @apply space-y-8; */
+    @apply bg-gray-100 p-4 rounded-lg shadow-lg dark:bg-gray-600;
+    
+  }
+
+  .contact-info-items {
+    @apply space-y-4;
+  }
+
+  .contact-info-item {
+    @apply flex items-center gap-4;
+  }
+
+  .contact-icon {
+    @apply h-6 w-6 text-primary;
+  }
+
+  .contact-info-label {
+    @apply font-semibold text-sm/5 py-1 ;
+  }
+
+  .contact-info-link {
+    @apply text-blue-600/100;
+  }
+
+  .contact-form-container {
+    /* @apply bg-white dark:bg-gray-800/100 p-6 rounded-lg shadow-md; */
+    @apply p-4 rounded-md shadow-xl dark:bg-gray-600;
+    background-color: #a6d2c3c7;
+    box-shadow: 2px 8px 12px 3px #4189c0e7;
+
+
+  }
+
+  .contact-form {
+    @apply space-y-6;
+  }
+
+  .contact-form-label {
+    @apply block text-sm font-medium mb-2;
+  }
+
+  .contact-form-input {
+    @apply w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/100 focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+
+  .contact-form-success {
+    /* @apply text-green-500 text-center; */
+    @apply text-white text-center;
+
+    /* color: #0e86e1;
+    @apply text-center; */
+  }
+
+  .contact-form-error {
+    @apply text-red-500 text-center;
+  }
+
+  .contact-form-submissin-message {
+    @apply text-white;
+
+  }
+
+  .page-btn { 
+    @apply inline-flex items-center justify-center w-auto relative px-4 py-2 text-sm font-medium 
+    text-white rounded-full
+    hover:bg-blue-700 focus:ring-blue-500 ;
+    background-color: #0e86e1;
+    ;
+  }
+
+  .page-btn-position {
+    @apply flex justify-center;
+  }
+
+  /* .page-btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500;
+  } */
+
+  
+
+  /* -------------------------------------------------------------------------------------------------------- */
+  /*  TILL HERE.  */
+  /* -------------------------------------------------------------------------------------------------------- */
+
+
+
+
+}
