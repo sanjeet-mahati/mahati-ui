@@ -261,7 +261,7 @@ const MahatiAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
                 )}
 
                 {/* Chart (use ChartInterface) */}
-                <div className="flex-1 min-h-0">
+                <div className="w-[357px] h-[460px] border [background:linear-gradient(180deg,rgba(23,97,163,0.07)_0%,rgba(77,175,131,0.07)_100%)] rounded-2xl border-solid border-[red]">
                   <div className="h-full">
                     <ChartInterface type={chartType} data={chartData} options={internalOptions} variant="flat" />
                   </div>

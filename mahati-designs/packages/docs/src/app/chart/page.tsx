@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ChartData } from 'chart.js';
-import { MahatiChartAnalyticsWidget } from '@/components';
+import { MahatiChartAnalyticsWidget, DetailItem } from '@/components';
 
 // Chart data configurations
 const pieChartData: ChartData<'doughnut'> = {
@@ -105,23 +105,68 @@ const quickStatsData = {
 
 export default function MahatiChart() {
   const [activeChartData, setActiveChartData] = useState(chartDataMap);
+  const [selectedFilters, setSelectedFilters] = useState({
+    Relationship: 'Partner',
+    DebtCollector: 'Collector B',
+    CollectionAgency: 'Agency B',
+    Periodicity: '12 months'
+  });
   const [currentStats, setCurrentStats] = useState(quickStatsData.pie);
 
   const handleChartTypeChange = (chartType: 'pie' | 'doughnut' | 'line' | 'bar') => {
+    if (chartType === 'pie') setActiveChartData(chartDataMap);
+    if (chartType === 'doughnut') setActiveChartData({ ...chartDataMap, pie: doughnutData }); // Use pie for doughnut as well
+    if (chartType === 'line') setActiveChartData({ ...chartDataMap, pie: lineChartData });
+    if (chartType === 'bar') setActiveChartData({ ...chartDataMap, pie: barChartData });
     setCurrentStats(quickStatsData[chartType]);
   };
 
-  const handleApplyFilters = (filters: Record<string, string>) => {
-    //console.log("Applying filters:", filters);
-    // Example logic: If Relationship is 'Client', show different data. Otherwise, show default.
-    // if (filters.Relationship === 'Client') {
-    //   setActiveChartData(chartDataMapClient);
-    // } else {
-    //   setActiveChartData(chartDataMap);
-    // }
-    //alert('Filters applied! The data for the Pie chart will change if you selected "Client".');
-    setActiveChartData(chartDataMapClient);
+  const handleApplyFilters = () => {
+    console.log("Applying filters:", selectedFilters);
+    // Simulate fetching new data based on filters by generating random data
+    const newPieData = {
+      ...pieChartData,
+      datasets: [{ ...pieChartData.datasets[0], data: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50] }]
+    };
+
+    if (selectedFilters.Relationship === 'Client') {
+      setActiveChartData({ ...chartDataMap, pie: chartDataMapClient.pie });
+    } else {
+      setActiveChartData({ ...chartDataMap, pie: newPieData });
+    }
+   
   };
+
+  // Dynamically calculate details based on current chartData, just like the example
+  const currentDetails: DetailItem[] = useMemo(() => {
+    const data = activeChartData.pie; // We use 'pie' slot for all charts for simplicity
+    if (!data || !data.datasets || data.datasets.length === 0) return [];
+
+    if (data.type === 'line' && data.datasets.length > 1) {
+      // Logic for multi-line chart
+      return data.datasets.map((dataset: any) => ({
+        label: dataset.label || '',
+        value: dataset.data[dataset.data.length - 1].toString(),
+        color: dataset.borderColor,
+        description: `Latest value for ${dataset.label}`
+      }));
+    } else {
+      // Logic for pie, doughnut, bar charts
+      const total = data.datasets[0].data.reduce((sum: number, val: number) => sum + val, 0);
+      return (data.labels || []).map((label: any, index: number) => {
+        const value = data.datasets[0].data[index];
+        const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : 0;
+        const colors = data.datasets[0].backgroundColor;
+        const color = Array.isArray(colors) ? colors[index] : (colors as string);
+        return {
+          label: label,
+          value: `${percentage}%`,
+          description: `Represents ${label}`,
+          color: color,
+        };
+      });
+    }
+  }, [activeChartData]);
 
   return (
     <MahatiChartAnalyticsWidget 
@@ -134,14 +179,11 @@ export default function MahatiChart() {
       { id: 'CollectionAgency', label: 'Collection Agency', options: ['Agency B', 'Agency A'] },
       { id: 'Periodicity', label: 'Periodicity', options: ['12 months', '30 days', '7 days'] },
     ]}
-    initialFilters={{
-      Relationship: 'Partner',
-      DebtCollector: 'Collector B',
-      CollectionAgency: 'Agency B',
-      Periodicity: '12 months'
-    }}
+    selectedFilters={selectedFilters}
     chartDataMap={activeChartData}
     onApplyFilters={handleApplyFilters}
+    onFiltersChange={setSelectedFilters}
+    details={currentDetails}
     quickStats={currentStats}
     onChartTypeChange={handleChartTypeChange}
     actionButtons={[
