@@ -13,6 +13,9 @@ export  { TabbedInterface as MahatiTabbedInterfaceTailwind }  from './components
 export  { Table as MahatiTable }  from './components/Table';
 export  { Table as MahatiTableTailwind }  from './components/TableTailwindCSS';
 export  { Tooltip as MahatiTooltip }  from './components/TooltipTailwindCSS';
+// export  { TableWithTab as MahatiTableWithTab} from './components/TableTailwindCSS';
+// export  {TableWithTab} from './components/TableTailwindCSS';
+
     
 
 export  { Dropdown as MahatiDropdown } from './components/Dropdown';

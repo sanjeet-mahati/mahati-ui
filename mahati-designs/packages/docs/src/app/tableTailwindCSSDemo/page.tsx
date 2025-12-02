@@ -1368,13 +1368,13 @@ export default function TabDemoTailwindCSS() {
           </DemoGrid>
         </Section>
 
-        {/* Text Wrap Column TABLE */}
+        {/* SINGLE-COLUMN TEXT WRAP (Summary only) */}
         <Section id="textwrap-column">
-          <SectionTitle>Text Wrap Table</SectionTitle>
+          <SectionTitle>Text Wrap Table (Summary Column)</SectionTitle>
           <SectionDescription>
-            <b>Text Wrap</b>: A table with a dedicated Summary column that displays truncated summary text with
-            ellipsis. Hover over the summary text to see the full content. All rows maintain
-            consistent height.
+            <b>Text Wrap (single column)</b>: A table with a dedicated Summary column that displays
+            truncated summary text with ellipsis. Hover over the summary text to see the full
+            content. All rows maintain consistent height.
           </SectionDescription>
           <DemoGrid>
             <MahatiTableTailwind
@@ -1386,11 +1386,39 @@ export default function TabDemoTailwindCSS() {
           </DemoGrid>
         </Section>
 
-
-
-
-
+        {/* NEW: MULTI-COLUMN TEXT WRAP */}
+        <Section id="multicol-textwrap">
+          <SectionTitle>Multi-Column Text Wrap Table</SectionTitle>
+          <SectionDescription>
+            This variation lets you specify <b>multiple columns</b> that should use the same
+            truncate + ellipsis + hover-full-text behavior.
+            <br />
+            Example: <code>["summary"]</code> wraps only the Summary column;{" "}
+            <code>["email", "summary", "createdAt"]</code> wraps those three columns.
+          </SectionDescription>
+          <DemoGrid>
+            {/* Example 2: Wrap email + summary + createdAt */}
+            <div>
+              <MahatiTableTailwind
+                headers={summaryColumnHeaders}
+                data={peopleAll.slice(0, 8)}
+                textWrapColumns={["email", "summary", "createdAt"]}
+                textWrapMaxLength={10}
+              />
+            </div>
+          </DemoGrid>
+        </Section>
       </main>
     </div>
   );
 }
+
+
+
+
+
+
+//       </main>
+//     </div>
+//   );
+// }

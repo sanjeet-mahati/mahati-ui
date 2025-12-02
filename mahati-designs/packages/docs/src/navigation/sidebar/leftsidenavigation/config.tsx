@@ -287,20 +287,20 @@ export const NavItems = (): NavItem[]  => {
     //   active: pathname === '/navigationcomponent/',
     //   position: 'top',
     // },
-    // {
-    //   name: 'Spinner TailWindCSS',
-    //   href: '/spinnerTailwindcss',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/spinnerTailwindcss/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Spinner Regular CSS',
-    //   href: '/spinner',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/spinner/',
-    //   position: 'top',
-    // },
+    {
+      name: 'Spinner TailWindCSS',
+      href: '/spinnerTailwindcss',
+      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+      active: pathname === '/spinnerTailwindcss/',
+      position: 'top',
+    },
+    {
+      name: 'Spinner Regular CSS',
+      href: '/spinner',
+      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+      active: pathname === '/spinner/',
+      position: 'top',
+    },
     // {
     //   name: 'Toast Message using TailwindCSS',
     //   href: '/toastMessageTailwindcssDemo',
@@ -379,13 +379,13 @@ export const NavItems = (): NavItem[]  => {
     },
 
 
-    //  {
-    //   name: 'Tab Tailwind CSS',
-    //   href: '/tabTailwindCSSDemo',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/tabTailwindCSSDemo',
-    //   position: 'top',
-    //  },
+     {
+      name: 'Tab Tailwind CSS',
+      href: '/tabTailwindCSSDemo',
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/tabTailwindCSSDemo',
+      position: 'top',
+     },
 
 
     // {
@@ -396,6 +396,23 @@ export const NavItems = (): NavItem[]  => {
     //   active: pathname === '/navigationcomponent/',
     //   position: 'top',
     // },
+
+    {
+      name: 'Table With Tab',
+      href: '/tableWithTabDemo',
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/tableWithTabDemo',
+      position: 'top',
+    },
+
+    {
+      name: 'Calendar',
+      href: '/calendar',
+      // icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/calendar',
+      position: 'top',
+    },
     
     
   ];

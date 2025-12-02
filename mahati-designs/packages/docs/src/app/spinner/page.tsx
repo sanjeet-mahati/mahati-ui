@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Spinner from '../../components/Spinner';
+import Spinner from '../../../../uicomponents/src/components/Spinner';
 
 
 interface CircularSpinnerProps {
