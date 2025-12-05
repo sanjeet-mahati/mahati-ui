@@ -1,7 +1,7 @@
 // Components
 import './styles/index.css';
 export { Button as MahatiButton } from './components/Button';
-export { Card as MahatiCard }from './components/Card';
+export { Card as MahatiCard }from './components/card';
 export { Modal as MahatiModal }from './components/Modal';
 export { ChartInterface as MahatiChart }from './components/ChartInterface';
 export {  MahatiChartAnalyticsWidget }from './components/MahatiChartAnalyticsWidget';
@@ -16,6 +16,7 @@ export  { Tooltip as MahatiTooltip }  from './components/TooltipTailwindCSS';
     
 
 export  { Dropdown as MahatiDropdown } from './components/Dropdown';
+
 // export * from './components/Tooltip';
 // export * from './components/validators';
 // export * from './components/KeyValueDisplay';
