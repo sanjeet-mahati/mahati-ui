@@ -1,211 +1,189 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { MahatiCard } from "@/components";
+import { MahatiButton, MahatiModal } from "@/components";
+import { PropsTable } from "../PropsTable";
+import { CodePreview } from "../CodePreview";
+import { ShieldCheck } from "lucide-react";
 
-export default function CardPage() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+export default function ModalPage() {
+  const [openModal, setOpenModal] = useState<string | null>(null);
+
+  const modalProps = [
+    { name: "isOpen", type: "boolean", required: true, description: "Controls if the modal is visible." },
+    { name: "onClose", type: "() => void", required: true, description: "Function to call when the modal should be closed." },
+    { name: "title", type: "string", description: "The title displayed in the modal's header." },
+    { name: "subtitle", type: "string", description: "A subtitle or short description under the title." },
+    { name: "children", type: "React.ReactNode", description: "The main content of the modal." },
+    { name: "size", type: '"default" | "sm" | "md" | "lg" | "xl"', default: '"default"', description: "Sets the width and padding of the modal." },
+    { name: "primaryAction", type: "{ label?: string; onClick?: () => void; disabled?: boolean; }", description: "Defines the primary button in the footer." },
+    { name: "secondaryAction", type: "{ label?: string; onClick?: () => void; }", description: "Defines the secondary button in the footer." },
+    { name: "headerIcon", type: "React.ReactNode", description: "An icon to display next to the title." },
+    { name: "showDivider", type: "boolean", default: "true", description: "Shows a divider between the header and body." },
+    { name: "className", type: "string", description: "Additional CSS classes for the modal container." },
+  ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <main className="flex-1 p-12 max-w-4xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Modal</h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          A modal dialog that appears on top of the main content to display information or require user interaction.
+        </p>
+      </div>
 
-        {/* Basic Card */}
-        <section 
-          id="basic-card"
-          data-section-id="basic-card"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Basic Card</h2>
-          <MahatiCard variant="default" size="default" className="max-w-sm">
-            <p className="text-slate-600">This is a basic card with simple cardContent.</p>
-          </MahatiCard>
-        </section>
+      <PropsTable props={modalProps} title="Props" />
+      <br />
 
-        {/* Card with Title and Arrow Toggle */}
-        <section 
-          id="card-with-title"
-          data-section-id="card-with-title"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Card with Arrow Toggle</h2>
-          <MahatiCard 
-            variant="figma" 
-            size="figma"
-            backgroundColor="#8ea1b0ff"
-            title="Collapsible Card"
-            collapsible={true}
-            cardContent={
-              <p className="text-slate-600">
-                Click the arrow button to hide/show this cardContent. 
-                The button has a smooth animation and matches the card's color scheme.
+      <CodePreview
+        title="Basic Modal"
+        code={`const [isOpen, setIsOpen] = useState(false);
+
+<MahatiButton onClick={() => setIsOpen(true)}>Open Modal</MahatiButton>
+
+<MahatiModal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Account Created"
+  subtitle="Your account has been successfully created."
+  primaryAction={{
+    label: "Got it, thanks!",
+    onClick: () => setIsOpen(false),
+  }}
+>
+  <p className="text-sm text-slate-600">
+    You can now explore your new dashboard and start managing your projects.
+  </p>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setOpenModal("basic")}>Open Basic Modal</MahatiButton>
+            <MahatiModal
+              isOpen={openModal === "basic"}
+              onClose={() => setOpenModal(null)}
+              title="Basic Modal"
+              subtitle="This is a standard modal dialog."
+              primaryAction={{
+                label: "Confirm",
+                onClick: () => setOpenModal(null),
+              }}
+              secondaryAction={{
+                label: "Cancel",
+                onClick: () => setOpenModal(null),
+              }}
+            >
+              <p className="text-sm text-slate-600 py-4">
+                This is the main content area for the modal. You can place any React components here.
               </p>
-            }
-          />
-        </section>
-
-        {/* Card with Image */}
-        <section 
-          id="card-with-image"
-          data-section-id="card-with-image"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Card with Image</h2>
-          <MahatiCard variant="elevated" className="max-w-sm overflow-hidden p-0">
-            <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
-              <Image 
-                src="/logo.png" 
-                alt="Company Logo"
-                width={120}
-                height={120}
-                className="object-contain"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-slate-800 mb-2">Company Profile</h3>
-              <p className="text-slate-600">Leading technology solutions provider.</p>
-            </div>
-          </MahatiCard>
-        </section>
-
-        {/* Interactive Card */}
-        <section 
-          id="interactive-card"
-          data-section-id="interactive-card"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Interactive Card</h2>
-          <MahatiCard 
-            variant="default"
-            className="max-w-sm cursor-pointer transform transition-transform duration-200 hover:-translate-y-1"
-            onClick={() => alert('Card clicked!')}
-          >
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">Click Me</h3>
-            <p className="text-slate-600">This card is interactive. Click to trigger an action.</p>
-          </MahatiCard>
-        </section>
-
-        {/* Multiple Figma Cards */}
-        <section 
-          id="figma-grid"
-          data-section-id="figma-grid"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Figma Card Grid</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <MahatiCard 
-              variant="figma" 
-              size="figma"
-              title="Feature 1"
-              collapsible={true}
-              cardContent={<p className="text-slate-600">First feature description</p>}
-            />
-            <MahatiCard 
-              variant="figma" 
-              size="figma"
-              title="Feature 2"
-              collapsible={true}
-              cardContent={<p className="text-slate-600">Second feature description</p>}
-            />
-            <MahatiCard 
-              variant="figma" 
-              size="figma"
-              title="Feature 3"
-              collapsible={true}
-              cardContent={<p className="text-slate-600">Third feature description</p>}
-            />
+            </MahatiModal>
           </div>
-        </section>
+        }
+      />
 
-        {/* Product Card */}
-        <section 
-          id="product-card"
-          data-section-id="product-card"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Product Card</h2>
-          <MahatiCard variant="elevated" className="max-w-sm p-0 overflow-hidden">
-            <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
-              <Image 
-                src="/logo.png"
-                alt="Product Logo"
-                width={100}
-                height={100}
-                className="object-contain"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-slate-800 mb-2">Enterprise Solution</h3>
-              <p className="text-slate-600 mb-4">Advanced enterprise software solution.</p>
-              <div className="flex justify-between items-center">
-                <span className="text-2xl font-bold text-slate-800">$999</span>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                  Learn More
-                </button>
-              </div>
-            </div>
-          </MahatiCard>
-        </section>
-
-        {/* Spinning Cards */}
-        <section 
-          id="spinning-cards"
-          data-section-id="spinning-cards"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Spinning Cards</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Continuous Spinning Card */}
-            <MahatiCard variant="subtle" className="max-w-sm perspective-1000 p-0 overflow-hidden">
-              <div className="animate-spin-slow preserve-3d">
-                <div className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
-                  <h3 className="text-xl font-semibold text-white mb-2">3D Spinning Card</h3>
-                  <p className="text-white/90">Watch the entire card spin in 3D space!</p>
-                  <div className="flex gap-2 mt-4">
-                    <span className="inline-block w-4 h-4 bg-yellow-400 rounded-full animate-pulse"></span>
-                    <span className="inline-block w-4 h-4 bg-green-400 rounded-full animate-pulse delay-150"></span>
-                    <span className="inline-block w-4 h-4 bg-blue-400 rounded-full animate-pulse delay-300"></span>
-                  </div>
-                </div>
-              </div>
-            </MahatiCard>
-
-            {/* Flip Card */}
-            <MahatiCard
-              className="max-w-sm cursor-pointer h-[200px]"
-              flippable={true}
-              cardContent={
-                <div className="flex flex-col justify-between h-full">
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                      Front Side
-                    </h3>
-                    <p className="text-slate-600">Click me to flip! 🔄</p>
-                  </div>
-                  <div className="self-end">
-                    <span className="text-slate-400 text-3xl">↻</span>
-                  </div>
-                </div>
-               }
-              cardBackContent={
-                <div className="p-6 h-full flex flex-col justify-between bg-slate-100">
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                      Back Side
-                    </h3>
-                    <p className="text-slate-600">
-                      Here is the back content!
-                    </p>
-                  </div>
-                </div>
-               }
-            />
+      <CodePreview
+        title="Modal with Header Icon"
+        code={`<MahatiModal
+  isOpen={...}
+  onClose={...}
+  title="Payment Successful"
+  headerIcon={<ShieldCheck className="text-green-500" />}
+  ...
+>
+  ...
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setOpenModal("icon")}>Open Modal with Icon</MahatiButton>
+            <MahatiModal
+              isOpen={openModal === "icon"}
+              onClose={() => setOpenModal(null)}
+              title="Payment Successful"
+              subtitle="Your payment has been processed."
+              headerIcon={<ShieldCheck className="text-green-500" size={24} />}
+              primaryAction={{
+                label: "View Receipt",
+                onClick: () => setOpenModal(null),
+              }}
+              secondaryAction={{
+                label: "Close",
+                onClick: () => setOpenModal(null),
+              }}
+            >
+              <p className="text-sm text-slate-600 py-4">
+                A confirmation email has been sent to your address.
+              </p>
+            </MahatiModal>
           </div>
-        </section>
-      </main>
+        }
+      />
+
+      <CodePreview
+        title="Modal Sizes"
+        code={`<MahatiModal size="sm">...</MahatiModal>
+<MahatiModal size="default">...</MahatiModal>
+<MahatiModal size="md">...</MahatiModal>
+<MahatiModal size="lg">...</MahatiModal>
+<MahatiModal size="xl">...</MahatiModal>`}
+        preview={
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <MahatiButton size="sm" onClick={() => setOpenModal("sm")}>Small (sm)</MahatiButton>
+            <MahatiButton size="sm" onClick={() => setOpenModal("default")}>Default</MahatiButton>
+            <MahatiButton size="sm" onClick={() => setOpenModal("md")}>Medium (md)</MahatiButton>
+            <MahatiButton size="sm" onClick={() => setOpenModal("lg")}>Large (lg)</MahatiButton>
+            <MahatiButton size="sm" onClick={() => setOpenModal("xl")}>Extra Large (xl)</MahatiButton>
+
+            <MahatiModal
+              isOpen={openModal === "sm"}
+              onClose={() => setOpenModal(null)}
+              title="Small Modal"
+              size="sm"
+              primaryAction={{ onClick: () => setOpenModal(null) }}
+            >
+              <p className="py-2">This is a small modal.</p>
+            </MahatiModal>
+
+            <MahatiModal
+              isOpen={openModal === "default"}
+              onClose={() => setOpenModal(null)}
+              title="Default Modal"
+              size="default"
+              primaryAction={{ onClick: () => setOpenModal(null) }}
+            >
+              <p className="py-4">This is a default sized modal.</p>
+            </MahatiModal>
+
+            <MahatiModal
+              isOpen={openModal === "md"}
+              onClose={() => setOpenModal(null)}
+              title="Medium Modal"
+              size="md"
+              primaryAction={{ onClick: () => setOpenModal(null) }}
+            >
+              <p className="py-4">This is a medium modal, good for more content.</p>
+            </MahatiModal>
+
+            <MahatiModal
+              isOpen={openModal === "lg"}
+              onClose={() => setOpenModal(null)}
+              title="Large Modal"
+              size="lg"
+              primaryAction={{ onClick: () => setOpenModal(null) }}
+            >
+              <p className="py-6">This is a large modal for complex forms or detailed information.</p>
+            </MahatiModal>
+
+            <MahatiModal
+              isOpen={openModal === "xl"}
+              onClose={() => setOpenModal(null)}
+              title="Extra Large Modal"
+              size="xl"
+              primaryAction={{ onClick: () => setOpenModal(null) }}
+            >
+              <p className="py-6">This is an extra-large modal for experiences that need a lot of space.</p>
+            </MahatiModal>
+          </div>
+        }
+      />
     </div>
   );
 }

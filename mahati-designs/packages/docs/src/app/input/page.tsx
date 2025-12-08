@@ -3,7 +3,8 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import {MahatiFormContainer,MahatiInput} from '@/components';
-
+import { CodePreview } from '../CodePreview';
+import { PropsTable } from '../PropsTable';
 
 import {
   UserIcon as HiUserIcon,
@@ -989,6 +990,136 @@ const CompactFormArea = styled.div`
 
 interface FormData { firstName: string; lastName: string; email: string; password: string; phone: string; message: string; }
 
+// Props table data for components
+const floatingInputProps = [
+  {
+    name: "type",
+    type: "string",
+    default: '"text"',
+    description: "HTML input type (text, email, password, etc.)",
+  },
+  {
+    name: "name",
+    type: "string",
+    default: "-",
+    description: "Name attribute for the input",
+  },
+  {
+    name: "label",
+    type: "string",
+    default: "-",
+    description: "Floating label text",
+  },
+  {
+    name: "value",
+    type: "string",
+    default: "-",
+    description: "Controlled value",
+  },
+  {
+    name: "onChange",
+    type: "(e: React.ChangeEvent<HTMLInputElement>) => void",
+    default: "-",
+    description: "Change event handler",
+  },
+  {
+    name: "hasError",
+    type: "boolean",
+    default: "false",
+    description: "Whether to show error styling",
+  },
+  {
+    name: "errorMessage",
+    type: "string",
+    default: "-",
+    description: "Error message to display below input",
+  },
+  {
+    name: "autoComplete",
+    type: "string",
+    default: "-",
+    description: "HTML autocomplete attribute",
+  },
+  {
+    name: "size",
+    type: '"sm" | "md" | "lg" | "xl"',
+    default: '"md"',
+    description: "Size variant of the input",
+  },
+];
+
+const mahatiFormContainerProps = [
+  {
+    name: "onSubmit",
+    type: "(e: React.FormEvent) => void",
+    default: "-",
+    description: "Form submit handler",
+  },
+  {
+    name: "children",
+    type: "React.ReactNode",
+    default: "-",
+    description: "Form content",
+  },
+  {
+    name: "className",
+    type: "string",
+    default: "-",
+    description: "Additional CSS classes",
+  },
+  {
+    name: "style",
+    type: "React.CSSProperties",
+    default: "-",
+    description: "Inline styles",
+  },
+];
+
+const mahatiInputProps = [
+  {
+    name: "type",
+    type: "string",
+    default: '"text"',
+    description: "HTML input type",
+  },
+  {
+    name: "value",
+    type: "string",
+    default: "-",
+    description: "Controlled value",
+  },
+  {
+    name: "onChange",
+    type: "(e: React.ChangeEvent<HTMLInputElement>) => void",
+    default: "-",
+    description: "Change event handler",
+  },
+  {
+    name: "placeholder",
+    type: "string",
+    default: "-",
+    description: "Placeholder text",
+  },
+  {
+    name: "disabled",
+    type: "boolean",
+    default: "false",
+    description: "Whether the input is disabled",
+  },
+  {
+    name: "className",
+    type: "string",
+    default: "-",
+    description: "Additional CSS classes",
+  },
+  {
+    name: "ref",
+    type: "React.Ref<HTMLInputElement>",
+    default: "-",
+    description: "Ref to the input element",
+  },
+];
+
 export default function ForMahatiInputDemoPage() {
   const [basicForm, setBasicForm] = useState({ name: "", email: "", message: "" });
   const [validationForm, setValidationForm] = useState({ email: "", password: "", confirmPassword: "" });
@@ -1015,7 +1146,7 @@ export default function ForMahatiInputDemoPage() {
   const [roundedBasic, setRoundedBasic] = useState<RadiusClass>("rounded");
   const [roundedAvatar, setRoundedAvatar] = useState<RadiusClass>("rounded");
   const [roundedBasicValue, setRoundedBasicValue] = useState("");
-  const [roundedAvatarValue, setRoundedAvatarValue] = useState(""); // editable
+  const [roundedAvatarValue, setRoundedAvatarValue] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -1129,7 +1260,7 @@ export default function ForMahatiInputDemoPage() {
   }, [iconForm, isIconSubmitting]);
 
   return (
-    <>
+    <div className="w-full max-w-6xl mx-auto p-6">
       <PageHeader>
         <PageTitle>Form & Input</PageTitle>
         <PageDescription>
@@ -1138,104 +1269,184 @@ export default function ForMahatiInputDemoPage() {
         </PageDescription>
       </PageHeader>
 
-      <Section id="basic-input-field">
-        <SectionTitle>Basic Input Fields</SectionTitle>
-        <SectionDescription>Standard input field with placeholder text (no floating label).</SectionDescription>
-        <DemoGrid>
-          <DemoCard>
-            <FormDemo>
-              <BasicPlainInput
-                $hasValue={basicText.trim().length > 0}
-                type="text"
-                name="basicText"
-                placeholder="Enter your text"
-                value={basicText}
-                onChange={(e) => setBasicText(e.target.value)}
-              />
-              <DemoLabel>Text Input</DemoLabel>
-            </FormDemo>
-          </DemoCard>
-        </DemoGrid>
-      </Section>
+      {/* Props Tables */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Component Props</h2>
+        
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">MahatiInput Props</h3>
+          <PropsTable props={mahatiInputProps} />
+        </div>
+        
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">MahatiFormContainer Props</h3>
+          <PropsTable props={mahatiFormContainerProps} />
+        </div>
+        
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">FloatingInput Props</h3>
+          <PropsTable props={floatingInputProps} />
+        </div>
+      </div>
 
-      <Section id="input-states">
-        <SectionTitle>Input States</SectionTitle>
-        <SectionDescription>No floating label. Empty = red border; when you type, it matches the Basic Input styling.</SectionDescription>
-        <DemoGrid>
-          <DemoCard>
-            <FormDemo>
-              <StatePlainInput
-                $empty={inputStatesText.trim().length === 0}
-                type="text"
-                name="normalState"
-                placeholder="Type something…"
-                value={inputStatesText}
-                onChange={(e) => setInputStatesText(e.target.value)}
-              />
-              <DemoLabel>{inputStatesText ? "Filled" : "Empty (error border)"}</DemoLabel>
-            </FormDemo>
-          </DemoCard>
-        </DemoGrid>
-      </Section>
+      {/* Basic Input Field with CodePreview */}
+      <CodePreview
+        title="Basic Input Field"
+        description="Standard input field with placeholder text (no floating label)."
+        code={`<BasicPlainInput
+  $hasValue={basicText.trim().length > 0}
+  type="text"
+  name="basicText"
+  placeholder="Enter your text"
+  value={basicText}
+  onChange={(e) => setBasicText(e.target.value)}
+/>`}
+        preview={
+          <div className="flex flex-col items-center gap-4 p-6 border border-gray-200 rounded-lg bg-white">
+            <BasicPlainInput
+              $hasValue={basicText.trim().length > 0}
+              type="text"
+              name="basicText"
+              placeholder="Enter your text"
+              value={basicText}
+              onChange={(e) => setBasicText(e.target.value)}
+            />
+            <span className="text-sm text-gray-700 font-medium">Text Input</span>
+          </div>
+        }
+      />
 
-      <Section id="floating-label">
-        <SectionTitle>Floating Label</SectionTitle>
-        <SectionDescription>
-          Floating label input inspired by FlyonUI. Wrapper <code>.input-float</code>, field <code>.input</code>, label <code>.input-label</code>.
-        </SectionDescription>
-        <DemoGrid>
-          <DemoCard><FormDemo><FloatingInput name="demoFloating" label="Your Name" /></FormDemo></DemoCard>
-        </DemoGrid>
-      </Section>
+      <br/>
 
-      <Section id="input-sizes">
-        <SectionTitle>Input Sizes</SectionTitle>
-        <SectionDescription>Floating label input in multiple sizes stacked vertically.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><FloatingInput size="sm" name="sizeSm" label="Small size" /><DemoLabel>Small</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><FloatingInput size="md" name="sizeMd" label="Medium size" /><DemoLabel>Medium</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><FloatingInput size="lg" name="sizeLg" label="Large size" /><DemoLabel>Large</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><FloatingInput size="xl" name="sizeXl" label="Extra large size" /><DemoLabel>Extra Large</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      {/* Input States with CodePreview */}
+      <CodePreview
+        title="Input States"
+        description="No floating label. Empty = red border; when you type, it matches the Basic Input styling."
+        code={`<StatePlainInput
+  $empty={inputStatesText.trim().length === 0}
+  type="text"
+  name="normalState"
+  placeholder="Type something…"
+  value={inputStatesText}
+  onChange={(e) => setInputStatesText(e.target.value)}
+/>`}
+        preview={
+          <div className="flex flex-col items-center gap-4 p-6 border border-gray-200 rounded-lg bg-white">
+            <StatePlainInput
+              $empty={inputStatesText.trim().length === 0}
+              type="text"
+              name="normalState"
+              placeholder="Type something…"
+              value={inputStatesText}
+              onChange={(e) => setInputStatesText(e.target.value)}
+            />
+            <span className="text-sm text-gray-700 font-medium">
+              {inputStatesText ? "Filled" : "Empty (error border)"}
+            </span>
+          </div>
+        }
+      />
 
-      <Section id="resizable-textarea">
-        <SectionTitle>Resizable Textarea</SectionTitle>
-        <SectionDescription>Drag the bottom-right corner to resize.</SectionDescription>
-        <DemoGrid>
-          <DemoCard><FormDemo><ResizableTextarea placeholder="Write your message here..." /><DemoLabel>Resizable Textarea</DemoLabel></FormDemo></DemoCard>
-        </DemoGrid>
-      </Section>
+      <br/>
 
-      <Section id="file-input">
-        <SectionTitle>File Input</SectionTitle>
-        <SectionDescription>Three styles: a clickable box, inline input-like with button, and drag & drop.</SectionDescription>
-        <DemoGrid>
-          <DemoCard>
-            <FormDemo>
+      {/* Floating Label with CodePreview */}
+      <CodePreview
+        title="Floating Label"
+        description="Floating label input inspired by FlyonUI. Wrapper .input-float, field .input, label .input-label."
+        code={`<FloatingInput 
+  name="demoFloating" 
+  label="Your Name" 
+/>`}
+        preview={
+          <div className="flex flex-col items-center gap-4 p-6 border border-gray-200 rounded-lg bg-white">
+            <FloatingInput name="demoFloating" label="Your Name" />
+          </div>
+        }
+      />
+
+      <br/>
+
+      {/* Input Sizes with CodePreview */}
+      <CodePreview
+        title="Input Sizes"
+        description="Floating label input in multiple sizes stacked vertically."
+        code={`<FloatingInput size="sm" name="sizeSm" label="Small size" />
+<FloatingInput size="md" name="sizeMd" label="Medium size" />
+<FloatingInput size="lg" name="sizeLg" label="Large size" />
+<FloatingInput size="xl" name="sizeXl" label="Extra large size" />`}
+        preview={
+          <div className="space-y-6 p-6 border border-gray-200 rounded-lg bg-white">
+            <div className="flex flex-col items-center gap-2">
+              <FloatingInput size="sm" name="sizeSm" label="Small size" />
+              <span className="text-sm text-gray-700 font-medium">Small</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <FloatingInput size="md" name="sizeMd" label="Medium size" />
+              <span className="text-sm text-gray-700 font-medium">Medium</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <FloatingInput size="lg" name="sizeLg" label="Large size" />
+              <span className="text-sm text-gray-700 font-medium">Large</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <FloatingInput size="xl" name="sizeXl" label="Extra large size" />
+              <span className="text-sm text-gray-700 font-medium">Extra Large</span>
+            </div>
+          </div>
+        }
+      />
+
+      <br/>
+
+      {/* Resizable Textarea with CodePreview */}
+      <CodePreview
+        title="Resizable Textarea"
+        description="Drag the bottom-right corner to resize."
+        code={`<ResizableTextarea placeholder="Write your message here..." />`}
+        preview={
+          <div className="flex flex-col items-center gap-4 p-6 border border-gray-200 rounded-lg bg-white">
+            <ResizableTextarea placeholder="Write your message here..." />
+            <span className="text-sm text-gray-700 font-medium">Resizable Textarea</span>
+          </div>
+        }
+      />
+
+      <br/>
+
+      {/* File Input with CodePreview */}
+      <CodePreview
+        title="File Input"
+        description="Three styles: a clickable box, inline input-like with button, and drag & drop."
+        code={`{/* Clickable Box */}
+<FileBox onClick={onFileBoxClick} role="button" aria-label="Open file dialog">
+  <HiFolderOpen className="icon" />
+  <div className="title">Click to select files</div>
+  <div className="hint">You can choose one or multiple files</div>
+</FileBox>
+
+{/* Inline File Input */}
+<InlineFileInput
+  buttonSide="left"
+  coloredButton={true}
+  buttonLabel="Choose File"
+  placeholder="No file chosen"
+  multiple={true}
+/>
+
+{/* Drag & Drop */}
+<DragDropFileInput multiple accept="image/*,.pdf,.zip" height={150} />`}
+        preview={
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border border-gray-200 rounded-lg bg-white">
+            <div className="flex flex-col items-center gap-4">
               <FileBox onClick={onFileBoxClick} role="button" aria-label="Open file dialog">
                 <HiFolderOpen className="icon" />
                 <div className="title">Click to select files</div>
                 <div className="hint">You can choose one or multiple files</div>
               </FileBox>
-
-              <MahatiInput ref={fileInputRef} type="file" multiple style={{ display: 'none' }} onChange={onFilesChange} />
-
-              {files.length > 0 && (
-                <>
-                  <DemoLabel>Selected Files</DemoLabel>
-                  <FilesList>
-                    {files.map((f, idx) => (
-                      <li key={`${f.name}-${idx}`}>{f.name} <span style={{ color: '#9ca3af' }}>({Math.round(f.size / 1024)} KB)</span></li>
-                    ))}
-                  </FilesList>
-                </>
-              )}
-            </FormDemo>
-          </DemoCard>
-
-          <DemoCard>
-            <FormDemo>
+              <span className="text-sm text-gray-700 font-medium">Clickable Box</span>
+            </div>
+            
+            <div className="flex flex-col items-center gap-4">
               <InlineFileInput
                 buttonSide="left"
                 coloredButton={true}
@@ -1243,324 +1454,344 @@ export default function ForMahatiInputDemoPage() {
                 placeholder="No file chosen"
                 multiple={true}
               />
-              <DemoLabel>Inline File (button left, colored)</DemoLabel>
-            </FormDemo>
-          </DemoCard>
-
-          <DemoCard>
-            <FormDemo>
-              <InlineFileInput
-                buttonSide="right"
-                coloredButton={false}
-                buttonLabel="Browse"
-                placeholder="No file chosen"
-                multiple={false}
-              />
-              <DemoLabel>Inline File (button right, neutral)</DemoLabel>
-            </FormDemo>
-          </DemoCard>
-
-          <DemoCard>
-            <FormDemo>
+              <span className="text-sm text-gray-700 font-medium">Inline File (left, colored)</span>
+            </div>
+            
+            <div className="flex flex-col items-center gap-4">
               <DragDropFileInput multiple accept="image/*,.pdf,.zip" height={150} />
-              <DemoLabel>Drag & Drop Files</DemoLabel>
-            </FormDemo>
-          </DemoCard>
-        </DemoGrid>
-      </Section>
+              <span className="text-sm text-gray-700 font-medium">Drag & Drop</span>
+            </div>
+          </div>
+        }
+      />
 
-      <Section id="avatar-input">
-        <SectionTitle>Input with Avatar</SectionTitle>
-        <SectionDescription>Avatar outside the field; switch sides with <code>avatarSide</code>.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><AvatarInput label="Username" avatarText="JS" avatarSide="left" /><DemoLabel>Avatar Left</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><AvatarInput label="Username" avatarText="AL" avatarSide="right" /><DemoLabel>Avatar Right</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      <br/>
 
-      <Section id="avatar-placeholder">
-        <SectionTitle>Input with Avatar Placeholder</SectionTitle>
-        <SectionDescription>Shows a default user icon when no image is set.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><AvatarPlaceholderInput label="Display Name" avatarSide="left" /><DemoLabel>Placeholder Left</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><AvatarPlaceholderInput label="Display Name" avatarSide="right" avatarUrl="https://i.pravatar.cc/100?img=15" /><DemoLabel>Custom Image Right</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      {/* Form with Validation with CodePreview */}
+      <CodePreview
+        title="Form with Validation"
+        description="Real-time validation with error messages and form submission handling."
+        code={`<MahatiFormContainer onSubmit={handleValidationSubmit} style={{ padding: 24 }}>
+  <CompactFormArea>
+    <FormDemo>
+      <FloatingIconInput 
+        type="email" 
+        name="email" 
+        label="Enter your email" 
+        value={validationForm.email}
+        onChange={handleValidationFormChange}
+        hasError={!!validationErrors.email}
+        errorMessage={validationErrors.email}
+        autoComplete="email"
+        icon={<HiUserIcon />}
+      />
+      <PasswordToggleInput 
+        name="password" 
+        label="Create password" 
+        value={validationForm.password}
+        onChange={handleValidationFormChange}
+        hasError={!!validationErrors.password}
+        errorMessage={validationErrors.password}
+        autoComplete="new-password"
+      />
+      <PasswordToggleInput 
+        name="confirmPassword" 
+        label="Confirm password" 
+        value={validationForm.confirmPassword}
+        onChange={handleValidationFormChange}
+        hasError={!!validationErrors.confirmPassword}
+        errorMessage={validationErrors.confirmPassword}
+        autoComplete="new-password"
+      />
+      <SubmitButton type="submit" disabled={validationDisabled}>
+        {isValidationSubmitting ? "Creating Account..." : "Create Account"}
+      </SubmitButton>
+    </FormDemo>
+  </CompactFormArea>
+</MahatiFormContainer>`}
+        preview={
+          <div className="p-6 border border-gray-200 rounded-lg bg-white">
+            <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
+              <CompactFormArea>
+                <FormDemo>
+                  <FloatingIconInput 
+                    type="email" 
+                    name="email" 
+                    label="Enter your email" 
+                    value={validationForm.email}
+                    onChange={handleValidationFormChange}
+                    hasError={!!validationErrors.email}
+                    errorMessage={validationErrors.email}
+                    autoComplete="email"
+                    icon={<HiUserIcon />}
+                  />
+                  <PasswordToggleInput 
+                    name="password" 
+                    label="Create password" 
+                    value={validationForm.password}
+                    onChange={handleValidationFormChange}
+                    hasError={!!validationErrors.password}
+                    errorMessage={validationErrors.password}
+                    autoComplete="new-password"
+                  />
+                  <PasswordToggleInput 
+                    name="confirmPassword" 
+                    label="Confirm password" 
+                    value={validationForm.confirmPassword}
+                    onChange={handleValidationFormChange}
+                    hasError={!!validationErrors.confirmPassword}
+                    errorMessage={validationErrors.confirmPassword}
+                    autoComplete="new-password"
+                  />
+                  <SubmitButton type="button" onClick={handleValidationSubmit} disabled={validationDisabled}>
+                    {isValidationSubmitting ? "Creating Account..." : "Create Account"}
+                  </SubmitButton>
+                </FormDemo>
+              </CompactFormArea>
+            </MahatiFormContainer>
+          </div>
+        }
+      />
 
-      <Section id="avatar-input-ring">
-        <SectionTitle>Input with Avatar (Ring)</SectionTitle>
-        <SectionDescription>Configurable ring (border) color via <code>ringColor</code>.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><AvatarRingInput label="Display Name" avatarText="EM" avatarSide="left" ringColor="#60a5fa" /><DemoLabel>Ring Left (blue)</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><AvatarRingInput label="Display Name" avatarText="PR" avatarSide="right" ringColor="#10b981" /><DemoLabel>Ring Right (green)</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      <br/>
 
-      <Section id="avatar-input-ring-gap">
-        <SectionTitle>Input with Avatar (Ring Gap)</SectionTitle>
-        <SectionDescription>Colored ring with visible space before the avatar.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><AvatarRingGapInput label="Display Name" avatarText="OW" avatarSide="left" ringColor="#f59e0b" gapPx={6} /><DemoLabel>Gap Ring Left (amber)</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><AvatarRingGapInput label="Display Name" avatarText="WT" avatarSide="right" ringColor="#8b5cf6" gapPx={8} /><DemoLabel>Gap Ring Right (violet)</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      {/* Full Featured Form with CodePreview */}
+      <CodePreview
+        title="Full Featured Form"
+        description="A complete registration form showcasing all input types and form functionality."
+        code={`<MahatiFormContainer onSubmit={handleFullFormSubmit}>
+  <CompactFormArea>
+    <FormDemo>
+      <FloatingInput name="firstName" label="First Name" />
+      <FloatingInput name="lastName" label="Last Name" />
+      <FloatingIconInput 
+        type="email" 
+        name="email" 
+        label="Email Address" 
+        icon={<HiUserIcon />}
+      />
+      <PasswordToggleInput name="password" label="Password" />
+      <FloatingInput type="tel" name="phone" label="Phone Number" />
+      <FloatingInput name="message" label="Additional Notes (Optional)" />
+      <SubmitButton type="submit">
+        Complete Registration
+      </SubmitButton>
+    </FormDemo>
+  </CompactFormArea>
+</MahatiFormContainer>`}
+        preview={
+          <div className="p-6 border border-gray-200 rounded-lg bg-white">
+            <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ paddingTop: 56, paddingBottom: 78, paddingLeft: 24, paddingRight: 24 }}>
+              <CompactFormArea>
+                <FormDemo>
+                  <FloatingInput name="firstName" label="First Name" value={fullForm.firstName} onChange={handleFullFormChange} />
+                  <FloatingInput name="lastName" label="Last Name" value={fullForm.lastName} onChange={handleFullFormChange} />
+                  <FloatingIconInput 
+                    type="email" 
+                    name="email" 
+                    label="Email Address" 
+                    value={fullForm.email}
+                    onChange={handleFullFormChange}
+                    icon={<HiUserIcon />}
+                  />
+                  <PasswordToggleInput name="password" label="Password" value={fullForm.password} onChange={handleFullFormChange} />
+                  <FloatingInput type="tel" name="phone" label="Phone Number" value={fullForm.phone} onChange={handleFullFormChange} />
+                  <FloatingInput name="message" label="Additional Notes (Optional)" value={fullForm.message} onChange={handleFullFormChange} />
+                  <SubmitButton type="button" onClick={handleFullFormSubmit} disabled={isFullSubmitting}>
+                    {isFullSubmitting ? "Registering..." : "Complete Registration"}
+                  </SubmitButton>
+                </FormDemo>
+              </CompactFormArea>
+            </MahatiFormContainer>
+          </div>
+        }
+      />
 
-      <Section id="avatar-image-input">
-        <SectionTitle>Input with Avatar Image</SectionTitle>
-        <SectionDescription>Use an image avatar; choose <code>shape</code> and optional ring.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize><FormDemo><AvatarImageInput label="User 1" avatarSide="left" shape="circle" avatarUrl="https://i.pravatar.cc/100?img=12" useRing={false} /><DemoLabel>No Ring (left, circle)</DemoLabel></FormDemo></DemoCardSize>
-          <DemoCardSize><FormDemo><AvatarImageInput label="User 2" avatarSide="right" shape="rounded" avatarUrl="https://i.pravatar.cc/100?img=32" useRing={true} ringColor="#f59e0b" /><DemoLabel>With Ring (right, rounded, amber)</DemoLabel></FormDemo></DemoCardSize>
-        </SizeStack>
-      </Section>
+      <br/>
 
-      <Section id="rounded-inputs">
-        <SectionTitle>Rounded Inputs</SectionTitle>
-        <SectionDescription>Adjust the input’s radius using the “rounded-*” utility class options.</SectionDescription>
-        <SizeStack>
-          <DemoCardSize>
-            <FormDemo>
+      {/* Login Form with Background Image with CodePreview */}
+      <CodePreview
+        title="Login Form with Background Image"
+        description="Form container with background image overlay."
+        code={`const LOGIN_BG_URL = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f";
+const LOGIN_BG_OPACITY = 0.35;
+
+<BGFormContainer
+  onSubmit={(e) => e.preventDefault()}
+  $bg={LOGIN_BG_URL}
+  $opacity={LOGIN_BG_OPACITY}
+>
+  <OverImageReadable>
+    <CompactFormArea>
+      <FormDemo>
+        <FloatingIconInput
+          type="email"
+          name="bgLoginEmail"
+          label="Email address"
+          icon={<HiUserIcon />}
+        />
+        <PasswordToggleInput
+          name="bgLoginPassword"
+          label="Password"
+        />
+        <SubmitButton type="submit">Sign In</SubmitButton>
+      </FormDemo>
+    </CompactFormArea>
+  </OverImageReadable>
+</BGFormContainer>`}
+        preview={
+          <div className="p-6 border border-gray-200 rounded-lg bg-white">
+            {(() => {
+              const LOGIN_BG_URL = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&w=1400&q=80";
+              const LOGIN_BG_OPACITY = 0.35;
+
+              return (
+                <BGFormContainer
+                  onSubmit={(e) => e.preventDefault()}
+                  $bg={LOGIN_BG_URL}
+                  $opacity={LOGIN_BG_OPACITY}
+                  style={{ maxWidth: '400px', margin: '0 auto' }}
+                >
+                  <OverImageReadable>
+                    <CompactFormArea>
+                      <FormDemo>
+                        <FloatingIconInput
+                          type="email"
+                          name="bgLoginEmail"
+                          label="Email address"
+                          icon={<HiUserIcon />}
+                        />
+                        <PasswordToggleInput
+                          name="bgLoginPassword"
+                          label="Password"
+                        />
+                        <SubmitButton type="submit">Sign In</SubmitButton>
+                      </FormDemo>
+                    </CompactFormArea>
+                  </OverImageReadable>
+                </BGFormContainer>
+              );
+            })()}
+          </div>
+        }
+      />
+
+      <br/>
+
+      {/* Avatar Input Variations with CodePreview */}
+      <CodePreview
+        title="Avatar Input Variations"
+        description="Different avatar input styles with various configurations."
+        code={`{/* Basic Avatar */}
+<AvatarInput label="Username" avatarText="JS" avatarSide="left" />
+
+{/* Avatar with Ring */}
+<AvatarRingInput label="Display Name" avatarText="EM" avatarSide="left" ringColor="#60a5fa" />
+
+{/* Avatar with Image */}
+<AvatarImageInput 
+  label="User 1" 
+  avatarSide="left" 
+  shape="circle" 
+  avatarUrl="https://i.pravatar.cc/100?img=12" 
+  useRing={false} 
+/>`}
+        preview={
+          <div className="space-y-6 p-6 border border-gray-200 rounded-lg bg-white">
+            <div className="flex flex-col items-center gap-2">
+              <AvatarInput label="Username" avatarText="JS" avatarSide="left" />
+              <span className="text-sm text-gray-700 font-medium">Basic Avatar</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <AvatarRingInput label="Display Name" avatarText="EM" avatarSide="left" ringColor="#60a5fa" />
+              <span className="text-sm text-gray-700 font-medium">Avatar with Ring</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <AvatarImageInput 
+                label="User 1" 
+                avatarSide="left" 
+                shape="circle" 
+                avatarUrl="https://i.pravatar.cc/100?img=12" 
+                useRing={false} 
+              />
+              <span className="text-sm text-gray-700 font-medium">Avatar with Image</span>
+            </div>
+          </div>
+        }
+      />
+
+      <br/>
+
+      {/* Rounded Inputs with CodePreview */}
+      <CodePreview
+        title="Rounded Inputs"
+        description="Adjust the input's radius using the 'rounded-*' utility class options."
+        code={`{/* Rounded Basic Input */}
+<PillRow>
+  {(["rounded-none","rounded-sm","rounded","rounded-lg","rounded-full"] as RadiusClass[]).map(rc => (
+    <Pill key={rc} $active={roundedBasic === rc} onClick={() => setRoundedBasic(rc)}>
+      {rc}
+    </Pill>
+  ))}
+</PillRow>
+<RoundedBasicInput 
+  radiusClass={roundedBasic} 
+  placeholder="Rounded basic input" 
+/>
+
+{/* Rounded Avatar Input */}
+<PillRow>
+  {(["rounded-none","rounded-sm","rounded","rounded-lg","rounded-full"] as RadiusClass[]).map(rc => (
+    <Pill key={rc} $active={roundedAvatar === rc} onClick={() => setRoundedAvatar(rc)}>
+      {rc}
+    </Pill>
+  ))}
+</PillRow>
+<AvatarImageRoundedInput
+  radiusClass={roundedAvatar}
+  placeholder="Rounded input with avatar"
+  avatarUrl="https://i.pravatar.cc/100?img=24"
+/>`}
+        preview={
+          <div className="space-y-8 p-6 border border-gray-200 rounded-lg bg-white">
+            <div className="flex flex-col items-center gap-4">
               <PillRow>
                 {(["rounded-none","rounded-sm","rounded","rounded-lg","rounded-full"] as RadiusClass[]).map(rc => (
-                  <Pill key={rc} $active={roundedBasic === rc} onClick={() => setRoundedBasic(rc)}>{rc}</Pill>
+                  <Pill key={rc} $active={roundedBasic === rc} onClick={() => setRoundedBasic(rc)}>
+                    {rc}
+                  </Pill>
                 ))}
               </PillRow>
-              <RoundedBasicInput radiusClass={roundedBasic} placeholder="Rounded basic input" value={roundedBasicValue} onChange={(e) => setRoundedBasicValue(e.target.value)} />
-              <DemoLabel>Basic Input • {roundedBasic}</DemoLabel>
-            </FormDemo>
-          </DemoCardSize>
-
-          <DemoCardSize>
-            <FormDemo>
+              <RoundedBasicInput 
+                radiusClass={roundedBasic} 
+                placeholder="Rounded basic input" 
+                value={roundedBasicValue}
+                onChange={(e) => setRoundedBasicValue(e.target.value)}
+              />
+              <span className="text-sm text-gray-700 font-medium">Basic Input • {roundedBasic}</span>
+            </div>
+            
+            <div className="flex flex-col items-center gap-4">
               <PillRow>
                 {(["rounded-none","rounded-sm","rounded","rounded-lg","rounded-full"] as RadiusClass[]).map(rc => (
-                  <Pill key={rc} $active={roundedAvatar === rc} onClick={() => setRoundedAvatar(rc)}>{rc}</Pill>
+                  <Pill key={rc} $active={roundedAvatar === rc} onClick={() => setRoundedAvatar(rc)}>
+                    {rc}
+                  </Pill>
                 ))}
               </PillRow>
               <AvatarImageRoundedInput
                 radiusClass={roundedAvatar}
-                placeholder="Rounded input with avatar image"
+                placeholder="Rounded input with avatar"
                 value={roundedAvatarValue}
                 onChange={(e) => setRoundedAvatarValue(e.target.value)}
                 avatarUrl="https://i.pravatar.cc/100?img=24"
-                avatarSide="left"
               />
-              <DemoLabel>Avatar Image Input • {roundedAvatar}</DemoLabel>
-            </FormDemo>
-          </DemoCardSize>
-        </SizeStack>
-      </Section>
-
-      <Section id="image-header-form">
-        <SectionTitle>Form with Image Header</SectionTitle>
-        <SectionDescription>Same FormContainer pattern—image sits at the very top; control size, alignment, and gap.</SectionDescription>
-
-        <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
-          <CompactFormArea>
-            <ImageHeader
-              src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&q=80"
-              alt="Workspace"
-              align="center"
-              width={180}
-              height={110}
-              rounded
-              gap={16}
-            />
-            <FormDemo>
-              <FloatingInput name="project" label="Enter your text" />
-              <FloatingInput name="company" label="Enter your text" />
-              <FloatingInput type="email" name="ownerEmail" label="Enter your Email" autoComplete="email" />
-              <SubmitButton type="submit">Submit Button</SubmitButton>
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="basic-form">
-        <SectionTitle>Basic Form Container</SectionTitle>
-        <SectionDescription>A simple form using the FormContainer with basic input fields.</SectionDescription>
-        <MahatiFormContainer onSubmit={(e) => e.preventDefault()}>
-          <CompactFormArea>
-            <FormDemo>
-              <FloatingInput name="name" label="Your Name" value={basicForm.name} onChange={handleBasicFormChange} />
-              <FloatingInput type="email" name="email" label="Your Email" value={basicForm.email} onChange={handleBasicFormChange} />
-              <FloatingInput name="message" label="Your Message" value={basicForm.message} onChange={handleBasicFormChange} />
-              <SubmitButton type="submit">Submit Form</SubmitButton>
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="reset-password">
-        <SectionTitle>Reset Password</SectionTitle>
-        <SectionDescription>Enter your account email and choose a new password.</SectionDescription>
-        <MahatiFormContainer onSubmit={handleResetSubmit} style={{ padding: 24 }}>
-          <CompactFormArea>
-            <FormDemo>
-              <FloatingInput type="email" name="resetEmail" label="Email address" value={resetEmail} onChange={(e) => { setResetEmail(e.target.value); if (resetErrors.email) setResetErrors(p => ({ ...p, email: "" })); }} hasError={!!resetErrors.email} errorMessage={resetErrors.email} autoComplete="email" />
-              <PasswordToggleInput name="newPassword" label="New password" value={resetNewPassword} onChange={(e) => { setResetNewPassword(e.target.value); if (resetErrors.newPassword) setResetErrors(p => ({ ...p, newPassword: "" })); }} hasError={!!resetErrors.newPassword} errorMessage={resetErrors.newPassword} autoComplete="new-password" />
-              <PasswordToggleInput name="confirmNewPassword" label="Confirm new password" value={resetConfirmPassword} onChange={(e) => { setResetConfirmPassword(e.target.value); if (resetErrors.confirm) setResetErrors(p => ({ ...p, confirm: "" })); }} hasError={!!resetErrors.confirm} errorMessage={resetErrors.confirm} autoComplete="new-password" />
-              <SubmitButton type="submit" disabled={isResetSubmitting}>{isResetSubmitting ? "Resetting..." : "Set New Password"}</SubmitButton>
-              {resetStatus === "success" && <SuccessMessage>✅ Password reset successful.</SuccessMessage>}
-              {resetStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="form-with-validation">
-        <SectionTitle>Form with Validation</SectionTitle>
-        <SectionDescription>Real-time validation with error messages and form submission handling.</SectionDescription>
-        <MahatiFormContainer onSubmit={handleValidationSubmit} style={{ padding: 24 }}>
-          <CompactFormArea>
-            {validationStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
-            <FormDemo>
-              <FloatingIconInput type="email" name="email" label="Enter your email" value={validationForm.email} onChange={handleValidationFormChange} hasError={!!validationErrors.email} errorMessage={validationErrors.email} autoComplete="email" icon={<HiUserIcon />} />
-              <PasswordToggleInput name="password" label="Create password" value={validationForm.password} onChange={handleValidationFormChange} hasError={!!validationErrors.password} errorMessage={validationErrors.password} autoComplete="new-password" />
-              <PasswordToggleInput name="confirmPassword" label="Confirm password" value={validationForm.confirmPassword} onChange={handleValidationFormChange} hasError={!!validationErrors.confirmPassword} errorMessage={validationErrors.confirmPassword} autoComplete="new-password" />
-              <SubmitButton type="submit" disabled={validationDisabled}>
-                {isValidationSubmitting ? "Creating Account..." : "Create Account"}
-              </SubmitButton>
-              {validationStatus === "success" && <SuccessMessage>✅ Form submitted successfully!</SuccessMessage>}
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="form-with-icons">
-        <SectionTitle>Form with Icons</SectionTitle>
-        <SectionDescription>Same validation rules, with icons/visibility toggles.</SectionDescription>
-        <MahatiFormContainer onSubmit={handleIconFormSubmit} style={{ padding: 24 }}>
-          <CompactFormArea>
-            {/* keep error at top if needed */}
-            {iconStatus === "error" && <ErrorMessage>❌ Please fix the errors above and try again.</ErrorMessage>}
-            <FormDemo>
-              <FloatingIconInput type="email" name="email" label="Email" value={iconForm.email} onChange={handleIconFormChange} hasError={!!iconErrors.email} errorMessage={iconErrors.email} autoComplete="email" icon={<HiUserIcon />} />
-              <PasswordToggleInput name="password" label="Password" value={iconForm.password} onChange={handleIconFormChange} hasError={!!iconErrors.password} errorMessage={iconErrors.password} autoComplete="new-password" />
-              <PasswordToggleInput name="confirmPassword" label="Confirm Password" value={iconForm.confirmPassword} onChange={handleIconFormChange} hasError={!!iconErrors.confirmPassword} errorMessage={iconErrors.confirmPassword} autoComplete="new-password" />
-              <SubmitButton type="submit" disabled={iconDisabled}>
-                {isIconSubmitting ? "Submitting..." : "Submit with Icons"}
-              </SubmitButton>
-              {/* SUCCESS BELOW THE BUTTON */}
-              {iconStatus === "success" && <SuccessMessage>✅ 🎊 Form submitted successfully with icons!</SuccessMessage>}
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="full-featured-form">
-        <SectionTitle>Full Featured Form</SectionTitle>
-        <SectionDescription>A complete registration form showcasing all input types and form functionality.</SectionDescription>
-        <MahatiFormContainer onSubmit={handleFullFormSubmit} style={{ paddingTop: 56, paddingBottom: 78, paddingLeft: 24, paddingRight: 24 }}>
-          <CompactFormArea>
-            <FormDemo>
-              <FloatingInput name="firstName" label="First Name" value={fullForm.firstName} onChange={handleFullFormChange} autoComplete="given-name" />
-              <FloatingInput name="lastName" label="Last Name" value={fullForm.lastName} onChange={handleFullFormChange} autoComplete="family-name" />
-              <FloatingIconInput type="email" name="email" label="Email Address" value={fullForm.email} onChange={handleFullFormChange} autoComplete="email" icon={<HiUserIcon />} />
-              <PasswordToggleInput name="password" label="Password" value={fullForm.password} onChange={handleFullFormChange} autoComplete="new-password" />
-              <FloatingInput type="tel" name="phone" label="Phone Number" value={fullForm.phone} onChange={handleFullFormChange} autoComplete="tel" />
-              <FloatingInput name="message" label="Additional Notes (Optional)" value={fullForm.message} onChange={handleFullFormChange} />
-              <SubmitButton type="submit" disabled={isFullSubmitting}>{isFullSubmitting ? "Registering..." : "Complete Registration"}</SubmitButton>
-              {/* SUCCESS BELOW THE BUTTON */}
-              {fullStatus === "success" && (<SuccessMessage>✅ Registration completed successfully! Welcome aboard.</SuccessMessage>)}
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="login-form">
-        <SectionTitle>Login Form Example</SectionTitle>
-        <SectionDescription>A typical login form implementation with remember me.</SectionDescription>
-        <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
-          <CompactFormArea>
-            <FormDemo>
-              <FloatingIconInput type="email" name="loginEmail" label="Email address" autoComplete="email" icon={<HiUserIcon />} />
-              <PasswordToggleInput name="loginPassword" label="Password" autoComplete="current-password" />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, width: 260 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.875rem' }}>
-                  <MahatiInput type="checkbox" /> Remember me
-                </label>
-                <a href="#reset-password" onClick={(e) => { e.preventDefault(); document.getElementById('reset-password')?.scrollIntoView({ behavior: "smooth", block: "start" }); }} style={{ color: '#1e73be', textDecoration: 'none', fontSize: '.875rem' }}>
-                  Forgot password?
-                </a>
-              </div>
-              <SubmitButton type="submit">Sign In</SubmitButton>
-              <div style={{ textAlign: 'center', fontSize: '.875rem', color: '#718096' }}>
-                Don&apos;t have an account?{' '}
-                <a href="#full-featured-form" onClick={(e) => { e.preventDefault(); document.getElementById('full-featured-form')?.scrollIntoView({ behavior: "smooth", block: "start" }); }} style={{ color: '#1e73be', textDecoration: 'none' }}>
-                  Sign up
-                </a>
-              </div>
-            </FormDemo>
-          </CompactFormArea>
-        </MahatiFormContainer>
-      </Section>
-
-      <Section id="login-form-bg">
-        <SectionTitle>Login Form with Background Image</SectionTitle>
-        <SectionDescription>
-          The image fills the form container.
-        </SectionDescription>
-
-        {
-          (() => {
-            const LOGIN_BG_URL = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&w=1400&q=80";
-            const LOGIN_BG_OPACITY = 0.35; 
-
-            return (
-              <BGFormContainer
-                onSubmit={(e) => e.preventDefault()}
-                $bg={LOGIN_BG_URL}
-                $opacity={LOGIN_BG_OPACITY}
-              >
-                <OverImageReadable>
-                  <CompactFormArea>
-                    <FormDemo>
-                      <FloatingIconInput
-                        type="email"
-                        name="bgLoginEmail"
-                        label="Email address"
-                        autoComplete="email"
-                        icon={<HiUserIcon />}
-                      />
-                      <PasswordToggleInput
-                        name="bgLoginPassword"
-                        label="Password"
-                        autoComplete="current-password"
-                      />
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, width: 260 }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.875rem' }}>
-                          <MahatiInput type="checkbox" /> Remember me
-                        </label>
-                        <a
-                          href="#reset-password"
-                          onClick={(e) => { e.preventDefault(); document.getElementById('reset-password')?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                          style={{ fontSize: '.875rem' }}
-                        >
-                          Forgot password?
-                        </a>
-                      </div>
-
-                      <SubmitButton type="submit">Sign In</SubmitButton>
-
-                      <div style={{ textAlign: 'center', fontSize: '.875rem' }}>
-                        Don&apos;t have an account?{' '}
-                        <a
-                          href="#full-featured-form"
-                          onClick={(e) => { e.preventDefault(); document.getElementById('full-featured-form')?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                        >
-                          Sign up
-                        </a>
-                      </div>
-                    </FormDemo>
-                  </CompactFormArea>
-                </OverImageReadable>
-              </BGFormContainer>
-            );
-          })()
+              <span className="text-sm text-gray-700 font-medium">Avatar Input • {roundedAvatar}</span>
+            </div>
+          </div>
         }
-      </Section>
-    </>
+      />
+
+    </div>
   );
 }

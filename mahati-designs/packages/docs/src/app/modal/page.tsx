@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import {MahatiModal} from "@/components";
+import { MahatiModal, MahatiButton } from "@/components";
 import { MessageCircle, Users, Bot } from "lucide-react";
+import { CodePreview } from "../CodePreview";
+import { PropsTable } from "../PropsTable";
 
 export default function ModalPage() {
   const [basicOpen, setBasicOpen] = useState(false);
@@ -29,88 +31,99 @@ export default function ModalPage() {
 
   const onChange = (k: string, v: string | boolean) => setFormData((p) => ({ ...p, [k]: v }));
 
+  const modalProps = [
+    { name: 'isOpen', type: 'boolean', required: true, description: 'Controls if the modal is open or closed.' },
+    { name: 'onClose', type: '() => void', required: true, description: 'Function called when the modal is requested to be closed.' },
+    { name: 'title', type: 'string', description: 'The title displayed in the modal header.' },
+    { name: 'children', type: 'React.ReactNode', description: 'The main content of the modal.' },
+    { name: 'primaryAction', type: '{ label: string; onClick: () => void; }', description: 'Defines the primary button in the footer.' },
+    { name: 'secondaryAction', type: '{ label: string; onClick: () => void; }', description: 'Defines the secondary button in the footer.' },
+    { name: 'headerIcon', type: 'React.ReactNode', description: 'An icon or element to display next to the title.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Sets the width of the modal.' },
+    { name: 'showDivider', type: 'boolean', default: 'true', description: 'Shows a divider line below the header.' },
+  ];
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <main className="flex-1 p-12 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-semibold text-slate-800 mb-6">Mahati — Modal Testbed (Style A)</h1>
+    <div className="w-full max-w-6xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Modal</h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          A versatile modal component for displaying content, forms, or confirmations in a focused overlay.
+        </p>
+      </div>
 
-        {/* Triggers grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setBasicOpen(true)}>
-            <div className="font-medium">Basic Modal</div>
-            <p className="text-sm text-slate-500 mt-1">Simple content modal</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setUpdateOpen(true)}>
-            <div className="font-medium">Update Record</div>
-            <p className="text-sm text-slate-500 mt-1">Form modal with inputs</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setConfirmOpen(true)}>
-            <div className="font-medium">Confirmation</div>
-            <p className="text-sm text-slate-500 mt-1">Yes / No flow</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setFormOpen(true)}>
-            <div className="font-medium">Form Modal</div>
-            <p className="text-sm text-slate-500 mt-1">Simple form</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setImageOpen(true)}>
-            <div className="font-medium">Image Modal</div>
-            <p className="text-sm text-slate-500 mt-1">Show image</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setLoadingOpen(true)}>
-            <div className="font-medium">Loading Modal</div>
-            <p className="text-sm text-slate-500 mt-1">Spinner / loader</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setFullOpen(true)}>
-            <div className="font-medium">Full Screen</div>
-            <p className="text-sm text-slate-500 mt-1">Full screen content</p>
-          </button>
-
-          <button className="p-4 bg-white rounded-lg shadow-sm text-left" onClick={() => setScrollOpen(true)}>
-            <div className="font-medium">Scrollable</div>
-            <p className="text-sm text-slate-500 mt-1">Large content</p>
-          </button>
-        </div>
-
-        {/* New demo cards */}
-        <div className="grid sm:grid-cols-2 gap-6 mt-8">
-          <div
-            className="p-6 hover:shadow-lg rounded-2xl border cursor-pointer bg-white"
-            onClick={() => {
-              setActiveDemo("emoji");
-              setDemoOpen(true);
-            }}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="flex items-center gap-3 text-xl font-medium">
-              <MessageCircle />
-              Interactive Emoji Video
-            </div>
-            <p className="text-sm text-gray-600 mt-2">Visual response avatar reacting to client input.</p>
+      <CodePreview
+        title="Basic Modal"
+        code={`<MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>
+<MahatiModal
+  isOpen={basicOpen}
+  onClose={() => setBasicOpen(false)}
+  title="Basic Modal"
+  primaryAction={{ label: "Okay", onClick: () => setBasicOpen(false) }}
+>
+  <p>This is a basic modal with simple content.</p>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>
           </div>
+        }
+      />
 
-          <div
-            className="p-6 hover:shadow-lg rounded-2xl border cursor-pointer bg-white"
-            onClick={() => {
-              setActiveDemo("multi");
-              setDemoOpen(true);
-            }}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="flex items-center gap-3 text-xl font-medium">
-              <Users />
-              Multi-Party Chatbot
-            </div>
-            <p className="text-sm text-gray-600 mt-2">Simulated chat involving multiple roles.</p>
+      <CodePreview
+        title="Confirmation Modal"
+        code={`<MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>
+<MahatiModal
+  isOpen={confirmOpen}
+  onClose={() => setConfirmOpen(false)}
+  title="Confirmation"
+  secondaryAction={{ label: "No", onClick: () => setConfirmOpen(false) }}
+  primaryAction={{ label: "Yes", onClick: () => alert("Confirmed") }}
+>
+  <p>Are you sure you want to proceed?</p>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>
           </div>
-        </div>
+        }
+      />
+
+      <CodePreview
+        title="Form Modal"
+        code={`<MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>
+<MahatiModal
+  isOpen={updateOpen}
+  onClose={() => setUpdateOpen(false)}
+  title="Update Record"
+  primaryAction={{ label: "Update Record", onClick: () => setUpdateOpen(false) }}
+  secondaryAction={{ label: "Cancel", onClick: () => setUpdateOpen(false) }}
+>
+  {/* Form content... */}
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>
+          </div>
+        }
+      />
+
+      <CodePreview
+        title="Scrollable Content"
+        code={`<MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
+<MahatiModal isOpen={scrollOpen} onClose={() => setScrollOpen(false)} title="Scrollable Modal" size="lg">
+  <div className="max-h-[40vh] overflow-y-auto space-y-4">
+    {/* Long content... */}
+  </div>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
+          </div>
+        }
+      />
+
+      <PropsTable props={modalProps} title="Props" />
 
         {/* ---------- MODALS ---------- */}
 
@@ -133,14 +146,14 @@ export default function ModalPage() {
           headerIcon={<img src="/icons/edit.png" className="w-5 h-5" alt="edit" />}
           primaryAction={{ label: "Update Record", onClick: () => setUpdateOpen(false) }}
           secondaryAction={{ label: "Cancel", onClick: () => setUpdateOpen(false) }}
-      showDivider={true}
+          showDivider={true}
         >
           
           <div className="w-[562px] h-[350px] shrink-0 [background:#FFF] rounded-[14px]">
     
             
          
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-4 p-4">
               {/* Id */}
               <div>
                 <label className="text-black [font-family:Poppins] text-xs not-italic font-medium leading-[normal]">Id</label><br/>
@@ -268,7 +281,6 @@ export default function ModalPage() {
             </div>
           )}
         </MahatiModal>
-      </main>
     </div>
   );
 }
