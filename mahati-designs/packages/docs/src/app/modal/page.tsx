@@ -1,218 +1,286 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import {MCard,MahatiModal} from "@/components";
+import { MahatiModal, MahatiButton } from "@/components";
+import { MessageCircle, Users, Bot } from "lucide-react";
+import { CodePreview } from "../CodePreview";
+import { PropsTable } from "../PropsTable";
 
-export default function CardPage() {
-  const [isBasicModalOpen, setIsBasicModalOpen] = useState(false);
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [isForMahatiModalOpen, setIsForMahatiModalOpen] = useState(false);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
-  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
-  const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);
-  const [isScrollableModalOpen, setIsScrollableModalOpen] = useState(false);
+export default function ModalPage() {
+  const [basicOpen, setBasicOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [loadingOpen, setLoadingOpen] = useState(false);
+  const [fullOpen, setFullOpen] = useState(false);
+  const [scrollOpen, setScrollOpen] = useState(false);
+
+  // demos for emoji/multi
+  const [demoOpen, setDemoOpen] = useState(false);
+  const [activeDemo, setActiveDemo] = useState<"emoji" | "multi" | null>(null);
+
+  // form data for update record demo
+  const [formData, setFormData] = useState({
+    id: "2",
+    code: "Company",
+    name: "Company",
+    notInUse: false,
+  });
+
+  const onChange = (k: string, v: string | boolean) => setFormData((p) => ({ ...p, [k]: v }));
+
+  const modalProps = [
+    { name: 'isOpen', type: 'boolean', required: true, description: 'Controls if the modal is open or closed.' },
+    { name: 'onClose', type: '() => void', required: true, description: 'Function called when the modal is requested to be closed.' },
+    { name: 'title', type: 'string', description: 'The title displayed in the modal header.' },
+    { name: 'children', type: 'React.ReactNode', description: 'The main content of the modal.' },
+    { name: 'primaryAction', type: '{ label: string; onClick: () => void; }', description: 'Defines the primary button in the footer.' },
+    { name: 'secondaryAction', type: '{ label: string; onClick: () => void; }', description: 'Defines the secondary button in the footer.' },
+    { name: 'headerIcon', type: 'React.ReactNode', description: 'An icon or element to display next to the title.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Sets the width of the modal.' },
+    { name: 'showDivider', type: 'boolean', default: 'true', description: 'Shows a divider line below the header.' },
+  ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <main className="flex-1 p-12 max-w-4xl mx-auto">
-        {/* Basic Modal Trigger */}
-        <section 
-          id="basic-modal"
-          data-section-id="basic-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Basic Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsBasicModalOpen(true)}
-            >
-              Open Basic Modal
-            </button>
-          </MCard>
-        </section>
+    <div className="w-full max-w-6xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Modal</h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          A versatile modal component for displaying content, forms, or confirmations in a focused overlay.
+        </p>
+      </div>
 
-        {/* Confirmation Modal Trigger */}
-        <section 
-          id="confirmation-modal"
-          data-section-id="confirmation-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Confirmation Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsConfirmationModalOpen(true)}
-            >
-              Open Confirmation Modal
-            </button>
-          </MCard>
-        </section>
+      <CodePreview
+        title="Basic Modal"
+        code={`<MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>
+<MahatiModal
+  isOpen={basicOpen}
+  onClose={() => setBasicOpen(false)}
+  title="Basic Modal"
+  primaryAction={{ label: "Okay", onClick: () => setBasicOpen(false) }}
+>
+  <p>This is a basic modal with simple content.</p>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>
+          </div>
+        }
+      />
 
-        {/* Form Modal Trigger */}
-        <section 
-          id="form-modal"
-          data-section-id="form-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Form Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsForMahatiModalOpen(true)}
-            >
-              Open Form Modal
-            </button>
-          </MCard>
-        </section>
+      <CodePreview
+        title="Confirmation Modal"
+        code={`<MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>
+<MahatiModal
+  isOpen={confirmOpen}
+  onClose={() => setConfirmOpen(false)}
+  title="Confirmation"
+  secondaryAction={{ label: "No", onClick: () => setConfirmOpen(false) }}
+  primaryAction={{ label: "Yes", onClick: () => alert("Confirmed") }}
+>
+  <p>Are you sure you want to proceed?</p>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>
+          </div>
+        }
+      />
 
-        {/* Image Modal Trigger */}
-        <section 
-          id="image-modal"
-          data-section-id="image-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Image Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsImageModalOpen(true)}
-            >
-              Open Image Modal
-            </button>
-          </MCard>
-        </section>
+      <CodePreview
+        title="Form Modal"
+        code={`<MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>
+<MahatiModal
+  isOpen={updateOpen}
+  onClose={() => setUpdateOpen(false)}
+  title="Update Record"
+  primaryAction={{ label: "Update Record", onClick: () => setUpdateOpen(false) }}
+  secondaryAction={{ label: "Cancel", onClick: () => setUpdateOpen(false) }}
+>
+  {/* Form content... */}
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>
+          </div>
+        }
+      />
 
-        {/* Notification Modal Trigger */}
-        <section 
-          id="notification-modal"
-          data-section-id="notification-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Notification Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsNotificationModalOpen(true)}
-            >
-              Open Notification Modal
-            </button>
-          </MCard>
-        </section>
+      <CodePreview
+        title="Scrollable Content"
+        code={`<MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
+<MahatiModal isOpen={scrollOpen} onClose={() => setScrollOpen(false)} title="Scrollable Modal" size="lg">
+  <div className="max-h-[40vh] overflow-y-auto space-y-4">
+    {/* Long content... */}
+  </div>
+</MahatiModal>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
+          </div>
+        }
+      />
 
-        {/* Loading Modal Trigger */}
-        <section 
-          id="loading-modal"
-          data-section-id="loading-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Loading Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsLoadingModalOpen(true)}
-            >
-              Open Loading Modal
-            </button>
-          </MCard>
-        </section>
+      <PropsTable props={modalProps} title="Props" />
 
-        {/* Full-Screen Modal Trigger */}
-        <section 
-          id="fullscreen-modal"
-          data-section-id="fullscreen-modal"
-          className="mb-12 scroll-mt-20"
-        >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Full-Screen Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsFullScreenModalOpen(true)}
-            >
-              Open Full-Screen Modal
-            </button>
-          </MCard>
-        </section>
+        {/* ---------- MODALS ---------- */}
 
-        {/* Scrollable Modal Trigger */}
-        <section 
-          id="scrollable-modal"
-          data-section-id="scrollable-modal"
-          className="mb-12 scroll-mt-20"
+        {/* Basic */}
+        <MahatiModal
+          isOpen={basicOpen}
+          onClose={() => setBasicOpen(false)}
+          title="Basic Modal"
+          headerIcon={<span className="text-sm">ℹ️</span>}
+          primaryAction={{ label: "Okay", onClick: () => setBasicOpen(false) }}
         >
-          <h2 className="text-3xl font-semibold text-slate-800 mb-4">Scrollable Modal</h2>
-          <MCard className="max-w-sm">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={() => setIsScrollableModalOpen(true)}
-            >
-              Open Scrollable Modal
-            </button>
-          </MCard>
-        </section>
-
-        {/* Modals */}
-        <MahatiModal isOpen={isBasicModalOpen} onClose={() => setIsBasicModalOpen(false)} title="Basic Modal">
-          <p>This is a basic modal with simple content.</p>
+          <p className="text-sm text-slate-700">This is a basic modal with simple content.</p>
         </MahatiModal>
 
-        <MahatiModal isOpen={isConfirmationModalOpen} onClose={() => setIsConfirmationModalOpen(false)} title="Confirmation Modal">
-          <p>Are you sure you want to proceed?</p>
-          <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" onClick={() => alert('Confirmed!')}>
-            Yes
-          </button>
-          <button className="mt-4 ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" onClick={() => setIsConfirmationModalOpen(false)}>
-            No
-          </button>
+        {/* Update Record (form with specified Figma sizes) */}
+        <MahatiModal
+          isOpen={updateOpen}
+          onClose={() => setUpdateOpen(false)}
+          title="Update Record"
+          headerIcon={<img src="/icons/edit.png" className="w-5 h-5" alt="edit" />}
+          primaryAction={{ label: "Update Record", onClick: () => setUpdateOpen(false) }}
+          secondaryAction={{ label: "Cancel", onClick: () => setUpdateOpen(false) }}
+          showDivider={true}
+        >
+          
+          <div className="w-[562px] h-[350px] shrink-0 [background:#FFF] rounded-[14px]">
+    
+            
+         
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-4 p-4">
+              {/* Id */}
+              <div>
+                <label className="text-black [font-family:Poppins] text-xs not-italic font-medium leading-[normal]">Id</label><br/>
+             
+                  <input
+                    className="w-[490px] h-[42px] shrink-0 border [background:#F6F6F6] rounded-lg border-solid border-[#D5D5D5]"
+                    value={formData.id}
+                    onChange={(e) => onChange("id", e.target.value)}
+                  />
+             
+              </div>
+
+              {/* Code */}
+              <div >
+                <label className="text-black [font-family:Poppins] text-xs not-italic font-medium leading-[normal]">Code</label><br/>
+                <div className="col-span-3">
+                  <input
+                    className="w-[490px] h-[42px] shrink-0 border [background:#F6F6F6] rounded-lg border-solid border-[#D5D5D5]"
+                    value={formData.code}
+                    onChange={(e) => onChange("code", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Name */}
+              <div>
+                <label className="text-black [font-family:Poppins] text-xs not-italic font-medium leading-[normal]">Name</label><br/>
+                <div className="col-span-3">
+                  <input
+                    className="w-[490px] h-[42px] shrink-0 border [background:#F6F6F6] rounded-lg border-solid border-[#D5D5D5]"
+                    value={formData.name}
+                    onChange={(e) => onChange("name", e.target.value)}
+                  />
+                </div>
+              </div>
+
+            
+            </form>
+          </div>
         </MahatiModal>
 
-        <MahatiModal isOpen={isForMahatiModalOpen} onClose={() => setIsForMahatiModalOpen(false)} title="Form Modal">
-          <form>
-            <label className="block mb-2">Name:</label>
-            <input type="text" className="border rounded p-2 w-full mb-4" />
-            <label className="block mb-2">Email:</label>
-            <input type="email" className="border rounded p-2 w-full mb-4" />
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => setIsForMahatiModalOpen(false)}>
-              Submit
-            </button>
+        {/* Confirmation */}
+        <MahatiModal
+          isOpen={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          title="Confirmation"
+          headerIcon={<span className="text-sm">❗</span>}
+          secondaryAction={{ label: "No", onClick: () => setConfirmOpen(false) }}
+          primaryAction={{ label: "Yes", onClick: () => { alert("Confirmed"); setConfirmOpen(false); } }}
+        >
+          <p className="text-sm text-slate-700">Are you sure you want to proceed?</p>
+        </MahatiModal>
+
+        {/* Simple form */}
+        <MahatiModal
+          isOpen={formOpen}
+          onClose={() => setFormOpen(false)}
+          title="Form Modal"
+          primaryAction={{ label: "Submit", onClick: () => setFormOpen(false) }}
+        >
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+            <label className="block text-sm">Name</label>
+            <input className="w-full rounded-[6px] border border-[#D9D9D9] h-[44px] px-3" />
+            <label className="block text-sm">Email</label>
+            <input className="w-full rounded-[6px] border border-[#D9D9D9] h-[44px] px-3" />
           </form>
         </MahatiModal>
 
-        <MahatiModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} title="Image Modal">
-          <Image src="/logo.png" alt="Company Logo" width={300} height={300} className="object-contain" />
-        </MahatiModal>
-
-        <MahatiModal isOpen={isNotificationModalOpen} onClose={() => setIsNotificationModalOpen(false)} title="Notification Modal">
-          <p>This is a notification message!</p>
-        </MahatiModal>
-
-        <MahatiModal isOpen={isLoadingModalOpen} onClose={() => setIsLoadingModalOpen(false)} title="Loading Modal">
-          <p>Loading, please wait...</p>
-          <div className="loader"></div> {/* You can add a spinner here */}
-        </MahatiModal>
-
-        <MahatiModal isOpen={isFullScreenModalOpen} onClose={() => setIsFullScreenModalOpen(false)} title="Full-Screen Modal">
-          <div className="h-screen flex items-center justify-center">
-            <h1 className="text-4xl">This is a full-screen modal!</h1>
+        {/* Image */}
+        <MahatiModal isOpen={imageOpen} onClose={() => setImageOpen(false)} title="Image Modal" primaryAction={{ label: "Close", onClick: () => setImageOpen(false) }}>
+          <div className="flex items-center justify-center">
+            <Image src="/logo.png" alt="logo" width={300} height={300} className="object-contain" />
           </div>
         </MahatiModal>
 
-        <MahatiModal isOpen={isScrollableModalOpen} onClose={() => setIsScrollableModalOpen(false)} title="Scrollable Modal">
-          <div className="max-h-60 overflow-y-auto">
-            <p>Content goes here...</p>
-            {/* Add more content to make it scrollable */}
-            <p>Lorem ipsum dolor sit amet...</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus auctor mattis. Praesent dictum in odio ac eget. Sed eu diam at nulla eleifend egestas. Mauris et ante quis lectus aliquet dictum. Phasellus et dolor. Maecenas et ante. Vestibulum sit amet metus. Curabitur eget sem eu velit eleifend elementum. Sed a nulla.</p>
-            <p>Vivamus id enim. Sed eu diam at nulla eleifend egestas. Mauris et ante quis lectus aliquet dictum. Phasellus et dolor. Maecenas et ante. Vestibulum sit amet metus. Curabitur eget sem eu velit eleifend elementum. Sed a nulla. Vivamus id enim. Sed eu diam at nulla eleifend egestas. Mauris et ante quis lectus aliquet dictum. Phasellus et dolor. Maecenas et ante. Vestibulum sit amet metus. Curabitur eget sem eu velit eleifend elementum. Sed a nulla.</p>
-            <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui erat, auctor sed, placerat at, egestas sed, neque. Praesent in mauris eu fermentum.</p>
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui erat, auctor sed, placerat at, egestas sed, neque. Praesent in mauris eu fermentum.</p>
-            <p>Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, orci. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Quisque id mi. Ut tincidunt tincidunt erat. Etiam feugiat lorem non metus. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis.</p>
+        {/* Loading */}
+        <MahatiModal isOpen={loadingOpen} onClose={() => setLoadingOpen(false)} title="Loading..." showDivider={false}>
+          <div className="flex items-center gap-4">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-t-blue-600 border-slate-200" />
+            <p className="text-sm text-slate-700">Loading, please wait...</p>
           </div>
         </MahatiModal>
-      </main>
+
+        {/* Full screen (modal uses big inner area) */}
+        <MahatiModal isOpen={fullOpen} onClose={() => setFullOpen(false)} title="Full Screen Modal" size="xl">
+          <div className="h-[60vh] flex items-center justify-center">
+            <h2 className="text-2xl font-semibold">This is a full-screen style modal</h2>
+          </div>
+        </MahatiModal>
+
+        {/* Scrollable */}
+        <MahatiModal isOpen={scrollOpen} onClose={() => setScrollOpen(false)} title="Scrollable Modal" size="lg">
+          <div className="max-h-[40vh] overflow-y-auto space-y-4">
+            {[...new Array(12)].map((_, i) => (
+              <p key={i} className="text-sm text-slate-700">
+                Paragraph {i + 1} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
+              </p>
+            ))}
+          </div>
+        </MahatiModal>
+
+        {/* Demo: emoji / multi */}
+        <MahatiModal
+          isOpen={demoOpen}
+          onClose={() => { setDemoOpen(false); setActiveDemo(null); }}
+          title={activeDemo === "emoji" ? "Interactive Emoji Video" : "Multi-Party Chatbot"}
+          headerIcon={activeDemo === "emoji" ? <span className="text-sm">😊</span> : <span className="text-sm">🤖</span>}
+          primaryAction={{ label: "Send", onClick: () => alert("Send clicked") }}
+          secondaryAction={{ label: "Close", onClick: () => setDemoOpen(false) }}
+        >
+          {activeDemo === "emoji" ? (
+            <div className="space-y-4">
+              <div className="mx-auto w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center text-6xl">😊</div>
+              <p className="text-center text-slate-700">Avatar reacts in real-time to user prompts.</p>
+              <input className="w-full rounded-[6px] border border-[#D9D9D9] h-[44px] px-3" placeholder="Type a message..." />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="space-y-2 bg-gray-50 p-4 rounded-xl">
+                <div className="flex gap-2 text-sm"><Bot /> <p><strong>HR Bot:</strong> Please upload your documents.</p></div>
+                <div className="flex gap-2 text-sm"><Bot /> <p><strong>Insurance Bot:</strong> I can help verify your policy details.</p></div>
+                <div className="flex gap-2 text-sm"><Bot /> <p><strong>Employee:</strong> Uploading now...</p></div>
+              </div>
+              <input className="w-full rounded-[6px] border border-[#D9D9D9] h-[44px] px-3" placeholder="Type as employee..." />
+            </div>
+          )}
+        </MahatiModal>
     </div>
   );
 }

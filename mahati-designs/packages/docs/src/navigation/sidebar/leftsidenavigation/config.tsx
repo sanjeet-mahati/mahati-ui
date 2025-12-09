@@ -80,6 +80,18 @@ export const NavItems = (): NavItem[]  => {
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
+        },
+        {
+          name: 'Dotted Button',
+          href: '/button#dotted-button',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+        },
+        {
+          name: 'Pill Button',
+          href: '/button#pill-button',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
         },     
         {
           name: 'Props',
@@ -219,9 +231,23 @@ export const NavItems = (): NavItem[]  => {
      {
       name: 'Tooltip',
       href: '/tooltip',
-      icon: <FontAwesomeIcon icon={faSquareCaretDown} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
       active: pathname === '/tooltip',
       position: 'top',
+      subItems: [
+        { name: 'MahatiTooltip Props', href: '/tooltip#mahatitooltip-props', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'ConfettiExplosion Props', href: '/tooltip#confettiexplosion-props', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'RealisticConfetti Props', href: '/tooltip#realisticconfetti-props', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Basic', href: '/tooltip#basic', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Transparent Background', href: '/tooltip#transparent-background', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Image & GIF', href: '/tooltip#image-gif', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Custom Border', href: '/tooltip#custom-border', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Sparkles', href: '/tooltip#sparkles', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Positions', href: '/tooltip#positions', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Text Content', href: '/tooltip#text-content', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Interactive Elements', href: '/tooltip#interactive-elements', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+        { name: 'Celebration', href: '/tooltip#celebration', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
+      ],
     },
     {
       name: 'Form',
@@ -229,13 +255,13 @@ export const NavItems = (): NavItem[]  => {
       icon: <FontAwesomeIcon icon={faHandPointer} size="lg" />,
       active: pathname === '/form',
       position: 'top',
-     subItems:[
-      { name: 'Basic Input', href: '/form#basic-inputs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-      { name: 'Floating Label', href: '/form#floating-inputs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-      { name: 'File Upload', href: '/form#file-upload', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-      { name: 'Form Example', href: '/form#form-example', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-  
-     ]
+      subItems: [
+        { name: 'Basic Input', href: '/form#basic-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Error', href: '/form#input-with-error', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Form Example', href: '/form#form-example', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input Props', href: '/form#input-props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'FormContainer Props', href: '/form#formcontainer-props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+      ]
     },
     {
       name: 'Input',
@@ -244,26 +270,29 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/input',
       position: 'top',
       subItems: [
-        { name: 'Basic Input', href: '/input#basic-input-field', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Basic Input Fields', href: '/input#basic-input-fields', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Input States', href: '/input#input-states', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Floating Label', href: '/input#floating-label', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Input Sizes', href: '/input#input-sizes', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Resizable Textarea', href: '/input#resizable-textarea', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'File Input', href: '/input#file-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Avatar Input', href: '/input#avatar-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Avatar Placeholder', href: '/input#avatar-placeholder', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Avatar Ring', href: '/input#avatar-input-ring', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Avatar Ring Gap', href: '/input#avatar-input-ring-gap', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Avatar Image', href: '/input#avatar-image-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Input - Click Box', href: '/input#file-input-click-box', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Input - Inline (Left Button)', href: '/input#file-input-inline-left-button', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Input - Inline (Right Button)', href: '/input#file-input-inline-right-button', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Input - Drag & Drop', href: '/input#file-input-drag-drop', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Avatar', href: '/input#input-with-avatar', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Avatar Placeholder', href: '/input#input-with-avatar-placeholder', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Avatar (Ring)', href: '/input#input-with-avatar-ring', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Avatar (Ring Gap)', href: '/input#input-with-avatar-ring-gap', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Input with Avatar Image', href: '/input#input-with-avatar-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Rounded Inputs', href: '/input#rounded-inputs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Image Header Form', href: '/input#image-header-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Basic Form', href: '/input#basic-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Reset Password', href: '/input#reset-password', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Validation', href: '/input#form-with-validation', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'With Icons', href: '/input#form-with-icons', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Full Form', href: '/input#full-featured-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Login Form', href: '/input#login-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Login with BG', href: '/input#login-form-bg', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Form with Image Header', href: '/input#form-with-image-header', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Basic Form Container', href: '/input#basic-form-container', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Reset Password Form', href: '/input#reset-password-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Form with Validation', href: '/input#form-with-validation', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Form with Icons', href: '/input#form-with-icons', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Full Featured Form', href: '/input#full-featured-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Login Form Example', href: '/input#login-form-example', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Login Form with Background Image', href: '/input#login-form-with-background-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
     // {
@@ -377,15 +406,34 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Gradient', href: '/tab#gradient-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
+    //     {
+    //   name: 'Chart',
+    //   href: '/chart',
+    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+    //   active: pathname === '/chart',
+    //   position: 'top',
+    //   subItems: [
+      
+    //     { name: 'Chart with dropdown', href: '/chart#chart-with-dropdown', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Basic Charts', href: '/chart#basic-charts', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Chart Variants', href: '/chart#chart-variants', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Chart Sizes', href: '/chart#chart-sizes', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Combining Variants', href: '/chart#combining-variants', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Props', href: '/chart#props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //     { name: 'Examples', href: '/chart#examples', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+    //   ]
+    // },
 
 
-     {
-      name: 'Tab Tailwind CSS',
-      href: '/tabTailwindCSSDemo',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-      active: pathname === '/tabTailwindCSSDemo',
-      position: 'top',
-     },
+    //  {
+    // {
+    //   name: 'Tab Tailwind CSS',
+    //   href: '/tabTailwindCSSDemo',
+    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+    //   active: pathname === '/tabTailwindCSSDemo',
+    //   position: 'top',
+    //  },
+    // },
 
 
     // {

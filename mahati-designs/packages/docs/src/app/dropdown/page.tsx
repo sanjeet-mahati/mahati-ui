@@ -1,121 +1,114 @@
 "use client";
 import React from "react";
 import { MahatiDropdown } from "@/components";
+import { CodePreview } from '../CodePreview';
+import { PropsTable } from '../PropsTable';
 
-const Section = ({
-  id,
-  title,
-  desc,
-  children,
-  bg,
-}: {
-  id: string;
-  title: string;
-  desc?: string;
-  children: React.ReactNode;
-  bg?: string;
-}) => (
-  <section
-    id={id}
-    className="scroll-mt-20 mb-12 p-8 bg-white border border-gray-200 rounded-xl shadow-sm"
-  >
-    <h2 className="text-2xl font-semibold text-gray-800 mb-2">{title}</h2>
-    {desc && <p className="text-gray-500 mb-6">{desc}</p>}
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ${bg ?? ""}`}>
-      {children}
-    </div>
-  </section>
-);
+const dropdownProps = [
+  {
+    name: 'variant',
+    type: "'basic' | 'outline' | 'pill' | 'dark' | 'underline' | 'shadow' | 'glass' | 'gradient'",
+    description: 'The visual style of the dropdown.',
+    default: "'basic'",
+  },
+  {
+    name: 'options',
+    type: 'string[]',
+    description: 'An array of strings to display as dropdown options.',
+    default: '[]',
+    required: true,
+  },
+  {
+    name: 'onSelect',
+    type: '(option: string) => void',
+    description: 'Callback function triggered when an option is selected.',
+    default: 'undefined',
+  },
+  {
+    name: 'placeholder',
+    type: 'string',
+    description: 'Placeholder text to show when no option is selected.',
+    default: "'Select an option'",
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    description: 'If true, the dropdown is disabled and cannot be interacted with.',
+    default: 'false',
+  },
+  {
+    name: 'className',
+    type: 'string',
+    description: 'Additional CSS classes to apply to the dropdown container.',
+    default: '-',
+  },
+];
 
 export default function DropdownDemoPage() {
   const handleSelect = (option: string) => console.log("Selected:", option);
 
   return (
-    <div className="p-10 space-y-10">
-      <Section id="basic" title="Basic Dropdown" desc="Simple blue dropdown.">
-        <MahatiDropdown
-          variant="basic"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
+    <div className="w-full max-w-6xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Dropdown</h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          A versatile dropdown component that allows users to select an option from a list. It comes with multiple style variants to fit any design.
+        </p>
+      </div>
 
-      <Section
-        id="outline"
-        title="Outline Dropdown"
-        desc="Outlined with hover effects."
-      >
-        <MahatiDropdown
-          variant="outline"
-          options={["Option A", "Option B", "Option C"]}
-          onSelect={handleSelect}
-        />
-      </Section>
+      <PropsTable props={dropdownProps} title="Props" />
+      <br/>
 
-      <Section id="pill" title="Pill Dropdown" desc="Rounded pill-style button.">
-        <MahatiDropdown
-          variant="pill"
-          options={["Small", "Medium", "Large"]}
-          onSelect={handleSelect}
-        />
-      </Section>
+      <CodePreview
+        title="Dropdown Variants"
+        code={`<MahatiDropdown variant="basic" options={["Option 1", "Option 2"]} />
+<MahatiDropdown variant="outline" options={["Option A", "Option B"]} />
+<MahatiDropdown variant="pill" options={["Small", "Medium"]} />
+<MahatiDropdown variant="dark" options={["Dark 1", "Dark 2"]} />
+<MahatiDropdown variant="underline" options={["Style 1", "Style 2"]} />
+<MahatiDropdown variant="shadow" options={["View", "Edit"]} />
+<MahatiDropdown variant="gradient" options={["Profile", "Logout"]} />`}
+        preview={
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <MahatiDropdown variant="basic" options={["Option 1", "Option 2", "Option 3"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="outline" options={["Option A", "Option B", "Option C"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="pill" options={["Small", "Medium", "Large"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="dark" options={["Dark 1", "Dark 2", "Dark 3"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="underline" options={["Style 1", "Style 2", "Style 3"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="shadow" options={["View", "Edit", "Delete"]} onSelect={handleSelect} />
+            <MahatiDropdown variant="gradient" options={["Profile", "Settings", "Logout"]} onSelect={handleSelect} />
+          </div>
+        }
+      />
 
-      <Section id="dark" title="Dark Dropdown" desc="Dark background with white text.">
-        <MahatiDropdown
-          variant="dark"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
-
-      <Section
-        id="underline"
-        title="Underline Dropdown"
-        desc="Minimal with underline style."
-      >
-        <MahatiDropdown
-          variant="underline"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
-
-      <Section
-        id="shadow"
-        title="Shadow Dropdown"
-        desc="Subtle shadow for elevation."
-      >
-        <MahatiDropdown
-          variant="shadow"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
-
-      <Section
-        id="glass"
+      <CodePreview
         title="Glass Dropdown"
-        desc="Translucent glass style for modern UI."
-        bg="bg-emerald-700 p-10 rounded-lg"
-      >
-        <MahatiDropdown
-          variant="glass"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
+        code={`<div className="p-8 rounded-lg bg-cover" style={{ backgroundImage: "url(...)" }}>
+  <MahatiDropdown variant="glass" options={["Option 1", "Option 2"]} />
+</div>`}
+        preview={
+          <div className="p-8 rounded-lg bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1554147090-e1221a04a025?w=800')" }}>
+            <MahatiDropdown variant="glass" options={["Option 1", "Option 2", "Option 3"]} onSelect={handleSelect} />
+          </div>
+        }
+      />
 
-      <Section
-        id="gradient"
-        title="Gradient Dropdown"
-        desc="Beautiful gradient background."
-      >
-        <MahatiDropdown
-          variant="gradient"
-          options={["Option 1", "Option 2", "Option 3"]}
-          onSelect={handleSelect}
-        />
-      </Section>
+      <CodePreview
+        title="Disabled State"
+        code={`<MahatiDropdown 
+  variant="basic" 
+  options={["You can't see these"]} 
+  placeholder="Disabled" 
+  disabled 
+/>`}
+        preview={
+          <div className="flex justify-center">
+            <MahatiDropdown variant="basic" options={["You can't see these"]} placeholder="Disabled" disabled />
+          </div>
+        }
+      />
+
+      <PropsTable props={dropdownProps} title="Props" />
     </div>
   );
 }

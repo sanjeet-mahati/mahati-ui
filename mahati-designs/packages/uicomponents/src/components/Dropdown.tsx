@@ -6,6 +6,7 @@ interface DropdownProps {
   options: string[];
   onSelect: (option: string) => void;
   variant?: "basic" | "outline" | "pill" | "dark" | "underline" | "shadow" | "glass" | "gradient";
+  className?: string;
 }
 
 const variantStyles: Record<string, string> = {
@@ -19,7 +20,7 @@ const variantStyles: Record<string, string> = {
   gradient: "bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90",
 };
 
- const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, variant = "basic" }) => {
+ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, variant = "basic", className = "" }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -30,10 +31,10 @@ const variantStyles: Record<string, string> = {
   };
 
   return (
-    <div className="relative w-56">
+    <div className={`relative w-56 ${className}`}>
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full text-left px-4 py-2 rounded-md transition-all duration-200 ${variantStyles[variant]}`}
+        className={`w-full text-left px-4 py-2 rounded-md transition-all duration-200 ${variantStyles[variant]} `}
       >
         {selected || "Select an option"}
       </button>
