@@ -4,7 +4,7 @@ export { Button as MahatiButton } from './components/Button';
 export { Card as MahatiCard }from './components/card';
 export { Modal as MahatiModal }from './components/Modal';
 export { ChartInterface as MahatiChart }from './components/ChartInterface';
-export {  MahatiChartAnalyticsWidget }from './components/MahatiChartAnalyticsWidget';
+// export {  MahatiChartAnalyticsWidget }from './components/MahatiChartAnalyticsWidget';
 export { FormContainer as MahatiFormContainer }from './components/FormContainer';
 export { Input as MahatiInput } from './components/Input';
 // export  { TabbedInterface as MahatiTabbedInterface }  from './components/TabbedInterface';
@@ -17,6 +17,14 @@ export  { Table as MahatiTableTailwind }  from './components/TableTailwindCSS';
 export  { Tooltip as MahatiTooltip }  from './components/TooltipTailwindCSS';
 // export  { TableWithTab as MahatiTableWithTab} from './components/TableTailwindCSS';
 // export  {TableWithTab} from './components/TableTailwindCSS';
+
+export  { Calendar as MahatiCalendar }  from './components/Calendar';
+export type {
+  CalendarDate,
+  CalendarTime,
+  CalendarDateRange,
+} from './components/Calendar';
+
 
     
 

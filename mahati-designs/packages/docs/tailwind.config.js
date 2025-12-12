@@ -7,6 +7,8 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    // Critical: Scan the actual calendar component files
+    "../uicomponents/src/**/*.{js,ts,jsx,tsx,mdx}",
 	],
   prefix: "",
   theme: {

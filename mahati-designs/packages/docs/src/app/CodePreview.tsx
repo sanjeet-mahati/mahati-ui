@@ -35,7 +35,7 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
   };
 
   return (
-       <div id={getSectionId(title)} className="border border-slate-300 rounded-lg overflow-hidden bg-white shadow-sm mb-8 scroll-mt-20">
+       <div id={getSectionId(title)} className="border border-slate-300 rounded-lg  bg-white shadow-sm mb-8 scroll-mt-20">
           {title && (
             <div className="px-6 py-3 border-b border-slate-200 bg-slate-50">
               <h3 className="text-lg font-semibold text-slate-800">{title}</h3>

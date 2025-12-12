@@ -10,7 +10,8 @@ import {
   faSpinner,
   faAlignJustify,
   faSquareCaretDown,
-  faWindowMaximize
+  faWindowMaximize,
+  faCalendarDays
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faMessage
@@ -457,9 +458,27 @@ export const NavItems = (): NavItem[]  => {
       name: 'Calendar',
       href: '/calendar',
       // icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faCalendarDays} size="lg"/>,
       active: pathname === '/calendar',
       position: 'top',
+      subItems: [
+        { name: 'Basic Calendar', href: '/calendar#basic-calendar', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'With Today & Clear Buttons', href: '/calendar#with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Auto Hide Calendar', href: '/calendar#auto-hide-calendar', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Calendar with Time Selection', href: '/calendar#calendar-with-time-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Time Selection with Today & Clear Buttons', href: '/calendar#time-selection-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Time Selection with Format Toggle (12h/24h)', href: '/calendar#time-selection-with-format-toggle-12h-24h', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Custom Preview Text Styling', href: '/calendar#custom-preview-text-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Global Typography Styling', href: '/calendar#global-typography-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Year Dropdown Feature', href: '/calendar#year-dropdown-feature', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Format & Time Zone Selection', href: '/calendar#date-format-&-time-zone-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Range with Today & Clear Buttons', href: '/calendar#date-range-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Block / Disable Dates', href: '/calendar#block-disable-dates', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Calendar Size Variations', href: '/calendar#calendar-size-variations', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Size Comparison (Side by Side)', href: '/calendar#size--comparison-side-by-side', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Size Prop with Date Range Selection', href: '/calendar#size-prop-with-date-range-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+                
+      ]
     },
     
     
