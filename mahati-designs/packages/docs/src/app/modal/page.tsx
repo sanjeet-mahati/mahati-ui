@@ -18,7 +18,8 @@ export default function ModalPage() {
   const [fullOpen, setFullOpen] = useState(false);
   const [scrollOpen, setScrollOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-
+  const [chatOpen, setChatOpen] = useState(false);
+ const [isTextareaVisible, setIsTextareaVisible] = useState(false);
   const [showFeedbackTextarea, setShowFeedbackTextarea] = useState(false);
 const messages = [
   {
@@ -48,6 +49,11 @@ const messages = [
     name: "Company",
     notInUse: false,
   });
+    const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // It's okay to submit without a text message if a rating is provided.
+  alert(feedbackText)
+    }
 
   const onChange = (k: string, v: string | boolean) =>
     setFormData((p) => ({ ...p, [k]: v }));
@@ -81,7 +87,10 @@ const messages = [
           <h3 className="font-semibold mb-4">Scrollable Modal</h3>
           <MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
         </div>
-
+ <div className="border rounded-lg p-4">
+          <h3 className="font-semibold mb-4">Chatbot Modal</h3>
+          <MahatiButton onClick={() => setChatOpen(true)}>Open Chatbot Modal</MahatiButton>
+        </div>
         <div className="border rounded-lg p-4">
           <h3 className="font-semibold mb-4">Feedback Modal with Rating & Emoji</h3>
           <MahatiButton onClick={() => setFeedbackOpen(true)}>Open Feedback Modal</MahatiButton>
@@ -119,7 +128,6 @@ const messages = [
           label: "Cancel",
           onClick: () => setUpdateOpen(false)
         }}
-        showDivider={true}
       >
         <div>
           <div className="space-y-4 py-4">
@@ -254,11 +262,19 @@ const messages = [
           <h2 className="text-xl font-bold">This is a full-screen style modal</h2>
         </div>
       </MahatiModal>
-
+  <MahatiModal isOpen={scrollOpen} onClose={() => setScrollOpen(false)} title="Scrollable Modal" size="lg">
+          <div className="max-h-[40vh] overflow-y-auto space-y-4">
+            {[...new Array(12)].map((_, i) => (
+              <p key={i} className="text-sm text-slate-700">
+                Paragraph {i + 1} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
+              </p>
+            ))}
+          </div>
+        </MahatiModal>
       {/* Scrollable */}
       <MahatiModal
-        isOpen={scrollOpen}
-        onClose={() => setScrollOpen(false)}
+        isOpen={chatOpen}
+        onClose={() => setChatOpen(false)}
         title="Scrollable Modal"
         width="600px">
 
@@ -376,42 +392,38 @@ const messages = [
       </MahatiModal>
 
       {/* Feedback Modal */}
-      <MahatiModal
+       <MahatiModal
         isOpen={feedbackOpen}
-        onClose={() => {
-          setFeedbackOpen(false);
-          setRating(0);
-          setFeedbackText("");
-          setShowFeedbackTextarea(false);
-        }}
+            onClose={() => setFeedbackOpen(false)}
         title="Send Feedback"
         showDivider={true}
         width="344px"
         position="bottom-right"
       >
         <div className="p-6 ml-[15px] mr-[21px] mt-[7px]">
-          {/* Star Rating */}
+          {/* Star Rating - FIXED to prevent flickering */}
           <div>
-            <p className="text-sm font-medium mb-3">Rate Us</p>
+            <p className="text-[#4D4D4D] [font-family:Poppins] text-[18px] not-italic font-medium leading-[normal]">Rate Us</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
-              <MahatiButton
+                <button
                   key={star}
                   onClick={() => setRating(star)}
-                  className="transition-transform hover:scale-110"
+                  className="transition-transform hover:scale-110 flex-shrink-0"
                 >
                   <div
-                    className="w-[28px] h-[28px] bg-center bg-no-repeat bg-cover"
-                  style={{
-                      backgroundImage: `url(${star <= rating ? '/icons/yellowstaremoji.png' : '/icons/staremoji.png'})`
+                    className="w-[28px] h-[28px] bg-center bg-no-repeat flex-shrink-0"
+                    style={{
+                      backgroundImage: `url(${star <= rating ? '/icons/yellowstaremoji.png' : '/icons/staremoji.png'})`,
+                      backgroundSize: 'contain' // CHANGED from 'cover' to 'contain' to prevent image stretching
                     }}
                   />
-              </MahatiButton>
+                </button>
               ))}
             </div>  
           </div>
 
-          {/* Emoji Selection */}
+          {/* Emoji Selection - FIXED to prevent flickering */}
           <div className="mt-[38px]">
             <div className="flex">
              {[
@@ -421,29 +433,30 @@ const messages = [
                 { icon: 'goodemoji', label: "Good", value: 4 },
                 { icon: 'amazingemoji', label: "Amazing", value: 5 }
               ].map((item) => (
-              <MahatiButton
+                <button
                   key={item.value}
                   title={item.label}
                   onClick={() => setRating(item.value)}
-                  className="flex flex-col items-center gap-1 p-2 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded-md"
+                  className="flex flex-col items-center gap-1 p-2 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded-md flex-shrink-0"
                 >
                   <div
-                    className="w-[23px] h-[23px] bg-center bg-no-repeat bg-cover"
+                    className="w-[23px] h-[23px] bg-center bg-no-repeat flex-shrink-0"
                     style={{
-                      backgroundImage: `url('/icons/${item.icon}.png')`
+                      backgroundImage: `url('/icons/${item.icon}.png')`,
+                      backgroundSize: 'contain' // CHANGED from 'cover' to 'contain'
                     }}
                   ></div>
-                  <span className="text-xs text-gray-600">
+                  <span className="text-[#4D4D4D] [font-family:Poppins] text-[12px] not-italic font-medium leading-[normal] whitespace-nowrap">
                     {item.label}
                   </span>
-              </MahatiButton>
+                </button>
               ))}
             </div>
           </div>
 
           {/* Conditional Feedback Prompt */}
           {rating > 0 && (
-            !showFeedbackTextarea ? (
+            !isTextareaVisible ? (
               <div className="mt-[29px] animate-fade-in">
                 <p className="text-[#4D4D4D] [font-family:Poppins] text-sm not-italic font-medium leading-[normal]">
                   Would you like to give more feedback?
@@ -451,16 +464,16 @@ const messages = [
                 <div className="flex gap-3 w-full mt-[29px]">
                   <MahatiButton
                     variant="outline"
-                    onClick={() => setFeedbackOpen(false)}
+                    onClick={handleSubmit}
                     className="w-[140px] h-9 border [background:#FFF] rounded-md border-solid border-[rgba(23,97,163,0.60)]"
                   >
                     No
                   </MahatiButton>
                   <MahatiButton 
-                    onClick={() => setShowFeedbackTextarea(true)} 
+                    onClick={() => setIsTextareaVisible(true)} 
                     className="w-[140px] h-9 border [background:#1761A3] rounded-md border-solid border-[rgba(23,97,163,0.60)] text-white"
                   >
-                    Yes
+                   <span className="text-white [font-family:Poppins] text-sm not-italic font-medium leading-[normal]">Yes</span>
                   </MahatiButton>
                 </div>
               </div>
@@ -469,13 +482,16 @@ const messages = [
                 <h3 className="mb-[5px]">Feedback Message</h3>
                 <textarea
                   value={feedbackText}
-                  onChange={(e) => setFeedbackText(e.target.value)}
+                  onChange={(e) =>
+                   alert(e.target.value)
+                  }
+                    
                   placeholder="Please Enter your Feedback"
                   rows={5}
                   className="w-full p-2 border [background:#F5F9FF] rounded border border-[rgba(23,97,163,0.40)] focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
                 <MahatiButton 
-                  onClick={() => alert(`Feedback submitted: ${feedbackText}`)} 
+                  onClick={handleSubmit} 
                   className="w-full mt-3 h-9 inline-flex items-center gap-1 rounded px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
                   style={{
                     background: 'linear-gradient(to right, #1e73be, #28a97d)'

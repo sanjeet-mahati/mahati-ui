@@ -128,7 +128,7 @@ export default function Modal({
           `}
           style={{ 
             width: width ?? "562px",
-            height: height ?? (position.includes("left") || position.includes("right") ? "100vh" : "auto"),
+            height: height ?? (position.includes("left") || position.includes("right") ? "90vh" : "auto"),
             pointerEvents: 'auto',
             margin: margin,
             boxShadow: '0px 4px 24px 0px rgba(0, 0, 0, 0.15)',
