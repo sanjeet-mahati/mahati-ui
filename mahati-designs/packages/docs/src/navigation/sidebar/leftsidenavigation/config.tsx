@@ -296,56 +296,20 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Login Form with Background Image', href: '/input#login-form-with-background-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
-    // {
-    //   name: 'Key Value Display',
-    //   href: '/keyValueDisplay',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Paragraph',
-    //   href: '/paragraph',
-    //   icon: <FontAwesomeIcon icon={faAlignJustify} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Row',
-    //   href: '/row',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
     {
-      name: 'Spinner TailWindCSS',
+      name: 'Spinner',
       href: '/spinnerTailwindcss',
       icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
       active: pathname === '/spinnerTailwindcss/',
       position: 'top',
     },
     {
-      name: 'Spinner Regular CSS',
-      href: '/spinner',
+      name: 'Toast Message',
+      href: '/toastMessageTailwindcssDemo',
       icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/spinner/',
+      active: pathname === '/ToastMessageTailwindcssDemo/',
       position: 'top',
     },
-    // {
-    //   name: 'Toast Message using TailwindCSS',
-    //   href: '/toastMessageTailwindcssDemo',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/ToastMessageTailwindcssDemo/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Toast Message Regular CSS',
-    //   href: '/toastMessageDemo',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/ToastMessageDemo/',
-    //   position: 'top',
-    // },
-
     {
       name: 'Table',
       href: '/table',
@@ -364,32 +328,6 @@ export const NavItems = (): NavItem[]  => {
         { name: 'All-in-One', href: '/table#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
       ]
     },
-
-    // {
-    //   name: 'Table with talwindcss',
-    //   href: '/tableTailwindCSSDemo',
-    //   icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
-    //   active: pathname === '/tableTailwindCSSDemo',
-    //   position: 'top',
-    //   // subItems: [
-    //   //   { name: 'Basic Table', href: '/tableTailwindCSSDemo#basic-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Paginated', href: '/tableTailwindCSSDemo#paginated', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Custom Cells', href: '/tableTailwindCSSDemo#custom-cells', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Sorting', href: '/tableTailwindCSSDemo#sorting', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Bordered', href: '/tableTailwindCSSDemo#bordered', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Global Alignment', href: '/tableTailwindCSSDemo#global-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Column Alignment', href: '/tableTailwindCSSDemo#column-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Column Visibility', href: '/tableTailwindCSSDemo#column-visibility', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'All-in-One', href: '/tableTailwindCSSDemo#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Expandable Rows with Summary', href: '/tableTailwindCSSDemo#expandable-rows-with-summary', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Expandable Multiple Rows with Summary', href: '/tableTailwindCSSDemo#expandable-multiple-rows-with-summary', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-    //   //   { name: 'Text Wrap Column Table', href: '/tableTailwindCSSDemo#text-wrap-column-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        
-    //   // ]
-    // },
-
-
-
     {
       name: 'Tab',
       href: '/tab',
@@ -436,16 +374,6 @@ export const NavItems = (): NavItem[]  => {
     //  },
     // },
 
-
-    // {
-    //   name: 'Tooltip',
-    //   href: '/Tooltip',
-    //   icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
-    //   // icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-
     {
       name: 'Table With Tab',
       href: '/tableWithTabDemo',
@@ -457,7 +385,6 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Calendar',
       href: '/calendar',
-      // icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
       icon: <FontAwesomeIcon icon={faCalendarDays} size="lg"/>,
       active: pathname === '/calendar',
       position: 'top',
