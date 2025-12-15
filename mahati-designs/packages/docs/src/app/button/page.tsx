@@ -53,15 +53,15 @@ export default function ButtonPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">Button</h1>
         <p className="text-lg text-gray-600 leading-relaxed">
-          Buttons allow users to perform actions and choose with a single tap. 
-          They communicate actions that users can take and are typically placed 
+          Buttons allow users to perform actions and choose with a single tap.
+          They communicate actions that users can take and are typically placed
           throughout your UI in forms, dialogs, and more.
         </p>
       </div>
 
 
       <PropsTable props={buttonProps} title="Props" />
-      <br/>
+      <br />
       <CodePreview
         title="Basic Buttons"
         code={`<MahatiButton variant="default">Default Button</MahatiButton>
@@ -145,7 +145,7 @@ export default function ButtonPage() {
             <MahatiButton size="default">Default</MahatiButton>
             <MahatiButton size="lg">Large</MahatiButton>
             <MahatiButton size="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </MahatiButton>
           </div>
         }
