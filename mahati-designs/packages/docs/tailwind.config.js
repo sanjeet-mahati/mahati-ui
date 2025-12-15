@@ -69,10 +69,48 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'circular-spin-accelerate': {
+          '0%': { transform: 'rotate(0deg)' },
+          '85%': { transform: 'rotate(289deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'dots-bounce': {
+          '0%, 80%, 100%': {
+            transform: 'scale(0)',
+            opacity: '0.45',
+          },
+          '40%': {
+            transform: 'scale(1)',
+            opacity: '1',
+          },
+        },
+        'dots-linear': {
+          '0%, 20%': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+          '21%, 100%': {
+            opacity: '0',
+            transform: 'scale(0.5)',
+          },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        spin: 'spin 1s linear infinite',
+        'circular-spin-accelerate': 'circular-spin-accelerate 1.5s linear infinite',
+        'dots-bounce': 'dots-bounce 1.2s ease-in-out infinite',
+        'dots-linear': 'dots-linear 1.2s ease-in-out infinite',
+        shimmer: 'shimmer 1.5s ease-in-out infinite',
       },
     },
   },
