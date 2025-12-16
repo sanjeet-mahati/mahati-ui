@@ -300,9 +300,9 @@ export const NavItems = (): NavItem[]  => {
     },
     {
       name: 'Toast Message',
-      href: '/toastMessageTailwindcssDemo',
+      href: '/toastMessage',
       icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/ToastMessageTailwindcssDemo/',
+      active: pathname === '/ToastMessage/',
       position: 'top',
     },
     {
