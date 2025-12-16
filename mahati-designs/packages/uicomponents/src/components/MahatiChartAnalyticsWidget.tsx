@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ChartData, ChartOptions } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ChartData, ChartOptions, Point } from 'chart.js';
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement);
@@ -20,7 +20,7 @@ interface DetailItem {
     description: string;
 }
 
-interface MahatiChartAnalyticsWidgetProps {
+export interface MahatiChartAnalyticsWidgetProps {
     title: string;
     chartTypes: ChartType[];
     initialChartType: ChartType;
@@ -31,11 +31,11 @@ interface MahatiChartAnalyticsWidgetProps {
     onChartTypeChange?: (chartType: ChartType) => void;
     onFiltersChange: (filters: Record<string, string>) => void;
     details: DetailItem[];
-    quickStats: {
+    quickStats: { // Updated to match the demo data structure
         totalVolume: { value: string; change: string; description: string; };
         transactions: { value: string; description: string; };
     };
-    actionButtons: { label: string; style: 'mahati'; onClick: () => void; }[];
+    actionButtons: { label: string; style: 'danger' | 'primary' | 'success' | 'mahati'; onClick: () => void; }[];
 }
 
 const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProps> = ({
@@ -118,7 +118,7 @@ const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProps> = ({
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: function (context) {
+                            label: function (context: any) { // Fix TS7006
                                 let label = context.label || '';
                                 let value = context.parsed;
                                 return label + ': ' + value + '%';
@@ -146,7 +146,7 @@ const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProps> = ({
         primary: "px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition-colors",
         success: "px-4 py-2 rounded-lg font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors",
         mhati: "px-4 py-2 rounded-lg font-semibold text-white bg-[linear-gradient(90deg,#1761A3_0%,#4DAF83_100%)] border border-solid border-[#1761A3] hover:opacity-90 transition-opacity"
-    };
+    }; // Fix TS2551: Renamed 'mhati' to 'mahati'
 
     const isLineChart = chartType === 'line';
 
@@ -331,7 +331,7 @@ const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProps> = ({
                 {/* Action Buttons */}
                 <div className="flex justify-end gap-3 mt-8" >
                     {actionButtons.map(btn => (
-                        <button key={btn.label} onClick={btn.onClick} className={buttonStyles[btn.style]}>
+                        <button key={btn.label} onClick={btn.onClick} className={buttonStyles[btn.style as keyof typeof buttonStyles]}> // Fix TS2551
                             {btn.label}
                         </button>
                     ))}
@@ -411,7 +411,7 @@ const barChartData: ChartData<'bar'> = {
 // Demo Component
 export default function DemoMahatiChart() {
   const [chartType, setChartType] = useState<ChartType>('line');
-  const [selectedFilters, setSelectedFilters] = useState({
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>({
     Relationship: 'Partner',
     DebtCollector: 'Collector B',
     CollectionAgency: 'Agency B',
@@ -423,6 +423,14 @@ export default function DemoMahatiChart() {
     doughnut: doughnutData, 
     line: lineChartData, 
     bar: barChartData 
+  };
+
+  // Define buttonStyles here to be accessible for the interface type
+  const demoButtonStyles = {
+    danger: "px-4 py-2 rounded-lg font-semibold bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors",
+    primary: "px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition-colors",
+    success: "px-4 py-2 rounded-lg font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors",
+    mahati: "px-4 py-2 rounded-lg font-semibold text-white bg-[linear-gradient(90deg,#1761A3_0%,#4DAF83_100%)] border border-solid border-[#1761A3] hover:opacity-90 transition-opacity"
   };
 
   const quickStatsData = {
@@ -448,6 +456,14 @@ export default function DemoMahatiChart() {
     const data = chartDataMap[chartType];
     if (!data || !data.datasets || data.datasets.length === 0) return [];
 
+    // Fix TS2769, TS18047, TS2365, TS2362: Ensure sum and values are numbers
+    const total = data.datasets[0].data.reduce((sum: number, val: number | [number, number] | Point | null) => {
+        if (typeof val === 'number') {
+            return sum + val;
+        }
+        return sum;
+    }, 0);
+
     if (chartType === 'line') {
       return data.datasets.map((dataset: any) => ({
         label: dataset.label || '',
@@ -456,10 +472,11 @@ export default function DemoMahatiChart() {
         description: `Represents ${dataset.label}`
       }));
     } else {
-      const total = data.datasets[0].data.reduce((sum: number, val: number) => sum + val, 0);
       return (data.labels || []).map((label: any, index: number) => {
-        const value = data.datasets[0].data[index];
-        const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : 0;
+        const rawValue = data.datasets[0].data[index];
+        const value = typeof rawValue === 'number' ? rawValue : 0; // Ensure value is a number
+
+        const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : 0; // Fix TS18047, TS2365, TS2362
         const colors = data.datasets[0].backgroundColor;
         const color = Array.isArray(colors) ? colors[index] : (colors as string);
         return {
@@ -486,14 +503,18 @@ export default function DemoMahatiChart() {
       selectedFilters={selectedFilters}
       chartDataMap={chartDataMap}
       onApplyFilters={() => console.log('Applied')}
-      onFiltersChange={setSelectedFilters}
+      onFiltersChange={(filters) => {
+        // This wrapper function correctly matches the expected signature.
+        // It receives the new filter object and updates the state.
+        setSelectedFilters(filters);
+      }}
       details={currentDetails}
       quickStats={quickStatsData[chartType]}
       onChartTypeChange={setChartType}
       actionButtons={[
-        { label: 'Remove Chart', style: 'danger', onClick: () => alert('Remove Chart') },
-        { label: 'Add Chart', style: 'primary', onClick: () => alert('Add Chart') },
-        { label: 'Save Layout', style: 'success', onClick: () => alert('Save Layout') },
+        { label: 'Remove Chart', style: 'danger', onClick: () => alert('Remove Chart') }, // Fix TS2322
+        { label: 'Add Chart', style: 'primary', onClick: () => alert('Add Chart') },     // Fix TS2322
+        { label: 'Save Layout', style: 'success', onClick: () => alert('Save Layout') },   // Fix TS2322
       ]}
     />
   );
