@@ -7,7 +7,6 @@ import { MessageCircle, Users, Bot, Frown, Meh, Smile, Laugh, Angry, Star } from
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 
-
 export default function ModalPage() {
   const [basicOpen, setBasicOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -18,6 +17,11 @@ export default function ModalPage() {
   const [fullOpen, setFullOpen] = useState(false);
   const [scrollOpen, setScrollOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [sizeSmOpen, setSizeSmOpen] = useState(false);
+  const [sizeDefaultOpen, setSizeDefaultOpen] = useState(false);
+  const [sizeMdOpen, setSizeMdOpen] = useState(false);
+  const [sizeLgOpen, setSizeLgOpen] = useState(false);
+  const [sizeXlOpen, setSizeXlOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
  const [isTextareaVisible, setIsTextareaVisible] = useState(false);
   const [showFeedbackTextarea, setShowFeedbackTextarea] = useState(false);
@@ -58,6 +62,285 @@ const messages = [
   const onChange = (k: string, v: string | boolean) =>
     setFormData((p) => ({ ...p, [k]: v }));
 
+  const modalProps = [
+    { name: 'isOpen', type: 'boolean', required: true, description: 'Controls if the modal is open or not.' },
+    { name: 'onClose', type: '() => void', required: true, description: 'Function to call when the modal should be closed.' },
+    { name: 'title', type: 'string', defaultValue: '-', description: 'The title displayed in the modal header.' },
+    { name: 'subtitle', type: 'string', description: "A subtitle or short description under the title." },
+    { name: 'children', type: 'React.ReactNode', defaultValue: '-', description: 'The content of the modal.' },
+    { name: 'size', type: '"default" | "sm" | "md" | "lg" | "xl"', default: '"default"', description: "Sets the predefined width of the modal." },
+    { name: 'primaryAction', type: '{ label: string; onClick: () => void; }', defaultValue: '-', description: 'Primary action button configuration.' },
+    { name: 'secondaryAction', type: '{ label: string; onClick: () => void; }', defaultValue: '-', description: 'Secondary action button configuration.' },
+    { name: 'headerIcon', type: 'React.ReactNode', defaultValue: '-', description: 'An icon to display in the header before the title.' },
+    { name: 'width', type: 'string', description: 'Custom width for the modal. Overrides the `size` prop.' },
+    { name: 'height', type: 'string', defaultValue: "'auto'", description: 'Custom height for the modal.' },
+    { name: 'position', type: "'center' | 'top-right' | 'bottom-right' | ...", defaultValue: "'center'", description: 'Position of the modal on the screen.' },
+    { name: 'showDivider', type: 'boolean', defaultValue: 'true', description: 'Whether to show a divider below the header.' },
+  ];
+
+  const basicModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function BasicModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Basic Modal</MahatiButton>
+      <MahatiModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Basic Modal"
+        headerIcon={<span>ℹ️</span>}
+        primaryAction={{
+          label: "Okay",
+          onClick: () => setIsOpen(false)
+        }}
+      >
+        <div className="p-4">
+          This is a basic modal with simple content.
+        </div>
+      </MahatiModal>
+    </>
+  );
+}
+`;
+
+  const confirmationModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function ConfirmationModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Confirmation</MahatiButton>
+      <MahatiModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Confirmation"
+        headerIcon={<span>❗</span>}
+        secondaryAction={{
+          label: "No",
+          onClick: () => setIsOpen(false)
+        }}
+        primaryAction={{
+          label: "Yes",
+          onClick: () => {
+            alert("Confirmed");
+            setIsOpen(false);
+          }
+        }}
+      >
+        <div className="p-4">
+          Are you sure you want to proceed?
+        </div>
+      </MahatiModal>
+    </>
+  );
+}
+`;
+
+  const formModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function FormModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    id: "2",
+    code: "Company",
+    name: "Company",
+    notInUse: false,
+  });
+
+  const onChange = (k: string, v: string | boolean) =>
+    setFormData((p) => ({ ...p, [k]: v }));
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Form Modal</MahatiButton>
+      <MahatiModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Update Record"
+        headerIcon={<span>✏️</span>}
+        primaryAction={{
+          label: "Update Record",
+          onClick: () => setIsOpen(false)
+        }}
+        secondaryAction={{
+          label: "Cancel",
+          onClick: () => setIsOpen(false)
+        }}
+      >
+        <div className="space-y-4 p-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Id</label>
+            <input type="text" value={formData.id} onChange={(e) => onChange("id", e.target.value)} className="w-full px-3 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Code</label>
+            <input type="text" value={formData.code} onChange={(e) => onChange("code", e.target.value)} className="w-full px-3 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Name</label>
+            <input type="text" value={formData.name} onChange={(e) => onChange("name", e.target.value)} className="w-full px-3 py-2 border rounded-lg" />
+          </div>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" checked={formData.notInUse} onChange={(e) => onChange("notInUse", e.target.checked)} />
+            <label className="text-sm">Not In Use</label>
+          </div>
+        </div>
+      </MahatiModal>
+    </>
+  );
+}
+`;
+
+  const scrollableModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function ScrollableModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Scrollable Modal</MahatiButton>
+      <MahatiModal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Scrollable Modal" size="lg">
+        <div className="max-h-[40vh] overflow-y-auto space-y-4 p-4">
+          {[...new Array(12)].map((_, i) => (
+            <p key={i} className="text-sm text-slate-700">
+              Paragraph {i + 1} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
+            </p>
+          ))}
+        </div>
+      </MahatiModal>
+    </>
+  );
+}
+`;
+
+  const modalSizesCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function ModalSizesExample() {
+  // Manage state for each modal size
+  const [openModal, setOpenModal] = useState<string | null>(null);
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      <MahatiButton size="sm" onClick={() => setOpenModal("sm")}>Small (sm)</MahatiButton>
+      <MahatiButton size="sm" onClick={() => setOpenModal("default")}>Default</MahatiButton>
+      <MahatiButton size="sm" onClick={() => setOpenModal("md")}>Medium (md)</MahatiButton>
+      <MahatiButton size="sm" onClick={() => setOpenModal("lg")}>Large (lg)</MahatiButton>
+      <MahatiButton size="sm" onClick={() => setOpenModal("xl")}>Extra Large (xl)</MahatiButton>
+      {/* ... MahatiModal components for each size ... */}
+    </div>
+  );
+}
+`;
+
+  const chatbotModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton, MahatiInput } from '@/components';
+import { MinusIcon, PaperclipIcon, SendIcon, XIcon } from "lucide-react";
+
+export default function ChatbotModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const messages = [
+    { id: 1, type: "bot", text: "Welcome! How can I help you?", time: "10.00 am" },
+    { id: 2, type: "user", text: "Hello, How are you?", time: "10.00 am" },
+  ];
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Chatbot Modal</MahatiButton>
+      <MahatiModal isOpen={isOpen} onClose={() => setIsOpen(false)} width="600px">
+        {/* Chatbot UI */}
+        <div className="w-full rounded-[20px] overflow-hidden border-0 shadow-lg">
+          <header>...</header>
+          <div className="bg-[#fefff2] min-h-[551px] p-6 flex flex-col">
+            {/* Messages */}
+          </div>
+          <footer className="bg-[#1761a30d] rounded-[0px_0px_16px_16px] border-t px-6 py-4">
+            {/* Input */}
+          </footer>
+        </div>
+      </MahatiModal>
+    </>
+  );
+}
+`;
+
+  const feedbackModalCode = `
+import { useState } from 'react';
+import { MahatiModal, MahatiButton } from '@/components';
+
+export default function FeedbackModalExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [isTextareaVisible, setIsTextareaVisible] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle submission logic
+    setIsOpen(false);
+  };
+
+  return (
+    <>
+      <MahatiButton onClick={() => setIsOpen(true)}>Open Feedback Modal</MahatiButton>
+      <MahatiModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Send Feedback"
+        width="344px"
+        position="bottom-right"
+      >
+        <div className="p-6">
+          {/* Star Rating */}
+          <div>
+            <p>Rate Us</p>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button key={star} onClick={() => setRating(star)}>
+                  {/* Star Icon */}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Emoji Selection */}
+          <div className="mt-[38px]">
+            {/* Emoji Buttons */}
+          </div>
+
+          {/* Conditional Feedback Prompt */}
+          {rating > 0 && (
+            !isTextareaVisible ? (
+              <div>
+                <p>Would you like to give more feedback?</p>
+                {/* Yes/No Buttons */}
+              </div>
+            ) : (
+              <div>
+                <textarea placeholder="Please Enter your Feedback" />
+                <MahatiButton onClick={handleSubmit}>Submit</MahatiButton>
+              </div>
+            )
+          )}
+        </div>
+      </MahatiModal>
+    </>
+  );
+}`;
+
   return (
     <div className="space-y-8 p-8">
       <div>
@@ -68,33 +351,56 @@ const messages = [
       </div>
 
       <div className="space-y-8">
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Basic Modal</h3>
-          <MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>
-        </div>
+        <h2 className="text-2xl font-bold">Examples</h2>
+        <CodePreview
+          title="Basic Modal"
+          code={basicModalCode}
+          preview={<MahatiButton onClick={() => setBasicOpen(true)}>Open Basic Modal</MahatiButton>}
+        />
 
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Confirmation Modal</h3>
-          <MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>
-        </div>
+        <CodePreview
+          title="Confirmation Modal"
+          code={confirmationModalCode}
+          preview={<MahatiButton onClick={() => setConfirmOpen(true)}>Open Confirmation</MahatiButton>}
+        />
 
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Form Modal (Update Record)</h3>
-          <MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>
-        </div>
+        <CodePreview
+          title="Form Modal"
+          code={formModalCode}
+          preview={<MahatiButton onClick={() => setUpdateOpen(true)}>Open Form Modal</MahatiButton>}
+        />
 
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Scrollable Modal</h3>
-          <MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>
-        </div>
- <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Chatbot Modal</h3>
-          <MahatiButton onClick={() => setChatOpen(true)}>Open Chatbot Modal</MahatiButton>
-        </div>
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-4">Feedback Modal with Rating & Emoji</h3>
-          <MahatiButton onClick={() => setFeedbackOpen(true)}>Open Feedback Modal</MahatiButton>
-        </div>
+        <CodePreview
+          title="Scrollable Modal"
+          code={scrollableModalCode}
+          preview={<MahatiButton onClick={() => setScrollOpen(true)}>Open Scrollable Modal</MahatiButton>}
+        />
+
+        <CodePreview
+          title="Modal Sizes"
+          code={modalSizesCode}
+          preview={
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <MahatiButton size="sm" onClick={() => setSizeSmOpen(true)}>Small (sm)</MahatiButton>
+              <MahatiButton size="sm" onClick={() => setSizeDefaultOpen(true)}>Default</MahatiButton>
+              <MahatiButton size="sm" onClick={() => setSizeMdOpen(true)}>Medium (md)</MahatiButton>
+              <MahatiButton size="sm" onClick={() => setSizeLgOpen(true)}>Large (lg)</MahatiButton>
+              <MahatiButton size="sm" onClick={() => setSizeXlOpen(true)}>Extra Large (xl)</MahatiButton>
+            </div>
+          }
+        />
+
+        <CodePreview
+          title="Chatbot Modal"
+          code={chatbotModalCode}
+          preview={<MahatiButton onClick={() => setChatOpen(true)}>Open Chatbot Modal</MahatiButton>}
+        />
+
+        <CodePreview
+          title="Feedback Modal"
+          code={feedbackModalCode}
+          preview={<MahatiButton onClick={() => setFeedbackOpen(true)}>Open Feedback Modal</MahatiButton>}
+        />
       </div>
 
       {/* ---------- MODALS ---------- */}
@@ -272,6 +578,56 @@ const messages = [
           </div>
         </MahatiModal>
       {/* Scrollable */}
+      {/* Modal Sizes */}
+      <MahatiModal
+        isOpen={sizeSmOpen}
+        onClose={() => setSizeSmOpen(false)}
+        title="Small Modal"
+        size="sm"
+        primaryAction={{ label: "Close", onClick: () => setSizeSmOpen(false) }}
+      >
+        <p className="py-2">This is a small modal.</p>
+      </MahatiModal>
+
+      <MahatiModal
+        isOpen={sizeDefaultOpen}
+        onClose={() => setSizeDefaultOpen(false)}
+        title="Default Modal"
+        size="default"
+        primaryAction={{ label: "Close", onClick: () => setSizeDefaultOpen(false) }}
+      >
+        <p className="py-4">This is a default sized modal.</p>
+      </MahatiModal>
+
+      <MahatiModal
+        isOpen={sizeMdOpen}
+        onClose={() => setSizeMdOpen(false)}
+        title="Medium Modal"
+        size="md"
+        primaryAction={{ label: "Close", onClick: () => setSizeMdOpen(false) }}
+      >
+        <p className="py-4">This is a medium modal, good for more content.</p>
+      </MahatiModal>
+
+      <MahatiModal
+        isOpen={sizeLgOpen}
+        onClose={() => setSizeLgOpen(false)}
+        title="Large Modal"
+        size="lg"
+        primaryAction={{ label: "Close", onClick: () => setSizeLgOpen(false) }}
+      >
+        <p className="py-6">This is a large modal for complex forms or detailed information.</p>
+      </MahatiModal>
+
+      <MahatiModal
+        isOpen={sizeXlOpen}
+        onClose={() => setSizeXlOpen(false)}
+        title="Extra Large Modal"
+        size="xl"
+        primaryAction={{ label: "Close", onClick: () => setSizeXlOpen(false) }}
+      >
+        <p className="py-6">This is an extra-large modal for experiences that need a lot of space.</p>
+      </MahatiModal>
       <MahatiModal
         isOpen={chatOpen}
         onClose={() => setChatOpen(false)}
@@ -504,6 +860,10 @@ const messages = [
           )}
         </div>
       </MahatiModal>
+
+      <div id="props" className="space-y-4">
+        <PropsTable props={modalProps} />
+      </div>
     </div>
   );
 }

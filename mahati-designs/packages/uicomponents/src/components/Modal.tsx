@@ -3,11 +3,14 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
 
-type MahatiModalProps = {
+export type MahatiModalSize = "default" | "sm" | "md" | "lg" | "xl";
+
+export type MahatiModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   subtitle?: string;
+  size?: MahatiModalSize;
   children?: React.ReactNode;
   className?: string;
   width?: string | number;
@@ -30,6 +33,14 @@ type MahatiModalProps = {
   // Note: style prop is intentionally not supported - use position, width, height instead
 };
 
+const MODAL_WIDTH_MAP: Record<MahatiModalSize, string> = {
+  sm: "360px",
+  default: "562px",
+  md: "720px",
+  lg: "760px",
+  xl: "800px",
+};
+
 export default function Modal({
   isOpen,
   onClose,
@@ -37,7 +48,7 @@ export default function Modal({
   subtitle,
   children,
   className = "",
-  width,
+  width: customWidth,
   height,
   margin,
   primaryAction,
@@ -45,7 +56,11 @@ export default function Modal({
   headerIcon,
   showDivider = true,
   position ="center",
+  size = "default",
 }: MahatiModalProps) {
+  // Use size prop for width, but allow customWidth to override it.
+  const width = customWidth ?? MODAL_WIDTH_MAP[size] ?? MODAL_WIDTH_MAP.default;
+
   // ESC key close
   useEffect(() => {
     if (!isOpen) return;
@@ -127,7 +142,7 @@ export default function Modal({
             ${className}
           `}
           style={{ 
-            width: width ?? "562px",
+            width: width,
             height: height ?? (position.includes("left") || position.includes("right") ? "90vh" : "auto"),
             pointerEvents: 'auto',
             margin: margin,
