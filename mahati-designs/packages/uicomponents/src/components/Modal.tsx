@@ -151,7 +151,7 @@ export default function Modal({
           }}
         >
           {/* Header with title and close button */}
-          <div className="px-6 pt-5 pb-4 shrink-0 flex items-center justify-between border-b border-gray-200">
+          <div className="px-6 py-4 pb-4 shrink-0 flex items-center justify-between border-b border-gray-200">
             <div className="flex items-center gap-3">
               {headerIcon && (
                 <div className="flex shrink-0 items-center justify-center">
