@@ -41,7 +41,7 @@ const PropsTable: React.FC<PropsTableProps> = ({ props, title = "Props" }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {props.map((prop) => (
+            {props&&props.map((prop) => (
               <tr key={prop.name} className="hover:bg-slate-50">
                 <td className="py-4 px-4 font-mono text-xs text-blue-600">
                   {prop.name} {prop.required && <span className="text-red-500">*</span>}
