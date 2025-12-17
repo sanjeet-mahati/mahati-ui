@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 
 import React, { useState } from "react";
 import { Home, User, Settings, BarChart3, FileText, Bell } from "lucide-react";

@@ -24,7 +24,7 @@ export type CalendarSize = "small" | "medium" | "large" | "extra-large";
 
 export interface CalendarProps {
   value?: CalendarDate | null;
-  onChange?: (date: CalendarDate | null) => void;
+  onChange?: (date: CalendarDate | null, dateString?: string) => void; 
   enableRangeSelection?: boolean;
   rangeValue?: CalendarDateRange;
   onRangeChange?: (range: CalendarDateRange) => void;
@@ -199,6 +199,14 @@ export interface CalendarProps {
     days: number;
   };
 }
+
+const convertToDateString = (date: CalendarDate | null): string => {
+  if (!date) return '';
+  const year = date.year;
+  const month = String(date.month + 1).padStart(2, '0'); 
+  const day = String(date.day).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const cn = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
@@ -441,18 +449,25 @@ const getLocalTimeZone = (): string => {
   return shortTimeZone || timeZoneString;
 };
 
-// Size scaling configuration
-// extra-large is 100% (default), all others scale proportionally
 const SIZE_SCALES = {
-  "small": 0.65,      // 65% of original
-  "medium": 0.8,      // 80% of original
-  "large": 0.9,       // 90% of original
-  "extra-large": 1.0, // 100% (default)
+  "small": 0.65,
+  "medium": 0.8,
+  "large": 0.9,
+  "extra-large": 1.0,
 } as const;
 
-// export default function Modal(
-const Calendar: React.FC<CalendarProps> = ({
+const getDeviceScale = (): number => {
+  if (typeof window === 'undefined') return 1;
+  
+  const width = window.innerWidth;
+  
+  if (width < 640) return 0.7;
+  if (width < 1024) return 0.85;
+  
+  return 1;
+};
 
+const Calendar: React.FC<CalendarProps> = ({
   value,
   onChange,
   enableRangeSelection = false,
@@ -475,31 +490,6 @@ const Calendar: React.FC<CalendarProps> = ({
   icon,
   showIcon = true,
   size = "extra-large",
-  navButtonLayout,
-  navButtonStyles,
-  navArrowLayout,
-  navArrowStyles,
-  timeButtonLayout,
-  timeButtonStyles,
-  timeButtonHoverGradient,
-  dateFieldLayout,
-  dateFieldStyles,
-  todayButtonLayout,
-  todayButtonStyles,
-  todayButtonHoverGradient,
-  clearButtonLayout,
-  clearButtonStyles,
-  confirmTimeButtonLayout,
-  confirmTimeButtonStyles,
-  confirmTimeButtonHoverGradient,
-  timeSelectLayout,
-  timeSelectStyles,
-  timeFormatToggleLayout,
-  timeFormatToggleStyles,
-  previewTextStyles,
-  globalTypography,
-  calendarContainerLayout,
-  calendarContainerStyles,
   enableYearDropdown = false,
   showDateFormatSelector = false,
   dateFormat = "none",
@@ -509,65 +499,6 @@ const Calendar: React.FC<CalendarProps> = ({
   onTimeZoneFormatChange,
   blockDateConfig,
 }) => {
-// export default function Calendar({
-
-//   value,
- 
-//   onChange,
-//   enableRangeSelection = false,
-//   rangeValue,
-//   onRangeChange,
-//   enableTimeSelection = false,
-//   timeValue,
-//   onTimeChange,
-//   showTimeFormatToggle = false,
-//   timeFormat = "12h",
-//   onTimeFormatChange,
-//   autoHide = false,
-//   showTodayButton = false,
-//   showClearButton = false,
-//   placeholder = "Select date",
-//   className,
-//   disabled = false,
-//   onShow,
-//   onHide,
-//   icon,
-//   showIcon = true,
-//   size = "extra-large",
-//   navButtonLayout,
-//   navButtonStyles,
-//   navArrowLayout,
-//   navArrowStyles,
-//   timeButtonLayout,
-//   timeButtonStyles,
-//   timeButtonHoverGradient,
-//   dateFieldLayout,
-//   dateFieldStyles,
-//   todayButtonLayout,
-//   todayButtonStyles,
-//   todayButtonHoverGradient,
-//   clearButtonLayout,
-//   clearButtonStyles,
-//   confirmTimeButtonLayout,
-//   confirmTimeButtonStyles,
-//   confirmTimeButtonHoverGradient,
-//   timeSelectLayout,
-//   timeSelectStyles,
-//   timeFormatToggleLayout,
-//   timeFormatToggleStyles,
-//   previewTextStyles,
-//   globalTypography,
-//   calendarContainerLayout,
-//   calendarContainerStyles,
-//   enableYearDropdown = false,
-//   showDateFormatSelector = false,
-//   dateFormat = "none",
-//   onDateFormatChange,
-//   showTimeZoneSelector = false,
-//   timeZoneFormat = "none",
-//   onTimeZoneFormatChange,
-//   blockDateConfig,
-// }:CalendarProps){
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(
     value?.year || today.getFullYear()
@@ -585,13 +516,58 @@ const Calendar: React.FC<CalendarProps> = ({
   const [showYearDropdown, setShowYearDropdown] = useState(false);
   const [internalDateFormat, setInternalDateFormat] = useState(dateFormat);
   const [internalTimeZoneFormat, setInternalTimeZoneFormat] = useState(timeZoneFormat);
+  const [deviceScale, setDeviceScale] = useState(1);
+  const [positionAbove, setPositionAbove] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Get scale factor based on size prop
-  const scale = SIZE_SCALES[size];
+  const sizeScale = SIZE_SCALES[size];
+  const scale = sizeScale * deviceScale;
 
-  // Helper function to scale dimensions
   const scaled = (value: number): number => Math.round(value * scale);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceScale(getDeviceScale());
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current || !calendarRef.current) return;
+
+    const calculatePosition = () => {
+      const containerRect = containerRef.current?.getBoundingClientRect();
+      const calendarHeight = calendarRef.current?.offsetHeight || 526 * scale;
+      
+      if (!containerRect) return;
+
+      const spaceBelow = window.innerHeight - containerRect.bottom;
+      const spaceAbove = containerRect.top;
+      const bufferSpace = 16;
+
+      if (spaceBelow < calendarHeight + bufferSpace && spaceAbove > spaceBelow) {
+        setPositionAbove(true);
+      } else {
+        setPositionAbove(false);
+      }
+    };
+
+    calculatePosition();
+    window.addEventListener('resize', calculatePosition);
+    window.addEventListener('scroll', calculatePosition, true);
+
+    return () => {
+      window.removeEventListener('resize', calculatePosition);
+      window.removeEventListener('scroll', calculatePosition, true);
+    };
+  }, [isOpen, scale]);
 
   useEffect(() => {
     if (value) {
@@ -694,7 +670,8 @@ const Calendar: React.FC<CalendarProps> = ({
         }
       }
     } else {
-      onChange?.(date);
+      const dateString = convertToDateString(date);
+      onChange?.(date, dateString);
     }
 
     if (showTimeSelector) {
@@ -721,9 +698,10 @@ const Calendar: React.FC<CalendarProps> = ({
 
     setCurrentYear(todayDate.year);
     setCurrentMonth(todayDate.month);
-    onChange?.(todayDate);
+    
+    const dateString = convertToDateString(todayDate);
+    onChange?.(todayDate, dateString);
 
-    // If time selection is enabled and we're in time selector view, also set current time
     if (enableTimeSelection && showTimeSelector) {
       const now = new Date();
       const currentHour = now.getHours();
@@ -756,7 +734,6 @@ const Calendar: React.FC<CalendarProps> = ({
         period: period,
       });
 
-      // Set local timezone if timezone selector is enabled
       if (showTimeZoneSelector) {
         const localTZ = getLocalTimeZone();
         setInternalTimeZoneFormat(localTZ);
@@ -776,7 +753,7 @@ const Calendar: React.FC<CalendarProps> = ({
       onRangeChange?.({ start: null, end: null });
       setActiveField("start");
     } else {
-      onChange?.(null);
+      onChange?.(null, '');
     }
     if (enableTimeSelection) {
       onTimeChange?.({ hour: 12, minute: 0, period: "AM" });
@@ -965,7 +942,6 @@ const Calendar: React.FC<CalendarProps> = ({
         <div className="flex-1">
           {(showTimeFormatToggle || showDateFormatSelector || showTimeZoneSelector) && (
             <div style={{ marginBottom: `${scaled(12)}px` }}>
-              {/* First Row: Format Toggle Only */}
               {showTimeFormatToggle && (
                 <div style={{ marginBottom: `${scaled(12)}px` }}>
                   <div className="flex flex-col" style={{ gap: `${scaled(8)}px` }}>
@@ -1025,7 +1001,6 @@ const Calendar: React.FC<CalendarProps> = ({
                 </div>
               )}
 
-              {/* Second Row: Date Format and Time Format */}
               {(showDateFormatSelector || showTimeZoneSelector) && (
                 <div className="flex items-start" style={{ gap: `${scaled(15)}px` }}>
                   {showDateFormatSelector && (
@@ -1343,12 +1318,17 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const calendarContent = (
     <div 
-      className="absolute top-full left-0 z-50 border border-[#1761A3] bg-white shadow-xl transition-all duration-300 bg-gradient-to-b from-[rgba(23,97,163,0.08)] to-[rgba(77,175,131,0.08)]"
+      ref={calendarRef}
+      className={cn(
+        "absolute left-0 z-50 border border-[#1761A3] bg-white shadow-xl transition-all duration-300 bg-gradient-to-b from-[rgba(23,97,163,0.08)] to-[rgba(77,175,131,0.08)]",
+        positionAbove ? "bottom-full" : "top-full"
+      )}
       style={{
-        marginTop: `${scaled(8)}px`,
+        [positionAbove ? 'marginBottom' : 'marginTop']: `${scaled(8)}px`,
         width: `${scaled(406)}px`,
         height: `${scaled(526)}px`,
-        borderRadius: `${scaled(22)}px`
+        borderRadius: `${scaled(22)}px`,
+        maxWidth: '95vw',
       }}
     >
       <div className="h-full flex flex-col" style={{ 
@@ -1712,7 +1692,7 @@ const Calendar: React.FC<CalendarProps> = ({
           disabled={disabled}
           placeholder={placeholder}
           className={cn(
-            "block w-full rounded-xl border border-gray-300 bg-gray-50 font-semibold shadow-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500",
+            "block w-full rounded-full border border-gray-300 bg-gray-50 font-semibold shadow-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500",
             disabled && "cursor-not-allowed opacity-50"
           )}
           style={{
@@ -1730,9 +1710,5 @@ const Calendar: React.FC<CalendarProps> = ({
   );
 };
 
-// export default Calendar;
-
 Calendar.displayName = "Calendar";
-export { Calendar ,CalendarDate,
-  CalendarTime,
-  CalendarDateRange};
+export { Calendar };

@@ -10,7 +10,8 @@ import {
   faSpinner,
   faAlignJustify,
   faSquareCaretDown,
-  faWindowMaximize
+  faWindowMaximize,
+  faCalendarDays
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faMessage
@@ -290,56 +291,20 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Login Form with Background Image', href: '/input#login-form-with-background-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
-    // {
-    //   name: 'Key Value Display',
-    //   href: '/keyValueDisplay',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Paragraph',
-    //   href: '/paragraph',
-    //   icon: <FontAwesomeIcon icon={faAlignJustify} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Row',
-    //   href: '/row',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Spinner TailWindCSS',
-    //   href: '/spinnerTailwindcss',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/spinnerTailwindcss/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Spinner Regular CSS',
-    //   href: '/spinner',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/spinner/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Toast Message using TailwindCSS',
-    //   href: '/toastMessageTailwindcssDemo',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/ToastMessageTailwindcssDemo/',
-    //   position: 'top',
-    // },
-    // {
-    //   name: 'Toast Message Regular CSS',
-    //   href: '/toastMessageDemo',
-    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-    //   active: pathname === '/ToastMessageDemo/',
-    //   position: 'top',
-    // },
-
+    {
+      name: 'Spinner',
+      href: '/spinnerTailwindcss',
+      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+      active: pathname === '/spinnerTailwindcss/',
+      position: 'top',
+    },
+    {
+      name: 'Toast Message',
+      href: '/toastMessage',
+      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+      active: pathname === '/ToastMessage/',
+      position: 'top',
+    },
     {
       name: 'Table',
       href: '/table',
@@ -358,17 +323,6 @@ export const NavItems = (): NavItem[]  => {
         { name: 'All-in-One', href: '/table#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
       ]
     },
-
-    // {
-    //   name: 'Table with talwindcss',
-    //   href: '/table',
-    //   icon: <FontAwesomeIcon icon={faTableList} size="lg"/>,
-    //   active: pathname === '/tableTailwindCSSDemo',
-    //   position: 'top',
-    // },
-
-
-
     {
       name: 'Tab',
       href: '/tab',
@@ -415,15 +369,39 @@ export const NavItems = (): NavItem[]  => {
     //  },
     // },
 
+    {
+      name: 'Table With Tab',
+      href: '/tableWithTabDemo',
+      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      active: pathname === '/tableWithTabDemo',
+      position: 'top',
+    },
 
-    // {
-    //   name: 'Tooltip',
-    //   href: '/Tooltip',
-    //   icon: <FontAwesomeIcon icon={faMessage} size="lg"/>,
-    //   // icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/navigationcomponent/',
-    //   position: 'top',
-    // },
+    {
+      name: 'Calendar',
+      href: '/calendar',
+      icon: <FontAwesomeIcon icon={faCalendarDays} size="lg"/>,
+      active: pathname === '/calendar',
+      position: 'top',
+      subItems: [
+        { name: 'Basic Calendar', href: '/calendar#basic-calendar', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'With Today & Clear Buttons', href: '/calendar#with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Auto Hide Calendar', href: '/calendar#auto-hide-calendar', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Calendar with Time Selection', href: '/calendar#calendar-with-time-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Time Selection with Today & Clear Buttons', href: '/calendar#time-selection-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Time Selection with Format Toggle (12h/24h)', href: '/calendar#time-selection-with-format-toggle-12h-24h', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Custom Preview Text Styling', href: '/calendar#custom-preview-text-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Global Typography Styling', href: '/calendar#global-typography-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Year Dropdown Feature', href: '/calendar#year-dropdown-feature', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Format & Time Zone Selection', href: '/calendar#date-format-&-time-zone-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Range with Today & Clear Buttons', href: '/calendar#date-range-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Block / Disable Dates', href: '/calendar#block-disable-dates', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Calendar Size Variations', href: '/calendar#calendar-size-variations', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Size Comparison (Side by Side)', href: '/calendar#size--comparison-side-by-side', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Size Prop with Date Range Selection', href: '/calendar#size-prop-with-date-range-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+                
+      ]
+    },
     
     
   ];
