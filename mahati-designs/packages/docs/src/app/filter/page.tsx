@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 import {
-  MahatiButton,
   MahatiCalendar,
   CalendarDate,
 } from "@/components";
