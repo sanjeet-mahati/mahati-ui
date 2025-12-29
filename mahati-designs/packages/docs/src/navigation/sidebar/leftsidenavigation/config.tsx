@@ -402,7 +402,43 @@ export const NavItems = (): NavItem[]  => {
                 
       ]
     },
-    
+
+
+    {
+      name: 'Filter',
+      href: '/filter',
+      icon: <FontAwesomeIcon icon={faAlignJustify} size="lg" />,
+      active: pathname === '/filter',
+      position: 'top',
+      subItems: [
+        {
+          name: 'Basic Filter',
+          href: '/filter#basic-filter',
+          icon: <FontAwesomeIcon icon={faAlignJustify} size="sm" />,
+        },
+        {
+          name: 'Date / Time Filter',
+          href: '/filter#date-time-filter',
+          icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" />,
+        },
+        {
+          name: 'Dropdown Filter',
+          href: '/filter#dropdown-filter',
+          icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" />,
+        },
+        {
+          name: 'Search Filter',
+          href: '/filter#search-filter',
+          icon: <FontAwesomeIcon icon={faMessage} size="sm" />,
+        },
+        {
+          name: 'Props',
+          href: '/filter#props',
+          icon: <FontAwesomeIcon icon={faGear} size="sm" />,
+        },
+      ],
+    },
+
     
   ];
 };
