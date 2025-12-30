@@ -1,303 +1,251 @@
 "use client";
 
 import React, { useState } from "react";
-import { CodePreview } from "../CodePreview";
-import { PropsTable } from "../PropsTable";
-import {
-  MahatiButton,
-  MahatiCalendar,
-  CalendarDate,
-} from "@/components";
+import { X, ChevronDown } from "lucide-react";
 
-export default function FilterPage() {
-  const [open, setOpen] = useState(false);
+import { Button } from "./Button";
+import { Card } from "./card";
+import { Calendar, CalendarDateRange } from "./Calendar";
 
-  const [fromDate, setFromDate] = useState<CalendarDate | null>(null);
-  const [toDate, setToDate] = useState<CalendarDate | null>(null);
+/* ===================== TYPES ===================== */
 
-  const [activityType, setActivityType] = useState("Activity List");
-  const [status, setStatus] = useState("Active");
-  const [keyword, setKeyword] = useState("");
+export type SelectOption = string;
 
-  const filterProps = [
+export type FilterField =
+  | {
+      name: string;
+      label: string;
+      type: "text";
+      placeholder?: string;
+    }
+  | {
+      name: string;
+      label: string;
+      type: "select";
+      options: SelectOption[];
+    }
+  | {
+      name: string;
+      label: string;
+      type: "dateRange";
+    };
+
+export type FilterValues = Record<string, any>;
+
+/* ===================== FILTER CONFIG ===================== */
+
+const filterFields: FilterField[] = [
   {
-    name: "open",
-    type: "boolean",
-    default: "false",
-    description: "Controls whether the filter modal is visible.",
+    name: "date",
+    label: "Date Range",
+    type: "dateRange",
   },
   {
-    name: "onClose",
-    type: "() => void",
-    default: "-",
-    description: "Triggered when the close (X) button is clicked.",
-  },
-  {
-    name: "fromDate",
-    type: "CalendarDate | null",
-    default: "null",
-    description: "Selected start date in the date range filter.",
-  },
-  {
-    name: "toDate",
-    type: "CalendarDate | null",
-    default: "null",
-    description: "Selected end date in the date range filter.",
-  },
-  {
-    name: "activityType",
-    type: "string",
-    default: `"Activity List"`,
-    description: "Selected activity type value.",
+    name: "activity",
+    label: "Activity Type",
+    type: "select",
+    options: ["Activity List", "Login", "Update", "Delete"],
   },
   {
     name: "status",
-    type: "string",
-    default: `"Active"`,
-    description: "Selected status value.",
+    label: "Status",
+    type: "select",
+    options: ["Active", "Inactive", "Pending"],
   },
   {
     name: "keyword",
-    type: "string",
-    default: '""',
-    description: "Keyword entered in the search input.",
+    label: "Keyword search",
+    type: "text",
+    placeholder: "Search...",
   },
 ];
 
+/* ===================== MAIN COMPONENT ===================== */
+
+export const Filter = () => {
+  const [open, setOpen] = useState(false);
+  const [values, setValues] = useState<FilterValues>({
+    date: { start: null, end: null },
+  });
+
+  const handleChange = (name: string, value: any) => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const resetField = (name: string) => {
+    if (name === "date") {
+      setValues((prev) => ({
+        ...prev,
+        date: { start: null, end: null },
+      }));
+    } else {
+      setValues((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
   const resetAll = () => {
-    setFromDate(null);
-    setToDate(null);
-    setActivityType("Activity List");
-    setStatus("Active");
-    setKeyword("");
+    setValues({
+      date: { start: null, end: null },
+    });
+  };
+
+  const applyFilters = () => {
+    console.log("Applied Filters:", values);
+    setOpen(false);
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Filter</h1>
-        <p className="text-gray-600">
-          Filters allow users to narrow down data using date range, status, and keywords.
-        </p>
-      </div>
+    <div className="relative">
+      {/* FILTER BUTTON */}
+      <Button
+        variant="outline"
+        className="flex items-center gap-2 px-5 py-3 rounded-lg
+          border border-[rgba(23,97,163,0.35)]
+          bg-gradient-to-r from-[#f2fbf8] to-[#eef6fb]
+          text-[#0f172a] font-semibold shadow-sm"
+        onClick={() => setOpen((p) => !p)}
+      >
+        Filter
+      </Button>
 
-      <PropsTable id="props" props={filterProps} title="Props" />
-
-      <br />
-
-      <CodePreview
-        id="basic-filter"
-        title="Basic Filter"
-        code={`<MahatiButton onClick={() => setOpen(true)}>Open Filter</MahatiButton>`}
-        preview={
-            <div className="flex justify-center py-10 relative">
-            <button
-            onClick={() => setOpen(true)}
-            className="
-                flex items-center gap-2
-                px-5 py-3
-                rounded-[8px]
-                border border-[rgba(23,97,163,0.35)]
-                bg-gradient-to-r from-[#f2fbf8] to-[#eef6fb]
-                text-[#0f172a] text-sm font-semibold
-                shadow-sm
-            "
-            >
-            <img
-                src="/icons/filter-icon.png"
-                alt="Filter"
-                className="w-5 h-5 opacity-90"
-            />
-            Filter
-            </button>
-
-            {open && (
-            <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">
-                <div
-                className="
-                    w-[360px]
-                    rounded-[8px]
-                    border border-[rgba(23,97,163,0.35)]
-                    bg-white
-                    shadow-lg
-                "
-                >
-                {/* HEADER */}
-                <div className="flex justify-between items-center px-5 py-3 border-b border-[rgba(23,97,163,0.35)]">
-                    <h3 className="text-md font-semibold">Add Filter</h3>
-                    <button
-                    onClick={() => setOpen(false)}
-                    className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
-                    >
-                    <img
-                        src="/icons/close-icon.png"
-                        alt="Close"
-                        className="w-4 h-4 opacity-90"
-                    />
-                    </button>
-                </div>
-
-                {/* DATE RANGE */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Date Range</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => {
-                        setFromDate(null);
-                        setToDate(null);
-                        }}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                    <div>
-                        <label className="text-xs text-slate-500">From</label>
-                        <MahatiCalendar
-                        value={fromDate}
-                        onChange={setFromDate}
-                        placeholder="Select date"
-                        size="small"
-                        autoHide
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-slate-500">To</label>
-                        <MahatiCalendar
-                        value={toDate}
-                        onChange={setToDate}
-                        placeholder="Select date"
-                        size="small"
-                        autoHide
-                        />
-                    </div>
-                    </div>
-                </div>
-
-                {/* ACTIVITY TYPE */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Activity Type</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setActivityType("Activity List")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="relative w-full">
-                    <select
-                        value={activityType}
-                        onChange={(e) => setActivityType(e.target.value)}
-                        className="
-                        w-full appearance-none
-                        px-4 py-3 pr-10
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                        "
-                    >
-                        <option>Activity List</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                    </select>
-
-                    <img
-                        src="/icons/down-arrow.png"
-                        alt="Dropdown"
-                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80"
-                    />
-                    </div>
-                </div>
-
-                {/* STATUS */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Status</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setStatus("Active")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="relative w-full">
-                    <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        className="
-                        w-full appearance-none
-                        px-4 py-3 pr-10
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                        "
-                    >
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-
-                    <img
-                        src="/icons/down-arrow.png"
-                        alt="Dropdown"
-                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80"
-                    />
-                    </div>
-                </div>
-
-                {/* KEYWORD SEARCH */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Keyword search</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setKeyword("")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <input
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="Search..."
-                    className="
-                        w-full px-4 py-3
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                    "
-                    />
-                </div>
-
-                {/* FOOTER */}
-                <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
-                    <button
-                    onClick={resetAll}
-                    className="px-5 py-3 rounded-[6px] border border-[#1761A3] text-sm bg-[#F0F8FF] font-semibold"
-                    >
-                    Reset all
-                    </button>
-
-                    <button className="px-5 py-3 rounded-[6px] text-white text-sm font-semibold bg-gradient-to-r from-[#1761A3] to-[#4DAF83]">
-                    Apply Now
-                    </button>
-                </div>
-                </div>
+      {/* DROPDOWN */}
+      {open && (
+        <div className="absolute right-0 mt-3 z-50">
+          <Card
+            variant="figma"
+            className="w-[360px] p-0 overflow-hidden bg-white"
+          >
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-5 py-3 border-b border-[rgba(23,97,163,0.35)]">
+              <h3 className="text-md font-semibold">Add Filter</h3>
+              <button
+                onClick={() => setOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
+              >
+                <X className="w-4 h-4 text-slate-600" />
+              </button>
             </div>
-            )}
-            </div>
-        }
-        />
 
+            {/* DYNAMIC FIELDS */}
+            {filterFields.map((field) => (
+              <Section
+                key={field.name}
+                title={field.label}
+                onReset={() => resetField(field.name)}
+              >
+                {field.type === "text" && (
+                  <input
+                    type="text"
+                    placeholder={field.placeholder}
+                    value={values[field.name] || ""}
+                    onChange={(e) =>
+                      handleChange(field.name, e.target.value)
+                    }
+                    className="w-full px-4 py-3 rounded-[6px]
+                      border border-slate-300 bg-white
+                      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+                  />
+                )}
+
+                {field.type === "select" && (
+                  <Select
+                    value={values[field.name] || ""}
+                    options={field.options}
+                    onChange={(v) => handleChange(field.name, v)}
+                  />
+                )}
+
+                {field.type === "dateRange" && (
+                  <Calendar
+                    enableRangeSelection
+                    rangeValue={
+                      values[field.name] as CalendarDateRange
+                    }
+                    onRangeChange={(range) =>
+                      handleChange(field.name, range)
+                    }
+                    size="small"
+                  />
+                )}
+              </Section>
+            ))}
+
+            {/* FOOTER */}
+            <div className="flex justify-between items-center px-5 py-4
+              bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
+              <Button
+                variant="outline"
+                className="border-[#1761A3] bg-[#F0F8FF]"
+                onClick={resetAll}
+              >
+                Reset all
+              </Button>
+
+              <Button
+                className="text-white bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
+                onClick={applyFilters}
+              >
+                Apply Now
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+/* ===================== INTERNAL UI ===================== */
+
+const Section = ({
+  title,
+  onReset,
+  children,
+}: {
+  title: string;
+  onReset: () => void;
+  children: React.ReactNode;
+}) => (
+  <div
+    className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]
+    border-b border-[rgba(23,97,163,0.35)]"
+  >
+    <div className="flex justify-between items-center mb-3">
+      <h6 className="font-semibold text-sm">{title}</h6>
+      <button
+        onClick={onReset}
+        className="text-[#1761a3] font-semibold text-sm"
+      >
+        Reset
+      </button>
+    </div>
+    {children}
+  </div>
+);
+
+const Select = ({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) => (
+  <div className="relative">
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full appearance-none px-4 py-3 pr-10
+        rounded-[6px] border border-slate-300 bg-white
+        focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+    >
+      <option value="">Select</option>
+      {options.map((opt) => (
+        <option key={opt}>{opt}</option>
+      ))}
+    </select>
+    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2
+      w-4 h-4 text-slate-500 pointer-events-none" />
+  </div>
+);

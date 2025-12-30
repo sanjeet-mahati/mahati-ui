@@ -202,8 +202,9 @@ export default function FilterPage() {
                         "
                     >
                         <option>Activity List</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
+                        <option>Login</option>
+                        <option>Update</option>
+                        <option>Delete</option>
                     </select>
 
                     <img
@@ -241,6 +242,7 @@ export default function FilterPage() {
                     >
                         <option>Active</option>
                         <option>Inactive</option>
+                        <option>Pending</option>
                     </select>
 
                     <img
