@@ -16,11 +16,24 @@ export function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="w-full max-w-[684px]  min-w-[684px] border border-slate-200  overflow-hidden bg-white first:rounded-t-xl last:rounded-b-xl">
-      {/* HEADER */}
+    // <div className="w-full max-w-[684px]  min-w-[684px] border border-slate-200  overflow-hidden bg-white first:rounded-t-xl last:rounded-b-xl">
+      <div 
+      className="w-full max-w-full sm:max-w-[684px] border border-slate-200 overflow-hidden bg-white rounded-xl">
+      
+    {/* HEADER */}
+    
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full h-[60px] px-6 flex items-center justify-between font-medium transition-colors
+        // className={`w-full h-[60px] px-6 flex items-center justify-between font-medium transition-colors
+        className={
+          `w-full
+          min-h-[52px]
+          sm:h-[60px]
+          px-4 sm:px-6
+          flex items-center justify-between
+          font-medium
+          transition-colors
+        
         ${
           open
             ? "text-white bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]"

@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion } from "../../../../uicomponents/src/components/accordion";
+import { Accordion } from "../../../../uicomponents/src/components/Accordion";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 

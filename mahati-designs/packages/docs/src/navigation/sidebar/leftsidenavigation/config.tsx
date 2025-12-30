@@ -408,7 +408,7 @@ export const NavItems = (): NavItem[]  => {
     },
     {
   name: 'Accordion',
-  href: '/accordion',
+  href: '/Accordion',
   icon: <FontAwesomeIcon icon={faLayerGroup} size="lg" />,
   active: pathname === '/accordion',
   position: 'top',
