@@ -31,6 +31,13 @@ export type {
 
 export  { Dropdown as MahatiDropdown } from './components/Dropdown';
 
+export { SearchFilter as MahatiSearchFilter } from './components/SearchFilter';
+export type {
+  FilterField,
+  FilterValues,
+  SearchFilterProps,
+} from './components/SearchFilter';
+
 // Type Exports
 // It's a good practice to re-export types that consumers of your library might need.
 //export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';

@@ -6,77 +6,161 @@ import { PropsTable } from "../PropsTable";
 import {
   MahatiCalendar,
   CalendarDate,
+  MahatiSearchFilter,
+  FilterField,
+  FilterValues,
 } from "@/components";
 
 export default function FilterPage() {
-  const [open, setOpen] = useState(false);
-
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
   const [fromDate, setFromDate] = useState<CalendarDate | null>(null);
   const [toDate, setToDate] = useState<CalendarDate | null>(null);
 
-  const [activityType, setActivityType] = useState("Activity List");
-  const [status, setStatus] = useState("Active");
-  const [keyword, setKeyword] = useState("");
+  // Define filter fields for SearchFilter component
+  const filterFields: FilterField[] = [
+    {
+      id: "dateRange",
+      label: "Date Range",
+      type: "date_range",
+    },
+    {
+      id: "activityType",
+      label: "Activity Type",
+      type: "select",
+      placeholder: "Activity List",
+      options: [
+        { value: "login", label: "Login" },
+        { value: "update", label: "Update" },
+        { value: "delete", label: "Delete" },
+        { value: "create", label: "Create" },
+        { value: "view", label: "View" },
+      ],
+    },
+    {
+      id: "status",
+      label: "Status",
+      type: "select",
+      placeholder: "Select Status",
+      options: [
+        { value: "active", label: "Active" },
+        { value: "inactive", label: "Inactive" },
+        { value: "pending", label: "Pending" },
+        { value: "suspended", label: "Suspended" },
+      ],
+    },
+    {
+      id: "departments",
+      label: "Departments",
+      type: "multi_select",
+      placeholder: "Select Departments",
+      options: [
+        { value: "engineering", label: "Engineering" },
+        { value: "marketing", label: "Marketing" },
+        { value: "sales", label: "Sales" },
+        { value: "hr", label: "Human Resources" },
+        { value: "finance", label: "Finance" },
+      ],
+    },
+    {
+      id: "keyword",
+      label: "Keyword Search",
+      type: "text",
+      placeholder: "Search...",
+    },
+  ];
 
   const filterProps = [
   {
-    name: "open",
+    name: "fields",
+    type: "FilterField[]",
+    default: "[]",
+    description: "Array of filter field configurations.",
+  },
+  {
+    name: "onApplyFilter",
+    type: "(values: FilterValues) => void",
+    default: "-",
+    description: "Callback function called when filters are applied.",
+  },
+  {
+    name: "onResetFilter",
+    type: "() => void",
+    default: "undefined",
+    description: "Optional callback for resetting all filters.",
+  },
+  {
+    name: "onResetField",
+    type: "(fieldId: string) => void",
+    default: "undefined",
+    description: "Optional callback for resetting individual fields.",
+  },
+  {
+    name: "buttonText",
+    type: "string",
+    default: `"Filter"`,
+    description: "Text displayed on the filter button.",
+  },
+  {
+    name: "title",
+    type: "string",
+    default: `"Add Filter"`,
+    description: "Title shown in the filter dropdown header.",
+  },
+  {
+    name: "width",
+    type: "string",
+    default: `"360px"`,
+    description: "Width of the filter dropdown panel.",
+  },
+  {
+    name: "placement",
+    type: "'left' | 'right'",
+    default: `"right"`,
+    description: "Position of dropdown relative to button.",
+  },
+  {
+    name: "disabled",
     type: "boolean",
     default: "false",
-    description: "Controls whether the filter modal is visible.",
+    description: "Whether the filter button is disabled.",
   },
   {
-    name: "onClose",
-    type: "() => void",
-    default: "-",
-    description: "Triggered when the close (X) button is clicked.",
+    name: "showResetAll",
+    type: "boolean",
+    default: "true",
+    description: "Whether to show the 'Reset all' button.",
   },
   {
-    name: "fromDate",
-    type: "CalendarDate | null",
-    default: "null",
-    description: "Selected start date in the date range filter.",
-  },
-  {
-    name: "toDate",
-    type: "CalendarDate | null",
-    default: "null",
-    description: "Selected end date in the date range filter.",
-  },
-  {
-    name: "activityType",
-    type: "string",
-    default: `"Activity List"`,
-    description: "Selected activity type value.",
-  },
-  {
-    name: "status",
-    type: "string",
-    default: `"Active"`,
-    description: "Selected status value.",
-  },
-  {
-    name: "keyword",
-    type: "string",
-    default: '""',
-    description: "Keyword entered in the search input.",
+    name: "initialValues",
+    type: "FilterValues",
+    default: "{}",
+    description: "Initial filter values.",
   },
 ];
 
-  const resetAll = () => {
-    setFromDate(null);
-    setToDate(null);
-    setActivityType("Activity List");
-    setStatus("Active");
-    setKeyword("");
+  const handleApplyFilter = (values: FilterValues) => {
+    setAppliedFilters(values);
+    console.log("Applied Filters:", values);
+  };
+
+  const handleResetFilter = () => {
+    setAppliedFilters({});
+    console.log("All filters reset");
+  };
+
+  const handleResetField = (fieldId: string) => {
+    const updated = { ...appliedFilters };
+    delete updated[fieldId];
+    setAppliedFilters(updated);
+    console.log(`Field ${fieldId} reset`);
   };
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Filter</h1>
+        <h1 className="text-3xl font-bold mb-2">SearchFilter Component</h1>
         <p className="text-gray-600">
-          Filters allow users to narrow down data using date range, status, and keywords.
+          A dynamic and flexible filter component with support for date ranges, dropdowns, multi-select, and text search.
         </p>
       </div>
 
@@ -86,222 +170,280 @@ export default function FilterPage() {
 
       <CodePreview
         id="basic-filter"
-        title="Basic Filter"
-        code={`<MahatiButton onClick={() => setOpen(true)}>Open Filter</MahatiButton>`}
+        title="SearchFilter Component"
+        code={`import { MahatiSearchFilter } from "@/components";
+
+const filterFields = [
+  {
+    id: "dateRange",
+    label: "Date Range",
+    type: "date_range",
+  },
+  {
+    id: "activityType",
+    label: "Activity Type",
+    type: "select",
+    placeholder: "Activity List",
+    options: [
+      { value: "login", label: "Login" },
+      { value: "update", label: "Update" },
+      { value: "delete", label: "Delete" },
+    ],
+  },
+  {
+    id: "status",
+    label: "Status",
+    type: "select",
+    options: [
+      { value: "active", label: "Active" },
+      { value: "inactive", label: "Inactive" },
+      { value: "pending", label: "Pending" },
+    ],
+  },
+  {
+    id: "keyword",
+    label: "Keyword Search",
+    type: "text",
+    placeholder: "Search...",
+  },
+];
+
+<MahatiSearchFilter
+  fields={filterFields}
+  onApplyFilter={handleApplyFilter}
+  onResetFilter={handleResetFilter}
+  onResetField={handleResetField}
+  buttonText="Filter Data"
+  title="Advanced Filter"
+  width="400px"
+  placement="right"
+/>`}
         preview={
-            <div className="flex justify-center py-10 relative">
-            <button
-            onClick={() => setOpen(true)}
-            className="
-                flex items-center gap-2
-                px-5 py-3
-                rounded-[8px]
-                border border-[rgba(23,97,163,0.35)]
-                bg-gradient-to-r from-[#f2fbf8] to-[#eef6fb]
-                text-[#0f172a] text-sm font-semibold
-                shadow-sm
-            "
-            >
-            <img
-                src="/icons/filter-icon.png"
-                alt="Filter"
-                className="w-5 h-5 opacity-90"
-            />
-            Filter
-            </button>
-
-            {open && (
-            <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">
-                <div
-                className="
-                    w-[360px]
-                    rounded-[8px]
-                    border border-[rgba(23,97,163,0.35)]
-                    bg-white
-                    shadow-lg
-                "
-                >
-                {/* HEADER */}
-                <div className="flex justify-between items-center px-5 py-3 border-b border-[rgba(23,97,163,0.35)]">
-                    <h3 className="text-md font-semibold">Add Filter</h3>
-                    <button
-                    onClick={() => setOpen(false)}
-                    className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
-                    >
-                    <img
-                        src="/icons/close-icon.png"
-                        alt="Close"
-                        className="w-4 h-4 opacity-90"
-                    />
-                    </button>
-                </div>
-
-                {/* DATE RANGE */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Date Range</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => {
-                        setFromDate(null);
-                        setToDate(null);
-                        }}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                    <div>
-                        <label className="text-xs text-slate-500">From</label>
-                        <MahatiCalendar
-                        value={fromDate}
-                        onChange={setFromDate}
-                        placeholder="Select date"
-                        size="small"
-                        autoHide
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-slate-500">To</label>
-                        <MahatiCalendar
-                        value={toDate}
-                        onChange={setToDate}
-                        placeholder="Select date"
-                        size="small"
-                        autoHide
-                        />
-                    </div>
-                    </div>
-                </div>
-
-                {/* ACTIVITY TYPE */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Activity Type</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setActivityType("Activity List")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="relative w-full">
-                    <select
-                        value={activityType}
-                        onChange={(e) => setActivityType(e.target.value)}
-                        className="
-                        w-full appearance-none
-                        px-4 py-3 pr-10
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                        "
-                    >
-                        <option>Activity List</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                    </select>
-
-                    <img
-                        src="/icons/down-arrow.png"
-                        alt="Dropdown"
-                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80"
-                    />
-                    </div>
-                </div>
-
-                {/* STATUS */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Status</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setStatus("Active")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <div className="relative w-full">
-                    <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        className="
-                        w-full appearance-none
-                        px-4 py-3 pr-10
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                        "
-                    >
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-
-                    <img
-                        src="/icons/down-arrow.png"
-                        alt="Dropdown"
-                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80"
-                    />
-                    </div>
-                </div>
-
-                {/* KEYWORD SEARCH */}
-                <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb] border-b border-[rgba(23,97,163,0.35)]">
-                    <div className="flex justify-between items-center mb-3">
-                    <span className="font-semibold text-sm">Keyword search</span>
-                    <button
-                        className="text-[#1761A3] font-semibold text-sm"
-                        onClick={() => setKeyword("")}
-                    >
-                        Reset
-                    </button>
-                    </div>
-
-                    <input
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="Search..."
-                    className="
-                        w-full px-4 py-3
-                        rounded-[6px]
-                        border border-slate-300
-                        bg-white text-sm
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]
-                    "
-                    />
-                </div>
-
-                {/* FOOTER */}
-                <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
-                    <button
-                    onClick={resetAll}
-                    className="px-5 py-3 rounded-[6px] border border-[#1761A3] text-sm bg-[#F0F8FF] font-semibold"
-                    >
-                    Reset all
-                    </button>
-
-                    <button className="px-5 py-3 rounded-[6px] text-white text-sm font-semibold bg-gradient-to-r from-[#1761A3] to-[#4DAF83]">
-                    Apply Now
-                    </button>
-                </div>
-                </div>
+          <div className="flex flex-col items-center py-10 space-y-6">
+            {/* SearchFilter Component */}
+            <div className="flex justify-end w-full max-w-2xl">
+              <MahatiSearchFilter
+                fields={filterFields}
+                onApplyFilter={handleApplyFilter}
+                onResetFilter={handleResetFilter}
+                onResetField={handleResetField}
+                buttonText="Filter Data"
+                title="Advanced Filter"
+                width="400px"
+                placement="right"
+                showResetAll={true}
+              />
             </div>
+
+            {/* Display Applied Filters */}
+            {Object.keys(appliedFilters).length > 0 && (
+              <div className="w-full max-w-2xl bg-blue-50 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-blue-900 mb-2">Applied Filters:</h4>
+                <pre className="text-sm text-blue-700 bg-white p-3 rounded border overflow-auto">
+                  {JSON.stringify(appliedFilters, null, 2)}
+                </pre>
+              </div>
             )}
+
+            {/* Sample Data Table */}
+            <div className="w-full max-w-2xl">
+              <h4 className="text-lg font-medium mb-3">Sample Data</h4>
+              <div className="overflow-x-auto bg-white border rounded-lg">
+                <table className="min-w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">ID</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Department</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    <tr>
+                      <td className="px-4 py-2 text-sm">001</td>
+                      <td className="px-4 py-2 text-sm">John Doe</td>
+                      <td className="px-4 py-2 text-sm">Engineering</td>
+                      <td className="px-4 py-2"><span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Active</span></td>
+                      <td className="px-4 py-2 text-sm">2024-01-15</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm">002</td>
+                      <td className="px-4 py-2 text-sm">Jane Smith</td>
+                      <td className="px-4 py-2 text-sm">Marketing</td>
+                      <td className="px-4 py-2"><span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Active</span></td>
+                      <td className="px-4 py-2 text-sm">2024-02-20</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm">003</td>
+                      <td className="px-4 py-2 text-sm">Mike Johnson</td>
+                      <td className="px-4 py-2 text-sm">Sales</td>
+                      <td className="px-4 py-2"><span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">Inactive</span></td>
+                      <td className="px-4 py-2 text-sm">2024-03-10</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         }
         />
 
-        {/* ================= DATE / TIME FILTER ================= */}
-            <CodePreview
+        {/* ================= COMPACT FILTER VARIANTS ================= */}
+        <CodePreview
+            id="compact-filters"
+            title="Filter Variants"
+            code={`// Left aligned filter
+<MahatiSearchFilter
+  fields={[{ id: "search", label: "Search", type: "text" }]}
+  placement="left"
+  buttonText="🔍"
+  width="280px"
+/>
+
+// Multi-select filter
+<MahatiSearchFilter
+  fields={[{
+    id: "departments",
+    label: "Departments", 
+    type: "multi_select",
+    options: [
+      { value: "eng", label: "Engineering" },
+      { value: "marketing", label: "Marketing" }
+    ]
+  }]}
+  buttonText="Select Departments"
+/>`}
+            preview={
+                <div className="space-y-6 py-6">
+                <div className="flex justify-between items-center">
+                    <span className="font-medium">Left Aligned Filter:</span>
+                    <MahatiSearchFilter
+                    fields={[
+                        {
+                        id: "quickSearch",
+                        label: "Quick Search",
+                        type: "text",
+                        placeholder: "Type to search...",
+                        },
+                    ]}
+                    onApplyFilter={(values) => console.log("Quick search:", values)}
+                    buttonText="🔍"
+                    placement="left"
+                    width="280px"
+                    showResetAll={false}
+                    />
+                </div>
+
+                <div className="flex justify-between items-center">
+                    <span className="font-medium">Multi-Select Filter:</span>
+                    <MahatiSearchFilter
+                    fields={[
+                        {
+                        id: "departments",
+                        label: "Departments",
+                        type: "multi_select",
+                        placeholder: "Select departments...",
+                        options: [
+                            { value: "engineering", label: "Engineering" },
+                            { value: "marketing", label: "Marketing" },
+                            { value: "sales", label: "Sales" },
+                            { value: "hr", label: "HR" },
+                        ],
+                        },
+                    ]}
+                    onApplyFilter={(values) => console.log("Departments:", values)}
+                    buttonText="Select Departments"
+                    width="320px"
+                    />
+                </div>
+
+                <div className="flex justify-between items-center">
+                    <span className="font-medium">Date Range Only:</span>
+                    <MahatiSearchFilter
+                    fields={[
+                        {
+                        id: "dateRange",
+                        label: "Date Range",
+                        type: "date_range",
+                        },
+                    ]}
+                    onApplyFilter={(values) => console.log("Date range:", values)}
+                    buttonText="📅 Select Dates"
+                    width="350px"
+                    />
+                </div>
+                </div>
+            }
+            />
+
+        {/* ================= FIELD TYPES DEMO ================= */}
+        <CodePreview
+            id="field-types"
+            title="Field Types Demo"
+            code={`const allFieldTypes = [
+  { id: "date", label: "Date Range", type: "date_range" },
+  { id: "single", label: "Single Select", type: "select", options: [...] },
+  { id: "multi", label: "Multi Select", type: "multi_select", options: [...] },
+  { id: "text", label: "Text Search", type: "text", placeholder: "Search..." }
+];`}
+            preview={
+                <div className="flex justify-center py-6">
+                <MahatiSearchFilter
+                    fields={[
+                    {
+                        id: "dateExample",
+                        label: "Date Range",
+                        type: "date_range",
+                    },
+                    {
+                        id: "selectExample",
+                        label: "Priority Level",
+                        type: "select",
+                        placeholder: "Select priority",
+                        options: [
+                        { value: "high", label: "High Priority" },
+                        { value: "medium", label: "Medium Priority" },
+                        { value: "low", label: "Low Priority" },
+                        ],
+                    },
+                    {
+                        id: "multiExample",
+                        label: "Categories",
+                        type: "multi_select",
+                        placeholder: "Select categories",
+                        options: [
+                        { value: "bug", label: "Bug Fix" },
+                        { value: "feature", label: "New Feature" },
+                        { value: "improvement", label: "Improvement" },
+                        { value: "docs", label: "Documentation" },
+                        ],
+                    },
+                    {
+                        id: "textExample",
+                        label: "Keyword Search",
+                        type: "text",
+                        placeholder: "Search tickets...",
+                    },
+                    ]}
+                    onApplyFilter={(values) => console.log("All field types:", values)}
+                    buttonText="All Field Types"
+                    title="Advanced Search"
+                    width="420px"
+                />
+                </div>
+            }
+            />
+        {/* ================= INDIVIDUAL COMPONENTS FOR REFERENCE ================= */}
+        <CodePreview
             id="date-time-filter"
-            title="Date / Time Filter"
-            code={`<MahatiCalendar />`}
+            title="Individual Calendar Components"
+            code={`<MahatiCalendar 
+  value={fromDate}
+  onChange={setFromDate}
+  placeholder="Select date"
+  size="small"
+/>`}
             preview={
                 <div className="flex gap-6 justify-center py-6">
                 <div className="flex flex-col gap-2">
