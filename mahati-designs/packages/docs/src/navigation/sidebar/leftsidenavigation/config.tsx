@@ -14,8 +14,17 @@ import {
   faCalendarDays
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid';
+import {
   faMessage
 } from '@fortawesome/free-regular-svg-icons';
+import { HiBellAlert } from "react-icons/hi2";
 
 export interface NavItem {
   name: string;
@@ -298,13 +307,43 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/spinnerTailwindcss/',
       position: 'top',
     },
+    // {
+    //   name: 'Toast Message 2',
+    //   href: '/toastMessage',
+    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+    //   active: pathname === '/ToastMessage/',
+    //   position: 'top',
+    // },
+    // {
+    //   name: 'Toast Message 1',
+    //   href: '/toastMessage1',
+    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+    //   active: pathname === '/ToastMessage1/',
+    //   position: 'top',
+    // },
     {
       name: 'Toast Message',
-      href: '/toastMessage',
-      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/ToastMessage/',
+      href: '/toastMessageDemo',
+      icon: <HiBellAlert size={24} />,
+      active: pathname === '/ToastMessageDemo/',
       position: 'top',
+      subItems: [
+        { name: 'Toast Position', href: '/toastMessageDemo#toast-position', icon: <HiBellAlert size={24} /> },
+        { name: 'Custom Styled Toast Notifications', href: '/toastMessageDemo#custom-styled-toast-notifications', icon: <HiBellAlert size={14} /> },
+        { name: 'Original Toast Types', href: '/toastMessageDemo#original-toast-types', icon: <HiBellAlert size={24} /> },
+        { name: 'Confirmation Toast ("Accept / Decline")', href: '/toastMessageDemo#confirmation-toast-("Accept/Decline")', icon: <HiBellAlert size={14} /> },
+        { name: 'Duration Options', href: '/toastMessageDemo#duration-options', icon: <HiBellAlert size={24} /> },
+        { name: 'Actions', href: '/toastMessageDemo#actions', icon: <HiBellAlert size={24} /> },
+        
+      ]
     },
+    // {
+    //   name: 'Toast Message 3',
+    //   href: '/toastMessageDemo2',
+    //   icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
+    //   active: pathname === '/ToastMessageDemo2/',
+    //   position: 'top',
+    // },
     {
       name: 'Table',
       href: '/table',
