@@ -7,6 +7,11 @@ import {
   MahatiCalendar,
   CalendarDate,
 } from "@/components";
+import {
+  MahatiActivity,
+  MahatiStatus,
+  MahatiSearch,
+} from "@/components";
 
 export default function FilterPage() {
   const [open, setOpen] = useState(false);
@@ -335,32 +340,32 @@ export default function FilterPage() {
             }
             />
 
-      {/* ================= DROPDOWN FILTER ================= */}
-      <CodePreview
-        id="dropdown-filter"
-        title="Dropdown Filter"
-        code={`<select>...</select>`}
+      {/* ================= ACTIVITY FILTER ================= */}
+        <CodePreview
+        id="activity-filter"
+        title="Activity Filter"
+        code={`<MahatiActivity />`}
         preview={
             <div className="w-64 mx-auto">
-            <div className="relative w-full">
-                <select
-                className="w-full h-[36px] appearance-none px-4 pr-10 rounded-[6px]
-                            border border-slate-300 bg-white text-sm
-                            focus:outline-none focus:ring-2 focus:ring-[#1761A3]"
-                >
-                <option>Select category</option>
-                <option>Option 1</option>
-                <option>Option 2</option>
-                </select>
-
-                {/* Down arrow icon */}
-                <img
-                src="/icons/down-arrow.png"
-                alt="Dropdown"
-                className="pointer-events-none absolute right-3 top-1/2
-                            -translate-y-1/2 w-3 h-3 opacity-80"
-                />
+            <MahatiActivity
+                value={activityType}
+                onChange={setActivityType}
+            />
             </div>
+        }
+        />
+
+        {/* ================= STATUS FILTER ================= */}
+        <CodePreview
+        id="status-filter"
+        title="Status Filter"
+        code={`<MahatiStatus />`}
+        preview={
+            <div className="w-64 mx-auto">
+            <MahatiStatus
+                value={status}
+                onChange={setStatus}
+            />
             </div>
         }
         />
@@ -369,15 +374,12 @@ export default function FilterPage() {
         <CodePreview
         id="search-filter"
         title="Search Filter"
-        code={`<input type="text" placeholder="Search..." />`}
+        code={`<MahatiSearch />`}
         preview={
             <div className="w-64 mx-auto">
-            <input
-                type="text"
-                placeholder="Search..."
-                className="w-full border border-gray-300 px-3 py-2 text-sm bg-white
-                        focus:outline-none focus:ring-2 focus:ring-[#1761A3]"
-                style={{ borderRadius: "4px" }}
+            <MahatiSearch
+                value={keyword}
+                onChange={setKeyword}
             />
             </div>
         }

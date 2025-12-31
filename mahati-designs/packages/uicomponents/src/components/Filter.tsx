@@ -9,70 +9,30 @@ import { Calendar, CalendarDateRange } from "./Calendar";
 
 /* ===================== TYPES ===================== */
 
-export type SelectOption = string;
+export type FilterValues = {
+  date: CalendarDateRange;
+  activity: string;
+  status: string;
+  keyword: string;
+};
 
-export type FilterField =
-  | {
-      name: string;
-      label: string;
-      type: "text";
-      placeholder?: string;
-    }
-  | {
-      name: string;
-      label: string;
-      type: "select";
-      options: SelectOption[];
-    }
-  | {
-      name: string;
-      label: string;
-      type: "dateRange";
-    };
-
-export type FilterValues = Record<string, any>;
-
-/* ===================== FILTER CONFIG ===================== */
-
-const filterFields: FilterField[] = [
-  {
-    name: "date",
-    label: "Date Range",
-    type: "dateRange",
-  },
-  {
-    name: "activity",
-    label: "Activity Type",
-    type: "select",
-    options: ["Activity List", "Login", "Update", "Delete"],
-  },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["Active", "Inactive", "Pending"],
-  },
-  {
-    name: "keyword",
-    label: "Keyword search",
-    type: "text",
-    placeholder: "Search...",
-  },
-];
-
-/* ===================== MAIN COMPONENT ===================== */
+/* ===================== MAIN FILTER ===================== */
 
 export const Filter = () => {
   const [open, setOpen] = useState(false);
+
   const [values, setValues] = useState<FilterValues>({
     date: { start: null, end: null },
+    activity: "",
+    status: "",
+    keyword: "",
   });
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: keyof FilterValues, value: any) => {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const resetField = (name: string) => {
+  const resetField = (name: keyof FilterValues) => {
     if (name === "date") {
       setValues((prev) => ({
         ...prev,
@@ -86,6 +46,9 @@ export const Filter = () => {
   const resetAll = () => {
     setValues({
       date: { start: null, end: null },
+      activity: "",
+      status: "",
+      keyword: "",
     });
   };
 
@@ -108,13 +71,10 @@ export const Filter = () => {
         Filter
       </Button>
 
-      {/* DROPDOWN */}
+      {/* FILTER MODAL */}
       {open && (
         <div className="absolute right-0 mt-3 z-50">
-          <Card
-            variant="figma"
-            className="w-[360px] p-0 overflow-hidden bg-white"
-          >
+          <Card variant="figma" className="w-[360px] p-0 overflow-hidden bg-white">
             {/* HEADER */}
             <div className="flex justify-between items-center px-5 py-3 border-b border-[rgba(23,97,163,0.35)]">
               <h3 className="text-md font-semibold">Add Filter</h3>
@@ -126,53 +86,42 @@ export const Filter = () => {
               </button>
             </div>
 
-            {/* DYNAMIC FIELDS */}
-            {filterFields.map((field) => (
-              <Section
-                key={field.name}
-                title={field.label}
-                onReset={() => resetField(field.name)}
-              >
-                {field.type === "text" && (
-                  <input
-                    type="text"
-                    placeholder={field.placeholder}
-                    value={values[field.name] || ""}
-                    onChange={(e) =>
-                      handleChange(field.name, e.target.value)
-                    }
-                    className="w-full px-4 py-3 rounded-[6px]
-                      border border-slate-300 bg-white
-                      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
-                  />
-                )}
+            {/* DATE RANGE */}
+            <Section title="Date Range" onReset={() => resetField("date")}>
+              <Calendar
+                enableRangeSelection
+                rangeValue={values.date}
+                onRangeChange={(range) => handleChange("date", range)}
+                size="small"
+              />
+            </Section>
 
-                {field.type === "select" && (
-                  <Select
-                    value={values[field.name] || ""}
-                    options={field.options}
-                    onChange={(v) => handleChange(field.name, v)}
-                  />
-                )}
+            {/* ACTIVITY */}
+            <Section title="Activity Type" onReset={() => resetField("activity")}>
+              <MahatiActivity
+                value={values.activity}
+                onChange={(v) => handleChange("activity", v)}
+              />
+            </Section>
 
-                {field.type === "dateRange" && (
-                  <Calendar
-                    enableRangeSelection
-                    rangeValue={
-                      values[field.name] as CalendarDateRange
-                    }
-                    onRangeChange={(range) =>
-                      handleChange(field.name, range)
-                    }
-                    size="small"
-                  />
-                )}
-              </Section>
-            ))}
+            {/* STATUS */}
+            <Section title="Status" onReset={() => resetField("status")}>
+              <MahatiStatus
+                value={values.status}
+                onChange={(v) => handleChange("status", v)}
+              />
+            </Section>
+
+            {/* SEARCH */}
+            <Section title="Keyword search" onReset={() => resetField("keyword")}>
+              <MahatiSearch
+                value={values.keyword}
+                onChange={(v) => handleChange("keyword", v)}
+              />
+            </Section>
 
             {/* FOOTER */}
-            <div className="flex justify-between items-center px-5 py-4
-              bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
+            <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
               <Button
                 variant="outline"
                 className="border-[#1761A3] bg-[#F0F8FF]"
@@ -195,7 +144,7 @@ export const Filter = () => {
   );
 };
 
-/* ===================== INTERNAL UI ===================== */
+/* ===================== SECTION ===================== */
 
 const Section = ({
   title,
@@ -223,13 +172,70 @@ const Section = ({
   </div>
 );
 
+/* ===================== REUSABLE FIELDS ===================== */
+
+const activityOptions = ["Activity List", "Login", "Update", "Delete"];
+const statusOptions = ["Active", "Inactive", "Pending"];
+
+export const MahatiActivity = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) => (
+  <Select
+    value={value}
+    onChange={onChange}
+    placeholder="Select Activity"
+    options={activityOptions}
+  />
+);
+
+export const MahatiStatus = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) => (
+  <Select
+    value={value}
+    onChange={onChange}
+    placeholder="Select Status"
+    options={statusOptions}
+  />
+);
+
+export const MahatiSearch = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) => (
+  <input
+    type="text"
+    value={value}
+    placeholder="Search..."
+    onChange={(e) => onChange(e.target.value)}
+    className="w-full px-4 py-3 rounded-[6px]
+      border border-slate-300 bg-white
+      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+  />
+);
+
+/* ===================== BASE SELECT ===================== */
+
 const Select = ({
   value,
   options,
+  placeholder,
   onChange,
 }: {
   value: string;
   options: string[];
+  placeholder: string;
   onChange: (v: string) => void;
 }) => (
   <div className="relative">
@@ -240,12 +246,15 @@ const Select = ({
         rounded-[6px] border border-slate-300 bg-white
         focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
     >
-      <option value="">Select</option>
+      <option value="">{placeholder}</option>
       {options.map((opt) => (
         <option key={opt}>{opt}</option>
       ))}
     </select>
-    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2
-      w-4 h-4 text-slate-500 pointer-events-none" />
+
+    <ChevronDown
+      className="absolute right-3 top-1/2 -translate-y-1/2
+      w-4 h-4 text-slate-500 pointer-events-none"
+    />
   </div>
 );
