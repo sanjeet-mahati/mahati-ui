@@ -32,6 +32,12 @@ export  { ToastMessage as MahatiToastMessage }  from './components/ToastMessage'
 
 export  { Dropdown as MahatiDropdown } from './components/Dropdown';
 
+// Filter components
+export { Filter as MahatiFilter } from './components/Filter';
+export { MahatiActivity } from './components/Filter';
+export { MahatiStatus } from './components/Filter';
+export { MahatiSearch } from './components/Filter';
+
 // Type Exports
 // It's a good practice to re-export types that consumers of your library might need.
 //export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';
