@@ -544,7 +544,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
     const calculatePosition = () => {
       const containerRect = containerRef.current?.getBoundingClientRect();
-      const calendarHeight = calendarRef.current?.offsetHeight || 526 * scale;
+      const calendarHeight = calendarRef.current?.offsetHeight || 580 * scale;
       
       if (!containerRect) return;
 
@@ -623,6 +623,10 @@ const Calendar: React.FC<CalendarProps> = ({
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
   const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
   const monthName = getMonthName(currentMonth);
+
+  // Calculate number of rows needed for the calendar grid
+  const totalCells = firstDay + daysInMonth;
+  const rowsNeeded = Math.ceil(totalCells / 7);
 
   const previousMonth = () => {
     if (currentMonth === 0) {
@@ -939,7 +943,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
     return (
       <div className="flex flex-col h-full">
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           {(showTimeFormatToggle || showDateFormatSelector || showTimeZoneSelector) && (
             <div style={{ marginBottom: `${scaled(12)}px` }}>
               {showTimeFormatToggle && (
@@ -1247,7 +1251,7 @@ const Calendar: React.FC<CalendarProps> = ({
           </div>
         </div>
 
-        <div className="mt-auto border-t border-gray-200" style={{ paddingTop: `${scaled(15)}px` }}>
+        <div className="mt-auto border-t border-gray-200 flex-shrink-0" style={{ paddingTop: `${scaled(15)}px` }}>
           {(showTodayButton || showClearButton) && (
             <div className="flex" style={{ 
               gap: `${scaled(12)}px`,
@@ -1326,16 +1330,17 @@ const Calendar: React.FC<CalendarProps> = ({
       style={{
         [positionAbove ? 'marginBottom' : 'marginTop']: `${scaled(8)}px`,
         width: `${scaled(406)}px`,
-        height: `${scaled(526)}px`,
+        height: `${scaled(580)}px`,
         borderRadius: `${scaled(22)}px`,
         maxWidth: '95vw',
+        overflow: 'hidden',
       }}
     >
       <div className="h-full flex flex-col" style={{ 
         padding: `${scaled(24)}px`,
         paddingBottom: `${scaled(22)}px`
       }}>
-        <div className="text-left font-bold text-gray-900" style={{ 
+        <div className="text-left font-bold text-gray-900 flex-shrink-0" style={{ 
           marginBottom: `${scaled(20)}px`,
           fontSize: `${scaled(20)}px`
         }}>
@@ -1343,7 +1348,7 @@ const Calendar: React.FC<CalendarProps> = ({
         </div>
 
         {enableRangeSelection ? (
-          <div className="flex" style={{ 
+          <div className="flex flex-shrink-0" style={{ 
             marginBottom: `${scaled(24)}px`,
             gap: `${scaled(12)}px`
           }}>
@@ -1398,7 +1403,7 @@ const Calendar: React.FC<CalendarProps> = ({
             </button>
           </div>
         ) : (
-          <div className="flex" style={{ 
+          <div className="flex flex-shrink-0" style={{ 
             marginBottom: `${scaled(24)}px`,
             gap: `${scaled(12)}px`
           }}>
@@ -1489,9 +1494,15 @@ const Calendar: React.FC<CalendarProps> = ({
         {showTimeSelector ? (
           renderTimeSelector()
         ) : (
-          <div className="flex flex-col h-full">
-            <div className="flex-1">
-              <div className="flex items-center justify-between" style={{ marginBottom: `${scaled(8)}px` }}>
+          <div className="flex flex-col" style={{ 
+            flex: '1 1 auto',
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {/* Navigation Header */}
+            <div className="flex-shrink-0">
+              <div className="flex items-center justify-between" style={{ marginBottom: `${scaled(22)}px` }}>
                 <button
                   type="button"
                   onClick={previousMonth}
@@ -1580,6 +1591,7 @@ const Calendar: React.FC<CalendarProps> = ({
                 </button>
               </div>
 
+              {/* Day Names */}
               <div style={{ marginBottom: `${scaled(6)}px` }}>
                 <div className="grid grid-cols-7" style={{ 
                   gap: `${scaled(8)}px ${scaled(8)}px`
@@ -1597,16 +1609,31 @@ const Calendar: React.FC<CalendarProps> = ({
                       {day}
                     </div>
                   ))}
-                  {renderDays()}
                 </div>
               </div>
             </div>
 
-            <div className="mt-auto border-t border-gray-200" style={{ paddingTop: `${scaled(2)}px` }}>
+            {/* Calendar Grid - Always allocate space for 6 rows */}
+            <div 
+              className="flex-shrink-0"
+              style={{ 
+                height: `${scaled(228)}px`,
+                marginBottom: `${scaled(8)}px`
+              }}
+            >
+              <div className="grid grid-cols-7" style={{ 
+                gap: `${scaled(8)}px ${scaled(16)}px`
+              }}>
+                {renderDays()}
+              </div>
+            </div>
+
+            {/* Footer Buttons - Fixed at bottom */}
+            <div className="flex-shrink-0 border-t border-gray-200" style={{ paddingTop: `${scaled(12)}px` }}>
               {(showTodayButton || showClearButton) && (
                 <div className="flex" style={{ 
                   gap: `${scaled(12)}px`,
-                  marginBottom: `${scaled(3)}px`
+                  marginBottom: `${scaled(8)}px`
                 }}>
                   {showTodayButton && (
                     <button
@@ -1712,3 +1739,4 @@ const Calendar: React.FC<CalendarProps> = ({
 
 Calendar.displayName = "Calendar";
 export { Calendar };
+
