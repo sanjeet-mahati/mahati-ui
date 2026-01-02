@@ -1,17 +1,14 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/solid';
 
-type ToastType = 'success' | 'error' | 'warning' | 'info' | 'action' | 'liquidUI';
-type ToastPosition =
+type ClassValue = string | false | null | undefined;
+
+const cn = (...values: ClassValue[]) => values.filter(Boolean).join(' ');
+const cnArr = (values: ClassValue[]) => values.filter(Boolean).join(' ');
+
+export type ToastType = 'Success' | 'Error' | 'Warning' | 'Notification' | 'Action' | 'LiquidUI';
+export type ToastPosition =
   | 'top-left'
   | 'top-center'
   | 'top-right'
@@ -19,10 +16,25 @@ type ToastPosition =
   | 'bottom-center'
   | 'bottom-right';
 
+export type ToastBackground = 'solid' | 'transparent';
+
 export interface ToastAction {
   label: string;
   onClick?: () => void;
 }
+
+export type ToastSlots =
+  | 'base'
+  | 'strip'
+  | 'icon'
+  | 'title'
+  | 'message'
+  | 'close'
+  | 'actions'
+  | 'primaryAction'
+  | 'secondaryAction';
+
+export type ToastClassNames = Partial<Record<ToastSlots, string>>;
 
 export interface Toast {
   id: string;
@@ -31,227 +43,139 @@ export interface Toast {
   message: string;
   duration?: number;
   actions?: ToastAction[];
-
-  // Custom styling (white background + strip)
-  colorStripGradientStart?: string;
-  colorStripGradientEnd?: string;
-  titleColor?: string;
-  subtitleColor?: string;
-  colorStripPosition?: 'left' | 'right';
-  colorStripSpacing?: number;
-
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>> | string;
-  iconColor?: string;
-
-  showCloseIcon?: boolean;
-  closeIconColor?: string;
-  closeIconImage?: string;
-  closeIconBackgroundColor?: string;
-
-  // Background gradient (priority)
-  backgroundGradientStart?: string;
-  backgroundGradientEnd?: string;
-  textColor?: string;
-  messageColor?: string;
-
-  // Strip on gradient background
-  showColorStripOnGradient?: boolean;
-  colorStripOnGradientStart?: string;
-  colorStripOnGradientEnd?: string;
-  colorStripOnGradientPosition?: 'left' | 'right';
-  colorStripOnGradientSpacing?: number;
+  background?: ToastBackground;
+  classNames?: ToastClassNames;
 }
 
-export interface ToastMessageProps {
+export type AlertArgs = {
+  type: ToastType;
+  message: string;
+  background?: ToastBackground;
+  duration?: number;
+  actions?: ToastAction[];
+  classNames?: ToastClassNames;
+};
+
+export interface ToastContainerProps {
   toasts: Toast[];
-  position?: ToastPosition;
+  position: ToastPosition;
   onClose: (id: string) => void;
 }
 
-// ===============================
-// Helpers (Tailwind-only mapping)
-// ===============================
-
-// Only the spacings used in your demos (0, 5, 10).
-const SPACING_CLASS: Record<number, string> = {
-  0: '0',
-  5: '[5px]',
-  10: '[10px]',
+type LayoutPreset = {
+  container: string;
+  bgSolid: string;
+  stripBg: string;
+  stripTitleColor: string;
+  leftImageBgSolid: string;
+  leftImageBgTransparent: string;
 };
 
-function edgeWithSpacing(side: 'left' | 'right', spacing?: number) {
-  const s = typeof spacing === 'number' ? spacing : 0;
-  const token = SPACING_CLASS[s] ?? SPACING_CLASS[0];
-  return side === 'left' ? `left-${token}` : `right-${token}`;
-}
+const presetFor = (type: ToastType): LayoutPreset => {
+  const commonContainer =
+    'w-[min(92vw,420px)] md:w-[325px] rounded-[12px] shadow-[0_4px_12px_0_rgba(0,0,0,0.08)]';
 
-function colorTextClass(color?: string, fallback: string) {
-  if (!color) return fallback;
-  // Tailwind arbitrary value text color
-  return `text-[${color.replace(/\s+/g, '')}]`;
-}
+  switch (type) {
+    case 'Success':
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+            'bg-[linear-gradient(90deg,rgba(40,167,69,1)_0%,rgba(58,208,125,1)_100%)]',
+        stripBg:
+            'bg-[linear-gradient(90deg,rgba(40,167,69,1)_22.5%,rgba(58,208,125,1)_130%)]',
+        stripTitleColor: 'text-[rgba(40,167,69,1)]',
+        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/check-mark_2.png')]",
+      };
 
-function gradientBgClass(start?: string, end?: string) {
-  if (!start || !end) return '';
-  return `bg-[linear-gradient(90deg,${start.replace(/\s+/g, '')}_0%,${end.replace(/\s+/g, '')}_100%)]`;
-}
+    case 'Error':
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(220,53,69,1)_0%,rgba(183,28,28,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(220,53,69,1)_22.5%,rgba(183,28,28,1)_130%)]',
+        stripTitleColor: 'text-[rgba(220,53,69,1)]',
+        leftImageBgSolid: "bg-[url('/icons/danger_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/danger_2.png')]",
+      };
 
-function stripGradientClass(start?: string, end?: string) {
-  const a = (start ?? 'rgba(245,158,11,1)').replace(/\s+/g, '');
-  const b = (end ?? 'rgba(255,191,92,1)').replace(/\s+/g, '');
-  return `bg-[linear-gradient(90deg,${a}_22.5%,${b}_130%)]`;
-}
+    case 'Warning':
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
+        stripTitleColor: 'text-[rgba(245,158,11,1)]',
+        leftImageBgSolid: "bg-[url('/icons/danger_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/danger_1_1.png')]",
+      };
 
-const TailwindSafelist = () => (
-  <div className="hidden">
-    <div className="bg-[linear-gradient(90deg,rgba(34,197,94,1)_0%,rgba(74,222,128,1)_100%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(59,130,246,1)_0%,rgba(96,165,250,1)_100%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(220,53,69,1)_0%,rgba(183,28,28,1)_100%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(23,97,163,1)_0%,rgba(77,175,131,1)_100%)]" />
+    case 'Notification':
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(23,97,163,1)_0%,rgba(77,175,131,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(23,97,163,1)_22.5%,rgba(77,175,131,1)_130%)]',
+        stripTitleColor: 'text-[rgba(23,97,163,1)]',
+        leftImageBgSolid: "bg-[url('/icons/notification_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/notification_2.png')]",
+      };
 
-    <div className="bg-[linear-gradient(90deg,rgba(34,197,94,1)_22.5%,rgba(74,222,128,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(59,130,246,1)_22.5%,rgba(96,165,250,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(58,208,125,1)_22.5%,rgba(40,167,69,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(40,167,69,1)_22.5%,rgba(58,208,125,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(220,53,69,1)_22.5%,rgba(183,28,28,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(239,68,68,1)_22.5%,rgba(248,113,113,1)_130%)]" />
-    <div className="bg-[linear-gradient(90deg,rgba(23,97,163,1)_22.5%,rgba(77,175,131,1)_130%)]" />
+    case 'LiquidUI':
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(16,185,129,1)_0%,rgba(59,130,246,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(16,185,129,1)_22.5%,rgba(59,130,246,1)_130%)]',
+        stripTitleColor: 'text-[rgba(16,185,129,1)]',
+        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
+      };
 
-    <div className="text-[rgba(34,197,94,1)] text-[rgba(74,222,128,1)] text-[rgba(245,158,11,1)] text-[rgba(255,191,92,1)] text-[rgba(59,130,246,1)] text-[rgba(96,165,250,1)] text-[rgba(239,68,68,1)] text-[rgba(248,113,113,1)] text-[rgba(17,24,39,1)] text-[rgba(55,65,81,1)] text-[rgba(85,85,85,1)] text-[rgba(107,114,128,1)] text-[rgba(178,185,182,0.4)] text-[rgba(255,255,255,1)] text-[rgba(220,53,69,1)] text-[rgba(183,28,28,1)]" />
+    case 'Action':
+      return {
+        container: `${commonContainer} h-[110px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(139,92,246,1)_0%,rgba(168,85,247,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(139,92,246,1)_22.5%,rgba(168,85,247,1)_130%)]',
+        stripTitleColor: 'text-[rgba(139,92,246,1)]',
+        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
+      };
 
-    <div className="left-0 right-0 left-[5px] right-[5px] left-[10px] right-[10px]" />
+    default:
+      return {
+        container: `${commonContainer} h-[70px]`,
+        bgSolid:
+          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
+        stripBg:
+          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
+        stripTitleColor: 'text-[rgba(245,158,11,1)]',
+        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
+        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
+      };
+  }
+};
 
-    <div className="w-0 w-1/4 w-1/2 w-3/4 w-full" />
-  </div>
-);
+const closeImageBgFor = (background: ToastBackground) =>
+  background === 'solid'
+    ? "bg-[url('/icons/close.png')]"
+    : "bg-[url('/icons/close_copy_1.png')]";
 
-interface CustomToastButtonProps {
-  title: string;
-  subtitle: string;
-  colorStripGradientStart?: string;
-  colorStripGradientEnd?: string;
-  titleColor?: string;
-  subtitleColor?: string;
-  colorStripPosition?: 'left' | 'right';
-  colorStripSpacing?: number;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>> | string;
-  iconColor?: string;
-  showCloseIcon?: boolean;
-  closeIconColor?: string;
-  closeIconImage?: string;
-  closeIconBackgroundColor?: string;
-  onClose?: () => void;
-  onClick: () => void;
-}
-
-const CustomToastButton: React.FC<CustomToastButtonProps> = ({
-  title,
-  subtitle,
-  colorStripGradientStart = 'rgba(245, 158, 11, 1)',
-  colorStripGradientEnd = 'rgba(255, 191, 92, 1)',
-  titleColor = 'rgba(245, 158, 11, 1)',
-  subtitleColor = 'rgba(85, 85, 85, 1)',
-  colorStripPosition = 'left',
-  colorStripSpacing = 0,
-  icon,
-  iconColor,
-  showCloseIcon = false,
-  closeIconColor = 'rgba(107, 114, 128, 1)',
-  closeIconImage,
-  closeIconBackgroundColor,
-  onClose,
-  onClick,
-}) => {
-  const finalIconColor = iconColor || titleColor;
-  const showIcon = icon !== null && icon !== undefined;
-  const isIconImage = typeof icon === 'string';
-
-  const stripCls = stripGradientClass(colorStripGradientStart, colorStripGradientEnd);
-
-  const titleCls = colorTextClass(titleColor, 'text-[rgba(245,158,11,1)]');
-  const subCls = colorTextClass(subtitleColor, 'text-[rgba(85,85,85,1)]');
-  const iconCls = colorTextClass(finalIconColor, titleCls);
-  const closeCls = colorTextClass(closeIconColor, 'text-[rgba(107,114,128,1)]');
-
-  const stripPos =
-    colorStripPosition === 'left'
-      ? ['left-0', edgeWithSpacing('left', colorStripSpacing), 'rounded-l-[12px]'].join(' ')
-      : ['right-0', edgeWithSpacing('right', colorStripSpacing), 'rounded-r-[12px]'].join(' ');
-
-  const handleClose = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClose?.();
-  };
-
-  return (
-    <div
-      onClick={onClick}
-      className={[
-        'relative overflow-hidden cursor-pointer',
-        'w-[325px] h-[70px] rounded-[12px] bg-white',
-        'shadow-[0px_4px_12px_0px_rgba(0,0,0,0.08)]',
-        'transition-all duration-200',
-        'hover:shadow-[0px_6px_16px_0px_rgba(0,0,0,0.12)]',
-        'hover:scale-[0.98]',
-        'flex items-center',
-      ].join(' ')}
-    >
-      <div className={['absolute top-0 w-[5px] h-[70px]', stripCls, stripPos].join(' ')} />
-
-      {showIcon && (
-        <div className="absolute left-[33px] top-1/2 -translate-y-1/2 w-[32px] h-[32px] flex items-center justify-center">
-          {isIconImage ? (
-            <img src={icon as string} alt="icon" className="w-[32px] h-[32px] object-contain block" />
-          ) : (
-            React.createElement(icon as React.ComponentType<React.SVGProps<SVGSVGElement>>, {
-              className: ['w-[32px] h-[32px]', iconCls].join(' '),
-            })
-          )}
-        </div>
-      )}
-
-      <div
-        className={[
-          'absolute top-1/2 -translate-y-1/2 flex flex-col gap-[2px]',
-          showIcon ? 'left-[80px]' : 'left-[24px]',
-          showCloseIcon ? 'right-[60px]' : 'right-[24px]',
-        ].join(' ')}
-      >
-        <h3 className={['font-[Poppins] text-[16px] font-semibold leading-normal m-0 p-0', titleCls].join(' ')}>
-          {title}
-        </h3>
-        <p className={['font-[Poppins] text-[10px] font-normal leading-normal m-0 p-0', subCls].join(' ')}>
-          {subtitle}
-        </p>
-      </div>
-
-      {showCloseIcon && (
-        <button
-          onClick={handleClose}
-          className={[
-            'absolute right-[33px] top-1/2 -translate-y-1/2',
-            'w-[20px] h-[20px] p-0 border-0 rounded-full',
-            'flex items-center justify-center',
-            'transition-all duration-200 hover:opacity-70',
-          ].join(' ')}
-          style={{
-            backgroundColor: closeIconBackgroundColor || 'transparent',
-          }}
-          aria-label="Close"
-        >
-          {closeIconImage ? (
-            <img src={closeIconImage} alt="close" className="w-[7px] h-[7px] object-contain block" />
-          ) : (
-            <XMarkIcon className={['w-[7px] h-[7px]', closeCls].join(' ')} />
-          )}
-        </button>
-      )}
-
-      <TailwindSafelist />
-    </div>
-  );
+const titleForType = (type: ToastType) => {
+  switch (type) {
+    case 'LiquidUI':
+      return 'Liquid UI';
+    case 'Action':
+      return 'Confirmation';
+    default:
+      return type;
+  }
 };
 
 interface ToastItemProps {
@@ -262,35 +186,14 @@ interface ToastItemProps {
 const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   const [isExiting, setIsExiting] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
 
   const hasActions = !!(toast.actions && toast.actions.length > 0);
-
-  useEffect(() => {
-    if (toast.duration !== undefined && toast.duration > 0 && !hovered && !hasActions) {
-      const interval = setInterval(() => {
-        setElapsed((prev) => {
-          if (prev >= toast.duration!) {
-            setIsExiting(true);
-            setTimeout(() => onClose(toast.id), 300);
-            return prev;
-          }
-          return prev + 100;
-        });
-      }, 100);
-      return () => clearInterval(interval);
-    }
-    return undefined;
-  }, [toast.duration, hovered, hasActions, onClose, toast.id]);
+  const preset = useMemo(() => presetFor(toast.type), [toast.type]);
+  const background: ToastBackground = toast.background ?? 'solid';
 
   const handleClose = () => {
     setIsExiting(true);
     setTimeout(() => onClose(toast.id), 300);
-  };
-
-  const handleCloseClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleClose();
   };
 
   const handleAction = (action?: () => void) => {
@@ -298,436 +201,188 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     handleClose();
   };
 
-  const defaultStyles = useMemo(() => {
-    switch (toast.type) {
-      case 'success':
-        return {
-          border: 'border-[rgba(34,197,94,1)]',
-          bg: 'bg-[rgba(240,253,244,1)]',
-          icon: 'text-[rgba(34,197,94,1)]',
-          progressBg: 'bg-[rgba(34,197,94,1)]',
-          Icon: CheckCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      case 'error':
-        return {
-          border: 'border-[rgba(239,68,68,1)]',
-          bg: 'bg-[rgba(254,242,242,1)]',
-          icon: 'text-[rgba(239,68,68,1)]',
-          progressBg: 'bg-[rgba(239,68,68,1)]',
-          Icon: XCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      case 'warning':
-        return {
-          border: 'border-[rgba(234,179,8,1)]',
-          bg: 'bg-[rgba(254,252,232,1)]',
-          icon: 'text-[rgba(234,179,8,1)]',
-          progressBg: 'bg-[rgba(234,179,8,1)]',
-          Icon: ExclamationTriangleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      case 'info':
-        return {
-          border: 'border-[rgba(59,130,246,1)]',
-          bg: 'bg-[rgba(239,246,255,1)]',
-          icon: 'text-[rgba(59,130,246,1)]',
-          progressBg: 'bg-[rgba(59,130,246,1)]',
-          Icon: InformationCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      case 'action':
-        return {
-          border: 'border-[rgba(139,92,246,1)]',
-          bg: 'bg-[rgba(245,243,255,1)]',
-          icon: 'text-[rgba(139,92,246,1)]',
-          progressBg: 'bg-[rgba(139,92,246,1)]',
-          Icon: QuestionMarkCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      case 'liquidUI':
-        return {
-          border: 'border-[rgba(178,185,182,0.4)]',
-          bg: 'bg-[rgba(240,253,244,1)]',
-          icon: 'text-[rgba(178,185,182,0.4)]',
-          progressBg: 'bg-[rgba(178,185,182,0.4)]',
-          Icon: CheckCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
-      default:
-        return {
-          border: 'border-gray-300',
-          bg: 'bg-white',
-          icon: 'text-slate-600',
-          progressBg: 'bg-slate-600',
-          Icon: InformationCircleIcon,
-          textColor: 'text-[rgba(17,24,39,1)]',
-          subtitleColor: 'text-[rgba(107,114,128,1)]',
-        };
+  useEffect(() => {
+    if (toast.duration && toast.duration > 0 && !hovered && !hasActions) {
+      const t = setTimeout(() => handleClose(), toast.duration);
+      return () => clearTimeout(t);
     }
-  }, [toast.type]);
+    return;
+  }, [toast.duration, hovered, hasActions]);
 
-  const progressPct =
-    toast.duration !== undefined && toast.duration > 0 ? Math.min(100, (elapsed / toast.duration) * 100) : 0;
+  const titleBottomClass = hasActions ? 'bottom-[78px]' : 'bottom-[33px]';
+  const messageBottomClass = hasActions ? 'bottom-[52px]' : 'bottom-[16px]';
 
-  const progressWidthClass =
-    progressPct >= 100 ? 'w-full' : progressPct >= 75 ? 'w-3/4' : progressPct >= 50 ? 'w-1/2' : progressPct >= 25 ? 'w-1/4' : 'w-0';
+  const containerBgClass =
+    background === 'solid' ? preset.bgSolid : 'bg-[rgba(255,255,255,1)]';
 
-  const hasBackgroundGradient = !!(toast.backgroundGradientStart || toast.backgroundGradientEnd);
+  const titleTextClass =
+    background === 'transparent'
+      ? preset.stripTitleColor
+      : 'text-[rgba(255,255,255,1)]';
 
-  if (hasBackgroundGradient) {
-    const start = toast.backgroundGradientStart || 'rgba(34, 197, 94, 1)';
-    const end = toast.backgroundGradientEnd || 'rgba(74, 222, 128, 1)';
-    const bgGradient = gradientBgClass(start, end);
+  const messageTextClass =
+    background === 'transparent'
+      ? 'text-[rgba(0,0,0,1)]'
+      : 'text-[rgba(255,255,255,1)]';
 
-    const finalTextCls = colorTextClass(toast.textColor || 'rgba(255, 255, 255, 1)', 'text-white');
-    const finalMsgCls = colorTextClass(toast.messageColor || 'rgba(255, 255, 255, 1)', 'text-white');
-    const iconClrCls = colorTextClass(toast.iconColor || 'rgba(255, 255, 255, 1)', 'text-white');
+  const leftImageBgClass =
+    background === 'solid' ? preset.leftImageBgSolid : preset.leftImageBgTransparent;
 
-    const showStrip = toast.showColorStripOnGradient || false;
-    const stripStart = toast.colorStripOnGradientStart || 'rgba(245, 158, 11, 1)';
-    const stripEnd = toast.colorStripOnGradientEnd || 'rgba(255, 191, 92, 1)';
-    const stripPos = toast.colorStripOnGradientPosition || 'left';
-    const stripSpacing = toast.colorStripOnGradientSpacing ?? 0;
+  const closeImageBgClass = closeImageBgFor(background);
 
-    const stripCls = stripGradientClass(stripStart, stripEnd);
-    const stripPosCls =
-      stripPos === 'left'
-        ? ['left-0', edgeWithSpacing('left', stripSpacing), 'rounded-l-[12px]'].join(' ')
-        : ['right-0', edgeWithSpacing('right', stripSpacing), 'rounded-r-[12px]'].join(' ');
+  const slots = toast.classNames ?? {};
 
-    const IconComponent = toast.icon;
-    const hasIconToShow = IconComponent !== null && IconComponent !== undefined;
-    const isIconImage = typeof IconComponent === 'string';
+  const titleRight = hasActions ? 'right-[80px] md:right-[140px]' : 'right-[80px] md:right-[140px]';
+  const messageRight = hasActions ? 'right-[70px] md:right-[94px]' : 'right-[70px] md:right-[94px]';
+  const closeLeft = 'left-[calc(100%-36px)] md:left-[289px]';
 
-    return (
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className={[
-          'relative overflow-hidden transition-all duration-300',
-          'w-[325px] h-[70px] rounded-[12px]',
-          'shadow-[0px_4px_12px_0px_rgba(0,0,0,0.08)]',
-          bgGradient,
-          isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0',
-        ].join(' ')}
-        role="status"
-        aria-live="polite"
-      >
-        {showStrip && <div className={['absolute top-0 z-10 w-[5px] h-[70px]', stripCls, stripPosCls].join(' ')} />}
+  const baseClass = cnArr([
+    'relative flex overflow-hidden border border-transparent transition-all duration-300',
+    preset.container,
+    containerBgClass,
+    isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0',
+    slots.base,
+  ]);
 
-        {hasIconToShow && (
-          <div className="absolute left-[36px] top-1/2 -translate-y-1/2 w-[26px] h-[26px] flex items-center justify-center">
-            {isIconImage ? (
-              <img src={IconComponent as string} alt="icon" className="w-[26px] h-[26px] object-contain block" />
-            ) : (
-              React.createElement(IconComponent as React.ComponentType<React.SVGProps<SVGSVGElement>>, {
-                className: ['w-[26px] h-[26px]', iconClrCls].join(' '),
-              })
-            )}
-          </div>
-        )}
+  const stripClass = cnArr([
+    'absolute top-0 left-[5px] w-[5px] h-full rounded-[20px_0_0_20px]',
+    preset.stripBg,
+    slots.strip,
+  ]);
 
-        <div
-          className={[
-            'absolute top-1/2 -translate-y-1/2 flex flex-col gap-[2px]',
-            hasIconToShow ? 'left-[80px]' : 'left-[24px]',
-            hasActions ? 'right-[24px]' : 'right-[60px]',
-          ].join(' ')}
-        >
-          <h4 className={['font-[Poppins] text-[16px] font-bold leading-normal m-0 p-0', finalTextCls].join(' ')}>
-            {toast.title}
-          </h4>
-          <p className={['font-[Poppins] text-[10px] font-normal leading-normal m-0 p-0', finalMsgCls].join(' ')}>
-            {toast.message}
-          </p>
-        </div>
+  const iconClass = cnArr([
+    'absolute left-[36px] top-[22px] w-[26px] h-[26px] aspect-square',
+    'bg-transparent bg-center bg-cover bg-no-repeat',
+    leftImageBgClass,
+    slots.icon,
+  ]);
 
-        {!hasActions && (
-          <button
-            onClick={handleClose}
-            className={[
-              'absolute right-[22px] top-1/2 -translate-y-1/2',
-              'w-[24px] h-[24px] p-0 border-0 rounded-full',
-              'flex items-center justify-center',
-              'transition-all duration-200 hover:opacity-70',
-            ].join(' ')}
-            style={{
-              backgroundColor: toast.closeIconBackgroundColor || 'transparent',
-            }}
-            aria-label="Close"
-          >
-            {toast.closeIconImage ? (
-              <img 
-                src={toast.closeIconImage} 
-                alt="close" 
-                className="w-[14px] h-[14px] object-contain block"
-                style={{
-                  filter: toast.closeIconColor === 'rgba(255, 255, 255, 1)' || toast.closeIconColor === 'white'
-                    ? 'brightness(0) invert(1)'
-                    : undefined
-                }}
-              />
-            ) : (
-              <XMarkIcon className={['w-[14px] h-[14px]', finalTextCls].join(' ')} />
-            )}
-          </button>
-        )}
+  const titleClass = cnArr([
+    'absolute left-[80px] top-[13px]',
+    titleRight,
+    titleBottomClass,
+    'font-["Poppins"] text-[16px] font-[700] leading-none overflow-hidden text-ellipsis whitespace-nowrap',
+    titleTextClass,
+    slots.title,
+  ]);
 
-        {hasActions && (
-          <div className="absolute left-[24px] right-[24px] bottom-[16px] flex gap-2">
-            {toast.actions?.[0] && (
-              <button
-                onClick={() => handleAction(toast.actions?.[0].onClick)}
-                className={['flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors', 'bg-white/20 hover:bg-white/30', finalTextCls].join(' ')}
-              >
-                {toast.actions[0].label}
-              </button>
-            )}
-            {toast.actions?.[1] && (
-              <button
-                onClick={() => handleAction(toast.actions?.[1].onClick)}
-                className={['flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors', 'bg-white/10 hover:bg-white/20 border border-white/30', finalTextCls].join(' ')}
-              >
-                {toast.actions[1].label}
-              </button>
-            )}
-          </div>
-        )}
+  const messageClass = cnArr([
+    'absolute left-[80px] top-[39px]',
+    messageRight,
+    messageBottomClass,
+    'font-["Poppins"] text-[10px] font-[400] leading-none truncate',
+    messageTextClass,
+    slots.message,
+  ]);
 
-        {toast.duration !== undefined && toast.duration > 0 && !hasActions && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-            <div className={['h-full bg-white transition-[width] duration-100', progressWidthClass].join(' ')} aria-hidden />
-          </div>
-        )}
+  const closeBtnClass = cnArr([
+    'absolute top-[27px] h-[14px] w-[14px]',
+    closeLeft,
+    slots.close,
+  ]);
 
-        <TailwindSafelist />
-      </div>
-    );
-  }
+  const actionsWrapClass = cnArr([
+    'absolute left-[80px] right-[12px] md:right-[22px] bottom-[10px] flex flex-wrap gap-2',
+    slots.actions,
+  ]);
 
-  const hasCustomStyling =
-    !!(
-      toast.colorStripGradientStart ||
-      toast.colorStripGradientEnd ||
-      toast.titleColor ||
-      toast.icon ||
-      toast.colorStripPosition ||
-      toast.showCloseIcon
-    );
+  const primaryActionClass = cnArr([
+    'inline-flex w-fit whitespace-nowrap items-center justify-center rounded-lg',
+    'bg-[rgba(17,24,39,1)] px-3 py-2 text-[12px] font-[600] text-[rgba(255,255,255,1)] transition-colors hover:bg-[rgba(31,41,55,1)]',
+    slots.primaryAction,
+  ]);
 
-  if (hasCustomStyling) {
-    const stripStart = toast.colorStripGradientStart || 'rgba(245, 158, 11, 1)';
-    const stripEnd = toast.colorStripGradientEnd || 'rgba(255, 191, 92, 1)';
-    const stripCls = stripGradientClass(stripStart, stripEnd);
-
-    const titleCls = colorTextClass(toast.titleColor || 'rgba(17,24,39,1)', 'text-[rgba(17,24,39,1)]');
-    const subCls = colorTextClass(toast.subtitleColor || 'rgba(107,114,128,1)', 'text-[rgba(107,114,128,1)]');
-
-    const stripPos = toast.colorStripPosition || 'left';
-    const stripSpacing = toast.colorStripSpacing ?? 0;
-    const stripPosCls =
-      stripPos === 'left'
-        ? ['left-0', edgeWithSpacing('left', stripSpacing), 'rounded-l-[12px]'].join(' ')
-        : ['right-0', edgeWithSpacing('right', stripSpacing), 'rounded-r-[12px]'].join(' ');
-
-    const showIcon = toast.icon !== null && toast.icon !== undefined;
-    const isIconImage = typeof toast.icon === 'string';
-    const iconCls = colorTextClass(toast.iconColor || toast.titleColor || 'rgba(17,24,39,1)', titleCls);
-
-    const showCloseIcon = toast.showCloseIcon || false;
-    const closeCls = colorTextClass(toast.closeIconColor || 'rgba(107,114,128,1)', 'text-[rgba(107,114,128,1)]');
-
-    return (
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className={[
-          'relative overflow-hidden rounded-[12px] bg-white',
-          'shadow-[0px_4px_12px_0px_rgba(0,0,0,0.08)] transition-all duration-300',
-          isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0',
-          'min-w-[320px] max-w-[420px]',
-        ].join(' ')}
-        role="status"
-        aria-live="polite"
-      >
-        <div className={['absolute top-0 w-[5px] h-full', stripCls, stripPosCls].join(' ')} />
-
-        {showIcon && toast.icon && (
-          <div className="absolute z-10 left-[36px] top-[22px] w-[26px] h-[26px] flex items-center justify-center">
-            {isIconImage ? (
-              <img src={toast.icon as string} alt="icon" className="w-[26px] h-[26px] object-contain block" />
-            ) : (
-              React.createElement(toast.icon as React.ComponentType<React.SVGProps<SVGSVGElement>>, {
-                className: ['w-[26px] h-[26px]', iconCls].join(' '),
-              })
-            )}
-          </div>
-        )}
-
-        {showCloseIcon && (
-          <button
-            onClick={handleCloseClick}
-            className={[
-              'absolute z-10 top-[27px]',
-              stripPos === 'left' ? 'right-[22px]' : 'left-[289px]',
-              'w-[24px] h-[24px] p-0 border-0 rounded-full',
-              'flex items-center justify-center',
-              'transition-all duration-200 hover:opacity-70',
-            ].join(' ')}
-            style={{
-              backgroundColor: toast.closeIconBackgroundColor || 'transparent',
-            }}
-            aria-label="Close"
-          >
-            {toast.closeIconImage ? (
-              <img 
-                src={toast.closeIconImage} 
-                alt="close" 
-                className="w-[14px] h-[14px] object-contain block"
-                style={{
-                  filter: toast.closeIconColor && toast.closeIconColor !== 'rgba(107, 114, 128, 1)'
-                    ? toast.closeIconColor === 'rgba(255, 255, 255, 1)' || toast.closeIconColor === 'white'
-                      ? 'brightness(0) invert(1)'
-                      : 'brightness(0) saturate(100%)'
-                    : undefined
-                }}
-              />
-            ) : (
-              <XMarkIcon className={['w-[14px] h-[14px]', closeCls].join(' ')} />
-            )}
-          </button>
-        )}
-
-        <div className={['flex flex-col pt-[13px] pb-[16px]', showIcon ? 'pl-[57px]' : 'pl-[24px]', 'pr-[24px]'].join(' ')}>
-          <h3 className={['font-[Poppins] text-[16px] font-semibold leading-normal mb-[2px]', titleCls].join(' ')}>
-            {toast.title}
-          </h3>
-          <p className={['font-[Poppins] text-[10px] font-normal leading-normal', subCls].join(' ')}>
-            {toast.message}
-          </p>
-        </div>
-
-        {toast.duration !== undefined && toast.duration > 0 && !hasActions && (
-          <div className="h-1 w-full bg-black/5">
-            <div className={['h-full transition-[width] duration-100', stripCls, progressWidthClass].join(' ')} aria-hidden />
-          </div>
-        )}
-
-        <TailwindSafelist />
-      </div>
-    );
-  }
-
-  const DefaultIcon = defaultStyles.Icon;
+  const secondaryActionClass = cnArr([
+    'inline-flex w-fit whitespace-nowrap items-center justify-center rounded-lg',
+    'border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.15)] px-3 py-2 text-[12px] font-[600] text-[rgba(255,255,255,1)] transition-colors hover:bg-[rgba(255,255,255,0.22)]',
+    slots.secondaryAction,
+  ]);
 
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={[
-        'flex flex-col overflow-hidden rounded-lg border shadow-lg transition-all duration-300',
-        defaultStyles.bg,
-        defaultStyles.border,
-        isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0',
-        'min-w-[320px] max-w-[420px]',
-      ].join(' ')}
+      className={baseClass}
       role="status"
       aria-live="polite"
     >
-      <div className="flex items-start gap-3 p-4">
-        <div className={['flex shrink-0 items-center justify-center', defaultStyles.icon, 'w-[26px] h-[26px]'].join(' ')}>
-          <DefaultIcon className="w-[26px] h-[26px]" />
-        </div>
+      <div className={stripClass} aria-hidden="true" />
+      <div className={iconClass} role="img" aria-label={`${toast.type} image`} />
+      <h4 className={titleClass}>{toast.title}</h4>
+      <p className={messageClass}>{toast.message}</p>
 
-        <div className="min-w-0 flex-1">
-          <h4 className={['mb-1 text-sm font-semibold', defaultStyles.textColor].join(' ')}>
-            {toast.title}
-          </h4>
-          <p className={['text-sm', defaultStyles.subtitleColor].join(' ')}>
-            {toast.message}
-          </p>
-        </div>
-
-        {!hasActions && (
-          <button
-            onClick={handleClose}
-            className="shrink-0 rounded p-1 text-[rgba(107,114,128,1)] transition-colors hover:bg-black/5 w-[14px] h-[14px] flex items-center justify-center"
-            aria-label="Close"
-          >
-            <XMarkIcon className="w-[14px] h-[14px]" />
-          </button>
-        )}
-      </div>
+      {!hasActions && (
+        <button onClick={handleClose} className={closeBtnClass} aria-label="Close">
+          <span
+            className={cn(
+              'block h-[14px] w-[14px] aspect-square bg-transparent bg-center bg-cover bg-no-repeat',
+              closeImageBgClass
+            )}
+            aria-hidden="true"
+          />
+        </button>
+      )}
 
       {hasActions && (
-        <div className="flex gap-2 px-4 pb-4">
+        <div className={actionsWrapClass}>
           {toast.actions?.[0] && (
-            <button
-              onClick={() => handleAction(toast.actions?.[0].onClick)}
-              className="flex-1 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800"
-            >
+            <button onClick={() => handleAction(toast.actions?.[0]?.onClick)} className={primaryActionClass}>
               {toast.actions[0].label}
             </button>
           )}
           {toast.actions?.[1] && (
-            <button
-              onClick={() => handleAction(toast.actions?.[1].onClick)}
-              className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-gray-50"
-            >
+            <button onClick={() => handleAction(toast.actions?.[1]?.onClick)} className={secondaryActionClass}>
               {toast.actions[1].label}
             </button>
           )}
         </div>
       )}
-
-      {toast.duration !== undefined && toast.duration > 0 && !hasActions && (
-        <div className="h-1 w-full bg-black/5">
-          <div className={['h-full transition-[width] duration-100', defaultStyles.progressBg, progressWidthClass].join(' ')} aria-hidden />
-        </div>
-      )}
-
-      <TailwindSafelist />
     </div>
   );
 };
+
+ToastItem.displayName = "ToastItem";
 
 const posClass = (p: ToastPosition) => {
   switch (p) {
     case 'top-left':
-      return 'top-5 left-5';
+      return 'top-4 left-4';
     case 'top-center':
-      return 'top-5 left-1/2 -translate-x-1/2';
+      return 'top-4 left-1/2 -translate-x-1/2';
     case 'top-right':
-      return 'top-5 right-5';
+      return 'top-4 right-4';
     case 'bottom-left':
-      return 'bottom-5 left-5';
+      return 'bottom-4 left-4';
     case 'bottom-center':
-      return 'bottom-5 left-1/2 -translate-x-1/2';
+      return 'bottom-4 left-1/2 -translate-x-1/2';
     case 'bottom-right':
-      return 'bottom-5 right-5';
+      return 'bottom-4 right-4';
     default:
-      return 'top-5 right-5';
+      return 'top-4 right-4';
   }
 };
 
-const ToastMessage: React.FC<ToastMessageProps> = ({ toasts, position = 'top-right', onClose }) => {
-  return (
-    <div className={['fixed z-[9999] flex flex-col gap-3 pointer-events-none', posClass(position)].join(' ')}>
-      {toasts.map((t) => (
-        <div key={t.id} className="pointer-events-auto">
-          <ToastItem toast={t} onClose={onClose} />
-        </div>
-      ))}
-    </div>
-  );
+const ToastMessageBase: React.FC<ToastContainerProps> = ({ toasts, position, onClose }) => (
+  <div className={cn('fixed z-[9999] flex flex-col gap-3 pointer-events-none', posClass(position))}>
+    {toasts.map((t) => (
+      <div key={t.id} className="pointer-events-auto">
+        <ToastItem toast={t} onClose={onClose} />
+      </div>
+    ))}
+  </div>
+);
+
+ToastMessageBase.displayName = "ToastMessage";
+
+type ToastMessageWithUtils = typeof ToastMessageBase & {
+  cn: typeof cn;
+  titleForType: typeof titleForType;
 };
 
-ToastMessage.displayName = 'ToastMessage';
+const ToastMessage = ToastMessageBase as ToastMessageWithUtils;
+ToastMessage.cn = cn;
+ToastMessage.titleForType = titleForType;
+
+ToastMessage.displayName = "ToastMessage";
+
 export { ToastMessage };
