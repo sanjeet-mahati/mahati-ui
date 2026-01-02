@@ -55,7 +55,7 @@ const MahatiPieAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         {dropdownOptions.length > 0 && (
           <MahatiDropdown
-            options={dropdownOptions}
+            options={dropdownOptions.map((opt) => ({ key: opt, value: opt }))}
             onSelect={onDropdownSelect!}
             variant="outline"
             className="w-[130px] h-[30px] rounded border [background:linear-gradient(90deg,rgba(23,97,163,0.07)_0%,rgba(77,175,131,0.07)_100%)] border-solid border-[#D2D2D2]"

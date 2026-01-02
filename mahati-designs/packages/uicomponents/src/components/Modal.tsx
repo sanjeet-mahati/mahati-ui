@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import * as React from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "../lib/utils"; // Assuming you have a `cn` utility for merging Tailwind classes
 
 export type MahatiModalSize = "default" | "sm" | "md" | "lg" | "xl";
 
 export type MahatiModalProps = {
   isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
   onClose: () => void;
   title?: string;
   subtitle?: string;
@@ -16,15 +20,15 @@ export type MahatiModalProps = {
   width?: string | number;
   height?: string | number;
   margin?: string | number;
-  position?: "center" | "bottom-right" | "top-left" | "top-right" | "bottom-left" | "top-center" | "bottom-center" | "center-left" | "center-right";
+  position?: "center" | "top-left" | "top-right" | "top-center" | "bottom-left" | "bottom-right" | "bottom-center" | "center-left" | "center-right";
 
   primaryAction?: {
-    label?: string;
+    label?: React.ReactNode;
     onClick?: () => void;
     disabled?: boolean;
   };
   secondaryAction?: {
-    label?: string;
+    label?: React.ReactNode;
     onClick?: () => void;
   };
 
@@ -62,7 +66,7 @@ export default function Modal({
   const width = customWidth ?? MODAL_WIDTH_MAP[size] ?? MODAL_WIDTH_MAP.default;
 
   // ESC key close
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
