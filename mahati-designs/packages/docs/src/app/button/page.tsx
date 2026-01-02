@@ -1,10 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, Eye, Code as CodeIcon } from 'lucide-react';
-import { MahatiButton } from '@/components';
-import { CodePreview } from '../CodePreview';
-import { PropsTable } from '../PropsTable';
+import {
+  FiCopy,
+  FiCheck,
+  FiEye,
+  FiCode,
+  FiRefreshCcw,
+  FiEdit2,
+  FiMoreVertical,
+  FiChevronUp,
+  FiChevronDown,
+} from "react-icons/fi";
+
+import { MahatiButton } from "@/components";
+import { CodePreview } from "../CodePreview";
+import { PropsTable } from "../PropsTable";
 
 export default function ButtonPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,11 +56,52 @@ export default function ButtonPage() {
       default: "-",
       description: "Additional CSS classes to apply to the button.",
     },
+    {
+      name: "iconButton",
+      type: "boolean",
+      default: "false",
+      description: "Enables icon-only button styling (breadcrumb action icons).",
+    },
+    {
+      name: "iconButtonHeightClass",
+      type: "string",
+      default: '"h-9"',
+      description: "Tailwind height class for icon buttons.",
+    },
+    {
+      name: "iconButtonWidthClass",
+      type: "string",
+      default: '"w-9"',
+      description: "Tailwind width class for icon buttons.",
+    },
+    {
+      name: "iconButtonBgClass",
+      type: "string",
+      default: '"bg-transparent"',
+      description:
+        'Tailwind RGBA background class (e.g., `bg-[rgba(255,255,255,0.12)]`).',
+    },
+    {
+      name: "iconButtonRadiusClass",
+      type: "string",
+      default: '"rounded-md"',
+      description:
+        'Tailwind radius class for background (e.g., `rounded-[20px]`).',
+    },
+    {
+      name: "iconButtonBgPaddingClass",
+      type: "string",
+      default: '"p-[2px]"',
+      description:
+        'Controls background shape size around the icon (e.g., `p-[2px]`, `p-[6px]`).',
+    },
   ];
+
+  const breadcrumbBg =
+    "bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]";
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6">
-      {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">Button</h1>
         <p className="text-lg text-gray-600 leading-relaxed">
@@ -59,9 +111,9 @@ export default function ButtonPage() {
         </p>
       </div>
 
-
       <PropsTable props={buttonProps} title="Props" />
       <br />
+
       <CodePreview
         title="Basic Buttons"
         code={`<MahatiButton variant="default">Default Button</MahatiButton>
@@ -75,23 +127,31 @@ export default function ButtonPage() {
               <span className="text-sm text-gray-700 font-medium">Default</span>
             </div>
             <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-              <MahatiButton variant="secondary">Secondary Button</MahatiButton>
-              <span className="text-sm text-gray-700 font-medium">Secondary</span>
+              <MahatiButton variant="secondary">
+                Secondary Button
+              </MahatiButton>
+              <span className="text-sm text-gray-700 font-medium">
+                Secondary
+              </span>
             </div>
             <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
               <MahatiButton variant="outline">Outline Button</MahatiButton>
               <span className="text-sm text-gray-700 font-medium">Outline</span>
             </div>
             <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
-              <MahatiButton variant="destructive">Destructive Button</MahatiButton>
-              <span className="text-sm text-gray-700 font-medium">Destructive</span>
+              <MahatiButton variant="destructive">
+                Destructive Button
+              </MahatiButton>
+              <span className="text-sm text-gray-700 font-medium">
+                Destructive
+              </span>
             </div>
           </div>
         }
       />
 
       <CodePreview
-        title="Button Variants" // This title matches config.tsx entry
+        title="Button Variants"
         code={`<MahatiButton variant="default">Default</MahatiButton>
 <MahatiButton variant="destructive">Destructive</MahatiButton>
 <MahatiButton variant="outline">Outline</MahatiButton>
@@ -101,17 +161,29 @@ export default function ButtonPage() {
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
             <MahatiButton variant="default">Default</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="default"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="default"
+            </span>
             <MahatiButton variant="destructive">Destructive</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="destructive"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="destructive"
+            </span>
             <MahatiButton variant="outline">Outline</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="outline"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="outline"
+            </span>
             <MahatiButton variant="secondary">Secondary</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="secondary"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="secondary"
+            </span>
             <MahatiButton variant="ghost">Ghost</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="ghost"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="ghost"
+            </span>
             <MahatiButton variant="link">Link</MahatiButton>
-            <span className="text-sm text-gray-700 font-medium">variant="link"</span>
+            <span className="text-sm text-gray-700 font-medium">
+              variant="link"
+            </span>
           </div>
         }
       />
@@ -124,12 +196,15 @@ export default function ButtonPage() {
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
             <MahatiButton variant="dotted">Dotted Button</MahatiButton>
-            <MahatiButton variant="dotted" size="sm">Small Dotted</MahatiButton>
-            <MahatiButton variant="dotted" size="lg">Large Dotted</MahatiButton>
+            <MahatiButton variant="dotted" size="sm">
+              Small Dotted
+            </MahatiButton>
+            <MahatiButton variant="dotted" size="lg">
+              Large Dotted
+            </MahatiButton>
           </div>
         }
       />
-
 
       <CodePreview
         title="Button Sizes"
@@ -137,7 +212,7 @@ export default function ButtonPage() {
 <MahatiButton size="default">Default</MahatiButton>
 <MahatiButton size="lg">Large</MahatiButton>
 <MahatiButton size="icon">
-  <Icon />
+  <FiChevronDown />
 </MahatiButton>`}
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -145,12 +220,11 @@ export default function ButtonPage() {
             <MahatiButton size="default">Default</MahatiButton>
             <MahatiButton size="lg">Large</MahatiButton>
             <MahatiButton size="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+              <FiChevronDown className="h-4 w-4" />
             </MahatiButton>
           </div>
         }
       />
-
 
       <CodePreview
         title="Button States"
@@ -162,11 +236,13 @@ export default function ButtonPage() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <MahatiButton onClick={handleLoadingDemo} disabled={isLoading}>
               {isLoading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span className="inline-flex items-center">
+                  <span className="mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   Loading...
-                </>
-              ) : "Click to Load"}
+                </span>
+              ) : (
+                "Click to Load"
+              )}
             </MahatiButton>
             <MahatiButton disabled>Disabled Button</MahatiButton>
           </div>
@@ -174,7 +250,7 @@ export default function ButtonPage() {
       />
 
       <CodePreview
-        title="Combining Variants & Sizes" // This title matches config.tsx entry
+        title="Combining Variants & Sizes"
         code={`{/* Small Variants */}
 <MahatiButton size="sm" variant="default">Default</MahatiButton>
 <MahatiButton size="sm" variant="secondary">Secondary</MahatiButton>
@@ -195,16 +271,28 @@ export default function ButtonPage() {
         preview={
           <div className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Small Variants</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Small Variants
+              </h4>
               <div className="flex gap-2 flex-wrap">
-                <MahatiButton size="sm" variant="default">Default</MahatiButton>
-                <MahatiButton size="sm" variant="secondary">Secondary</MahatiButton>
-                <MahatiButton size="sm" variant="outline">Outline</MahatiButton>
-                <MahatiButton size="sm" variant="ghost">Ghost</MahatiButton>
+                <MahatiButton size="sm" variant="default">
+                  Default
+                </MahatiButton>
+                <MahatiButton size="sm" variant="secondary">
+                  Secondary
+                </MahatiButton>
+                <MahatiButton size="sm" variant="outline">
+                  Outline
+                </MahatiButton>
+                <MahatiButton size="sm" variant="ghost">
+                  Ghost
+                </MahatiButton>
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Default Size Variants</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Default Size Variants
+              </h4>
               <div className="flex gap-2 flex-wrap">
                 <MahatiButton variant="default">Default</MahatiButton>
                 <MahatiButton variant="secondary">Secondary</MahatiButton>
@@ -213,12 +301,22 @@ export default function ButtonPage() {
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Large Variants</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Large Variants
+              </h4>
               <div className="flex gap-2 flex-wrap">
-                <MahatiButton size="lg" variant="default">Default</MahatiButton>
-                <MahatiButton size="lg" variant="secondary">Secondary</MahatiButton>
-                <MahatiButton size="lg" variant="outline">Outline</MahatiButton>
-                <MahatiButton size="lg" variant="ghost">Ghost</MahatiButton>
+                <MahatiButton size="lg" variant="default">
+                  Default
+                </MahatiButton>
+                <MahatiButton size="lg" variant="secondary">
+                  Secondary
+                </MahatiButton>
+                <MahatiButton size="lg" variant="outline">
+                  Outline
+                </MahatiButton>
+                <MahatiButton size="lg" variant="ghost">
+                  Ghost
+                </MahatiButton>
               </div>
             </div>
           </div>
@@ -226,7 +324,7 @@ export default function ButtonPage() {
       />
 
       <CodePreview
-        title="Examples" // This title matches config.tsx entry
+        title="Examples"
         code={`{/* Form Actions */}
 <MahatiButton type="submit">Save Changes</MahatiButton>
 <MahatiButton variant="outline" type="button">Cancel</MahatiButton>
@@ -241,27 +339,49 @@ export default function ButtonPage() {
         preview={
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-3">Form Actions</h4>
+              <h4 className="text-lg font-medium text-gray-800 mb-3">
+                Form Actions
+              </h4>
               <div className="flex gap-3 flex-wrap items-center">
-                <MahatiButton type="submit" variant="default">Save Changes</MahatiButton>
-                <MahatiButton variant="outline" type="button">Cancel</MahatiButton>
+                <MahatiButton type="submit" variant="default">
+                  Save Changes
+                </MahatiButton>
+                <MahatiButton variant="outline" type="button">
+                  Cancel
+                </MahatiButton>
                 <MahatiButton variant="destructive">Delete</MahatiButton>
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-3">Call-to-Action</h4>
+              <h4 className="text-lg font-medium text-gray-800 mb-3">
+                Call-to-Action
+              </h4>
               <div className="flex gap-3 flex-wrap items-center">
-                <MahatiButton size="lg" variant="default">Get Started</MahatiButton>
-                <MahatiButton size="lg" variant="outline">Learn More</MahatiButton>
+                <MahatiButton size="lg" variant="default">
+                  Get Started
+                </MahatiButton>
+                <MahatiButton size="lg" variant="outline">
+                  Learn More
+                </MahatiButton>
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-3">Action Group</h4>
-              <div className="flex gap-2">
-                <MahatiButton variant="outline" size="sm">Edit</MahatiButton>
-                <MahatiButton variant="outline" size="sm">Duplicate</MahatiButton>
-                <MahatiButton variant="outline" size="sm">Archive</MahatiButton>
-                <MahatiButton variant="destructive" size="sm">Delete</MahatiButton>
+              <h4 className="text-lg font-medium text-gray-800 mb-3">
+                Action Group
+              </h4>
+              <div className="flex gap-2 flex-wrap">
+                <MahatiButton variant="outline" size="sm">
+                  Edit
+                </MahatiButton>
+                <MahatiButton variant="outline" size="sm">
+                  Duplicate
+                </MahatiButton>
+                <MahatiButton variant="outline" size="sm">
+                  Archive
+                </MahatiButton>
+                <MahatiButton variant="destructive" size="sm">
+                  Delete
+                </MahatiButton>
               </div>
             </div>
           </div>
@@ -276,8 +396,12 @@ export default function ButtonPage() {
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
             <MahatiButton variant="pill">Pill Button</MahatiButton>
-            <MahatiButton variant="pill" size="sm">Small Pill</MahatiButton>
-            <MahatiButton variant="pill" size="lg">Large Pill</MahatiButton>
+            <MahatiButton variant="pill" size="sm">
+              Small Pill
+            </MahatiButton>
+            <MahatiButton variant="pill" size="lg">
+              Large Pill
+            </MahatiButton>
           </div>
         }
       />
@@ -292,12 +416,159 @@ export default function ButtonPage() {
 </MahatiButton>`}
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <MahatiButton className="bg-emerald-500 hover:bg-emerald-600 text-white">Success</MahatiButton>
-            <MahatiButton className="bg-amber-500 hover:bg-amber-600 text-white">Warning</MahatiButton>
+            <MahatiButton className="bg-emerald-500 hover:bg-emerald-600 text-white">
+              Success
+            </MahatiButton>
+            <MahatiButton className="bg-amber-500 hover:bg-amber-600 text-white">
+              Warning
+            </MahatiButton>
           </div>
         }
       />
 
+      <CodePreview
+        title="Breadcrumb Action Icon Buttons (Background size changes are visible)"
+        code={`<div className={\`flex items-center justify-between rounded-md px-3 py-2 \${breadcrumbBg}\`}>
+  <MahatiButton.IconButtonGroup direction="row" gapClass="gap-2">
+    <MahatiButton
+      iconButton
+      variant="ghost"
+      iconButtonHeightClass="h-10"
+      iconButtonWidthClass="w-10"
+      iconButtonBgClass="bg-[rgba(255,255,255,0.12)]"
+      iconButtonRadiusClass="rounded-[20px]"
+      iconButtonBgPaddingClass="p-[2px]"
+    >
+      <FiRefreshCcw className="h-4 w-4" />
+    </MahatiButton>
+
+    <MahatiButton
+      iconButton
+      variant="ghost"
+      iconButtonHeightClass="h-10"
+      iconButtonWidthClass="w-10"
+      iconButtonBgClass="bg-[rgba(255,255,255,0.12)]"
+      iconButtonRadiusClass="rounded-[20px]"
+      iconButtonBgPaddingClass="p-[6px]"
+    >
+      <FiEdit2 className="h-4 w-4" />
+    </MahatiButton>
+  </MahatiButton.IconButtonGroup>
+</div>`}
+        preview={
+          <div className={`flex items-center justify-between rounded-md px-3 py-2 ${breadcrumbBg}`}>
+            <div className="flex items-center gap-2 text-sm text-white/90">
+              <span>Dashboard</span>
+              <span className="text-white/60">/</span>
+              <span>Users</span>
+            </div>
+
+            <MahatiButton.IconButtonGroup direction="row" gapClass="gap-2">
+              <MahatiButton
+                iconButton
+                variant="ghost"
+                iconButtonHeightClass="h-10"
+                iconButtonWidthClass="w-10"
+                // iconButtonBgClass="bg-[rgba(140,16,248,0.87)]"
+                iconButtonRadiusClass="rounded-[20px]"
+                iconButtonBgPaddingClass="p-[10px]"
+                aria-label="Refresh"
+              >
+                <FiRefreshCcw className="h-4 w-4" />
+              </MahatiButton>
+
+              <MahatiButton
+                iconButton
+                variant="ghost"
+                iconButtonHeightClass="h-10"
+                iconButtonWidthClass="w-10"
+                // iconButtonBgClass="bg-[rgba(240,16,16,0.39)]"
+                iconButtonRadiusClass="rounded-[20px]"
+                iconButtonBgPaddingClass="p-[10px]"
+                aria-label="Edit"
+              >
+                <FiEdit2 className="h-4 w-4" />
+              </MahatiButton>
+
+              <MahatiButton
+                iconButton
+                variant="ghost"
+                iconButtonHeightClass="h-10"
+                iconButtonWidthClass="w-10"
+                // iconButtonBgClass="bg-[rgba(240,16,16,0.39)]"
+                iconButtonHoverBgClass="hover:bg-[rgba(240,16,16,0.55)] active:bg-[rgba(240,16,16,0.7)]"
+                iconButtonRadiusClass="rounded-[20px]"
+                iconButtonBgPaddingClass="p-[6px]"
+                aria-label="Edit"
+                
+                aria-label="Refresh"
+              >
+                <FiRefreshCcw className="h-4 w-4" />
+              {/* >
+                <FiEdit2 className="h-4 w-4" /> */}
+              </MahatiButton>
+
+              <MahatiButton
+                iconButton
+                variant="ghost"
+                iconButtonHeightClass="h-10"
+                iconButtonWidthClass="w-10"
+                // iconButtonBgClass="bg-[rgba(240,16,16,0.39)]"
+                iconButtonHoverBgClass="hover:bg-[rgba(16,117,240,0.55)] active:bg-[rgba(240,16,16,0.7)]"
+                iconButtonRadiusClass="rounded-[20px]"
+                iconButtonBgPaddingClass="p-[4px]"
+                iconButtonHoverIntensity={70}
+              >
+                <FiEdit2 className="h-4 w-4" />
+              </MahatiButton>
+
+
+
+              <MahatiButton
+                iconButton
+                variant="ghost"
+                iconButtonHeightClass="h-10"
+                iconButtonWidthClass="w-10"
+                aria-label="More"
+              >
+                <FiMoreVertical className="h-4 w-4" />
+              </MahatiButton>
+            </MahatiButton.IconButtonGroup>
+          </div>
+        }
+      />
+
+      <CodePreview
+        title="Icon Buttons (Column Layout)"
+        code={`<MahatiButton.IconButtonGroup direction="col" gapClass="gap-2">
+  <MahatiButton iconButton variant="outline">
+    <FiChevronUp className="h-4 w-4" />
+  </MahatiButton>
+  <MahatiButton iconButton variant="outline">
+    <FiChevronDown className="h-4 w-4" />
+  </MahatiButton>
+</MahatiButton.IconButtonGroup>`}
+        preview={
+          <div 
+            className={`flex items-center justify-between rounded-md px-3 py-3 w-fit ${breadcrumbBg}`}
+          >
+            <MahatiButton.IconButtonGroup direction="col" gapClass="gap-2">
+              <MahatiButton 
+                iconButton 
+                variant="outline" 
+                aria-label="Up">
+                <FiChevronUp className="h-4 w-4" />
+              </MahatiButton>
+              <MahatiButton 
+                iconButton 
+                variant="ghost" 
+                ria-label="Down">
+                <FiChevronDown className="h-4 w-4" />
+              </MahatiButton>
+            </MahatiButton.IconButtonGroup>
+          </div>
+        }
+      />
     </div>
   );
 }

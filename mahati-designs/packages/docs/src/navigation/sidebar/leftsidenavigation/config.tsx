@@ -11,11 +11,14 @@ import {
   faAlignJustify,
   faSquareCaretDown,
   faWindowMaximize,
-  faCalendarDays
+  faCalendarDays,
+  faChevronDown,
+  faLayerGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faMessage
 } from '@fortawesome/free-regular-svg-icons';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export interface NavItem {
   name: string;
@@ -23,7 +26,8 @@ export interface NavItem {
   icon: JSX.Element | null;
   position?: 'top' | 'bottom';
   active?: boolean;
-  subItems?: NavItem[];
+  subItems?: NavItem [];
+
 }
 export const NavItems = (): NavItem[]  => {
   const pathname = usePathname();
@@ -402,43 +406,41 @@ export const NavItems = (): NavItem[]  => {
                 
       ]
     },
-
-
     {
-      name: 'Filter',
-      href: '/filter',
-      icon: <FontAwesomeIcon icon={faAlignJustify} size="lg" />,
-      active: pathname === '/filter',
-      position: 'top',
-      subItems: [
-        {
-          name: 'Basic Filter',
-          href: '/filter#basic-filter',
-          icon: <FontAwesomeIcon icon={faAlignJustify} size="sm" />,
-        },
-        {
-          name: 'Date / Time Filter',
-          href: '/filter#date-time-filter',
-          icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" />,
-        },
-        {
-          name: 'Dropdown Filter',
-          href: '/filter#dropdown-filter',
-          icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" />,
-        },
-        {
-          name: 'Search Filter',
-          href: '/filter#search-filter',
-          icon: <FontAwesomeIcon icon={faMessage} size="sm" />,
-        },
-        {
-          name: 'Props',
-          href: '/filter#props',
-          icon: <FontAwesomeIcon icon={faGear} size="sm" />,
-        },
-      ],
+  name: 'Accordion',
+  href: '/accordion',
+  icon: <FontAwesomeIcon icon={faLayerGroup} size="lg" />,
+  active: pathname === '/accordion',
+  position: 'top',
+  subItems: [
+    {
+      name: 'Basic Accordion',
+      href: '/accordion#basic-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size="lg" />,
+    },{name: 'Multiple Items Accordion',href: '/accordion#multiple-items-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
     },
-
+    {
+      name: 'Nested Accordion',
+      href: '/accordion#nested-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Disabled Accordion",
+      href:"/accordion#diabled-accordian",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Accordion Group",
+      href:"/accordion#accordion-group",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Long content Accordion",
+      href:"/accordion#long-content-accordion",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    }
+    
+  ],
+},
+  
+    
     
   ];
 };
+
+  
