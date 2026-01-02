@@ -11,11 +11,14 @@ import {
   faAlignJustify,
   faSquareCaretDown,
   faWindowMaximize,
-  faCalendarDays
+  faCalendarDays,
+  faChevronDown,
+  faLayerGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faMessage
 } from '@fortawesome/free-regular-svg-icons';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export interface NavItem {
   name: string;
@@ -23,7 +26,8 @@ export interface NavItem {
   icon: JSX.Element | null;
   position?: 'top' | 'bottom';
   active?: boolean;
-  subItems?: NavItem[];
+  subItems?: NavItem [];
+
 }
 export const NavItems = (): NavItem[]  => {
   const pathname = usePathname();
@@ -402,7 +406,41 @@ export const NavItems = (): NavItem[]  => {
                 
       ]
     },
+    {
+  name: 'Accordion',
+  href: '/accordion',
+  icon: <FontAwesomeIcon icon={faLayerGroup} size="lg" />,
+  active: pathname === '/accordion',
+  position: 'top',
+  subItems: [
+    {
+      name: 'Basic Accordion',
+      href: '/accordion#basic-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size="lg" />,
+    },{name: 'Multiple Items Accordion',href: '/accordion#multiple-items-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name: 'Nested Accordion',
+      href: '/accordion#nested-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Disabled Accordion",
+      href:"/accordion#diabled-accordian",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Accordion Group",
+      href:"/accordion#accordion-group",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },
+    {
+      name:"Long content Accordion",
+      href:"/accordion#long-content-accordion",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    }
+    
+  ],
+},
+  
     
     
   ];
 };
+
+  
