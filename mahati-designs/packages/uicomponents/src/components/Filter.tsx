@@ -16,6 +16,26 @@ export type FilterValues = {
   keyword: string;
 };
 
+export type FieldSize = "small" | "medium";
+
+/* ===================== SIZE STYLES ===================== */
+const selectExtraStyles = {
+  small: "w-full pr-10",
+  medium: "w-full pr-10",
+};
+
+
+const fieldStyles: Record<FieldSize, string> = {
+  small:
+    "w-[240px] px-3 py-2 pr-8 bg-white border border-gray-300 rounded-md " +
+    "appearance-none focus:outline-none focus:ring-2 focus:ring-[#1761a3]",
+
+  medium:
+    "w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded-md " +
+    "appearance-none focus:outline-none focus:ring-2 focus:ring-[#1761a3]",
+};
+
+
 /* ===================== MAIN FILTER ===================== */
 
 export const Filter = () => {
@@ -97,28 +117,65 @@ export const Filter = () => {
             </Section>
 
             {/* ACTIVITY */}
-            <Section title="Activity Type" onReset={() => resetField("activity")}>
-              <MahatiActivity
-                value={values.activity}
-                onChange={(v) => handleChange("activity", v)}
-              />
-            </Section>
+            <div className="relative w-full">
+            <select
+              value={values.activity}
+              onChange={(e) => handleChange("activity", e.target.value)}
+              className="
+                w-full appearance-none
+                px-4 py-3 pr-10
+                rounded-[6px]
+                border border-slate-300
+                bg-white text-sm
+                focus:outline-none focus:ring-2 focus:ring-[#1761A3]
+              "
+            >
+              <option value="">Select Activity</option>
+              <option>Activity List</option>
+              <option>Login</option>
+              <option>Update</option>
+              <option>Delete</option>
+            </select>
+
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+          </div>
 
             {/* STATUS */}
-            <Section title="Status" onReset={() => resetField("status")}>
-              <MahatiStatus
-                value={values.status}
-                onChange={(v) => handleChange("status", v)}
-              />
-            </Section>
+            <div className="relative w-full">
+            <select
+              value={values.status}
+              onChange={(e) => handleChange("status", e.target.value)}
+              className="
+                w-full appearance-none
+                px-4 py-3 pr-10
+                rounded-[6px]
+                border border-slate-300
+                bg-white text-sm
+                focus:outline-none focus:ring-2 focus:ring-[#1761A3]
+              "
+            >
+              <option value="">Select Status</option>
+              <option>Pending</option>
+              <option>Approved</option>
+              <option>Rejected</option>
+            </select>
+
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+          </div>
 
             {/* SEARCH */}
-            <Section title="Keyword search" onReset={() => resetField("keyword")}>
-              <MahatiSearch
-                value={values.keyword}
-                onChange={(v) => handleChange("keyword", v)}
-              />
-            </Section>
+            <input
+              value={values.keyword}
+              onChange={(e) => handleChange("keyword", e.target.value)}
+              placeholder="Search..."
+              className="
+                w-full px-4 py-3
+                rounded-[6px]
+                border border-slate-300
+                bg-white text-sm
+                focus:outline-none focus:ring-2 focus:ring-[#1761A3]
+              "
+            />
 
             {/* FOOTER */}
             <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
@@ -155,8 +212,7 @@ const Section = ({
   onReset: () => void;
   children: React.ReactNode;
 }) => (
-  <div
-    className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]
+  <div className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]
     border-b border-[rgba(23,97,163,0.35)]"
   >
     <div className="flex justify-between items-center mb-3">
@@ -172,89 +228,125 @@ const Section = ({
   </div>
 );
 
-/* ===================== REUSABLE FIELDS ===================== */
+/* ===================== REUSABLE OPTIONS ===================== */
 
 const activityOptions = ["Activity List", "Login", "Update", "Delete"];
 const statusOptions = ["Active", "Inactive", "Pending"];
 
+/* ===================== PUBLISHABLE COMPONENTS ===================== */
+
+export type SelectOption = {
+  label: string;
+  value: string;
+};
+/** ✅ MAHATI ACTIVITY */
+export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
+  { label: "Select Activity", value: "" },
+  { label: "Activity List", value: "Activity List" },
+  { label: "Login", value: "Login" },
+  { label: "Update", value: "Update" },
+  { label: "Delete", value: "Delete" },
+];
+/** ✅ MAHATI ACTIVITY */
 export const MahatiActivity = ({
   value,
   onChange,
+  options = DEFAULT_ACTIVITY_OPTIONS,
+  size = "medium",
+  showIcon = false,
 }: {
   value: string;
   onChange: (v: string) => void;
+  options?: SelectOption[];
+  size?: FieldSize;
+  showIcon?: boolean;
 }) => (
-  <Select
-    value={value}
-    onChange={onChange}
-    placeholder="Select Activity"
-    options={activityOptions}
-  />
+  <div className={size === "small" ? "w-[240px]" : "w-full"}>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`${fieldStyles[size]} ${selectExtraStyles[size]}`}
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+
+      {showIcon && (
+        <ChevronDown
+          className="absolute right-3 top-1/2 -translate-y-1/2
+                     w-4 h-4 text-slate-500 pointer-events-none"
+        />
+      )}
+    </div>
+  </div>
 );
 
+/** ✅ MAHATI STATUS */
+export const DEFAULT_STATUS_OPTIONS: SelectOption[] = [
+  { label: "Select Status", value: "" },
+  { label: "Pending", value: "Pending" },
+  { label: "Approved", value: "Approved" },
+  { label: "Rejected", value: "Rejected" },
+];
 export const MahatiStatus = ({
   value,
   onChange,
+  options=DEFAULT_STATUS_OPTIONS,
+  size = "medium",
+  showIcon = false,
 }: {
   value: string;
   onChange: (v: string) => void;
+  options: SelectOption[];
+  size?: FieldSize;
+  showIcon?: boolean;
 }) => (
-  <Select
-    value={value}
-    onChange={onChange}
-    placeholder="Select Status"
-    options={statusOptions}
-  />
+  <div className={size === "small" ? "w-[240px]" : "w-full"}>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`${fieldStyles[size]} ${selectExtraStyles[size]}`}
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+
+      {/* ✅ ONLY show icon when explicitly asked */}
+      {showIcon && (
+        <ChevronDown
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2
+                     w-4 h-4 text-slate-500"
+        />
+      )}
+    </div>
+  </div>
 );
 
+/** ✅ MAHATI SEARCH */
 export const MahatiSearch = ({
   value,
   onChange,
+  placeholder = "Search...",
+  size = "medium",
 }: {
   value: string;
   onChange: (v: string) => void;
+  placeholder?: string;
+  size?: FieldSize;
 }) => (
   <input
     type="text"
     value={value}
-    placeholder="Search..."
+    placeholder={placeholder}
     onChange={(e) => onChange(e.target.value)}
-    className="w-full px-4 py-3 rounded-[6px]
-      border border-slate-300 bg-white
-      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+    className={fieldStyles[size]}
   />
-);
-
-/* ===================== BASE SELECT ===================== */
-
-const Select = ({
-  value,
-  options,
-  placeholder,
-  onChange,
-}: {
-  value: string;
-  options: string[];
-  placeholder: string;
-  onChange: (v: string) => void;
-}) => (
-  <div className="relative">
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full appearance-none px-4 py-3 pr-10
-        rounded-[6px] border border-slate-300 bg-white
-        focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
-    >
-      <option value="">{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt}>{opt}</option>
-      ))}
-    </select>
-
-    <ChevronDown
-      className="absolute right-3 top-1/2 -translate-y-1/2
-      w-4 h-4 text-slate-500 pointer-events-none"
-    />
-  </div>
 );
