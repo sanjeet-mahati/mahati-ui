@@ -24,6 +24,10 @@ const selectExtraStyles = {
   medium: "w-full pr-10",
 };
 
+const dropdownPadding: Record<FieldSize, string> = {
+  small: "py-2.5",
+  medium: "py-3",
+};
 
 const fieldStyles: Record<FieldSize, string> = {
   small:
@@ -266,7 +270,7 @@ export const MahatiActivity = ({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`${fieldStyles[size]} ${selectExtraStyles[size]}`}
+        className={`${fieldStyles[size]} ${selectExtraStyles[size]} ${dropdownPadding[size]}`}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -310,7 +314,7 @@ export const MahatiStatus = ({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`${fieldStyles[size]} ${selectExtraStyles[size]}`}
+        className={`${fieldStyles[size]} ${selectExtraStyles[size]} ${dropdownPadding[size]}`}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
