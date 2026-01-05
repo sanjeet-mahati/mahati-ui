@@ -40,7 +40,7 @@ export interface Toast {
   id: string;
   type: ToastType;
   title: string;
-  message: string;
+  message?: string;
   duration?: number;
   actions?: ToastAction[];
   background?: ToastBackground;
@@ -49,7 +49,7 @@ export interface Toast {
 
 export type AlertArgs = {
   type: ToastType;
-  message: string;
+  message?: string;
   background?: ToastBackground;
   duration?: number;
   actions?: ToastAction[];
@@ -191,6 +191,9 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   const preset = useMemo(() => presetFor(toast.type), [toast.type]);
   const background: ToastBackground = toast.background ?? 'solid';
 
+  const rawMessage = toast.message ?? '';
+  const hasMessage = rawMessage.trim().length > 0;
+
   const handleClose = () => {
     setIsExiting(true);
     setTimeout(() => onClose(toast.id), 300);
@@ -212,8 +215,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   const titleBottomClass = hasActions ? 'bottom-[78px]' : 'bottom-[33px]';
   const messageBottomClass = hasActions ? 'bottom-[52px]' : 'bottom-[16px]';
 
-  const containerBgClass =
-    background === 'solid' ? preset.bgSolid : 'bg-[rgba(255,255,255,1)]';
+  const containerBgClass = background === 'solid' ? preset.bgSolid : 'bg-[rgba(255,255,255,1)]';
 
   const titleTextClass =
     background === 'transparent'
@@ -225,9 +227,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
       ? 'text-[rgba(0,0,0,1)]'
       : 'text-[rgba(255,255,255,1)]';
 
-  const leftImageBgClass =
-    background === 'solid' ? preset.leftImageBgSolid : preset.leftImageBgTransparent;
-
+  const leftImageBgClass = background === 'solid' ? preset.leftImageBgSolid : preset.leftImageBgTransparent;
   const closeImageBgClass = closeImageBgFor(background);
 
   const slots = toast.classNames ?? {};
@@ -257,10 +257,14 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     slots.icon,
   ]);
 
+  const isTitleCentered = !hasActions && !hasMessage;
+  const titleTopClass = isTitleCentered ? 'top-1/2 -translate-y-1/2' : 'top-[13px]';
+
   const titleClass = cnArr([
-    'absolute left-[80px] top-[13px]',
+    'absolute left-[80px]',
+    titleTopClass,
     titleRight,
-    titleBottomClass,
+    !isTitleCentered && titleBottomClass,
     'font-["Poppins"] text-[16px] font-[700] leading-none overflow-hidden text-ellipsis whitespace-nowrap',
     titleTextClass,
     slots.title,
@@ -309,7 +313,8 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
       <div className={stripClass} aria-hidden="true" />
       <div className={iconClass} role="img" aria-label={`${toast.type} image`} />
       <h4 className={titleClass}>{toast.title}</h4>
-      <p className={messageClass}>{toast.message}</p>
+
+      {hasMessage && <p className={messageClass}>{rawMessage}</p>}
 
       {!hasActions && (
         <button onClick={handleClose} className={closeBtnClass} aria-label="Close">
@@ -341,7 +346,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   );
 };
 
-ToastItem.displayName = "ToastItem";
+ToastItem.displayName = 'ToastItem';
 
 const posClass = (p: ToastPosition) => {
   switch (p) {
@@ -372,7 +377,7 @@ const ToastMessageBase: React.FC<ToastContainerProps> = ({ toasts, position, onC
   </div>
 );
 
-ToastMessageBase.displayName = "ToastMessage";
+ToastMessageBase.displayName = 'ToastMessage';
 
 type ToastMessageWithUtils = typeof ToastMessageBase & {
   cn: typeof cn;
@@ -383,6 +388,6 @@ const ToastMessage = ToastMessageBase as ToastMessageWithUtils;
 ToastMessage.cn = cn;
 ToastMessage.titleForType = titleForType;
 
-ToastMessage.displayName = "ToastMessage";
+ToastMessage.displayName = 'ToastMessage';
 
 export { ToastMessage };

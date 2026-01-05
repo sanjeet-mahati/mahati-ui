@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { MahatiToastMessage } from "@/components";
 
 type Toast = {
   id: string;
   type: 'Success' | 'Error' | 'Warning' | 'Notification' | 'Action' | 'LiquidUI';
   title: string;
-  message: string;
+  message?: string;
   duration?: number;
   actions?: Array<{ label: string; onClick?: () => void }>;
   background?: 'solid' | 'transparent';
@@ -24,7 +24,7 @@ type ToastPosition =
 
 type AlertArgs = {
   type: 'Success' | 'Error' | 'Warning' | 'Notification' | 'Action' | 'LiquidUI';
-  message: string;
+  message?: string;
   background?: 'solid' | 'transparent';
   duration?: number;
   actions?: Array<{ label: string; onClick?: () => void }>;
@@ -98,7 +98,7 @@ export default function ToastMessageDemo() {
       id: `${Date.now()}-${Math.random()}`,
       type,
       title: MahatiToastMessage.titleForType(type),
-      message,
+      message: message ?? "",
       duration,
       actions,
       background,
@@ -168,7 +168,7 @@ export default function ToastMessageDemo() {
             title="Toast Types"
             code={`alert({
   type: 'Success',
-  message: ' ',
+  message: '',
   background: 'solid',
 });
 
@@ -186,7 +186,7 @@ alert({
 
 alert({
   type: 'Notification',
-  message: ' ',
+  message: '',
   background: 'solid',
 });`}
             preview={
@@ -196,7 +196,7 @@ alert({
                     onClick={() =>
                       alert({
                         type: 'Success',
-                        message: ' ',
+                        message: '',
                         background: 'solid',
                       })
                     }
@@ -250,7 +250,7 @@ alert({
                     onClick={() =>
                       alert({
                         type: 'Notification',
-                        message: ' ',
+                        message: '',
                         background: 'solid',
                       })
                     }
@@ -272,14 +272,14 @@ alert({
             code={`// Solid Background (Default)
 alert({
   type: 'Success',
-  message: ' ',
+  message: '',
   background: 'solid',
 });
 
 // Transparent Background
 alert({
   type: 'Success',
-  message: ' ',
+  message: '',
   background: 'transparent',
 });`}
             preview={
@@ -288,7 +288,7 @@ alert({
                   onClick={() =>
                     alert({
                       type: 'Success',
-                      message: ' ',
+                      message: '',
                       background: 'solid',
                     })
                   }
@@ -302,9 +302,9 @@ alert({
                   onClick={() =>
                     alert({
                       type: 'Success',
-                      message: ' ',
+                      message: '',
                       background: 'transparent',
-                      duration: 0
+                      duration: 0,
                     })
                   }
                   color="neutral"
@@ -320,9 +320,7 @@ alert({
           {/* Additional Variants */}
           <CodePreview
             title="Custom Styles"
-            code={`
-
-// Custom Toast with classNames
+            code={`// Custom Toast with classNames
 alert({
   type: 'Success',
   message: 'This is a CUSTOM toast styled via classNames slots.',
@@ -383,7 +381,7 @@ alert({
   type: 'Action',
   message: "You've been invited to the project workspace.",
   background: 'solid',
-  duration: 0, // Persistent until user acts
+  duration: 0,
   actions: [
     {
       label: 'Accept',
@@ -443,7 +441,6 @@ alert({
             }
           />
 
-
           {/* Actions */}
           <CodePreview
             title="Actions"
@@ -451,16 +448,14 @@ alert({
 alert({ type: 'Success', message: 'First notification' });
 alert({ type: 'Success', message: 'First notification', background: 'solid', duration: 0 });
 alert({ type: 'Error', message: 'First notification', background: 'solid', duration: 0  });
-alert({ type: 'Notification', message: 'First notification', background: 'solid' , duration: 0  });
-
-`}
+alert({ type: 'Notification', message: 'First notification', background: 'solid' , duration: 0  });`}
             preview={
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <Button
                   onClick={() => {
                     alert({ type: 'Success', message: 'First notification', background: 'solid', duration: 0 });
-                    alert({ type: 'Error', message: 'First notification', background: 'solid', duration: 0  });
-                    alert({ type: 'Notification', message: 'First notification', background: 'solid' , duration: 0  });
+                    alert({ type: 'Error', message: 'First notification', background: 'solid', duration: 0 });
+                    alert({ type: 'Notification', message: 'First notification', background: 'solid', duration: 0 });
                   }}
                   color="primary"
                   radius="large"
