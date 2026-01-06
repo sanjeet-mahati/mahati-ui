@@ -2,8 +2,24 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 
-type ClassValue = string | false | null | undefined;
+// === ICON IMPORTS ===
+// packages/uicomponents/src/components/ToastMessage.tsx
+// → ../assets/icons/...
+import checkMarkSolid from '../assets/icons/check-mark_1.png';
+import checkMarkTransparent from '../assets/icons/check-mark_2.png';
 
+import dangerSolid from '../assets/icons/danger_1.png';
+import dangerTransparent from '../assets/icons/danger_2.png';
+
+import warningTransparent from '../assets/icons/danger_1_1.png';
+
+import notificationSolid from '../assets/icons/notification_1.png';
+import notificationTransparent from '../assets/icons/notification_2.png';
+
+import closeSolid from '../assets/icons/close.png';
+import closeTransparent from '../assets/icons/close_copy_1.png';
+
+type ClassValue = string | false | null | undefined;
 const cn = (...values: ClassValue[]) => values.filter(Boolean).join(' ');
 const cnArr = (values: ClassValue[]) => values.filter(Boolean).join(' ');
 
@@ -67,8 +83,6 @@ type LayoutPreset = {
   bgSolid: string;
   stripBg: string;
   stripTitleColor: string;
-  leftImageBgSolid: string;
-  leftImageBgTransparent: string;
 };
 
 const presetFor = (type: ToastType): LayoutPreset => {
@@ -79,93 +93,60 @@ const presetFor = (type: ToastType): LayoutPreset => {
     case 'Success':
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-            'bg-[linear-gradient(90deg,rgba(40,167,69,1)_0%,rgba(58,208,125,1)_100%)]',
-        stripBg:
-            'bg-[linear-gradient(90deg,rgba(40,167,69,1)_22.5%,rgba(58,208,125,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(40,167,69,1)_0%,rgba(58,208,125,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(40,167,69,1)_22.5%,rgba(58,208,125,1)_130%)]',
         stripTitleColor: 'text-[rgba(40,167,69,1)]',
-        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/check-mark_2.png')]",
       };
 
     case 'Error':
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(220,53,69,1)_0%,rgba(183,28,28,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(220,53,69,1)_22.5%,rgba(183,28,28,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(220,53,69,1)_0%,rgba(183,28,28,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(220,53,69,1)_22.5%,rgba(183,28,28,1)_130%)]',
         stripTitleColor: 'text-[rgba(220,53,69,1)]',
-        leftImageBgSolid: "bg-[url('/icons/danger_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/danger_2.png')]",
       };
 
     case 'Warning':
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
         stripTitleColor: 'text-[rgba(245,158,11,1)]',
-        leftImageBgSolid: "bg-[url('/icons/danger_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/danger_1_1.png')]",
       };
 
     case 'Notification':
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(23,97,163,1)_0%,rgba(77,175,131,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(23,97,163,1)_22.5%,rgba(77,175,131,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(23,97,163,1)_0%,rgba(77,175,131,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(23,97,163,1)_22.5%,rgba(77,175,131,1)_130%)]',
         stripTitleColor: 'text-[rgba(23,97,163,1)]',
-        leftImageBgSolid: "bg-[url('/icons/notification_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/notification_2.png')]",
       };
 
     case 'LiquidUI':
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(16,185,129,1)_0%,rgba(59,130,246,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(16,185,129,1)_22.5%,rgba(59,130,246,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(16,185,129,1)_0%,rgba(59,130,246,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(16,185,129,1)_22.5%,rgba(59,130,246,1)_130%)]',
         stripTitleColor: 'text-[rgba(16,185,129,1)]',
-        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
       };
 
     case 'Action':
       return {
         container: `${commonContainer} h-[110px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(139,92,246,1)_0%,rgba(168,85,247,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(139,92,246,1)_22.5%,rgba(168,85,247,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(139,92,246,1)_0%,rgba(168,85,247,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(139,92,246,1)_22.5%,rgba(168,85,247,1)_130%)]',
         stripTitleColor: 'text-[rgba(139,92,246,1)]',
-        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
       };
 
     default:
       return {
         container: `${commonContainer} h-[70px]`,
-        bgSolid:
-          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
-        stripBg:
-          'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
+        bgSolid: 'bg-[linear-gradient(90deg,rgba(245,158,11,1)_0%,rgba(255,191,92,1)_100%)]',
+        stripBg: 'bg-[linear-gradient(90deg,rgba(245,158,11,1)_22.5%,rgba(255,191,92,1)_130%)]',
         stripTitleColor: 'text-[rgba(245,158,11,1)]',
-        leftImageBgSolid: "bg-[url('/icons/check-mark_1.png')]",
-        leftImageBgTransparent: "bg-[url('/icons/check-mark_1.png')]",
       };
   }
 };
-
-const closeImageBgFor = (background: ToastBackground) =>
-  background === 'solid'
-    ? "bg-[url('/icons/close.png')]"
-    : "bg-[url('/icons/close_copy_1.png')]";
 
 const titleForType = (type: ToastType) => {
   switch (type) {
@@ -177,6 +158,36 @@ const titleForType = (type: ToastType) => {
       return type;
   }
 };
+
+type StaticImportLike = { src: string } | string;
+
+// Next image imports usually return {src, height, width...} in Next apps.
+// In other bundlers it might be string. This helper supports both.
+const toSrc = (v: StaticImportLike) => (typeof v === 'string' ? v : v.src);
+
+const iconFor = (type: ToastType, background: ToastBackground): string => {
+  const solid = background === 'solid';
+
+  switch (type) {
+    case 'Success':
+      return toSrc(solid ? checkMarkSolid : checkMarkTransparent);
+    case 'Error':
+      return toSrc(solid ? dangerSolid : dangerTransparent);
+    case 'Warning':
+      return toSrc(solid ? dangerSolid : warningTransparent);
+    case 'Notification':
+      return toSrc(solid ? notificationSolid : notificationTransparent);
+    case 'LiquidUI':
+      return toSrc(checkMarkSolid);
+    case 'Action':
+      return toSrc(checkMarkSolid);
+    default:
+      return toSrc(checkMarkSolid);
+  }
+};
+
+const closeIconFor = (background: ToastBackground): string =>
+  toSrc(background === 'solid' ? closeSolid : closeTransparent);
 
 interface ToastItemProps {
   toast: Toast;
@@ -218,22 +229,15 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   const containerBgClass = background === 'solid' ? preset.bgSolid : 'bg-[rgba(255,255,255,1)]';
 
   const titleTextClass =
-    background === 'transparent'
-      ? preset.stripTitleColor
-      : 'text-[rgba(255,255,255,1)]';
+    background === 'transparent' ? preset.stripTitleColor : 'text-[rgba(255,255,255,1)]';
 
   const messageTextClass =
-    background === 'transparent'
-      ? 'text-[rgba(0,0,0,1)]'
-      : 'text-[rgba(255,255,255,1)]';
-
-  const leftImageBgClass = background === 'solid' ? preset.leftImageBgSolid : preset.leftImageBgTransparent;
-  const closeImageBgClass = closeImageBgFor(background);
+    background === 'transparent' ? 'text-[rgba(0,0,0,1)]' : 'text-[rgba(255,255,255,1)]';
 
   const slots = toast.classNames ?? {};
 
-  const titleRight = hasActions ? 'right-[80px] md:right-[140px]' : 'right-[80px] md:right-[140px]';
-  const messageRight = hasActions ? 'right-[70px] md:right-[94px]' : 'right-[70px] md:right-[94px]';
+  const titleRight = 'right-[80px] md:right-[140px]';
+  const messageRight = 'right-[70px] md:right-[94px]';
   const closeLeft = 'left-[calc(100%-36px)] md:left-[289px]';
 
   const baseClass = cnArr([
@@ -250,10 +254,10 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     slots.strip,
   ]);
 
+  // We keep the SAME slot ("icon") so your demo overrides still work.
+  // But now it's applied to the <img> instead of background-image div.
   const iconClass = cnArr([
-    'absolute left-[36px] top-[22px] w-[26px] h-[26px] aspect-square',
-    'bg-transparent bg-center bg-cover bg-no-repeat',
-    leftImageBgClass,
+    'absolute left-[36px] top-[22px] h-[26px] w-[26px] object-contain',
     slots.icon,
   ]);
 
@@ -302,6 +306,9 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     slots.secondaryAction,
   ]);
 
+  const iconSrc = iconFor(toast.type, background);
+  const closeSrc = closeIconFor(background);
+
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -311,18 +318,19 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
       aria-live="polite"
     >
       <div className={stripClass} aria-hidden="true" />
-      <div className={iconClass} role="img" aria-label={`${toast.type} image`} />
+
+      <img src={iconSrc} alt={`${toast.type} icon`} className={iconClass} />
+
       <h4 className={titleClass}>{toast.title}</h4>
 
       {hasMessage && <p className={messageClass}>{rawMessage}</p>}
 
       {!hasActions && (
         <button onClick={handleClose} className={closeBtnClass} aria-label="Close">
-          <span
-            className={cn(
-              'block h-[14px] w-[14px] aspect-square bg-transparent bg-center bg-cover bg-no-repeat',
-              closeImageBgClass
-            )}
+          <img
+            src={closeSrc}
+            alt=""
+            className="block h-[14px] w-[14px] object-contain"
             aria-hidden="true"
           />
         </button>
@@ -387,7 +395,6 @@ type ToastMessageWithUtils = typeof ToastMessageBase & {
 const ToastMessage = ToastMessageBase as ToastMessageWithUtils;
 ToastMessage.cn = cn;
 ToastMessage.titleForType = titleForType;
-
 ToastMessage.displayName = 'ToastMessage';
 
 export { ToastMessage };
