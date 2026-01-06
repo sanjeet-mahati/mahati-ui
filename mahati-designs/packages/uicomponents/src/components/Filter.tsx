@@ -241,7 +241,7 @@ const statusOptions = ["Active", "Inactive", "Pending"];
 
 export type SelectOption = {
   label: string;
-  value: string;
+  value: string | number;
 };
 /** ✅ MAHATI ACTIVITY */
 export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
