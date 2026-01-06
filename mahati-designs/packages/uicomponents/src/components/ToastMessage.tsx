@@ -1,24 +1,5 @@
 'use client';
-
 import React, { useEffect, useMemo, useState } from 'react';
-
-// === ICON IMPORTS ===
-// packages/uicomponents/src/components/ToastMessage.tsx
-// → ../assets/icons/...
-import checkMarkSolid from '../assets/icons/check-mark_1.png';
-import checkMarkTransparent from '../assets/icons/check-mark_2.png';
-
-import dangerSolid from '../assets/icons/danger_1.png';
-import dangerTransparent from '../assets/icons/danger_2.png';
-
-import warningTransparent from '../assets/icons/danger_1_1.png';
-
-import notificationSolid from '../assets/icons/notification_1.png';
-import notificationTransparent from '../assets/icons/notification_2.png';
-
-import closeSolid from '../assets/icons/close.png';
-import closeTransparent from '../assets/icons/close_copy_1.png';
-
 type ClassValue = string | false | null | undefined;
 const cn = (...values: ClassValue[]) => values.filter(Boolean).join(' ');
 const cnArr = (values: ClassValue[]) => values.filter(Boolean).join(' ');
@@ -77,6 +58,35 @@ export interface ToastContainerProps {
   position: ToastPosition;
   onClose: (id: string) => void;
 }
+
+type AssetModule =
+  | string
+  | { src?: string; default?: string | { src?: string } }
+  | { default?: string }
+  | { default?: { src?: string } };
+
+const assetSrc = (m: AssetModule): string => {
+  if (typeof m === 'string') return m;
+
+  const anyM = m as any;
+
+  if (typeof anyM?.src === 'string') return anyM.src;
+
+  const d = anyM?.default;
+  if (typeof d === 'string') return d;
+  if (typeof d?.src === 'string') return d.src;
+  return '';
+};
+
+const checkMarkSolid = require('../assets/icons/check-mark_1.png') as AssetModule;
+const checkMarkTransparent = require('../assets/icons/check-mark_2.png') as AssetModule;
+const dangerSolid = require('../assets/icons/danger_1.png') as AssetModule;
+const dangerTransparent = require('../assets/icons/danger_2.png') as AssetModule;
+const warningTransparent = require('../assets/icons/danger_1_1.png') as AssetModule;
+const notificationSolid = require('../assets/icons/notification_1.png') as AssetModule;
+const notificationTransparent = require('../assets/icons/notification_2.png') as AssetModule;
+const closeSolid = require('../assets/icons/close.png') as AssetModule;
+const closeTransparent = require('../assets/icons/close_copy_1.png') as AssetModule;
 
 type LayoutPreset = {
   container: string;
@@ -159,35 +169,29 @@ const titleForType = (type: ToastType) => {
   }
 };
 
-type StaticImportLike = { src: string } | string;
-
-// Next image imports usually return {src, height, width...} in Next apps.
-// In other bundlers it might be string. This helper supports both.
-const toSrc = (v: StaticImportLike) => (typeof v === 'string' ? v : v.src);
-
 const iconFor = (type: ToastType, background: ToastBackground): string => {
   const solid = background === 'solid';
 
   switch (type) {
     case 'Success':
-      return toSrc(solid ? checkMarkSolid : checkMarkTransparent);
+      return assetSrc(solid ? checkMarkSolid : checkMarkTransparent);
     case 'Error':
-      return toSrc(solid ? dangerSolid : dangerTransparent);
+      return assetSrc(solid ? dangerSolid : dangerTransparent);
     case 'Warning':
-      return toSrc(solid ? dangerSolid : warningTransparent);
+      return assetSrc(solid ? dangerSolid : warningTransparent);
     case 'Notification':
-      return toSrc(solid ? notificationSolid : notificationTransparent);
+      return assetSrc(solid ? notificationSolid : notificationTransparent);
     case 'LiquidUI':
-      return toSrc(checkMarkSolid);
+      return assetSrc(checkMarkSolid);
     case 'Action':
-      return toSrc(checkMarkSolid);
+      return assetSrc(checkMarkSolid);
     default:
-      return toSrc(checkMarkSolid);
+      return assetSrc(checkMarkSolid);
   }
 };
 
 const closeIconFor = (background: ToastBackground): string =>
-  toSrc(background === 'solid' ? closeSolid : closeTransparent);
+  assetSrc(background === 'solid' ? closeSolid : closeTransparent);
 
 interface ToastItemProps {
   toast: Toast;
@@ -254,12 +258,12 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     slots.strip,
   ]);
 
-  // We keep the SAME slot ("icon") so your demo overrides still work.
-  // But now it's applied to the <img> instead of background-image div.
-  const iconClass = cnArr([
-    'absolute left-[36px] top-[22px] h-[26px] w-[26px] object-contain',
+  const iconWrapClass = cnArr([
+    'absolute left-[36px] top-[22px] h-[26px] w-[26px]',
     slots.icon,
   ]);
+
+  const iconImgClass = 'block h-[26px] w-[26px] object-contain';
 
   const isTitleCentered = !hasActions && !hasMessage;
   const titleTopClass = isTitleCentered ? 'top-1/2 -translate-y-1/2' : 'top-[13px]';
@@ -319,7 +323,9 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
     >
       <div className={stripClass} aria-hidden="true" />
 
-      <img src={iconSrc} alt={`${toast.type} icon`} className={iconClass} />
+      <div className={iconWrapClass} aria-hidden="true">
+        <img src={iconSrc} alt="" className={iconImgClass} />
+      </div>
 
       <h4 className={titleClass}>{toast.title}</h4>
 
@@ -327,12 +333,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
 
       {!hasActions && (
         <button onClick={handleClose} className={closeBtnClass} aria-label="Close">
-          <img
-            src={closeSrc}
-            alt=""
-            className="block h-[14px] w-[14px] object-contain"
-            aria-hidden="true"
-          />
+          <img src={closeSrc} alt="" className="block h-[14px] w-[14px] object-contain" aria-hidden="true" />
         </button>
       )}
 
