@@ -269,7 +269,7 @@ alert({
           {/* Background Variants */}
           <CodePreview
             title="Background Variants"
-            code={`// Solid Background (Default)
+            code={`// Solid Success Background (Default)
 alert({
   type: 'Success',
   message: '',
@@ -281,9 +281,53 @@ alert({
   type: 'Success',
   message: '',
   background: 'transparent',
-});`}
+});
+
+// Solid Error Background (Default)
+alert({
+  type: 'Error',
+  message: 'Error message description',
+  background: 'solid',
+});
+
+// Transparent Error Background
+alert({
+  type: 'Error',
+  message: 'Error message description',
+  background: 'transparent',
+});
+
+// Solid Warning Background (Default)
+alert({
+  type: 'Warning',
+  message: 'Warning message description',
+  background: 'solid',
+});
+
+// Transparent Warning Background
+alert({
+  type: 'Warning',
+  message: 'Warning message description',
+  background: 'transparent',
+});
+
+// Solid Notification Background (Default)
+alert({
+  type: 'Notification',
+  message: '',
+  background: 'solid',
+});
+
+// Transparent Notification Background
+alert({
+  type: 'Notification',
+  message: '',
+  background: 'transparent',
+});
+`}
             preview={
-              <div className="flex flex-wrap gap-20">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
                 <Button
                   onClick={() =>
                     alert({
@@ -295,7 +339,7 @@ alert({
                   color="success"
                   radius="large"
                 >
-                  Solid Background
+                  Solid Success Background
                 </Button>
 
                 <Button
@@ -311,9 +355,105 @@ alert({
                   radius="large"
                   className="border border-[rgba(229,231,235,1)] bg-[rgba(255,255,255,1)] text-[rgba(17,24,39,1)] hover:bg-[rgba(243,244,246,1)]"
                 >
-                  Transparent Background
+                  Transparent Success Background
                 </Button>
               </div>
+              
+              <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Error',
+                      message: 'Error message description',
+                      background: 'solid',
+                    })
+                  }
+                  color="error"
+                  radius="large"
+                >
+                  Solid Error Background
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Error',
+                      message: 'Error message description',
+                      background: 'transparent',
+                      duration: 0,
+                    })
+                  }
+                  color="neutral"
+                  radius="large"
+                  className="border border-[rgba(229,231,235,1)] bg-[rgba(255,255,255,1)] text-[rgba(17,24,39,1)] hover:bg-[rgba(243,244,246,1)]"
+                >
+                  Transparent Error Background
+                </Button>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Warning',
+                      message: 'Warning message description',
+                      background: 'solid',
+                    })
+                  }
+                  color="warning"
+                  radius="large"
+                >
+                  Solid Warning Background
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Warning',
+                      message: 'Warning message description',
+                      background: 'transparent',
+                      duration: 0,
+                    })
+                  }
+                  color="neutral"
+                  radius="large"
+                  className="border border-[rgba(229,231,235,1)] bg-[rgba(255,255,255,1)] text-[rgba(17,24,39,1)] hover:bg-[rgba(243,244,246,1)]"
+                >
+                  Transparent Warning Background
+                </Button>
+              </div>
+              
+              <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Notification',
+                      message: '',
+                      background: 'solid',
+                    })
+                  }
+                  color="notification"
+                  radius="large"
+                >
+                  Solid Notification Background
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    alert({
+                      type: 'Notification',
+                      message: '',
+                      background: 'transparent',
+                      duration: 0,
+                    })
+                  }
+                  color="neutral"
+                  radius="large"
+                  className="border border-[rgba(229,231,235,1)] bg-[rgba(255,255,255,1)] text-[rgba(17,24,39,1)] hover:bg-[rgba(243,244,246,1)]"
+                >
+                  Transparent Notification Background
+                </Button>
+              </div>
+            </div>
             }
           />
 
