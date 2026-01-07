@@ -68,6 +68,20 @@ export default function FilterPage() {
   },
 ];
 
+const statusValues = [{
+    label: "Select Status",
+    value: ""
+  }, {
+    label: "In Force",
+    value: 1
+  }, {
+    label: "Expired",
+    value: 2
+  }, {
+    label: "Cancelled",
+    value: 3
+  }];
+
   const resetAll = () => {
     setFromDate(null);
     setToDate(null);
@@ -345,10 +359,17 @@ export default function FilterPage() {
             id="activity-filter"
             title="Activity Filter"
             code={`<MahatiActivity
-            value={activityType}
-            onChange={setActivityType}
-            size="small"
-            />`}
+                        value={selectedStatus.value}
+                        options={statusValues}
+                        size="small"
+                        onChange={(v) => {
+                          const selectedItem = statusValues.find(item => item.value === v);
+                        setSelectedStatus({
+                        value: v,
+                        label: selectedItem?.label || "Select Status",
+                        });
+                    }}
+                  />`}
             preview={
                 <div className="max-w-[300px] mx-auto flex justify-center">
                 <MahatiActivity
@@ -366,10 +387,17 @@ export default function FilterPage() {
             id="status-filter"
             title="Status Filter"
             code={`<MahatiStatus
-            value={status}
-            onChange={setStatus}
-            size="small"
-            />`}
+                        value={selectedStatus.value}
+                        options={statusValues}
+                        size="small"
+                        onChange={(v) => {
+                          const selectedItem = statusValues.find(item => item.value === v);
+                        setSelectedStatus({
+                        value: v,
+                        label: selectedItem?.label || "Select Status",
+                        });
+                    }}
+                  />`}
             preview={
                 <div className="max-w-[300px] mx-auto flex justify-center">
                 <MahatiStatus

@@ -240,10 +240,10 @@ const statusOptions = ["Active", "Inactive", "Pending"];
 
 /* ===================== PUBLISHABLE COMPONENTS ===================== */
 
-export type SelectOption = {
+export interface SelectOption {
   label: string;
   value: string | number;
-};
+}
 /** ✅ MAHATI ACTIVITY */
 export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
   { label: "Select Activity", value: "" },
@@ -369,7 +369,7 @@ export const MahatiActivity = ({
                   px-4 py-2
                   text-sm
                   cursor-pointer
-                  hover:bg-slate-100
+                  text-black hover:bg-[#1761a3] hover:text-white
                 "
               >
                 {opt.label}
@@ -513,7 +513,7 @@ export const MahatiStatus = ({
                   px-4 py-2
                   text-sm
                   cursor-pointer
-                  hover:bg-slate-100
+                  text-black hover:bg-[#1761a3] hover:text-white
                 "
               >
                 {opt.label}
