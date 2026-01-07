@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, ChevronDown } from "lucide-react";
 
 import { Button } from "./Button";
 import { Card } from "./card";
 import { Calendar, CalendarDateRange } from "./Calendar";
+import { createPortal } from "react-dom";
 
 /* ===================== TYPES ===================== */
 
@@ -31,11 +32,11 @@ const dropdownPadding: Record<FieldSize, string> = {
 
 const fieldStyles: Record<FieldSize, string> = {
   small:
-    "w-[240px] px-3 py-2 pr-8 bg-white border border-gray-300 rounded-md " +
+    "w-full px-3 py-2 pr-5 bg-white border border-gray-300 rounded-md " +
     "appearance-none focus:outline-none focus:ring-2 focus:ring-[#1761a3]",
 
   medium:
-    "w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded-md " +
+    "w-full px-4 py-3 pr-6 bg-white border border-slate-300 rounded-md " +
     "appearance-none focus:outline-none focus:ring-2 focus:ring-[#1761a3]",
 };
 
@@ -251,43 +252,144 @@ export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
   { label: "Update", value: "Update" },
   { label: "Delete", value: "Delete" },
 ];
-/** ✅ MAHATI ACTIVITY */
+
 export const MahatiActivity = ({
   value,
   onChange,
   options = DEFAULT_ACTIVITY_OPTIONS,
   size = "medium",
-  showIcon = false,
 }: {
-  value: string;
-  onChange: (v: string) => void;
+  value: string | number;
+  onChange: (v: string | number) => void;
   options?: SelectOption[];
   size?: FieldSize;
-  showIcon?: boolean;
-}) => (
-  <div className={size === "small" ? "w-[240px]" : "w-full"}>
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${fieldStyles[size]} ${selectExtraStyles[size]} ${dropdownPadding[size]}`}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+}) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
-      {showIcon && (
+  const selectedLabel =
+    options.find((o) => o.value == value)?.label || "Select Activity";
+
+  /** Calculate dropdown position */
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  };
+
+  /** Keep dropdown aligned on scroll / resize */
+  useEffect(() => {
+    if (!open) return;
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
+
+  /** Outside click (trigger + dropdown) */
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        triggerRef.current?.contains(e.target as Node) ||
+        dropdownRef.current?.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <>
+      {/* ===== Trigger ===== */}
+      <div
+        ref={triggerRef}
+        onClick={() => setOpen((p) => !p)}
+        className={`
+          ${fieldStyles[size]}
+          cursor-pointer
+          flex items-center justify-between
+          relative
+          ${open ? "border-[#1761a3] ring-2 ring-[#1761a3]" : ""}
+        `}
+      >
+        <span className="truncate">{selectedLabel}</span>
         <ChevronDown
-          className="absolute right-3 top-1/2 -translate-y-1/2
-                     w-4 h-4 text-slate-500 pointer-events-none"
+          className={`w-4 h-4 text-slate-500 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
         />
-      )}
-    </div>
-  </div>
-);
+      </div>
+
+      {/* ===== Dropdown (PORTAL) ===== */}
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            style={{
+              position: "absolute",
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+            }}
+            className="
+              z-[9999]
+              rounded-[6px]
+              border border-slate-300
+              bg-white
+              shadow-xl
+              max-h-[240px]
+              overflow-y-auto
+            "
+          >
+            {options.map((opt) => (
+              <div
+                key={String(opt.value)}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+                className="
+                  px-4 py-2
+                  text-sm
+                  cursor-pointer
+                  hover:bg-slate-100
+                "
+              >
+                {opt.label}
+              </div>
+            ))}
+          </div>,
+          document.body
+        )}
+    </>
+  );
+};
+
+const getDropdownPosition = (el: HTMLElement) => {
+  const rect = el.getBoundingClientRect();
+  return {
+    top: rect.bottom + window.scrollY + 6,
+    left: rect.left + window.scrollX,
+    width: rect.width,
+  };
+};
 
 /** ✅ MAHATI STATUS */
 export const DEFAULT_STATUS_OPTIONS: SelectOption[] = [
@@ -299,40 +401,130 @@ export const DEFAULT_STATUS_OPTIONS: SelectOption[] = [
 export const MahatiStatus = ({
   value,
   onChange,
-  options=DEFAULT_STATUS_OPTIONS,
+  options= DEFAULT_STATUS_OPTIONS,
   size = "medium",
-  showIcon = false,
 }: {
-  value: string;
-  onChange: (v: string) => void;
+  value: string | number;
+  onChange: (v: string | number) => void;
   options: SelectOption[];
-  size?: FieldSize;
-  showIcon?: boolean;
-}) => (
-  <div className={size === "small" ? "w-[240px]" : "w-full"}>
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${fieldStyles[size]} ${selectExtraStyles[size]} ${dropdownPadding[size]}`}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+  size?: "small" | "medium";
+}) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
-      {/* ✅ ONLY show icon when explicitly asked */}
-      {showIcon && (
+  const selectedLabel =
+    options?.find((o) => o.value == value)?.label || "Select Status";
+
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  };
+
+  // keep dropdown aligned on scroll / resize
+  useEffect(() => {
+    if (!open) return;
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
+
+  // ✅ OUTSIDE CLICK FIX (trigger + dropdown)
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        triggerRef.current?.contains(e.target as Node) ||
+        dropdownRef.current?.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <>
+      {/* Trigger */}
+      <div
+        ref={triggerRef}
+        onClick={() => setOpen((p) => !p)}
+        className={`
+          ${fieldStyles[size]}
+          cursor-pointer
+          flex items-center justify-between
+          relative
+          ${open ? "border-[#1761a3] ring-2 ring-[#1761a3]" : ""}
+        `}
+      >
+        <span className="truncate">{selectedLabel}</span>
         <ChevronDown
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2
-                     w-4 h-4 text-slate-500"
+          className={`w-4 h-4 text-slate-500 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
         />
-      )}
-    </div>
-  </div>
-);
+      </div>
+
+      {/* Dropdown */}
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            style={{
+              position: "absolute",
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+            }}
+            className="
+              z-[9999]
+              rounded-[6px]
+              border border-slate-300
+              bg-white
+              shadow-xl
+              max-h-[240px]
+              overflow-y-auto
+            "
+          >
+            {options?.map((opt) => (
+              <div
+                key={String(opt.value)}
+                onClick={() => {
+                  onChange(opt.value); // ✅ now works
+                  setOpen(false);
+                }}
+                className="
+                  px-4 py-2
+                  text-sm
+                  cursor-pointer
+                  hover:bg-slate-100
+                "
+              >
+                {opt.label}
+              </div>
+            ))}
+          </div>,
+          document.body
+        )}
+    </>
+  );
+};
 
 /** ✅ MAHATI SEARCH */
 export const MahatiSearch = ({
