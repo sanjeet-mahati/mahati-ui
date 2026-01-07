@@ -165,7 +165,7 @@ export default function ToastMessageDemo() {
         <div className="grid gap-6 sm:gap-8">
           {/* Toast Types */}
           <CodePreview
-            title="Toast Types"
+            title="Solid Toast Types"
             code={`alert({
   type: 'Success',
   message: '',
@@ -268,7 +268,7 @@ alert({
 
           {/* Background Variants */}
           <CodePreview
-            title="Background Variants"
+            title="Transparent Toast Types"
             code={`// Transparent Success Background
 alert({
   type: 'Success',
