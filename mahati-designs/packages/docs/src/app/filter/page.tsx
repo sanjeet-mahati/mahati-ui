@@ -68,6 +68,20 @@ export default function FilterPage() {
   },
 ];
 
+const statusValues = [{
+    label: "Select Status",
+    value: ""
+  }, {
+    label: "In Force",
+    value: 1
+  }, {
+    label: "Expired",
+    value: 2
+  }, {
+    label: "Cancelled",
+    value: 3
+  }];
+
   const resetAll = () => {
     setFromDate(null);
     setToDate(null);
@@ -341,49 +355,82 @@ export default function FilterPage() {
             />
 
       {/* ================= ACTIVITY FILTER ================= */}
-        <CodePreview
-        id="activity-filter"
-        title="Activity Filter"
-        code={`<MahatiActivity />`}
-        preview={
-            <div className="w-64 mx-auto">
-            <MahatiActivity
-                value={activityType}
-                onChange={setActivityType}
+            <CodePreview
+            id="activity-filter"
+            title="Activity Filter"
+            code={`<MahatiActivity
+                        value={selectedStatus.value}
+                        options={statusValues}
+                        size="small"
+                        onChange={(v) => {
+                          const selectedItem = statusValues.find(item => item.value === v);
+                        setSelectedStatus({
+                        value: v,
+                        label: selectedItem?.label || "Select Status",
+                        });
+                    }}
+                  />`}
+            preview={
+                <div className="max-w-[300px] mx-auto flex justify-center">
+                <MahatiActivity
+                    value={activityType}
+                    onChange={setActivityType}
+                    size="small"
+                    showIcon
+                />
+                </div>
+            }
             />
-            </div>
-        }
-        />
 
-        {/* ================= STATUS FILTER ================= */}
-        <CodePreview
-        id="status-filter"
-        title="Status Filter"
-        code={`<MahatiStatus />`}
-        preview={
-            <div className="w-64 mx-auto">
-            <MahatiStatus
-                value={status}
-                onChange={setStatus}
+            {/* ================= STATUS FILTER ================= */}
+            <CodePreview
+            id="status-filter"
+            title="Status Filter"
+            code={`<MahatiStatus
+                        value={selectedStatus.value}
+                        options={statusValues}
+                        size="small"
+                        onChange={(v) => {
+                          const selectedItem = statusValues.find(item => item.value === v);
+                        setSelectedStatus({
+                        value: v,
+                        label: selectedItem?.label || "Select Status",
+                        });
+                    }}
+                  />`}
+            preview={
+                <div className="max-w-[300px] mx-auto flex justify-center">
+                <MahatiStatus
+                    value={status}
+                    onChange={setStatus}
+                    size="small"
+                    showIcon
+                />
+                </div>
+            }
             />
-            </div>
-        }
-        />
 
-      {/* ================= SEARCH FILTER ================= */}
-        <CodePreview
-        id="search-filter"
-        title="Search Filter"
-        code={`<MahatiSearch />`}
-        preview={
-            <div className="w-64 mx-auto">
-            <MahatiSearch
-                value={keyword}
-                onChange={setKeyword}
+            {/* ================= SEARCH FILTER ================= */}
+            <CodePreview
+            id="search-filter"
+            title="Search Filter"
+            code={`<MahatiSearch
+            value={keyword}
+            onChange={setKeyword}
+            placeholder="Search..."
+            size="small"
+            />`}
+            preview={
+                <div className="max-w-[300px] mx-auto flex justify-center">
+                <MahatiSearch
+                    value={keyword}
+                    onChange={setKeyword}
+                    placeholder="Search..."
+                    size="small"
+                />
+                </div>
+            }
             />
-            </div>
-        }
-        />
 
     </div>
   );
