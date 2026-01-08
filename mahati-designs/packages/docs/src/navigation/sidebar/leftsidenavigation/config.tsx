@@ -14,6 +14,12 @@ import {
   faCalendarDays,
   faChevronDown,
   faLayerGroup,
+  faSearch,
+  faListCheck,
+  faCodeBranch,
+  faUserCircle,
+  faUsers
+
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faMessage
@@ -225,6 +231,11 @@ export const NavItems = (): NavItem[]  => {
     { name: 'Shadow', href: '/dropdown#shadow', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Glass', href: '/dropdown#glass', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Gradient', href: '/dropdown#gradient', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    {name:'searchable',href:'/nesteddropdown#searchable',icon:<FontAwesomeIcon icon={faSearch} size="sm"/>},
+    {name:'Multi Select',href:'/nesteddropdown#multiselect',icon:<FontAwesomeIcon icon={faListCheck} size="sm"/>},
+    {name:'Grouped',href:'/nesteddropdown#grouped',icon:<FontAwesomeIcon icon={faLayerGroup} size="sm"/>},
+    {name:'Cascading/Nested',href:'/nesteddropdown#nested',icon:<FontAwesomeIcon icon={faCodeBranch} size="sm"/>},
+    {name:'Avatar',href:'/nesteddropdown#avatar',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
   ],
 },
 
