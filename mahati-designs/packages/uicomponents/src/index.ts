@@ -26,6 +26,7 @@ export type {
   CalendarDateRange,
 } from './components/Calendar';
 
+export  { ToastMessage as MahatiToastMessage }  from './components/ToastMessage';
 
     
 

@@ -16,8 +16,17 @@ import {
   faLayerGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid';
+import {
   faMessage
 } from '@fortawesome/free-regular-svg-icons';
+import { HiBellAlert } from "react-icons/hi2";
 import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export interface NavItem {
@@ -304,10 +313,17 @@ export const NavItems = (): NavItem[]  => {
     },
     {
       name: 'Toast Message',
-      href: '/toastMessage',
-      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/ToastMessage/',
+      href: '/toastMessageDemo',
+      icon: <HiBellAlert size={24} />,
+      active: pathname === '/ToastMessageDemo/',
       position: 'top',
+      subItems: [
+        { name: 'Toast Types', href: '/toastMessageDemo#toast-types', icon: <HiBellAlert size={24} /> },
+        { name: 'Background Variants', href: '/toastMessageDemo#background-variants', icon: <HiBellAlert size={14} /> },
+        { name: 'Custom Styles', href: '/toastMessageDemo#custom-styles', icon: <HiBellAlert size={24} /> },
+        { name: 'Confirmation Toast ("Accept / Decline")', href: '/toastMessageDemo#confirmation-toast-("Accept/Decline")', icon: <HiBellAlert size={14} /> },
+        { name: 'Actions', href: '/toastMessageDemo#actions', icon: <HiBellAlert size={24} /> },
+      ]
     },
     {
       name: 'Table',
