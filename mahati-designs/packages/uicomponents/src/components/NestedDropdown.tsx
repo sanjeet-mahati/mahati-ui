@@ -8,7 +8,7 @@ import { ChevronDown, X } from "lucide-react";
 
 
 
-/* -------------------------------- TYPES -------------------------------- */
+
 
 export type Option = {
   label: string;
@@ -27,70 +27,10 @@ type UserOption = {
 };
 
 
-/* -------------------------- BASE STYLES (FIGMA) -------------------------- */
+
 
 const buttonStyle =
   "w-full px-4 py-3 rounded-[6px] text-white font-semibold bg-gradient-to-r from-[#1761a3] to-[#4daf83] flex justify-between items-center";
-
-/* =============================== BASIC DROPDOWN =============================== */
-
-// export function BasicDropdown({
-//   label,
-//   placeholder,
-//   options,
-//   value,
-//   onChange,
-//   disabled,
-// }: {
-//   label?: string;
-//   placeholder: string;
-//   options: Option[];
-//   value?: string;
-//   onChange?: (value: string) => void;
-//   disabled?: boolean;
-// }) {
-//   const [open, setOpen] = useState(false);
-// //   const[open ,setOpen]=useState(false);
-// //   const[selected,setSelected]=useState<string[]>([]);
-
-//   return (
-//     <div className="space-y-2">
-//       {label && (
-//         <p className="text-sm font-semibold text-[#1761a3]">{label}</p>
-//       )}
-
-//       <div className="relative">
-//         <button
-//           disabled={disabled}
-//           onClick={() => setOpen(!open)}
-//           className={`${buttonStyle} ${
-//             disabled ? "opacity-50 cursor-not-allowed" : ""
-//           }`}
-//         >
-//           {value || placeholder}
-//           <ChevronDown size={16} />
-//         </button>
-
-//         {open && !disabled && (
-//           <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-//             {options.map((o) => (
-//               <div
-//                 key={o.value}
-//                 onClick={() => {
-//                   onChange?.(o.value);
-//                   setOpen(false);
-//                 }}
-//                 className="px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
-//               >
-//                 {o.label}
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }export function BasicDropdown({
 type BasicDropdownProps = {
   label?: string;
   placeholder: string;
@@ -145,48 +85,8 @@ export function BasicDropdown({
     </div>
   );
 }
- 
 
-/* =========================== SEARCHABLE DROPDOWN =========================== */
 
-//   const [open, setOpen] = useState(false);
-//   const [search, setSearch] = useState("");
-
-//   const options = ["Country", "Name", "Product", "Customer"];
-//   const filtered = options.filter((o) =>
-//     o.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   return (
-//     <div className="w-[320px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-//       <h3 className="font-semibold mb-3">Searchable / Filterable Dropdown</h3>
-
-//       <button onClick={() => setOpen(!open)} className={buttonStyle}>
-//         Choose an option
-//         <ChevronDown size={16} />
-//       </button>
-
-//       {open && (
-//         <div className="mt-2 bg-white rounded-[8px] border shadow-lg">
-//           <input
-//             placeholder="Search (up to five words)..."
-//             className="w-full p-3 border-b outline-none"
-//             onChange={(e) => setSearch(e.target.value)}
-//           />
-
-//           {filtered.map((o) => (
-//             <div
-//               key={o}
-//               className="px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
-//             >
-//               {o}
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// 
 export function SearchableDropdown() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -247,7 +147,7 @@ export function SearchableDropdown() {
     </div>
   );
 }
-/* =========================== MULTI SELECT DROPDOWN =========================== */
+
 
 export function MultiSelectDropdown() {
   const [open, setOpen] = useState(false);
@@ -304,224 +204,6 @@ export function MultiSelectDropdown() {
     </div>
   );
 }
-
-/* =========================== GROUPED DROPDOWN =========================== */
-
-// export function GroupedDropdown() {
-//   const [open, setOpen] = useState(false);
-//   const [selected, setSelected] = useState<string[]>([]);
-//   const toggleOption = (value: string) => {
-//   setSelected((prev) =>
-//     prev.includes(value)
-//       ? prev.filter((v) => v !== value)
-//       : [...prev, value]
-
-//   );
-// };
-
-// const toggleGroup = (group) => {
-//   const values = group.options.map((o) => o.value);
-//   const allSelected = values.every((v) => selected.includes(v));
-
-//   setSelected((prev) =>
-//     allSelected
-//       ? prev.filter((v) => !values.includes(v))
-//       : Array.from(new Set([...prev, ...values]))
-//   );
-// };
-
-//   const groups: Group[] = [
-//     {
-//       title: "Section 1",
-//       options: [
-//         { label: "option1", value: "option1" },
-//         { label: "Profile", value: "profile" },
-//       ],
-//     },
-//     {
-//       title: "Section 2",
-//       options: [
-//         { label: "Service", value: "service" },
-//         { label: "Policies", value: "policies" },
-//       ],
-//     },
-//     {
-//       title: "Section 3",
-//       options: [
-//         { label: "Settings", value: "settings" },
-//         { label: "Logout", value: "logout" },
-//       ],
-//     },
-//   ];
-
-
-//   return (
-//     <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-//       <h3 className="font-semibold mb-3">Grouped Dropdown</h3>
-
-//       <div className="relative">
-//         {/* BUTTON */}
-//         <button
-//           onClick={() => setOpen(!open)}
-//           className={buttonStyle}
-//         >
-//           {value}
-//           <ChevronDown size={16} />
-//         </button>
-
-//         {/* DROPDOWN */}
-//         {open && (
-//           // <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-//           //   {groups.map((group) => (
-//           //     <div key={group.title}>
-//           //       {/* GROUP TITLE */}
-//           //       <div className="px-4 py-2 text-xs font-semibold text-[#1761a3]">
-//           //         {group.title}
-//           //       </div>
-
-//           //       {/* OPTIONS */}
-//           //       {group.options.map((opt) => (
-//           //         <div
-//           //           key={opt.value}
-//           //           onClick={() => {
-//           //             setSelected(opt.label);
-//           //             setOpen(false);
-//           //           }}
-//           //           className="px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
-//           //         >
-//           //           {opt.label}
-//           //         </div>
-//           //       ))}
-//           //     </div>
-//           //   ))}
-//           // </div>
-//           <div
-//   className="px-4 py-2 text-xs font-semibold text-[#1761a3] cursor-pointer flex items-center gap-2"
-//   onClick={() => toggleGroup(group)}
-// >
-//   <input
-//     type="checkbox"
-//     readOnly
-//     checked={group.options.every((o) =>
-//       selected.includes(o.value)
-//     )}
-//   />
-//   {group.title}
-// </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-// export function GroupedDropdown() {
-//   const [open, setOpen] = useState(false);
-//   const [selected, setSelected] = useState<string[]>([]);
-
-//   /* ---------------- DATA ---------------- */
-//   const groups: Group[] = [
-//     {
-//       title: "Section 1",
-//       options: [
-//         { label: "option1", value: "option1" },
-//         { label: "Profile", value: "profile" },
-//       ],
-//     },
-//     {
-//       title: "Section 2",
-//       options: [
-//         { label: "Service", value: "service" },
-//         { label: "Policies", value: "policies" },
-//       ],
-//     },
-//     {
-//       title: "Section 3",
-//       options: [
-//         { label: "Settings", value: "settings" },
-//         { label: "Logout", value: "logout" },
-//       ],
-//     },
-//   ];
-
-//   /* ---------------- LOGIC ---------------- */
-//   const toggleOption = (value: string) => {
-//     setSelected((prev) =>
-//       prev.includes(value)
-//         ? prev.filter((v) => v !== value)
-//         : [...prev, value]
-//     );
-//   };
-
-//   const toggleGroup = (group: Group) => {
-//     const values = group.options.map((o) => o.value);
-//     const allSelected = values.every((v) => selected.includes(v));
-
-//     setSelected((prev) =>
-//       allSelected
-//         ? prev.filter((v) => !values.includes(v))
-//         : Array.from(new Set([...prev, ...values]))
-//     );
-//   };
-
-//   /* ---------------- UI ---------------- */
-//   return (
-//     <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f6f6] to-[#ecf6f3]">
-//       <h3 className="font-semibold mb-3">Grouped Dropdown</h3>
-
-//       <div className="relative">
-//         {/* BUTTON */}
-//         <button
-//           onClick={() => setOpen(!open)}
-//           className="w-full flex justify-between items-center px-4 py-3 rounded-[8px] bg-gradient-to-r from-[#0f4c75] to-[#1abc9c] text-white"
-//         >
-//           <span className="truncate">
-//             {selected.length > 0 ? selected.join(", ") : "Grouped"}
-//           </span>
-//           <ChevronDown size={16} />
-//         </button>
-
-//         {/* DROPDOWN */}
-//         {open && (
-//           <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-//             {groups.map((group) => (
-//               <div key={group.title}>
-//                 {/* GROUP TITLE */}
-//                 <div
-//                   onClick={() => toggleGroup(group)}
-//                   className="px-4 py-2 text-xs font-semibold text-[#1761a3] cursor-pointer flex items-center gap-2 hover:bg-[#f2f8ff]"
-//                 >
-//                   <input
-//                     type="checkbox"
-//                     readOnly
-//                     checked={group.options.every((o) =>
-//                       selected.includes(o.value)
-//                     )}
-//                   />
-//                   {group.title}
-//                 </div>
-
-//                 {/* OPTIONS */}
-//                 {group.options.map((opt) => (
-//                   <div
-//                     key={opt.value}
-//                     onClick={() => toggleOption(opt.value)}
-//                     className="px-6 py-3 cursor-pointer hover:bg-[#e6f3ef] flex items-center gap-2"
-//                   >
-//                     <input
-//                       type="checkbox"
-//                       readOnly
-//                       checked={selected.includes(opt.value)}
-//                     />
-//                     {opt.label}
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
 export function GroupedDropdown() {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -610,7 +292,7 @@ export function GroupedDropdown() {
     </div>
   );
 }
-/* =========================== AVATAR DROPDOWN =========================== */
+
 
 export function AvatarDropdown() {
   const [open, setOpen] = useState(false);
@@ -721,7 +403,6 @@ export function AvatarMultiSelectDropdown() {
         <ChevronDown size={16} />
       </button>
 
-      {/* SELECTED CHIPS (SAME AS MULTI-SELECT) */}
       <div className="flex flex-wrap gap-2 mt-3">
         {selected.map((u) => (
           <span
@@ -771,10 +452,6 @@ export function AvatarMultiSelectDropdown() {
     </div>
   );
 }
-/* =========================== NESTED / CASCADING =========================== */
-
-
-
 export function NestedDropdown() {
   const data: Record<string, Record<string, string[]>> = {
     "Country 1": {
@@ -805,14 +482,6 @@ export function NestedDropdown() {
          const stateOptions = Object.values(data)
   .flatMap((states) => Object.keys(states))
   .map((s) => ({ label: s, value: s }));
-//   const cityOptions =
-//     country && state
-//       ? data[country][state].map((c) => ({
-
-//           label: c,
-//           value: c,
-//         }))
-//       : [];
 const cityOptions = Object.values(data)
   .flatMap((states) => Object.values(states))
   .flat()

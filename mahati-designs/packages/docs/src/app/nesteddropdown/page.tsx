@@ -74,9 +74,7 @@ export default function Page() {
   return (
     <div className="space-y-14">
 
-      {/* =====================================================
-          CASCADING / NESTED DROPDOWN
-      ===================================================== */}
+      
       <section id="nested">
       <CodePreview
         title="Cascading / Nested Dropdown"
@@ -89,9 +87,7 @@ export default function Page() {
       />
       </section>
 
-      {/* =====================================================
-          SEARCHABLE / FILTERABLE DROPDOWN
-      ===================================================== */}
+      
       <section id="searchable">
       <CodePreview
         title="Searchable / Filterable Dropdown"
@@ -104,9 +100,7 @@ export default function Page() {
       />
       </section>
 
-      {/* =====================================================
-          MULTI SELECT DROPDOWN
-      ===================================================== */}
+      
       <section id="multiselect">
       <CodePreview
         title="Multi Select Dropdown"
@@ -119,9 +113,7 @@ export default function Page() {
       />
       </section>
 
-      {/* =====================================================
-          GROUPED DROPDOWN
-      ===================================================== */}
+      
       <section id="grouped">
       <CodePreview
         title="Grouped Dropdown"
@@ -134,9 +126,7 @@ export default function Page() {
       />
       </section>
 
-      {/* =====================================================
-          AVATAR DROPDOWN
-      ===================================================== */}
+      
       <section id="avatar">
       <CodePreview
         title="Avatar Dropdown"
@@ -160,9 +150,7 @@ export default function Page() {
       />
       </section>
 
-      {/* =====================================================
-          PROPS TABLE (LIKE ACCORDION)
-      ===================================================== */}
+      
       <PropsTable
         title="Dropdown Props"
         props={dropdownProps}
