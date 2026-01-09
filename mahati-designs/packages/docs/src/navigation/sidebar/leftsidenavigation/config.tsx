@@ -236,6 +236,12 @@ export const NavItems = (): NavItem[]  => {
     {name:'Grouped',href:'/nesteddropdown#grouped',icon:<FontAwesomeIcon icon={faLayerGroup} size="sm"/>},
     {name:'Cascading/Nested',href:'/nesteddropdown#nested',icon:<FontAwesomeIcon icon={faCodeBranch} size="sm"/>},
     {name:'Avatar',href:'/nesteddropdown#avatar',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
+    {name:'Multiselect-Avatar',href:'/nesteddropdown#multiselectavatar',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
+    {name:'Async/dynamic',href:'/nesteddropdown#async/dynamic',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
+  
+  
+  
+  
   ],
 },
 

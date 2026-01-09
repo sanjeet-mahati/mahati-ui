@@ -3,11 +3,16 @@
 import {
   SearchableDropdown,
   MultiSelectDropdown,
-  GroupedDropdown,
   AvatarMultiSelectDropdown,
   NestedDropdown,
-  AvatarDropdown
+  AvatarDropdown,
+  AsyncCascadingDropdown,
+  GroupedDropdown
+
 } from "../../../../uicomponents/src/components/NestedDropdown";
+
+
+
 
 
 import { CodePreview } from "../CodePreview";
@@ -127,7 +132,7 @@ export default function Page() {
       </section>
 
       
-      <section id="avatar">
+      <section id="multiselectavatar">
       <CodePreview
         title="Avatar Dropdown"
         code={`<AvatarDropdown />`}
@@ -149,9 +154,23 @@ export default function Page() {
         }
       />
       </section>
-
+     
+    
+        <section id ="async/dynamic">
+      <CodePreview
+        title="asyncdropdown"
+        code={`<Asyncdropdown />`}
+        preview={
+          <div className="flex justify-center">
+            <AsyncCascadingDropdown/>
+          </div>
+        }
+        
       
-      <PropsTable
+      />
+      </section>
+      
+       <PropsTable
         title="Dropdown Props"
         props={dropdownProps}
       />
