@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from "react";
+import styled from '@emotion/styled';
 
 export interface TooltipProps {
   text?: string;
@@ -22,22 +23,168 @@ export interface TooltipProps {
   };
 }
 
+const TooltipWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  overflow: visible !important;
+`;
+
+const TooltipContent = styled.div<{
+  $visible: boolean;
+  $position: string;
+  $variant: string;
+  $hasImage: boolean;
+  $hasText: boolean;
+  $isReady: boolean;
+}>`
+  position: fixed;
+  z-index: 99999;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+  white-space: nowrap;
+  
+  opacity: ${props => (props.$visible && props.$isReady) ? 1 : 0};
+  visibility: ${props => (props.$visible && props.$isReady) ? 'visible' : 'hidden'};
+  pointer-events: ${props => (props.$visible && props.$isReady) ? 'auto' : 'none'};
+  
+  display: ${props => (!props.$hasText && !props.$hasImage) ? 'none' : 'flex'};
+  
+  ${props => props.$variant === 'default' ? `
+    background: linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1));
+    color: rgba(255, 255, 255, 1);
+    font-size: 11px;
+    line-height: 1.4;
+    min-width: 98px;
+    min-height: 26px;
+    align-items: center;
+    justify-content: center;
+    padding: ${props.$hasImage ? '4px' : '8px 16px'};
+  ` : `
+    background: rgba(255, 255, 255, 0.95);
+    color: rgba(55, 65, 81, 1);
+    border: 1px solid rgba(229, 231, 235, 1);
+    font-size: 13px;
+    transform: scale(${props.$visible && props.$isReady ? 1 : 0.95});
+    padding: ${props.$hasImage ? '4px' : '8px 12px'};
+  `}
+`;
+
+const TooltipArrow = styled.div<{ $position: string }>`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  
+  ${props => {
+    switch(props.$position) {
+      case 'top':
+        return `
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 6px 6px 0 6px;
+          border-color: rgba(23, 97, 163, 1) transparent transparent transparent;
+        `;
+      case 'right':
+        return `
+          left: -6px;
+          top: 50%;
+          transform: translateY(-50%);
+          border-width: 6px 6px 6px 0;
+          border-color: transparent rgba(23, 97, 163, 1) transparent transparent;
+        `;
+      case 'bottom':
+        return `
+          top: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 0 6px 6px 6px;
+          border-color: transparent transparent rgba(23, 97, 163, 1) transparent;
+        `;
+      case 'left':
+        return `
+          right: -6px;
+          top: 50%;
+          transform: translateY(-50%);
+          border-width: 6px 0 6px 6px;
+          border-color: transparent transparent transparent rgba(23, 97, 163, 1);
+        `;
+      default:
+        return '';
+    }
+  }}
+`;
+
+const TooltipImage = styled.img`
+  border-radius: 4px;
+  object-fit: cover;
+  display: block;
+`;
+
 const Tooltip: React.FC<TooltipProps> = ({ 
   text, 
   position = "top", 
   children,
   variant = "default",
   className = "",
-  textColor = "text-gray-800",
-  backgroundColor = "bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]",
+  textColor,
+  backgroundColor,
   image,
   animation
 }) => {
   const [visible, setVisible] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const triggerRef = React.useRef<HTMLDivElement>(null);
+
+  const hasContent = !!(text || image);
+
+  const calculatePosition = () => {
+    if (!triggerRef.current) return;
+    
+    const rect = triggerRef.current.getBoundingClientRect();
+    const scrollY = window.scrollY;
+    const scrollX = window.scrollX;
+    
+    let top = 0;
+    let left = 0;
+    
+    const offset = 12;
+    
+    switch(position) {
+      case 'top':
+        top = rect.top + scrollY - offset;
+        left = rect.left + scrollX + rect.width / 2;
+        break;
+      case 'right':
+        top = rect.top + scrollY + rect.height / 2;
+        left = rect.right + scrollX + offset;
+        break;
+      case 'bottom':
+        top = rect.bottom + scrollY + offset;
+        left = rect.left + scrollX + rect.width / 2;
+        break;
+      case 'left':
+        top = rect.top + scrollY + rect.height / 2;
+        left = rect.left + scrollX - offset;
+        break;
+    }
+    
+    setTooltipPosition({ top, left });
+    setIsReady(true);
+  };
 
   const showTooltip = () => {
+    if (!hasContent) return;
+    
+    setIsReady(false);
+    calculatePosition();
     setVisible(true);
+    
     if (animation) {
       const delay = animation.triggerDelay || 100;
       setTimeout(() => setShowAnimation(true), delay);
@@ -46,80 +193,29 @@ const Tooltip: React.FC<TooltipProps> = ({
   
   const hideTooltip = () => {
     setVisible(false);
+    setIsReady(false);
     setShowAnimation(false);
   };
 
-  // Base tooltip container classes
-  const containerClasses = `relative inline-block ${className}`;
+  React.useEffect(() => {
+    if (visible) {
+      window.addEventListener('scroll', calculatePosition);
+      window.addEventListener('resize', calculatePosition);
+      return () => {
+        window.removeEventListener('scroll', calculatePosition);
+        window.removeEventListener('resize', calculatePosition);
+      };
+    }
+  }, [visible]);
 
-  // Default tooltip with background
-  const defaultTooltipClasses = `
-    absolute z-50 
-    font-poppins 
-    font-medium 
-    
-    text-[rgba(255,255,255,1)]
-    text-[10px] 
-    leading-normal 
-    not-italic
-    rounded 
-    shadow-sm 
-    transition-opacity 
-    duration-200
-    w-[98px] 
-    h-[26px] 
-    flex-shrink-0 flex 
-    items-center 
-    justify-center
-    bg-[rgba(23,97,163,1)] 
-    bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)]
-    ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-    ${image ? '' : 'px-3 py-3'}
-  `;
-
-  // Transparent tooltip styles
-  const transparentTooltipClasses = `
-    absolute z-50 font-medium ${textColor}
-    rounded transition-all duration-200
-    ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
-    ${image ? 'p-1' : 'px-3 py-2'}
-  `;
-
-  // Position-specific classes
-  const positionClasses = {
-    top: "bottom-full left-1/2 transform -translate-x-1/2 -translate-y-2 mb-2",
-    right: "left-full top-1/2 transform -translate-y-1/2 translate-x-2 ml-2",
-    bottom: "top-full left-1/2 transform -translate-x-1/2 translate-y-2 mt-2",
-    left: "right-full top-1/2 transform -translate-y-1/2 -translate-x-2 mr-2"
-  };
-
-  // Arrow styles for default variant
-  const arrowBaseClasses = "absolute w-2 h-2 transform rotate-45";
-  const arrowPositionClasses = {
-    top: "bottom-[-4px] left-1/2 transform -translate-x-1/2",
-    right: "left-[-4px] top-1/2 transform -translate-y-1/2",
-    bottom: "top-[-4px] left-1/2 transform -translate-x-1/2",
-    left: "right-[-4px] top-1/2 transform -translate-y-1/2"
-  };
-
-  // Arrow background classes
-  const arrowBackgroundClass = "bg-[rgba(23,97,163,1)]";
-
-  // Choose the appropriate tooltip classes based on variant
-  const tooltipClasses = variant === "transparent" 
-    ? `${transparentTooltipClasses} ${positionClasses[position]}`
-    : `${defaultTooltipClasses} ${positionClasses[position]}`;
-
-  // Render tooltip content
   const renderTooltipContent = () => {
     if (image) {
       return (
-        <img 
+        <TooltipImage
           src={image.src} 
           alt={image.alt || "Tooltip image"}
           width={image.width || 200}
           height={image.height || 150}
-          className="rounded-md object-cover"
           loading="lazy"
         />
       );
@@ -127,7 +223,6 @@ const Tooltip: React.FC<TooltipProps> = ({
     return text;
   };
 
-  // Render animation component if provided
   const renderAnimation = () => {
     if (!animation || !showAnimation) return null;
     
@@ -140,9 +235,29 @@ const Tooltip: React.FC<TooltipProps> = ({
     );
   };
 
+  const getTransform = () => {
+    switch(position) {
+      case 'top':
+        return 'translate(-50%, -100%)';
+      case 'right':
+        return 'translate(0, -50%)';
+      case 'bottom':
+        return 'translate(-50%, 0)';
+      case 'left':
+        return 'translate(-100%, -50%)';
+      default:
+        return 'none';
+    }
+  };
+
+  if (!hasContent) {
+    return <>{children}</>;
+  }
+
   return (
-    <div
-      className={containerClasses}
+    <TooltipWrapper
+      ref={triggerRef}
+      className={className}
       onMouseEnter={showTooltip}
       onMouseLeave={hideTooltip}
       onFocus={showTooltip}
@@ -150,30 +265,33 @@ const Tooltip: React.FC<TooltipProps> = ({
     >
       {children}
       
-      {/* Animation */}
       {renderAnimation()}
       
-      {/* Tooltip */}
-      <div 
-        className={tooltipClasses}
+      <TooltipContent
+        $visible={visible}
+        $isReady={isReady}
+        $position={position}
+        $variant={variant}
+        $hasImage={!!image}
+        $hasText={!!text}
         role="tooltip"
+        style={{
+          top: `${tooltipPosition.top}px`,
+          left: `${tooltipPosition.left}px`,
+          transform: getTransform()
+        }}
       >
         {renderTooltipContent()}
         
-        {/* Tooltip arrow - only for default variant */}
         {variant === "default" && !image && (
-          <div 
-            className={`${arrowBaseClasses} ${arrowPositionClasses[position]} ${arrowBackgroundClass} rounded-sm`}
-          />
+          <TooltipArrow $position={position} />
         )}
-      </div>
-    </div>
+      </TooltipContent>
+    </TooltipWrapper>
   );
 };
 
 export default Tooltip;
 
-
-// export default Table;
 Tooltip.displayName = "Tooltip";
-export {Tooltip};
+export { Tooltip };

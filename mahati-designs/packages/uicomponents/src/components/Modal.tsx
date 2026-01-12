@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
+//import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/utils"; // Assuming you have a `cn` utility for merging Tailwind classes
 
 export type MahatiModalSize = "default" | "sm" | "md" | "lg" | "xl";
