@@ -37,6 +37,9 @@ export { MahatiActivity } from './components/Filter';
 export { MahatiStatus } from './components/Filter';
 export { MahatiSearch } from './components/Filter';
 
+
+export {SearchableDropdown} from './components/NestedDropdown';
+
 // Type Exports
 // It's a good practice to re-export types that consumers of your library might need.
 //export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';

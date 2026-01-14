@@ -1,576 +1,250 @@
-
-
 "use client";
-import React from "react";
-import { useState,useEffect } from "react";
-import { ChevronDown, X,Search ,Loader2} from "lucide-react";
-export type Option = {
+
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown,X,Loader2 } from "lucide-react";
+
+export interface DropdownOption {
   label: string;
   value: string;
-  avatar?: string;
-};
+}
 
-type Group = {
-  title: string;
-  options: Option[];
-};
-
-type UserOption = {
-  label: string;
-  value: string;
-  avatar: string;
-};
-
-const buttonStyle =
-  "w-full px-4 py-3 rounded-[6px] text-white font-semibold bg-gradient-to-r from-[#1761a3] to-[#4daf83] flex justify-between items-center";
-type BasicDropdownProps = {
+export interface SearchableDropdownProps {
   label?: string;
-  placeholder: string;
-  options: Option[];
-  value: string | null;
-  
-
+  placeholder?: string;
+  options: DropdownOption[];
+  value?: string;
   onChange: (value: string) => void;
-};
+}
 
-export function BasicDropdown({
-  label,
-  placeholder,
+export function SearchableDropdown({
+  label = "Select here",
+  placeholder = "Choose an option",
   options,
   value,
   onChange,
-}: BasicDropdownProps) {
-  const [open, setOpen] = useState(false);
-  const[search,setSearch]=useState("")
-  const filteredOptions =
-  search.trim().length === 0
-    ? options
-    : options.filter((o) =>
-        o.label.toLowerCase().includes(search.toLowerCase())
-      );
-
-  return (
-    
-    <div className="space-y-2">
-      {label && (
-        <p className="text-sm font-semibold text-[#1761a3]">{label}</p>
-      )}
-
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className={buttonStyle}
-        >
-          {value ?? placeholder}
-          <ChevronDown size={16} />
-        </button>
-
-        
-        {open && (
-  <div className="absolute z-10 mt-2 w-full bg-white border rounded-[8px] shadow-lg">
-    
-   
-<div className="relative px-3 pt-3">
-  {/* Search icon */}
-  <Search
-    size={16}
-    className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400"
-  />
-
-  <input
-    type="text"
-    placeholder="Search..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="w-full pl-9 pr-9 py-2 text-sm border rounded outline-none"
-  />
-
-
-  {search && (
-    <X
-      size={16}
-      className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500"
-      onClick={() => setSearch("")}
-    />
-  )}
-</div>
-
-    {/* OPTIONS */}
-    <div className="max-h-48 overflow-auto">
-      {filteredOptions.length > 0 ? (
-        filteredOptions.map((opt) => (
-          <div
-            key={opt.value}
-            onClick={() => {
-              onChange(opt.value);
-              setOpen(false);
-              setSearch("");
-            }}
-            className="px-4 py-2 cursor-pointer hover:bg-[#f2f8ff]"
-          >
-            {opt.label}
-          </div>
-        ))
-      ) : (
-        <p className="px-4 py-2 text-sm text-gray-500">
-          No results found
-        </p>
-      )}
-    </div>
-  </div>
-)}
-      </div>
-    </div>
-  );
-}
-
-
-export function SearchableDropdown() {
+}: SearchableDropdownProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<Option | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const options: Option[] = [
-    { label: "Country", value: "country" },
-    { label: "Name", value: "name" },
-    { label: "Product", value: "product" },
-    { label: "Customer", value: "customer" },
-  ];
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-  const filtered = options.filter((o) =>
+  const selectedLabel =
+    options.find((o) => o.value === value)?.label || placeholder;
+
+  const filteredOptions = options.filter((o) =>
     o.label.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f6f6] to-[#ecf6f3]">
-      <h3 className="font-semibold mb-3">Searchable / Filterable Dropdown</h3>
+    <div className="w-full relative" ref={ref}>
+      {/* LABEL */}
+      <label className="block text-xs font-semibold text-[#1761a3] mb-2">
+        {label}
+      </label>
 
-      <div className="relative">
-        {/* BUTTON */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="w-full flex justify-between items-center px-4 py-3 rounded-[8px]
-          bg-gradient-to-r from-[#0f4c75] to-[#1abc9c] text-white"
-        >
-          <span>{selected ? selected.label : "Choose an option"}</span>
+      {/* BUTTON */}
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex justify-between items-center px-4 py-3
+        rounded-[6px] text-white font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]">
+      
+        <span className="truncate">{selectedLabel}</span>
+
+        <div className="flex items-center gap-2">
+          {value && (
+            <X
+              size={14}
+              onClick={(e) => {
+                e.stopPropagation();
+                onChange("");
+                setSearch("");
+              }}
+            />
+          )}
           <ChevronDown size={16} />
-        </button>
-
-        {/* DROPDOWN */}
-        {open && (
-          <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-            
-            {/* SEARCH INPUT */}
-            <div className="relative">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search (up to five words)..."
-                className="w-full pl-9 pr-9 py-2 border-b outline-none"
-              />
-
-              {/* SEARCH ICON */}
-              <Search
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-
-              {/* CLEAR ICON */}
-              {search && (
-                <X
-                  size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2
-                  text-gray-400 cursor-pointer hover:text-black"
-                  onClick={() => setSearch("")}
-                />
-              )}
-            </div>
-
-            {/* OPTIONS */}
-            <div className="max-h-60 overflow-auto">
-              {filtered.length > 0 ? (
-                filtered.map((opt) => (
-                  <div
-                    key={opt.value}
-                    onClick={() => {
-                      setSelected(opt);
-                      setOpen(false);
-                      setSearch("");
-                    }}
-                    className="px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
-                  >
-                    {opt.label}
-                  </div>
-                ))
-              ) : (
-                <div className="px-4 py-3 text-gray-400 text-sm">
-                  No results found
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export function MultiSelectDropdown() {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<string[]>([
-    // "Dashboard",
-    // "Settings",
-  ]);
-
-  const options = ["option1", "option2", "option3", "option4"];
-
-  const toggle = (v: string) =>
-    setSelected((s) =>
-      s.includes(v) ? s.filter((i) => i !== v) : [...s, v]
-    );
-
-  return (
-    <div className="w-[430px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-      <h3 className="font-semibold mb-3">Multi-Select Dropdown</h3>
-
-      <button onClick={() => setOpen(!open)} className={buttonStyle}>
-        Multi Select
-        <ChevronDown size={16} />
+        </div>
       </button>
 
-      <div className="flex flex-wrap gap-2 mt-3">
-        {selected.map((s) => (
-          <span
-            key={s}
-            className="flex items-center gap-1 px-3 py-1 bg-white border rounded-[6px]"
-          >
-            {s}
-            <X size={14} onClick={() => toggle(s)} className="cursor-pointer" />
-          </span>
-        ))}
-      </div>
-
+      {/* DROPDOWN */}
       {open && (
-        <div className="mt-3 bg-white rounded-[8px] border shadow-lg">
-          {options.map((o) => (
-            <label
-              key={o}
-              className="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
-            >
-              <input
-                type="checkbox"
-                checked={selected.includes(o)}
-                onChange={() => toggle(o)}
-              />
-              {o}
-            </label>
-          ))}
+        <div
+          className="absolute z-20 mt-2 w-full bg-white rounded-sm
+          shadow-lg border border-[rgba(77,175,131,0.4)]"
+        >
+          {/* SEARCH */}
+          <div className="p-3 border-b">
+            <div className="relative flex items-center">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search (up to five words)..."
+              className="w-full px-3 py-2.5 text-sm
+              rounded-sm
+              bg-[rgba(23,97,163,0.1)]
+              border border-[rgba(23,97,163,0.3)]
+              focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+            />
+            {search && (
+    <button
+      type="button"
+      onClick={() => setSearch("")}
+      className="absolute right-3 top-1/2 -translate-y-1/2
+                 w-5 h-5 rounded-full
+                bg-gray-400 hover:bg-gray-500
+                 text-white text-xs font-bold
+                 flex items-center justify-center"
+    >
+      ✕
+    </button>
+  )}
+</div>
+</div>
+{/* OPTIONS */}
+          <ul className="py-2 text-sm max-h-56 overflow-auto">
+            {filteredOptions.length === 0 && (
+              <li className="px-4 py-2 text-slate-400">No results</li>
+            )}
+
+            {filteredOptions.map((opt) => (
+              <li
+                key={opt.value}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                  setSearch("");
+                }}
+                className="px-4 py-2 cursor-pointer hover:bg-slate-100"
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
   );
 }
+export interface MultiSelectDropdownProps {
+  label?: string;
+  placeholder?: string;
+  options: DropdownOption[];
+  values: string[];
+  onChange: (values: string[]) => void;
+}
 
-
-
-
-
-export function GroupedDropdown() {
+export function MultiSelectDropdown({
+  label = "Multi Select",
+  placeholder = "Multi Select",
+  options,
+  values,
+  onChange,
+}: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const groups: Group[] = [
-    {
-      title: "Section 1",
-      options: [
-        { label: "Option 1", value: "option1" },
-        { label: "Profile", value: "profile" },
-      ],
-    },
-    {
-      title: "Section 2",
-      options: [
-        { label: "Service", value: "service" },
-        { label: "Policies", value: "policies" },
-      ],
-    },
-  ];
-
-  const [activeGroup, setActiveGroup] = useState<Group | null>(null);
-  const [selectedChildren, setSelectedChildren] = useState<Option[]>([]);
-
-  /* ---------- HELPERS ---------- */
-
-  const isParentSelected = (group: Group) =>
-    activeGroup?.title === group.title && selectedChildren.length>0;
-
-  const isChildSelected = (value: string) =>
-    selectedChildren.some((o) => o.value === value);
-
-  /* ---------- ACTIONS ---------- */
-
-  const toggleParent = (group: Group) => {
-    if (isParentSelected(group)) {
-      // unselect everything
-      setActiveGroup(null);
-      setSelectedChildren([]);
-    } else {
-
-      setActiveGroup(group);
-      setSelectedChildren(group.options);
-    }
-  };
-   const toggleChild = (group: Group, option: Option) => {
-  setSelectedChildren((prev) => {
-    
-    if (activeGroup?.title !== group.title) {
-      setActiveGroup(group);
-      return [option];
-    }
-
-    
-    const exists = prev.some((o) => o.value === option.value);
-
-    if (exists) {
-      const updated = prev.filter((o) => o.value !== option.value);
-
-      
-      if (updated.length === 0) {
-        setActiveGroup(null);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
       }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-      return updated;
+  const toggleValue = (value: string) => {
+    if (values.includes(value)) {
+      onChange(values.filter((v) => v !== value));
+    } else {
+      onChange([...values, value]);
     }
-
-    
-    return [...prev, option];
-  });
-};
-
-  const displayValue =
-    activeGroup && selectedChildren.length > 0
-      ? `${activeGroup.title} - ${selectedChildren
-          .map((o) => o.label)
-          .join(", ")}`
-      : "Grouped Dropdown";
-
-  /* ---------- UI ---------- */
-
-  return (
-    <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-      <h3 className="font-semibold mb-3">Grouped Dropdown</h3>
-
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className={buttonStyle}
-        >
-          <span className="truncate">{displayValue}</span>
-          <ChevronDown size={16} />
-        </button>
-
-        {/* DROPDOWN */}
-        {open && (
-          <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-            {groups.map((group) => (
-              <div key={group.title}>
-                {/* PARENT */}
-                <div
-                  onClick={() => toggleParent(group)}
-                  className="px-4 py-2 font-semibold cursor-pointer flex items-center gap-2 hover:bg-[#f2f8ff]"
-                >
-                  <input
-                    type="checkbox"
-                    readOnly
-                    checked={isParentSelected(group)}
-                  />
-                  {group.title}
-                </div>
-
-                {/* CHILDREN */}
-                {group.options.map((opt) => (
-                  <div
-                    key={opt.value}
-                    onClick={() => toggleChild(group, opt)}
-                    className={`px-8 py-2 cursor-pointer text-sm flex items-center gap-2
-                      hover:bg-[#e6f3ef]
-                      ${
-                        isChildSelected(opt.value)
-                          ? "text-[#1761a3] font-medium"
-                          : "text-gray-600"
-                      }`}
-                  >
-                    <input
-                      type="checkbox"
-                      readOnly
-                      checked={isChildSelected(opt.value)}
-                    />
-                    {opt.label}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export function AvatarDropdown() {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Option | null>(null);
-
-  const users: Option[] = [
-    { label: "Enter Title", value: "1", avatar: "https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { label: "Enter Title", value: "2", avatar: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=400&w=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { label: "Enter Title", value: "3", avatar: "https://plus.unsplash.com/premium_photo-1661780135580-a475a8cc6cae?q=400&w=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { label: "Enter Title", value: "4", avatar: "https://plus.unsplash.com/premium_photo-1688350839154-1a131bccd78a?q=400&w=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  ];
-
-  return (
-    <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-      <h3 className="font-semibold mb-3">Avatar Dropdown</h3>
-
-      <div className="relative">
-        {/* BUTTON */}
-        <button
-        type="button"
-          onClick={() => setOpen((prev)=>!prev)}
-          className={buttonStyle}
-        >
-          {selected ? (
-  <div className="flex items-center gap-2">
-    <img
-      src={selected.avatar}
-      alt={selected.label}
-      className="w-6 h-6 rounded-[4px] object-cover"
-    />
-    <span>{selected.label}</span>
-  </div>
-) : (
-  <span>Avatar Dropdown</span>
-)}
-<ChevronDown size={16} />
-         
-
-        </button>
-
-        {/* DROPDOWN */}
-        {open && (
-          <div className="absolute z-10 mt-2 w-full bg-white rounded-[8px] border shadow-lg">
-            {users.map((u, index) => (
-              <div
-                key={u.value}
-                
-                onClick={() => {
-                  setSelected(u);
-                  setOpen(false);
-                }}
-                className={`flex items-center gap-3 px-4 py-3 cursor-pointer ${
-                  index === 2
-                    ? "bg-[#e6f3ef]"
-                    : "hover:bg-[#e6f3ef]"
-                }`}
-              >
-                <img
-                  // src="/assets/avatar-1.jpg"
-                  // alt="avatar"
-                  src={u.avatar}
-                  alt={u.label}
-                  className="w-8 h-8 rounded-[4px] object-cover"
-                />
-                <div>
-                  <p className="font-medium">{u.label}</p>
-                  <p className="text-xs text-gray-500">
-                    Section {index + 1}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-
-
-export function AvatarMultiSelectDropdown() {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<UserOption[]>([]);
-  const user: UserOption[] = [
-  { label: "User One", value: "1", avatar: "https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { label: "User Two", value: "2", avatar: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { label: "User Three", value: "3", avatar: "https://plus.unsplash.com/premium_photo-1661780135580-a475a8cc6cae?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { label: "User Four", value: "4", avatar: "https://plus.unsplash.com/premium_photo-1688350839154-1a131bccd78a?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-];
-
-
-  const toggleSelect = (user: UserOption) => {
-    setSelected((prev) =>
-      prev.some((u) => u.value === user.value)
-        ? prev.filter((u) => u.value !== user.value)
-        : [...prev, user]
-    );
   };
 
+  const removeTag = (value: string) => {
+    onChange(values.filter((v) => v !== value));
+  };
 
   return (
-    <div className="w-[360px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3]">
-      <h3 className="font-semibold mb-3">Avatar Multi-Select</h3>
+    <div className="w-full relative" ref={ref}>
+      {/* LABEL */}
+      <label className="block text-xs font-semibold text-[#1761a3] mb-2">
+        {label}
+      </label>
 
       {/* BUTTON */}
-      <button onClick={() => setOpen(!open)} className={buttonStyle}>
-        Multi Select
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 rounded-[6px]
+        text-white text-sm font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
+      >
+        {placeholder}
         <ChevronDown size={16} />
       </button>
 
-      <div className="flex flex-wrap gap-2 mt-3">
-        {selected.map((u) => (
-          <span
-            key={u.value}
-            className="flex items-center gap-2 px-3 py-1 bg-white border rounded-[6px]"
-          >
-            <img
-              src={u.avatar}
-              className="w-5 h-5 rounded-full object-cover"
-            />
-            {u.label}
-            <X
-              size={14}
-              className="cursor-pointer"
-              onClick={() => toggleSelect(u)}
-            />
-          </span>
-        ))}
-      </div>
+      {/* TAGS */}
+      {values.length > 0 && (
+        <div className="flex gap-2 flex-wrap mt-3">
+          {values.map((val) => {
+            const label = options.find((o) => o.value === val)?.label;
+            return (
+              <div
+                key={val}
+                className="flex items-center gap-2 px-3 py-2 rounded-[6px]
+                bg-white border border-[#cde3f1] text-sm"
+              >
+                {label}
+                <X
+                  size={14}
+                  className="cursor-pointer text-slate-500"
+                  onClick={() => removeTag(val)}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* DROPDOWN */}
       {open && (
-        <div className="mt-3 bg-white rounded-[8px] border shadow-lg">
-          {user.map((u) => {
-            const checked = selected.some((s) => s.value === u.value);
-
+        <div
+          className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
+          shadow-lg border border-[rgba(77,175,131,0.4)]"
+        >
+          {options.map((opt) => {
+            const active = values.includes(opt.value);
             return (
-              <label
-                key={u.value}
-                className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-[#e6f3ef]"
+              <div
+                key={opt.value}
+                onClick={() => toggleValue(opt.value)}
+                className={`mx-3 my-2 px-3 py-2 rounded-[6px]
+                flex items-center gap-3 cursor-pointer
+                ${
+                  active
+                    ? "bg-[#e6f3ef] text-[#1761a3] font-medium"
+                    : "hover:bg-[#f0f7f5]"
+                }`}
               >
                 <input
                   type="checkbox"
-                  checked={checked}
-                  onChange={() => toggleSelect(u)}
+                  checked={active}
+                  readOnly
+                  className="accent-[#1761a3]"
                 />
-                <img
-                  src={u.avatar}
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-                <span>{u.label}</span>
-              </label>
+                {opt.label}
+              </div>
             );
           })}
         </div>
@@ -579,189 +253,566 @@ export function AvatarMultiSelectDropdown() {
   );
 }
 
+// ================== CASCADING DROPDOWN ==================
 
-export function NestedDropdown() {
-  const data: Record<string, Record<string, string[]>> = {
-    "Country 1": {
-      "State 1": ["City 1", "City 2"],
-      "State 2": ["City 3", "City 4"],
-    },
-    "Country 2": {
-      "State 3": ["City 5", "City 6"],
-      "State 4": ["City 7", "City 8"],
-    },
-    "Country 3": {
-      "State 5": ["City 9", "City 10"],
-    },
-    "Country 4": {
-      "State 6": ["City 11"],
-    },
+export interface CascadingValue {
+  country?: string;
+  state?: string;
+  city?: string;
+}
+
+interface CascadingDropdownProps {
+  value: CascadingValue;
+  onChange: (val: CascadingValue) => void;
+}
+
+export function CascadingDropdown({
+  value,
+  onChange,
+}: CascadingDropdownProps) {
+  return (
+    <div className="space-y-4">
+      {/* COUNTRY */}
+      <SearchableDropdown
+        label="Country"
+        placeholder="Select country"
+        options={[
+          { label: "India", value: "india" },
+          { label: "USA", value: "usa" },
+        ]}
+        value={value.country}
+        onChange={(v) => onChange({ ...value, country: v })}
+      />
+
+      {/* STATE */}
+      <SearchableDropdown
+        label="State"
+        placeholder="Select state"
+        options={[
+          { label: "Telangana", value: "ts" },
+          { label: "Karnataka", value: "ka" },
+          { label: "California", value: "ca" },
+        ]}
+        value={value.state}
+        onChange={(v) => onChange({ ...value, state: v })}
+      />
+
+      {/* CITY */}
+      <SearchableDropdown
+        label="City"
+        placeholder="Select city"
+        options={[
+          { label: "Hyderabad", value: "hyd" },
+          { label: "Bangalore", value: "blr" },
+          { label: "Los Angeles", value: "la" },
+        ]}
+        value={value.city}
+        onChange={(v) => onChange({ ...value, city: v })}
+      />
+    </div>
+  );
+}
+export interface GroupChild {
+  label: string;
+  value: string;
+}
+
+export interface Group {
+  label: string;
+  children: GroupChild[];
+}
+export interface AvatarOption {
+  label: string;
+  value: string;
+  subtitle?: string;
+  image: string;
+}
+
+export interface AvatarDropdownProps {
+  placeholder?: string;
+  options: AvatarOption[];
+  value?: string;
+  onChange: (value: string) => void;
+}
+
+export function AvatarDropdown({
+  placeholder = "Avatar Dropdown",
+  options,
+  value,
+  onChange,
+}: AvatarDropdownProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const selected = options.find((o) => o.value === value);
+
+  return (
+    <div className="relative w-full" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex justify-between items-center px-4 py-3
+        rounded-[6px] text-white font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
+      >
+        <span className="truncate">
+          {selected?.label ?? placeholder}
+        </span>
+        <ChevronDown size={16} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
+          shadow-lg border border-[rgba(77,175,131,0.4)]"
+        >
+          {options.map((opt) => {
+            const active = opt.value === value;
+
+            return (
+              <div
+                key={opt.value}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+                className={`flex items-center gap-4 px-4 py-3 cursor-pointer
+                ${
+                  active
+                    ? "bg-[#e6f3ef]"
+                    : "hover:bg-[#f0f7f5]"
+                }`}
+              >
+                <img
+                  src={opt.image}
+                  alt={opt.label}
+                  className="w-9 h-7 rounded-[4px] object-cover"
+                />
+
+                <div>
+                  <div
+                    className={`font-medium ${
+                      active ? "text-[#1761a3]" : ""
+                    }`}
+                  >
+                    {opt.label}
+                  </div>
+                  {opt.subtitle && (
+                    <div
+                      className={`text-xs ${
+                        active
+                          ? "text-[#1761a3]"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {opt.subtitle}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+export interface AvatarMultiSelectProps {
+  placeholder?: string;
+  options: AvatarOption[];
+  values: string[];
+  onChange: (values: string[]) => void;
+}
+
+export function AvatarMultiSelectDropdown({
+  placeholder = "Avatar Multi Select",
+  options,
+  values,
+  onChange,
+}: AvatarMultiSelectProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const toggleValue = (value: string) => {
+    if (values.includes(value)) {
+      onChange(values.filter((v) => v !== value));
+    } else {
+      onChange([...values, value]);
+    }
   };
 
-  const [country, setCountry] = useState<string | null>(null);
-  const [state, setState] = useState<string | null>(null);
-  const [city, setCity] = useState<string | null>(null);
-
-  const countryOptions = Object.keys(data).map((c) => ({
-    label: c,
-    value: c,
-  }));
-
-         const stateOptions = Object.values(data)
-  .flatMap((states) => Object.keys(states))
-  .map((s) => ({ label: s, value: s }));
-const cityOptions = Object.values(data)
-  .flatMap((states) => Object.values(states))
-  .flat()
-  .map((c) => ({ label: c, value: c }));
   return (
-    <div className="w-[340px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] space-y-4">
-      <h3 className="font-semibold">Cascading / Nested Dropdown</h3>
+    <div className="relative w-full" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex justify-between items-center px-4 py-3
+        rounded-[6px] text-white font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
+      >
+        {placeholder}
+        <ChevronDown size={16} />
+      </button>
 
-      {/* COUNTRY */}
-      <BasicDropdown
-  label="Country"
-  placeholder="Select country"
-  options={countryOptions}
-  value={country}
-  onChange={(v) => {
-    setCountry(v);
-    setState(null);
-    setCity(null);
-  }}
-/>
+      {values.length > 0 && (
+        <div className="flex gap-2 flex-wrap mt-3">
+          {values.map((v) => {
+            const opt = options.find((o) => o.value === v);
+            return (
+              <div
+                key={v}
+                className="flex items-center gap-2 px-3 py-2 rounded-[6px]
+                bg-white border text-sm"
+              >
+                {opt?.label}
+                <X
+                  size={14}
+                  className="cursor-pointer"
+                  onClick={() => toggleValue(v)}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
 
-<BasicDropdown
-  label="State"
-  placeholder="Select state"
-  options={stateOptions}
-  value={state}
-  onChange={(v) => {
-    setState(v);
-    setCity(null);
-  }}
-/>
+      {open && (
+        <div
+          className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
+          shadow-lg border"
+        >
+          {options.map((opt) => {
+            const active = values.includes(opt.value);
+            return (
+              <div
+                key={opt.value}
+                onClick={() => toggleValue(opt.value)}
+                className={`flex items-center gap-4 px-4 py-3 cursor-pointer
+                ${
+                  active
+                    ? "bg-[#e6f3ef]"
+                    : "hover:bg-[#f0f7f5]"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  readOnly
+                  checked={active}
+                  className="accent-[#1761a3]"
+                />
 
-<BasicDropdown
-  label="City"
-  placeholder="Select city"
-  options={cityOptions}
-  value={city}
-  onChange={(v) => setCity(v)}
-/>
-</div>
+                <img
+                  src={opt.image}
+                  className="w-9 h-7 rounded-[4px]"
+                />
+
+                <div>
+                  <div className="font-medium">{opt.label}</div>
+                  <div className="text-xs text-slate-500">
+                    {opt.subtitle}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+type Option = {
+  label: string;
+  value: string;
+};
+
+type Group = {
+  label: string;
+  options: Option[];
+};
+
+type GroupValue = {
+  section: string;
+  values: string[];
+} | null;
+
+type Props = {
+  label?: string;
+  groups: Group[];
+  values: GroupValue;
+  onChange: (val: GroupValue) => void;
+};
+
+export function GroupedDropdown({
+  label,
+  groups,
+  values,
+  onChange,
+}: Props) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  /* ---------- outside click close ---------- */
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  /* ---------- helpers ---------- */
+  const isSectionSelected = (group: Group) =>
+    values?.section === group.label;
+
+  const isChildChecked = (val: string) =>
+    values?.values.includes(val) ?? false;
+
+  /* ---------- parent toggle ---------- */
+  const toggleSection = (group: Group) => {
+    if (values?.section === group.label) {
+      onChange(null);
+    } else {
+      onChange({
+        section: group.label,
+        values: group.options.map(o => o.value),
+      });
+    }
+  };
+
+  /* ---------- child toggle ---------- */
+  const toggleChild = (group: Group, val: string) => {
+    if (values?.section !== group.label) {
+      onChange({ section: group.label, values: [val] });
+      return;
+    }
+
+    const exists = values.values.includes(val);
+    const newValues = exists
+      ? values.values.filter(v => v !== val)
+      : [...values.values, val];
+
+    onChange(
+      newValues.length === 0
+        ? null
+        : { section: group.label, values: newValues }
+    );
+  };
+
+  /* ---------- display value ---------- */
+  const displayValue = !values
+    ? "Grouped Dropdown"
+    : `${values.section} (${values.values
+        .map(v =>
+          groups
+            .flatMap(g => g.options)
+            .find(o => o.value === v)?.label
+        )
+        .join(", ")})`;
+
+  return (
+    <div ref={ref} className="relative w-full">
+      {label && <label className="mb-1 block text-sm">{label}</label>}
+
+      {/* trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex justify-between items-center px-4 py-3
+        rounded-[6px] text-white font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
+      >
+        
+        <span className="truncate">{displayValue}</span>
+
+            <ChevronDown size={18} />
+    
+  
+
+    
+
+      </button>
+
+      {/* dropdown */}
+      {open && (
+        <div className="bsolute z-20 mt-2 w-full bg-white p-3 rounded-md
+          shadow-lg border border-[rgba(77,175,131,0.4)]">
+          {groups.map(group => (
+            <div key={group.label} className="mb-2">
+              {/* parent */}
+              <div className="flex items-center gap-2 font-medium">
+                <input
+                  type="checkbox"
+                  checked={isSectionSelected(group)}
+                  onChange={() => toggleSection(group)}
+                />
+                <span>{group.label}</span>
+              </div>
+
+              {/* children (ALWAYS visible when dropdown open) */}
+              <div className="pl-6 mt-1 space-y-1">
+                {group.options.map(opt => (
+                  <label
+                    key={opt.value}
+                    className="flex items-center gap-2"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChildChecked(opt.value)}
+                      onChange={() => toggleChild(group, opt.value)}
+                    />
+                    {opt.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
-export function AsyncCascadingDropdown() {
-  const [countries, setCountries] = useState<Option[]>([]);
-  const [states, setStates] = useState<Option[]>([]);
-  const [cities, setCities] = useState<Option[]>([]);
+export interface Option {
+  label: string;
+  value: string;
+}
 
-  const [country, setCountry] = useState<string | null>(null);
-  const [state, setState] = useState<string | null>(null);
-  const [city, setCity] = useState<string | null>(null);
-  const [searchCountry, setSearchCountry] = useState("");
-const [searchState, setSearchState] = useState("");
-const [searchCity, setSearchCity] = useState("");
+interface Props {
+  label: string;
+  placeholder: string;
+  loadOptions: (search: string) => Promise<Option[]>;
+  value?: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}
 
-  /* ---------------- LOAD COUNTRIES ---------------- */
+export function AsyncLocationDropdown({
+  label,
+  placeholder,
+  loadOptions,
+  value,
+  onChange,
+  disabled,
+}: Props) {
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState<Option[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    fetch("https://countriesnow.space/api/v0.1/countries/positions")
-      .then((res) => res.json())
-      .then((data) => {
-        setCountries(
-          data.data.map((c: any) => ({
-            label: c.name,
-            value: c.name,
-          }))
-        );
-      });
+    if (!open) return;
+
+    setLoading(true);
+    loadOptions(search)
+      .then(setOptions)
+      .finally(() => setLoading(false));
+  }, [open, search, loadOptions]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* ---------------- LOAD STATES ---------------- */
-  useEffect(() => {
-    if (!country) return;
-
-    fetch("https://countriesnow.space/api/v0.1/countries/states", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ country }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setStates(
-          data.data.states.map((s: any) => ({
-            label: s.name,
-            value: s.name,
-          }))
-        );
-        setState(null);
-        setCity(null);
-        setCities([]);
-      });
-  }, [country]);
-
-  /* ---------------- LOAD CITIES ---------------- */
-  useEffect(() => {
-    if (!country || !state) return;
-
-    fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ country, state }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setCities(
-          data.data.map((c: string) => ({
-            label: c,
-            value: c,
-          }))
-        );
-        setCity(null);
-      });
-  }, [state]);
- const filteredCountries = countries.filter((c) =>
-  c.label.toLowerCase().includes(searchCountry.toLowerCase())
-);
-
-const filteredStates = states.filter((s) =>
-  s.label.toLowerCase().includes(searchState.toLowerCase())
-);
-
-const filteredCities = cities.filter((c) =>
-  c.label.toLowerCase().includes(searchCity.toLowerCase())
-);
+  const selectedLabel =
+    options.find((o) => o.value === value)?.label || placeholder;
 
   return (
-    <div className="w-[300px] p-4 rounded-[8px] border bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] space-y-4">
-      <h3 className="font-semibold mb-3">Async/Dynamic Dropdown</h3>
-    <div className="space-y-4">
-      <BasicDropdown
-        label="Country"
-        placeholder="Select Country"
-        options={countries}
-        value={country}
-        onChange={(v) => setCountry(v)}
-      />
+    <div className="w-full relative" ref={ref}>
+      <label className="block text-xs font-semibold text-[#1761a3] mb-2">
+        {label}
+      </label>
 
-      <BasicDropdown
-        label="State"
-        placeholder="Select State"
-        options={states}
-        value={state}
-        onChange={(v) => setState(v)}
-      />
+      <button
+        disabled={disabled}
+        onClick={() => setOpen((o) => !o)}
+        className={`w-full flex justify-between items-center px-4 py-3
+        rounded-[6px] text-white font-semibold
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]
+        ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      >
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown size={16} />
+      </button>
 
-      <BasicDropdown
-        label="City"
-        placeholder="Select City"
-        options={cities}
-        value={city}
-        onChange={(v) => setCity(v)}
-      />
-    </div>
+      {open && (
+        <div className="absolute z-30 w-full mt-2 bg-white rounded-[8px] border shadow-lg">
+          {/* SEARCH */}
+          <div className="p-3 border-b relative">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full px-3 py-2 text-sm border rounded"
+            />
+            {search && (
+              <X
+                size={14}
+                className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer"
+                onClick={() => setSearch("")}
+              />
+            )}
+          </div>
+
+          {/* OPTIONS */}
+          <div className="max-h-56 overflow-auto">
+            {loading && (
+              <div className="p-3 text-sm flex gap-2 items-center text-gray-500">
+                <Loader2 size={14} className="animate-spin" />
+                Loading...
+              </div>
+            )}
+
+            {!loading &&
+              options.map((opt) => (
+                <div
+                  key={opt.value}
+                  onClick={() => {
+                    onChange(opt.value);
+                    setOpen(false); // ✅ CLOSE ON SELECT
+                    setSearch("");
+                  }}
+                  className="px-4 py-2 cursor-pointer hover:bg-slate-100"
+                >
+                  {opt.label}
+                </div>
+              ))}
+
+            {!loading && options.length === 0 && (
+              <div className="px-4 py-2 text-gray-400 text-sm">
+                No results
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
