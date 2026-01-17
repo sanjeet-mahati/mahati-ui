@@ -335,19 +335,21 @@ const [country, setCountry] = useState("");
               label: "Enter Title",
               value: "1",
               subtitle: "Section 1",
-              image: "/avatar-1.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
             {
               label: "Enter Title",
               value: "2",
               subtitle: "Section 2",
-              image: "/avatar-2.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
             {
               label: "Enter Title",
               value: "3",
               subtitle: "Section 3",
-              image: "/avatar-3.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              
+              
             },
           ]}
           value={avatar}
@@ -366,19 +368,19 @@ const [country, setCountry] = useState("");
       label: "Enter Title",
       value: "1",
       subtitle: "Section 1",
-      image: "/avatar-1.jpg",
+      image: "https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       label: "Enter Title",
       value: "2",
       subtitle: "Section 2",
-      image: "/avatar-2.jpg",
+      image: "https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       label: "Enter Title",
       value: "3",
       subtitle: "Section 3",
-      image: "/avatar-3.jpg",
+      image: "https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   ]}
   values={avatars}
@@ -401,19 +403,19 @@ const [country, setCountry] = useState("");
               label: "Enter Title",
               value: "1",
               subtitle: "Section 1",
-              image: "/avatar-1.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
             {
               label: "Enter Title",
               value: "2",
               subtitle: "Section 2",
-              image: "/avatar-2.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
             {
               label: "Enter Title",
               value: "3",
               subtitle: "Section 3",
-              image: "/avatar-3.jpg",
+              image: "https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
           ]}
           values={avatars}

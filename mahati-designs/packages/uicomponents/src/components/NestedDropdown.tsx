@@ -56,7 +56,7 @@ export function SearchableDropdown({
         type="button"
         onClick={() => setOpen(!open)}
         className="w-full flex justify-between items-center px-4 py-3
-        rounded-[6px] text-white font-semibold
+        rounded-[8px] text-white font-semibold
         bg-gradient-to-r from-[#1761a3] to-[#4daf83]">
       
         <span className="truncate">{selectedLabel}</span>
@@ -152,6 +152,7 @@ export function MultiSelectDropdown({
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [search,setSearch]=useState("");
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -186,10 +187,10 @@ export function MultiSelectDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-[6px]
+        className="w-full flex items-center justify-between px-4 py-3 rounded-[8px]
         text-white text-sm font-semibold
-        bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
-      >
+        bg-gradient-to-r from-[#1761a3] to-[#4daf83]">
+         
         {placeholder}
         <ChevronDown size={16} />
       </button>
@@ -202,7 +203,7 @@ export function MultiSelectDropdown({
             return (
               <div
                 key={val}
-                className="flex items-center gap-2 px-3 py-2 rounded-[6px]
+                className="flex items-center gap-2 px-3 py-2 rounded-[10px]
                 bg-white border border-[#cde3f1] text-sm"
               >
                 {label}
@@ -220,9 +221,38 @@ export function MultiSelectDropdown({
       {/* DROPDOWN */}
       {open && (
         <div
-          className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
+          className="absolute z-20 mt-3 w-full bg-white rounded-[12px]
           shadow-lg border border-[rgba(77,175,131,0.4)]"
         >
+          {/* SEARCH */}
+<div className="p-3 border-b">
+  <div className="relative">
+    <input
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="Search..."
+      className="w-full px-3 py-2 text-sm
+      rounded-[6px]
+      bg-[rgba(23,97,163,0.1)]
+      border border-[rgba(23,97,163,0.3)]
+      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+    />
+
+    {search && (
+      <button
+        type="button"
+        onClick={() => setSearch("")}
+        className="absolute right-3 top-1/2 -translate-y-1/2
+        w-5 h-5 rounded-full
+        bg-gray-400 hover:bg-gray-500
+        text-white text-xs font-bold
+        flex items-center justify-center"
+      >
+        ✕
+      </button>
+    )}
+  </div>
+</div>
           {options.map((opt) => {
             const active = values.includes(opt.value);
             return (
@@ -343,6 +373,7 @@ export function AvatarDropdown({
 }: AvatarDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const[search,setSearch]=useState("");
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -376,6 +407,37 @@ export function AvatarDropdown({
           className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
           shadow-lg border border-[rgba(77,175,131,0.4)]"
         >
+          {/* SEARCH */}
+          {/* SEARCH */}
+<div className="p-3 border-b">
+  <div className="relative">
+    <input
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="Search..."
+      className="w-full px-3 py-2 text-sm
+      rounded-[6px]
+      bg-[rgba(23,97,163,0.1)]
+      border border-[rgba(23,97,163,0.3)]
+      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+    />
+
+    {search && (
+      <button
+        type="button"
+        onClick={() => setSearch("")}
+        className="absolute right-3 top-1/2 -translate-y-1/2
+        w-5 h-5 rounded-full
+        bg-gray-400 hover:bg-gray-500
+        text-white text-xs font-bold
+        flex items-center justify-center"
+      >
+        ✕
+      </button>
+    )}
+  </div>
+</div>
+
           {options.map((opt) => {
             const active = opt.value === value;
 
@@ -442,6 +504,7 @@ export function AvatarMultiSelectDropdown({
 }: AvatarMultiSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -501,6 +564,8 @@ export function AvatarMultiSelectDropdown({
           className="absolute z-20 mt-3 w-full bg-white rounded-[10px]
           shadow-lg border"
         >
+          {/* SEARCH */}
+
           {options.map((opt) => {
             const active = values.includes(opt.value);
             return (
@@ -540,14 +605,14 @@ export function AvatarMultiSelectDropdown({
     </div>
   );
 }
-type Option = {
+type GroupedOption = {
   label: string;
   value: string;
 };
 
-type Group = {
+type GroupedGroup = {
   label: string;
-  options: Option[];
+  options: GroupedOption[];
 };
 
 type GroupValue = {
@@ -555,9 +620,9 @@ type GroupValue = {
   values: string[];
 } | null;
 
-type Props = {
+type GroupedDropdownProps = {
   label?: string;
-  groups: Group[];
+  groups: GroupedGroup[];
   values: GroupValue;
   onChange: (val: GroupValue) => void;
 };
@@ -567,9 +632,10 @@ export function GroupedDropdown({
   groups,
   values,
   onChange,
-}: Props) {
+}: GroupedDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [search,setSearch]=useState("");
 
   /* ---------- outside click close ---------- */
   useEffect(() => {
@@ -583,14 +649,14 @@ export function GroupedDropdown({
   }, []);
 
   /* ---------- helpers ---------- */
-  const isSectionSelected = (group: Group) =>
+  const isSectionSelected = (group: GroupedGroup) =>
     values?.section === group.label;
 
   const isChildChecked = (val: string) =>
     values?.values.includes(val) ?? false;
 
   /* ---------- parent toggle ---------- */
-  const toggleSection = (group: Group) => {
+  const toggleSection = (group: GroupedGroup) => {
     if (values?.section === group.label) {
       onChange(null);
     } else {
@@ -602,7 +668,7 @@ export function GroupedDropdown({
   };
 
   /* ---------- child toggle ---------- */
-  const toggleChild = (group: Group, val: string) => {
+  const toggleChild = (group: GroupedGroup, val: string) => {
     if (values?.section !== group.label) {
       onChange({ section: group.label, values: [val] });
       return;
@@ -658,7 +724,7 @@ export function GroupedDropdown({
       {open && (
         <div className="bsolute z-20 mt-2 w-full bg-white p-3 rounded-md
           shadow-lg border border-[rgba(77,175,131,0.4)]">
-          {groups.map(group => (
+          {groups.map(group  => (
             <div key={group.label} className="mb-2">
               {/* parent */}
               <div className="flex items-center gap-2 font-medium">
@@ -672,7 +738,7 @@ export function GroupedDropdown({
 
               {/* children (ALWAYS visible when dropdown open) */}
               <div className="pl-6 mt-1 space-y-1">
-                {group.options.map(opt => (
+                {group.options.map((opt)=> (
                   <label
                     key={opt.value}
                     className="flex items-center gap-2"

@@ -39,6 +39,7 @@ export { MahatiSearch } from './components/Filter';
 
 
 export {SearchableDropdown} from './components/NestedDropdown';
+export{MultiSelectDropdown} from './components/NestedDropdown';
 
 // Type Exports
 // It's a good practice to re-export types that consumers of your library might need.
