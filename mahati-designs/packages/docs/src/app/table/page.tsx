@@ -7,6 +7,7 @@ import Link from "next/link";
 // import Button from "../../../../uicomponents/src/components/Button";
 import {MahatiTable} from "@/components";
 import {MahatiButton} from "@/components";
+import { CodePreview } from '../CodePreview';
 
 
 type Align = "left" | "center" | "right";
@@ -337,28 +338,6 @@ const toKey = (label: string, existing: Set<string>) => {
   while (existing.has(k)) k = `${base}_${i++}`;
   return k;
 };
-
-const Section: React.FC<React.PropsWithChildren<{ id?: string; className?: string }>> = ({
-  id,
-  className,
-  children,
-}) => (
-  <section
-    id={id}
-    className={`mb-12 rounded-xl border border-slate-200 bg-white p-8 shadow-sm ${className ?? ""}`}
-  >
-    {children}
-  </section>
-);
-const SectionTitle: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <h2 className="mb-3 text-2xl font-semibold text-slate-800">{children}</h2>
-);
-const SectionDescription: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <p className="mb-6 leading-relaxed text-slate-500">{children}</p>
-);
-const DemoGrid: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <div className="grid grid-cols-1 gap-6">{children}</div>
-);
 
 const useSearchPaginate = (rows: Person[], defaultLimit = 10) => {
   const [page, setPage] = useState(1);
@@ -919,66 +898,93 @@ export default function TabDemoTailwindCSS() {
         </header>
 
         {/* BASIC */}
-        <Section id="basic">
-          <SectionTitle>Basic Table</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             A minimal example with static data and no pagination controls.
-          </SectionDescription>
-          <DemoGrid>
-            <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Basic Table"
+            code={`<MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />`}
+            preview={<MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />}
+          />
+        </div>
 
         {/* PAGINATED */}
-        <Section id="paginated">
-          <SectionTitle>Paginated Table</SectionTitle>
-          <div className="mb-4 flex flex-wrap items-center gap-3">
-            <input
-              value={search}
-              onChange={(e) => onSearch(e.target.value)}
-              placeholder="Search…"
-              className="w-64 rounded-md border border-slate-300 px-3 py-2 text-sm"
-            />
-            <MahatiButton onClick={onReset}>Reset</MahatiButton>
-            <div className="ml-auto flex items-center gap-2 text-sm text-slate-600">
-              <span>Rows per page:</span>
-              <select
-                value={limit}
-                onChange={(e) => {
-                  setPage(1);
-                  setLimit(Number(e.target.value));
-                }}
-                className="rounded-md border border-slate-300 px-2 py-1 text-sm"
-              >
-                {[5, 8, 10, 12, 15].map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-              <span>| Total: {total}</span>
-            </div>
-          </div>
+        <div className="mb-12">
+          <CodePreview
+            title="Paginated Table"
+            code={`const { page, setPage, limit, setLimit, search, onSearch, onReset, total, slice } = useSearchPaginate(peopleAll, 10);
 
-          <DemoGrid>
-            <MahatiTable
-              headers={basicHeaders}
-              data={slice}
-              page={page}
-              setPage={setPage}
-              limit={limit}
-              setLimit={setLimit}
-              totalCount={total}
-              paginationRequired
-              paginationPosition="bottom-center"
-              // searchable
-              // searchTerm={search}
-              // onSearch={onSearch}
-              onResetSearch={onReset}
-              onDownloadPDF={() => alert("PDF download triggered!")}
-            />
-          </DemoGrid>
-        </Section>
+<div className="mb-4 flex flex-wrap items-center gap-3">
+  <input
+    value={search}
+    onChange={(e) => onSearch(e.target.value)}
+    placeholder="Search…"
+    className="w-64 rounded-md border border-slate-300 px-3 py-2 text-sm"
+  />
+  <MahatiButton onClick={onReset}>Reset</MahatiButton>
+  {/* ... rows per page selector ... */}
+</div>
+
+<MahatiTable
+  headers={basicHeaders}
+  data={slice}
+  page={page}
+  setPage={setPage}
+  limit={limit}
+  setLimit={setLimit}
+  totalCount={total}
+  paginationRequired
+  paginationPosition="bottom-center"
+  onResetSearch={onReset}
+  onDownloadPDF={() => alert("PDF download triggered!")}
+/>`}
+            preview={
+              <div>
+                <div className="mb-4 flex flex-wrap items-center gap-3">
+                  <input
+                    value={search}
+                    onChange={(e) => onSearch(e.target.value)}
+                    placeholder="Search…"
+                    className="w-64 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                  />
+                  <MahatiButton onClick={onReset}>Reset</MahatiButton>
+                  <div className="ml-auto flex items-center gap-2 text-sm text-slate-600">
+                    <span>Rows per page:</span>
+                    <select
+                      value={limit}
+                      onChange={(e) => {
+                        setPage(1);
+                        setLimit(Number(e.target.value));
+                      }}
+                      className="rounded-md border border-slate-300 px-2 py-1 text-sm"
+                    >
+                      {[5, 8, 10, 12, 15].map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                    <span>| Total: {total}</span>
+                  </div>
+                </div>
+                <MahatiTable
+                  headers={basicHeaders}
+                  data={slice}
+                  page={page}
+                  setPage={setPage}
+                  limit={limit}
+                  setLimit={setLimit}
+                  totalCount={total}
+                  paginationRequired
+                  paginationPosition="bottom-center"
+                  onResetSearch={onReset}
+                  onDownloadPDF={() => alert("PDF download triggered!")}
+                />
+              </div>
+            }
+          />
+        </div>
 
         {/* EXPANDABLE ROWS WITH SUMMARY (single) */}
         {/* <Section id="expandable-rows">
@@ -1036,378 +1042,447 @@ export default function TabDemoTailwindCSS() {
         </Section> */}
 
         {/* CUSTOM CELLS & ACTIONS */}
-        <Section id="custom">
-          <SectionTitle>Custom Cells &amp; Actions</SectionTitle>
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton variant="default" onClick={handleAddRow}>
-              + Add Row
-            </MahatiButton>
-            <MahatiButton onClick={handleAddColumn}>+ Add Column</MahatiButton>
-            <MahatiButton variant="danger" onClick={resetDemo}
-              className="bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
-            >
-              Reset Demo
-            </MahatiButton>
-          </div>
-          <DemoGrid>
-            <MahatiTable
-              headers={scriptHeaders}
-              data={customTableData}
-              actions={(row) => {
-                const rId = Number((row as any).id);
-                const source = scriptRows.find((r) => r.id === rId);
-                const isEditing = source?.id === editingRowId;
-                return (
-                  <div className="flex items-center gap-2">
-                    {!isEditing ? (
-                      <>
-                        <MahatiButton
-                          size="md"
-                          onClick={() => source && startEdit(source)}
-                        >
-                          Edit
-                        </MahatiButton>
-                        <MahatiButton
-                          size="md"
-                          variant="danger"
-                          onClick={() => source && deleteRow(source.id)}
-                        >
-                          Delete
-                        </MahatiButton>
-                      </>
-                    ) : (
-                      <>
-                        <MahatiButton
-                          size="md"
-                          variant="danger"
-                          onClick={saveEdit}
-                        >
-                          Save
-                        </MahatiButton>
-                        <MahatiButton size="md" onClick={cancelEdit}>
-                          Cancel
-                        </MahatiButton>
-                      </>
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </DemoGrid>
-        </Section>
+        <div className="mb-12">
+          <CodePreview
+            title="Custom Cells & Actions"
+            code={`<MahatiTable
+  headers={scriptHeaders}
+  data={customTableData}
+  actions={(row) => (
+    <div className="flex items-center gap-2">
+       {/* Edit/Delete buttons */}
+    </div>
+  )}
+/>`}
+            preview={
+              <div>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <MahatiButton variant="default" onClick={handleAddRow}>
+                    + Add Row
+                  </MahatiButton>
+                  <MahatiButton onClick={handleAddColumn}>+ Add Column</MahatiButton>
+                  <MahatiButton variant="danger" onClick={resetDemo}
+                    className="bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
+                  >
+                    Reset Demo
+                  </MahatiButton>
+                </div>
+                <MahatiTable
+                  headers={scriptHeaders}
+                  data={customTableData}
+                  actions={(row) => {
+                    const rId = Number((row as any).id);
+                    const source = scriptRows.find((r) => r.id === rId);
+                    const isEditing = source?.id === editingRowId;
+                    return (
+                      <div className="flex items-center gap-2">
+                        {!isEditing ? (
+                          <>
+                            <MahatiButton
+                              size="md"
+                              onClick={() => source && startEdit(source)}
+                            >
+                              Edit
+                            </MahatiButton>
+                            <MahatiButton
+                              size="md"
+                              variant="danger"
+                              onClick={() => source && deleteRow(source.id)}
+                            >
+                              Delete
+                            </MahatiButton>
+                          </>
+                        ) : (
+                          <>
+                            <MahatiButton
+                              size="md"
+                              variant="danger"
+                              onClick={saveEdit}
+                            >
+                              Save
+                            </MahatiButton>
+                            <MahatiButton size="md" onClick={cancelEdit}>
+                              Cancel
+                            </MahatiButton>
+                          </>
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+              </div>
+            }
+          />
+        </div>
 
         {/* DATE & TIME SORTING */}
-        <Section id="date-time-sorting">
-          <SectionTitle>Date &amp; Time Sorting</SectionTitle>
-          <DemoGrid>
-            <SortableTable headers={taskHeaders} data={tasksDataPrepared} />
-          </DemoGrid>
-        </Section>
+        <div className="mb-12">
+          <CodePreview
+            title="Date & Time Sorting"
+            code={`<SortableTable headers={taskHeaders} data={tasksDataPrepared} />`}
+            preview={<SortableTable headers={taskHeaders} data={tasksDataPrepared} />}
+          />
+        </div>
 
         {/* BORDERED */}
-        <Section id="bordered">
-          <SectionTitle>Bordered Table (Visible Edges)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Wrap the original Table to show visible cell edges.
-          </SectionDescription>
-          <DemoGrid>
-            <div className="rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200">
-              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
-            </div>
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Bordered Table (Visible Edges)"
+            code={`<div className="rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200">
+  <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
+</div>`}
+            preview={
+              <div className="rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200">
+                <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
+              </div>
+            }
+          />
+        </div>
 
         {/* ALIGNMENT CONTROLS (ALL CELLS) */}
-        <Section id="alignment-controls">
-          <SectionTitle>Alignment Controls (Left / Center / Right)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             This table starts left-aligned. Use the buttons to change alignment of{" "}
             <em>all cells</em> in this table only.
-          </SectionDescription>
-
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "left" ? "destructive" : undefined}
-              onClick={() => setAioAlign("left")}
-            >
-              Left
-            </MahatiButton>
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "center" ? "destructive" : undefined}
-              onClick={() => setAioAlign("center")}
-            >
-              Center
-            </MahatiButton>
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "right" ? "destructive" : undefined}
-              onClick={() => setAioAlign("right")}
-            >
-              Right
-            </MahatiButton>
-          </div>
-
-          <DemoGrid>
-            <div
-              className={
-                aioAlign === "left"
-                  ? "text-left"
-                  : aioAlign === "center"
-                  ? "text-center"
-                  : "text-right"
-              }
-            >
-              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} 
-              />
-            </div>
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Alignment Controls (Left / Center / Right)"
+            code={`<div className={alignClass}>
+  <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+</div>`}
+            preview={
+              <div>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "left" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("left")}
+                  >
+                    Left
+                  </MahatiButton>
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "center" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("center")}
+                  >
+                    Center
+                  </MahatiButton>
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "right" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("right")}
+                  >
+                    Right
+                  </MahatiButton>
+                </div>
+                <div
+                  className={
+                    aioAlign === "left"
+                      ? "text-left"
+                      : aioAlign === "center"
+                      ? "text-center"
+                      : "text-right"
+                  }
+                >
+                  <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+                </div>
+              </div>
+            }
+          />
+        </div>
 
         {/* PER-COLUMN ALIGNMENT */}
-        <Section id="per-column-alignment">
-          <SectionTitle>Per-Column Alignment (Click Header to Cycle)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Starts left-aligned. Click a column header to cycle that column's{" "}
             <em>cell</em> alignment: Left → Center → Right → Left.
-          </SectionDescription>
-          <DemoGrid>
-            <MahatiTable headers={perColHeadersClickable} data={perColData} />
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Per-Column Alignment"
+            code={`<MahatiTable headers={perColHeadersClickable} data={perColData} />`}
+            preview={<MahatiTable headers={perColHeadersClickable} data={perColData} />}
+          />
+        </div>
 
         {/* COLUMN VISIBILITY */}
-        <Section id="column-visibility">
-          <SectionTitle>Column Visibility (Multi-Select)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Use the dropdown to choose which columns are shown. Initially all 10 columns are
             visible.
-          </SectionDescription>
+          </p>
+          <CodePreview
+            title="Column Visibility (Multi-Select)"
+            code={`<MahatiTable
+  headers={visibilityHeaders.filter((h) => visibleKeys.includes(h.key))}
+  data={filteredData}
+/>`}
+            preview={
+              <div>
+                <div className="mb-3 flex items-center">
+                  <div className="relative" ref={pickerRef}>
+                    <button
+                      type="button"
+                      onClick={() => setPickerOpen((o) => !o)}
+                      aria-haspopup="menu"
+                      aria-expanded={pickerOpen}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm hover:bg-slate-50"
+                    >
+                      Columns ({visibleKeys.length}/{visibilityHeaders.length})
+                    </button>
 
-          <div className="mb-3 flex items-center">
-            <div className="relative" ref={pickerRef}>
-              <button
-                type="button"
-                onClick={() => setPickerOpen((o) => !o)}
-                aria-haspopup="menu"
-                aria-expanded={pickerOpen}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm hover:bg-slate-50"
-              >
-                Columns ({visibleKeys.length}/{visibilityHeaders.length})
-              </button>
-
-              {pickerOpen && (
-                <div
-                  role="menu"
-                  aria-label="Choose visible columns"
-                  className="absolute left-0 top-[calc(100%+6px)] z-30 min-w-60 rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
-                >
-                  <div className="max-h-72 space-y-1 overflow-auto">
-                    {visibilityHeaders.map((h) => (
-                      <label
-                        key={h.key}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-50"
+                    {pickerOpen && (
+                      <div
+                        role="menu"
+                        aria-label="Choose visible columns"
+                        className="absolute left-0 top-[calc(100%+6px)] z-30 min-w-60 rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
                       >
-                        <input
-                          type="checkbox"
-                          checked={visibleKeys.includes(h.key)}
-                          onChange={() => toggleKey(h.key)}
-                          className="h-4 w-4 rounded border-slate-300"
-                        />
-                        <span className="text-sm text-slate-700">{h.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                  <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2">
-                    <MahatiButton size="md" onClick={selectAll}>
-                      Select All
-                    </MahatiButton>
-                    <MahatiButton size="md" onClick={clearAll}>
-                      Clear All
-                    </MahatiButton>
-                    <div className="ml-md">
-                      <MahatiButton
-                        className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
-                        size="md"
-                        variant="destructive"
-                        onClick={() => setPickerOpen(false)}
-                      >
-                        Done
-                      </MahatiButton>
-                    </div>
+                        <div className="max-h-72 space-y-1 overflow-auto">
+                          {visibilityHeaders.map((h) => (
+                            <label
+                              key={h.key}
+                              className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-50"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={visibleKeys.includes(h.key)}
+                                onChange={() => toggleKey(h.key)}
+                                className="h-4 w-4 rounded border-slate-300"
+                              />
+                              <span className="text-sm text-slate-700">{h.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2">
+                          <MahatiButton size="md" onClick={selectAll}>
+                            Select All
+                          </MahatiButton>
+                          <MahatiButton size="md" onClick={clearAll}>
+                            Clear All
+                          </MahatiButton>
+                          <div className="ml-md">
+                            <MahatiButton
+                              className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
+                              size="md"
+                              variant="destructive"
+                              onClick={() => setPickerOpen(false)}
+                            >
+                              Done
+                            </MahatiButton>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-
-          <DemoGrid>
-            <MahatiTable
-              headers={visibilityHeaders.filter((h) => visibleKeys.includes(h.key))}
-              data={useMemo(() => {
-                return visibilityData.map((row) => {
-                  const obj: Record<string, any> = {};
-                  visibilityHeaders.forEach((h) => {
-                    if (visibleKeys.includes(h.key)) {
-                      obj[h.key] = (row as any)[h.key];
-                    }
-                  });
-                  return obj;
-                });
-                
-              }, [visibilityData, visibleKeys])}
-            />
-          </DemoGrid>
-        </Section>
+                <MahatiTable
+                  headers={visibilityHeaders.filter((h) => visibleKeys.includes(h.key))}
+                  data={useMemo(() => {
+                    return visibilityData.map((row) => {
+                      const obj: Record<string, any> = {};
+                      visibilityHeaders.forEach((h) => {
+                        if (visibleKeys.includes(h.key)) {
+                          obj[h.key] = (row as any)[h.key];
+                        }
+                      });
+                      return obj;
+                    });
+                  }, [visibilityData, visibleKeys])}
+                />
+              </div>
+            }
+          />
+        </div>
 
         {/* ALL-IN-ONE */}
-        <Section id="all-in-one">
-          <SectionTitle>All-in-One Table (Everything Demo)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Combines: sortable headers, pagination, editable rows &amp; actions, add column/row,
             per-table alignment controls, and visible borders — all in one table.
-          </SectionDescription>
+          </p>
+          <CodePreview
+            title="All-in-One Table"
+            code={`<SortableTable
+  headers={[{ label: "ID", key: "id" }, ...scriptHeaders]}
+  data={scriptRows}
+/>`}
+            preview={
+              <div>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "left" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("left")}
+                  >
+                    Left
+                  </MahatiButton>
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "center" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("center")}
+                  >
+                    Center
+                  </MahatiButton>
+                  <MahatiButton
+                    size="md"
+                    variant={aioAlign === "right" ? "destructive" : undefined}
+                    onClick={() => setAioAlign("right")}
+                  >
+                    Right
+                  </MahatiButton>
 
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "left" ? "destructive" : undefined}
-              onClick={() => setAioAlign("left")}
-            >
-              Left
-            </MahatiButton>
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "center" ? "destructive" : undefined}
-              onClick={() => setAioAlign("center")}
-            >
-              Center
-            </MahatiButton>
-            <MahatiButton
-              size="md"
-              variant={aioAlign === "right" ? "destructive" : undefined}
-              onClick={() => setAioAlign("right")}
-            >
-              Right
-            </MahatiButton>
+                  <span className="mx-2 h-6 w-px bg-slate-200" />
 
-            <span className="mx-2 h-6 w-px bg-slate-200" />
+                  <MahatiButton size="md" onClick={handleAddColumn}>
+                    + Add Column
+                  </MahatiButton>
+                  <MahatiButton size="md" onClick={handleAddRow}>
+                    + Add Row
+                  </MahatiButton>
+                  <MahatiButton
+                    className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
+                    size="lg"
+                    variant="danger"
+                    onClick={resetDemo}
+                  >
+                    Reset
+                  </MahatiButton>
+                </div>
 
-            <MahatiButton size="md" onClick={handleAddColumn}>
-              + Add Column
-            </MahatiButton>
-            <MahatiButton size="md" onClick={handleAddRow}>
-              + Add Row
-            </MahatiButton>
-            <MahatiButton 
-              className="ml-auto bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] rounded-lg text-white"
-              size="lg" 
-              variant="danger" 
-              onClick={resetDemo}
-            >
-              Reset
-            </MahatiButton>
-          </div>
+                <div
+                  className={`rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200 ${
+                    aioAlign === "left"
+                      ? "text-left"
+                      : aioAlign === "center"
+                      ? "text-center"
+                      : "text-right"
+                  }`}
+                >
+                  <SortableTable
+                    headers={[{ label: "ID", key: "id" }, ...scriptHeaders]}
+                    data={scriptRows}
+                  />
+                </div>
 
-          <div
-            className={`rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200 ${
-              aioAlign === "left"
-                ? "text-left"
-                : aioAlign === "center"
-                ? "text-center"
-                : "text-right"
-            }`}
-          >
-            <SortableTable
-              headers={[{ label: "ID", key: "id" }, ...scriptHeaders]}
-              data={scriptRows}
-            />
-          </div>
-
-          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-600">
-            <span className="font-medium">Rows:</span>
-            <span>{scriptRows.length}</span>
-          </div>
-        </Section>
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                  <span className="font-medium">Rows:</span>
+                  <span>{scriptRows.length}</span>
+                </div>
+              </div>
+            }
+          />
+        </div>
 
         {/* EXPANDABLE ROWS WITH SUMMARY (single) */}
-        <Section id="expandable-rows">
-          <SectionTitle>Expandable Rows with Summary</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Click on any row to expand and view the summary. Only one row can be expanded at a time.
             Click the same row again to collapse, or use the (X) button to close the summary.
-          </SectionDescription>
-          <DemoGrid>
-            <MahatiTable
-              headers={basicHeaders}
-              data={peopleAll.slice(0, 8)}
-              summary="single"
-              summaryKey="summary"
-              summaryTitleField="name"
-            />
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Expandable Rows with Summary"
+            code={`<MahatiTable
+  headers={basicHeaders}
+  data={peopleAll.slice(0, 8)}
+  summary="single"
+  summaryKey="summary"
+  summaryTitleField="name"
+/>`}
+            preview={
+              <MahatiTable
+                headers={basicHeaders}
+                data={peopleAll.slice(0, 8)}
+                summary="single"
+                summaryKey="summary"
+                summaryTitleField="name"
+              />
+            }
+          />
+        </div>
 
         {/* EXPANDABLE MULTIPLE ROWS WITH SUMMARY (multi) */}
-        <Section id="expandable-multiple-rows">
-          <SectionTitle>Expandable Multiple Rows with Summary</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             Click on any row to expand and view the summary. Multiple rows can be expanded
             simultaneously. Click the same row again to collapse, or use the (X) button to close
             individual summaries.
-          </SectionDescription>
-          <DemoGrid>
-            <MahatiTable
-              headers={basicHeaders}
-              data={peopleAll.slice(0, 8)}
-              summary="multi"
-              summaryKey="summary"
-              summaryTitleField="name"
-            />
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Expandable Multiple Rows with Summary"
+            code={`<MahatiTable
+  headers={basicHeaders}
+  data={peopleAll.slice(0, 8)}
+  summary="multi"
+  summaryKey="summary"
+  summaryTitleField="name"
+/>`}
+            preview={
+              <MahatiTable
+                headers={basicHeaders}
+                data={peopleAll.slice(0, 8)}
+                summary="multi"
+                summaryKey="summary"
+                summaryTitleField="name"
+              />
+            }
+          />
+        </div>
 
         {/* SINGLE-COLUMN TEXT WRAP (Summary only) */}
-        <Section id="textwrap-column">
-          <SectionTitle>Text Wrap Table (Summary Column)</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             <b>Text Wrap (single column)</b>: A table with a dedicated Summary column that displays
             truncated summary text with ellipsis. Hover over the summary text to see the full
             content. All rows maintain consistent height.
-          </SectionDescription>
-          <DemoGrid>
-            <MahatiTable
-              headers={summaryColumnHeaders}
-              data={peopleAll.slice(0, 8)}
-              summaryColumn
-              summaryColumnKey="summary"
-            />
-          </DemoGrid>
-        </Section>
+          </p>
+          <CodePreview
+            title="Text Wrap Table (Summary Column)"
+            code={`<MahatiTable
+  headers={summaryColumnHeaders}
+  data={peopleAll.slice(0, 8)}
+  summaryColumn
+  summaryColumnKey="summary"
+/>`}
+            preview={
+              <MahatiTable
+                headers={summaryColumnHeaders}
+                data={peopleAll.slice(0, 8)}
+                summaryColumn
+                summaryColumnKey="summary"
+              />
+            }
+          />
+        </div>
 
         {/* NEW: MULTI-COLUMN TEXT WRAP */}
-        <Section id="multicol-textwrap">
-          <SectionTitle>Multi-Column Text Wrap Table</SectionTitle>
-          <SectionDescription>
+        <div className="mb-12">
+          <p className="mb-4 text-slate-500">
             This variation lets you specify <b>multiple columns</b> that should use the same
             truncate + ellipsis + hover-full-text behavior.
             <br />
             Example: <code>["summary"]</code> wraps only the Summary column;{" "}
             <code>["email", "summary", "createdAt"]</code> wraps those three columns.
-          </SectionDescription>
-          <DemoGrid>
-            {/* Example 2: Wrap email + summary + createdAt */}
-            <div>
+          </p>
+          <CodePreview
+            title="Multi-Column Text Wrap Table"
+            code={`<MahatiTable
+  headers={summaryColumnHeaders}
+  data={peopleAll.slice(0, 8)}
+  textWrapColumns={["email", "summary", "createdAt"]}
+  textWrapMaxLength={10}
+/>`}
+            preview={
               <MahatiTable
                 headers={summaryColumnHeaders}
                 data={peopleAll.slice(0, 8)}
                 textWrapColumns={["email", "summary", "createdAt"]}
                 textWrapMaxLength={10}
               />
-            </div>
-          </DemoGrid>
-        </Section>
+            }
+          />
+        </div>
       </main>
     </div>
   );

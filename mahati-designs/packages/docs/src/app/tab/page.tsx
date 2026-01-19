@@ -3,6 +3,7 @@
 import React from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import {MahatiTabbedInterface} from "@/components";
+import { CodePreview } from '../CodePreview';
 
 interface Tab {
   id?: string;
@@ -11,24 +12,6 @@ interface Tab {
   content: React.ReactNode;
 }
 
-
-const Section: React.FC<React.PropsWithChildren<{ id?: string }>> = ({ id, children }) => (
-  <section id={id} className="mb-12 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-    {children}
-  </section>
-);
-
-const SectionTitle: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <h2 className="mb-4 text-[1.875rem] font-semibold text-gray-800">{children}</h2>
-);
-
-const SectionDescription: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <p className="mb-6 leading-relaxed text-gray-500">{children}</p>
-);
-
-const DemoGrid: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <div className="mb-8">{children}</div>
-);
 
 export default function TabDemoTailwindCSS() {
   const tabArr: Tab[] = [
@@ -79,124 +62,140 @@ export default function TabDemoTailwindCSS() {
   ];
 
   return (
-    <>
+    <div className="w-full max-w-6xl mx-auto p-6">
       {/* Page Header */}
-      <header className="mb-12">
-        <h1 className="mb-4 text-5xl font-bold text-gray-900">Tabs</h1>
-        <p className=" text-xl leading-relaxed text-gray-600">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Tabs</h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
           Tabs are a UI navigation pattern that allows users to switch between multiple sections or views of related
           content without leaving the current page.
         </p>
-      </header>
+      </div>
 
       {/* BASIC TABS */}
-      <Section id="basic">
-        <SectionTitle>Basic Tabs</SectionTitle>
-        <SectionDescription>Simple horizontal tabs at the top of content.</SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface
-            tabs={[
-              { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home.</p> },
-              { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User content.</p> },
-              { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings.</p> },
-            ]}
-          />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">Simple horizontal tabs at the top of content.</p>
+        <CodePreview
+          title="Basic Tabs"
+          code={`<MahatiTabbedInterface
+  tabs={[
+    { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home.</p> },
+    { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User content.</p> },
+    { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings.</p> },
+  ]}
+/>`}
+          preview={
+            <MahatiTabbedInterface
+              tabs={[
+                { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home.</p> },
+                { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User content.</p> },
+                { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings.</p> },
+              ]}
+            />
+          }
+        />
+      </div>
 
       {/* OUTLINE TABS */}
-      <Section id="outline">
-        <SectionTitle>Outline Tabs</SectionTitle>
-        <SectionDescription>
-          Tabs are separated by thin borders, with the active tab highlighted using a border color
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="outline" />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          Tabs are separated by thin borders, with the active tab highlighted using a border color.
+        </p>
+        <CodePreview
+          title="Outline Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="outline" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="outline" />}
+        />
+      </div>
 
       {/* PILL TABS */}
-      <Section id="pill">
-        <SectionTitle>Pill Tabs</SectionTitle>
-        <SectionDescription>
-          Rounded “button-like” tabs for a modern, soft look.
-          <br />
-          Each tab appears as a pill-shaped button.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface
-            tabs={[
-              { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home</p> },
-              { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User</p> },
-              { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings</p> },
-            ]}
-            variant="pill"
-          />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          Rounded “button-like” tabs for a modern, soft look. Each tab appears as a pill-shaped button.
+        </p>
+        <CodePreview
+          title="Pill Tabs"
+          code={`<MahatiTabbedInterface
+  tabs={[
+    { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home</p> },
+    { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User</p> },
+    { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings</p> },
+  ]}
+  variant="pill"
+/>`}
+          preview={
+            <MahatiTabbedInterface
+              tabs={[
+                { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home</p> },
+                { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User</p> },
+                { icon: <Cog6ToothIcon className="h-4 w-4" />, label: "Settings", content: <p>Settings</p> },
+              ]}
+              variant="pill"
+            />
+          }
+        />
+      </div>
 
       {/* DARK TABS */}
-      <Section id="dark">
-        <SectionTitle>Dark Tabs</SectionTitle>
-        <SectionDescription>
-          Ideal for dark-themed dashboards.
-          <br />
-          Emphasizes a dark background with glowing blue highlights.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="dark" />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          Ideal for dark-themed dashboards. Emphasizes a dark background with glowing blue highlights.
+        </p>
+        <CodePreview
+          title="Dark Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="dark" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="dark" />}
+        />
+      </div>
 
       {/* UNDERLINE TABS */}
-      <Section id="underline">
-        <SectionTitle>Underline Tabs</SectionTitle>
-        <SectionDescription>
-          Instead of changing background color or using borders, the active tab is highlighted by a smooth underline
-          animation.
-          <br />
-          Text color usually changes to emphasize the active state.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="underline" />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          Instead of changing background color or using borders, the active tab is highlighted by a smooth underline animation.
+        </p>
+        <CodePreview
+          title="Underline Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="underline" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="underline" />}
+        />
+      </div>
 
       {/* SHADOW TABS */}
-      <Section id="shadow">
-        <SectionTitle>Shadow Tabs</SectionTitle>
-        <SectionDescription>
-          A soft, elevated tab design that uses shadows to create depth. Feels tactile and clickable, suitable for
-          dashboard UIs or component previews.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="shadow" />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          A soft, elevated tab design that uses shadows to create depth. Feels tactile and clickable.
+        </p>
+        <CodePreview
+          title="Shadow Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="shadow" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="shadow" />}
+        />
+      </div>
 
       {/* GLASS TABS */}
-      <Section id="glass">
-        <SectionTitle>Glass Tabs</SectionTitle>
-        <SectionDescription>
-          A frosted glass style using transparency, blur, and light shadows. Feels futuristic and minimal — perfect for
-          modern apps or light UIs.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="glass" />
-        </DemoGrid>
-      </Section>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
+          A frosted glass style using transparency, blur, and light shadows. Feels futuristic and minimal.
+        </p>
+        <CodePreview
+          title="Glass Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="glass" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="glass" />}
+        />
+      </div>
 
       {/* GRADIENT TABS */}
-      <Section id="gradient">
-        <SectionTitle>Gradient Tabs</SectionTitle>
-        <SectionDescription>
+      <div className="mb-12">
+        <p className="mb-4 text-slate-500">
           Vibrant and visually striking. The active tab has a gradient background for a dynamic, high-impact effect.
-        </SectionDescription>
-        <DemoGrid>
-          <MahatiTabbedInterface tabs={tabArr} variant="gradient" />
-        </DemoGrid>
-      </Section>
-    </>
+        </p>
+        <CodePreview
+          title="Gradient Tabs"
+          code={`<MahatiTabbedInterface tabs={tabs} variant="gradient" />`}
+          preview={<MahatiTabbedInterface tabs={tabArr} variant="gradient" />}
+        />
+      </div>
+    </div>
   );
 }
     

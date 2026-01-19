@@ -194,7 +194,7 @@ export default function CardPage() {
             <MahatiCard variant="elevated" className="max-w-sm overflow-hidden p-0">
               <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
                 <Image 
-                  src="/logo.png" 
+                  src="/resources/images/mahatilog.jpg"
                   alt="Company Logo"
                   width={120}
                   height={120}
