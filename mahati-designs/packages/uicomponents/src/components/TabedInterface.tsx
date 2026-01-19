@@ -76,7 +76,6 @@ const Container = styled.div<{
   variant: TabbedInterfaceProps["variant"];
 }>`
   width: 100%;
-  max-width: 896px;
   margin: 2.5rem auto;
   border-radius: 0.75rem;
   border: 1px solid;

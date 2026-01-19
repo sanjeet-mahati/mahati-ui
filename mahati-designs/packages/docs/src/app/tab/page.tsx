@@ -2,7 +2,7 @@
 
 import React from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
-import {MahatiTabbedInterfaceTailwind} from "@/components";
+import {MahatiTabbedInterface} from "@/components";
 
 interface Tab {
   id?: string;
@@ -94,7 +94,7 @@ export default function TabDemoTailwindCSS() {
         <SectionTitle>Basic Tabs</SectionTitle>
         <SectionDescription>Simple horizontal tabs at the top of content.</SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind
+          <MahatiTabbedInterface
             tabs={[
               { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home.</p> },
               { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User content.</p> },
@@ -111,7 +111,7 @@ export default function TabDemoTailwindCSS() {
           Tabs are separated by thin borders, with the active tab highlighted using a border color
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="outline" />
+          <MahatiTabbedInterface tabs={tabArr} variant="outline" />
         </DemoGrid>
       </Section>
 
@@ -124,7 +124,7 @@ export default function TabDemoTailwindCSS() {
           Each tab appears as a pill-shaped button.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind
+          <MahatiTabbedInterface
             tabs={[
               { icon: <HomeIcon className="h-4 w-4" />, label: "Home", content: <p>Home</p> },
               { icon: <UserIcon className="h-4 w-4" />, label: "User", content: <p>User</p> },
@@ -144,7 +144,7 @@ export default function TabDemoTailwindCSS() {
           Emphasizes a dark background with glowing blue highlights.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="dark" />
+          <MahatiTabbedInterface tabs={tabArr} variant="dark" />
         </DemoGrid>
       </Section>
 
@@ -158,7 +158,7 @@ export default function TabDemoTailwindCSS() {
           Text color usually changes to emphasize the active state.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="underline" />
+          <MahatiTabbedInterface tabs={tabArr} variant="underline" />
         </DemoGrid>
       </Section>
 
@@ -170,7 +170,7 @@ export default function TabDemoTailwindCSS() {
           dashboard UIs or component previews.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="shadow" />
+          <MahatiTabbedInterface tabs={tabArr} variant="shadow" />
         </DemoGrid>
       </Section>
 
@@ -182,7 +182,7 @@ export default function TabDemoTailwindCSS() {
           modern apps or light UIs.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="glass" />
+          <MahatiTabbedInterface tabs={tabArr} variant="glass" />
         </DemoGrid>
       </Section>
 
@@ -193,7 +193,7 @@ export default function TabDemoTailwindCSS() {
           Vibrant and visually striking. The active tab has a gradient background for a dynamic, high-impact effect.
         </SectionDescription>
         <DemoGrid>
-          <MahatiTabbedInterfaceTailwind tabs={tabArr} variant="gradient" />
+          <MahatiTabbedInterface tabs={tabArr} variant="gradient" />
         </DemoGrid>
       </Section>
     </>

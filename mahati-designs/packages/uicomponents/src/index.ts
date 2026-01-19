@@ -29,10 +29,10 @@ export type {
   MahatiSearchProps,
 } from './components/Filter';
 
-export { TabbedInterface as MahatiTabbedInterfaceTailwind } from './components/TabedInterface';
+export { TabbedInterface as MahatiTabbedInterface } from './components/TabedInterface';
 export { Dropdown as MahatiDropdown } from './components/Dropdown';
 export { TableWithTab as MahatiTableWithTab } from './components/TableWithTab';
-export { Table as MahatiTableTailwind } from './components/Table';
+export { Table as MahatiTable } from './components/Table';
 export { Tooltip as MahatiTooltip } from './components/Tooltip';
 export { ToastMessage as MahatiToastMessage } from './components/ToastMessage';
 export {  ConfettiExplosion as MahatiConfettiExplosion} from './components/ConfettiExplosion';
