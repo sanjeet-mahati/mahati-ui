@@ -306,14 +306,21 @@ export const NavItems = (): NavItem[]  => {
     },
     {
       name: 'Spinner',
-      href: '/spinnerTailwindcss',
+      href: '/spinner',
       icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/spinnerTailwindcss/',
+      active: pathname === '/spinner',
       position: 'top',
+      subItems: [
+        { name: 'Ring Spinner', href: '/spinner#ring-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Circular Spinner', href: '/spinner#circular-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Loading Dots', href: '/spinner#loading-dots', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Overlay Loader', href: '/spinner#overlay-loader', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Skeleton Card', href: '/spinner#skeleton-card', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+      ]
     },
     {
       name: 'Toast Message',
-      href: '/toastMessageDemo',
+      href: '/toast',
       icon: <HiBellAlert size={24} />,
       active: pathname === '/ToastMessageDemo/',
       position: 'top',
@@ -379,22 +386,21 @@ export const NavItems = (): NavItem[]  => {
     // },
 
 
-    //  {
-    // {
-    //   name: 'Tab Tailwind CSS',
-    //   href: '/tabTailwindCSSDemo',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/tabTailwindCSSDemo',
-    //   position: 'top',
-    //  },
-    // },
+
 
     {
       name: 'Table With Tab',
-      href: '/tableWithTabDemo',
+      href: '/tableWithTab',
       icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-      active: pathname === '/tableWithTabDemo',
+      active: pathname === '/tableWithTab',
       position: 'top',
+      subItems: [
+        { name: 'Basic', href: '/tableWithTab#basic', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Rearrangeable', href: '/tableWithTab#rearrange', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Header Close Icon', href: '/tableWithTab#header-close-icon', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical (Left)', href: '/tableWithTab#vertical-tabs', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical (Right)', href: '/tableWithTab#vertical-tabs-right', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      ]
     },
 
     {
