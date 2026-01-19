@@ -1,44 +1,5 @@
-// import styled from "styled-components";
-
-// const FormContainer = styled.form`
-//   /* Layout (unchanged logic, roomy enough for 438px inputs) */
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-
-//   width: 100%;
-//   max-width: 560px;  /* fits 438px input + labels comfortably */
-//   min-height: 80vh;
-//   margin: 0 auto;
-//   padding: 24px;
-
-//   background-color: white;
-//   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-//   border-radius: 8px;
-
-//   /* ===== EXACT FIGMA INPUT DETAILS (scoped to inputs in this form) =====
-//      width: 438px;
-//      height: 44px;
-//      flex-shrink: 0;
-//      border-radius: 6px;
-//      border: 1px solid #D9D9D9;
-//      background: #FFF;
-//   */
-//   & :where(input:not([type="checkbox"]):not([type="radio"])) {
-//     width: 438px !important;
-//     height: 44px !important;
-//     flex-shrink: 0;
-//     border-radius: 6px;
-//     border: 1px solid #D9D9D9;
-//     background: #FFF;
-//   }
-// `;
-
-// export default FormContainer;
-
-
 import React from 'react';
+import styled from '@emotion/styled';
 
 interface FormContainerProps {
   children: React.ReactNode;
@@ -46,21 +7,47 @@ interface FormContainerProps {
   className?: string;
 }
 
-const FormContainer: React.FC<FormContainerProps> = ({ children, onSubmit, className = '' }) => {
+const StyledForm = styled.form`
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 560px;  /* fits 438px input + labels comfortably */
+  min-height: 80vh;
+  margin: 0 auto;
+  padding: 24px;
+
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+
+  /* Ensure all inputs inside maintain Figma specs */
+  /* This scopes the styling to direct input children */
+  & input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+    width: 438px;
+    height: 44px;
+  }
+`;
+
+const FormContainer: React.FC<FormContainerProps> = ({ 
+  children, 
+  onSubmit, 
+  className = '' 
+}) => {
   return (
-    <form 
+    <StyledForm 
       onSubmit={onSubmit}
-      className={`
-        flex flex-col items-center justify-center
-        w-full max-w-[560px] min-h-[80vh] mx-auto p-6
-        bg-white shadow-lg rounded-lg
-        ${className}
-      `}
+      className={className}
     >
       {children}
-    </form>
+    </StyledForm>
   );
 };
-FormContainer.displayName = "FormContainer";
-export {FormContainer};
 
+FormContainer.displayName = "FormContainer";
+
+export { FormContainer };
+export type { FormContainerProps };
