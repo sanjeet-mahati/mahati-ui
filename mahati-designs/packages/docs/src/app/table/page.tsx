@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 // import Table from "../../../../uicomponents/src/components/TableTailwindCSS";
 // import Button from "../../../../uicomponents/src/components/Button";
-import {MahatiTableTailwind} from "@/components";
+import {MahatiTable} from "@/components";
 import {MahatiButton} from "@/components";
 
 
@@ -451,7 +451,7 @@ const SortableTable: React.FC<{
     ),
   }));
 
-  return <MahatiTableTailwind headers={clickableHeaders} data={sorted} />;
+  return <MahatiTable headers={clickableHeaders} data={sorted} />;
 };
 
 export default function TabDemoTailwindCSS() {
@@ -925,7 +925,7 @@ export default function TabDemoTailwindCSS() {
             A minimal example with static data and no pagination controls.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 8)} />
+            <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />
           </DemoGrid>
         </Section>
 
@@ -961,7 +961,7 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={basicHeaders}
               data={slice}
               page={page}
@@ -1050,7 +1050,7 @@ export default function TabDemoTailwindCSS() {
             </MahatiButton>
           </div>
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={scriptHeaders}
               data={customTableData}
               actions={(row) => {
@@ -1112,7 +1112,7 @@ export default function TabDemoTailwindCSS() {
           </SectionDescription>
           <DemoGrid>
             <div className="rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200">
-              <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 10)} />
+              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 10)} />
             </div>
           </DemoGrid>
         </Section>
@@ -1159,7 +1159,7 @@ export default function TabDemoTailwindCSS() {
                   : "text-right"
               }
             >
-              <MahatiTableTailwind headers={basicHeaders} data={peopleAll.slice(0, 8)} 
+              <MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} 
               />
             </div>
           </DemoGrid>
@@ -1173,7 +1173,7 @@ export default function TabDemoTailwindCSS() {
             <em>cell</em> alignment: Left → Center → Right → Left.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTableTailwind headers={perColHeadersClickable} data={perColData} />
+            <MahatiTable headers={perColHeadersClickable} data={perColData} />
           </DemoGrid>
         </Section>
 
@@ -1243,7 +1243,7 @@ export default function TabDemoTailwindCSS() {
           </div>
 
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={visibilityHeaders.filter((h) => visibleKeys.includes(h.key))}
               data={useMemo(() => {
                 return visibilityData.map((row) => {
@@ -1339,7 +1339,7 @@ export default function TabDemoTailwindCSS() {
             Click the same row again to collapse, or use the (X) button to close the summary.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={basicHeaders}
               data={peopleAll.slice(0, 8)}
               summary="single"
@@ -1358,7 +1358,7 @@ export default function TabDemoTailwindCSS() {
             individual summaries.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={basicHeaders}
               data={peopleAll.slice(0, 8)}
               summary="multi"
@@ -1377,7 +1377,7 @@ export default function TabDemoTailwindCSS() {
             content. All rows maintain consistent height.
           </SectionDescription>
           <DemoGrid>
-            <MahatiTableTailwind
+            <MahatiTable
               headers={summaryColumnHeaders}
               data={peopleAll.slice(0, 8)}
               summaryColumn
@@ -1399,7 +1399,7 @@ export default function TabDemoTailwindCSS() {
           <DemoGrid>
             {/* Example 2: Wrap email + summary + createdAt */}
             <div>
-              <MahatiTableTailwind
+              <MahatiTable
                 headers={summaryColumnHeaders}
                 data={peopleAll.slice(0, 8)}
                 textWrapColumns={["email", "summary", "createdAt"]}
