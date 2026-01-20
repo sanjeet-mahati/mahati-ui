@@ -2,14 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
-// Import existing components JUST for their prop types / variants
-// import Table from "../components/TableTailwindCSS_3";
-// import TabbedInterface from "../components/TabedInterfaceTailwindCSS";
-import {Table} from "./TableTailwindCSS";
-import {TabbedInterface} from "./TabedInterfaceTailwindCSS";
-
-
+// Import existing components
+import { Table } from "./Table";
+import { TabbedInterface } from "./TabedInterface";
 
 // Base prop types of existing components
 type BaseTableProps = React.ComponentProps<typeof Table>;
@@ -58,11 +56,6 @@ export interface TableWithTabProps<RowType extends Record<string, any>> {
   onRowOpenInTab?: (row: RowType) => void;
 
   /**
-   * Optional outer wrapper class.
-   */
-  className?: string;
-
-  /**
    * Optional title/description displayed above the table.
    */
   title?: string;
@@ -77,33 +70,223 @@ export interface TableWithTabProps<RowType extends Record<string, any>> {
 
   /**
    * Optional font configuration for the section title/description.
-   * Values like "sans", "serif", "mono", "Poppins", or a full Tailwind
-   * class like "font-[Poppins]" are allowed.
+   * Values like "sans", "serif", "mono", "Poppins", or a custom font name.
    */
   sectionTitleFont?: string;
   sectionDescriptionFont?: string;
 }
 
-// Simple className join helper
-const cn = (...classes: Array<string | false | null | undefined>) =>
-  classes.filter(Boolean).join(" ");
-
-// Map a friendly font string -> Tailwind font class
-const getFontClass = (font?: string): string => {
-  if (!font) return "font-sans";
-
+// Map font strings to CSS
+const getFontFamily = (font?: string): string => {
+  if (!font) return "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  
   const lower = font.toLowerCase().trim();
-
-  if (lower === "sans" || lower === "sans-serif") return "font-sans";
-  if (lower === "serif") return "font-serif";
-  if (lower === "mono" || lower === "monospace") return "font-mono";
-
-  // If it already looks like a Tailwind class, use as-is
-  if (font.startsWith("font-") || font.includes("[")) return font;
-
-  // Otherwise treat as a font family name
-  return `font-[${font}]`;
+  
+  if (lower === "sans" || lower === "sans-serif") 
+    return "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  if (lower === "serif") 
+    return "Georgia, 'Times New Roman', serif";
+  if (lower === "mono" || lower === "monospace") 
+    return "'Courier New', Courier, monospace";
+  if (lower === "poppins") 
+    return "'Poppins', sans-serif";
+  
+  return `'${font}', sans-serif`;
 };
+
+// Styled Components
+const Container = styled.div`
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+`;
+
+const Header = styled.header`
+  margin-bottom: 1rem;
+`;
+
+const Title = styled.h2<{ fontFamily: string }>`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: ${props => props.fontFamily};
+`;
+
+const Description = styled.p<{ fontFamily: string }>`
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-family: ${props => props.fontFamily};
+`;
+
+const TableWrapper = styled.div`
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+`;
+
+const StyledTable = styled.table`
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+`;
+
+const TableHead = styled.thead`
+  background: linear-gradient(to right, #1761A3, #4DAF83);
+`;
+
+const TableHeadRow = styled.tr``;
+
+const TableHeadCell = styled.th`
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+`;
+
+const TableBody = styled.tbody`
+  background-color: white;
+`;
+
+const TableRow = styled.tr<{ selected: boolean }>`
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  ${props => props.selected && css`
+    background-color: rgba(219, 234, 254, 0.7);
+  `}
+`;
+
+const TableCell = styled.td`
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  color: #1e293b;
+`;
+
+const EmptyRow = styled.tr``;
+
+const EmptyCell = styled.td`
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+`;
+
+const TabsSection = styled.div`
+  margin-top: 1.5rem;
+`;
+
+const TabsHeader = styled.div`
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TabsTitle = styled.h3`
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+`;
+
+const TabsHint = styled.p`
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const TabContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const CloseButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const CloseButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  background-color: #f1f5f9;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #334155;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #e2e8f0;
+  }
+
+  svg {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+`;
+
+const DefaultContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const DetailRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+  }
+`;
+
+const DetailLabel = styled.span`
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+
+  @media (min-width: 640px) {
+    width: 12rem;
+  }
+`;
+
+const DetailValue = styled.span`
+  flex: 1;
+  word-break: break-words;
+  color: #1e293b;
+`;
+
+const EmptyValue = styled.span`
+  color: #cbd5e1;
+`;
 
 type SelectedTab<RowType> = {
   id: string | number;
@@ -116,7 +299,7 @@ function renderCellValue(value: any): React.ReactNode {
   if (React.isValidElement(value)) return value;
 
   if (value === null || value === undefined) {
-    return <span className="text-slate-400">-</span>;
+    return <EmptyValue>-</EmptyValue>;
   }
 
   if (Array.isArray(value)) {
@@ -142,21 +325,14 @@ function DefaultTabContent<RowType extends Record<string, any>>({
   row: RowType;
 }) {
   return (
-    <div className="space-y-2">
+    <DefaultContentContainer>
       {headers.map((h) => (
-        <div
-          key={h.key}
-          className="flex flex-col gap-1 rounded-lg bg-white p-3 text-sm shadow-sm sm:flex-row sm:items-center"
-        >
-          <span className="w-full text-xs font-semibold uppercase tracking-wide text-slate-500 sm:w-48">
-            {h.label}
-          </span>
-          <span className="flex-1 break-words text-slate-800">
-            {renderCellValue((row as any)[h.key])}
-          </span>
-        </div>
+        <DetailRow key={h.key}>
+          <DetailLabel>{h.label}</DetailLabel>
+          <DetailValue>{renderCellValue((row as any)[h.key])}</DetailValue>
+        </DetailRow>
       ))}
-    </div>
+    </DefaultContentContainer>
   );
 }
 
@@ -167,7 +343,6 @@ function TableWithTab<RowType extends Record<string, any>>({
   getRowId,
   renderTabContent,
   onRowOpenInTab,
-  className,
   title,
   description,
   tabLabelKey,
@@ -183,8 +358,8 @@ function TableWithTab<RowType extends Record<string, any>>({
   // 2) otherwise first column's key
   const labelColumnKey = tabLabelKey ?? headers[0]?.key;
 
-  const sectionTitleFontClass = getFontClass(sectionTitleFont);
-  const sectionDescriptionFontClass = getFontClass(sectionDescriptionFont);
+  const sectionTitleFontFamily = getFontFamily(sectionTitleFont);
+  const sectionDescriptionFontFamily = getFontFamily(sectionDescriptionFont);
 
   // Keep existing tabs' labels in sync when tabLabelKey or headers change
   useEffect(() => {
@@ -274,132 +449,104 @@ function TableWithTab<RowType extends Record<string, any>>({
   const tabbedInterfaceTabs = tabs.map((t) => ({
     label: t.label,
     content: (
-      <div className="space-y-4">
-        <div className="flex justify-end">
-          <button
+      <TabContentWrapper>
+        <CloseButtonWrapper>
+          <CloseButton
             type="button"
             onClick={() => handleCloseTab(t.id)}
-            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
           >
-            <XMarkIcon className="h-3 w-3" />
+            <XMarkIcon />
             <span>Close tab</span>
-          </button>
-        </div>
+          </CloseButton>
+        </CloseButtonWrapper>
 
         {renderTabContent ? (
           renderTabContent(t.row)
         ) : (
           <DefaultTabContent<RowType> headers={headers} row={t.row} />
         )}
-      </div>
+      </TabContentWrapper>
     ),
   }));
 
-  // Respect user’s setting for header close icon, but default to true
+  // Respect user's setting for header close icon, but default to true
   const effectiveShowHeaderClose =
     tabProps?.showTabCloseIconInHeader ?? true;
 
   return (
-    <div
-      className={cn(
-        "w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm",
-        className
-      )}
-    >
+    <Container>
       {(title || description) && (
-        <header className="mb-4">
+        <Header>
           {title && (
-            <h2
-              className={cn(
-                "text-xl font-semibold text-slate-900",
-                sectionTitleFontClass
-              )}
-            >
+            <Title fontFamily={sectionTitleFontFamily}>
               {title}
-            </h2>
+            </Title>
           )}
           {description && (
-            <p
-              className={cn(
-                "mt-1 text-sm text-slate-500",
-                sectionDescriptionFontClass
-              )}
-            >
+            <Description fontFamily={sectionDescriptionFontFamily}>
               {description}
-            </p>
+            </Description>
           )}
-        </header>
+        </Header>
       )}
 
       {/* Clickable Table */}
-      <div className="overflow-hidden rounded-xl border border-slate-200">
-        <table className="min-w-full border-collapse text-sm">
-          <thead className="bg-gradient-to-r from-[#1761A3] to-[#4DAF83]">
-            <tr>
+      <TableWrapper>
+        <StyledTable>
+          <TableHead>
+            <TableHeadRow>
               {headers.map((header) => (
-                <th
-                  key={header.key}
-                  className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-white"
-                >
+                <TableHeadCell key={header.key}>
                   {header.label}
-                </th>
+                </TableHeadCell>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white">
+            </TableHeadRow>
+          </TableHead>
+          <TableBody>
             {data.length === 0 && (
-              <tr>
-                <td
-                  colSpan={headers.length}
-                  className="px-4 py-6 text-center text-sm text-slate-500"
-                >
+              <EmptyRow>
+                <EmptyCell colSpan={headers.length}>
                   No records to display.
-                </td>
-              </tr>
+                </EmptyCell>
+              </EmptyRow>
             )}
 
             {data.map((row, index) => {
-              const selected = isRowSelected(row, index);
-              const rowId = getRowId ? getRowId(row, index) : index;
+              const selected = isRowSelected(row as RowType, index);
+              const rowId = getRowId ? getRowId(row as RowType, index) : index;
 
               return (
-                <tr
+                <TableRow
                   key={String(rowId)}
-                  onClick={() => handleRowClick(row, index)}
-                  className={cn(
-                    "cursor-pointer border-b border-slate-100 transition-colors hover:bg-slate-50",
-                    selected && "bg-blue-50/70"
-                  )}
+                  onClick={() => handleRowClick(row as RowType, index)}
+                  selected={selected}
                 >
                   {headers.map((header) => (
-                    <td
-                      key={header.key}
-                      className="px-3 py-2 align-middle text-slate-800"
-                    >
+                    <TableCell key={header.key}>
                       {renderCellValue((row as any)[header.key])}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </StyledTable>
+      </TableWrapper>
 
       {/* Tabs below table */}
       {tabs.length > 0 && (
-        <div className="mt-6">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <TabsSection>
+          <TabsHeader>
+            <TabsTitle>
               Open Rows ({tabs.length})
-            </h3>
+            </TabsTitle>
             {rearrange && (
-              <p className="text-xs text-slate-500">
+              <TabsHint>
                 Drag the tab headers to change their order. Clicking a row
                 again will close its tab.
-              </p>
+              </TabsHint>
             )}
-          </div>
+          </TabsHeader>
 
           <TabbedInterface
             // allow all stylistic props from parent
@@ -415,14 +562,11 @@ function TableWithTab<RowType extends Record<string, any>>({
               handleCloseTab(target.id);
             }}
           />
-        </div>
+        </TabsSection>
       )}
-    </div>
+    </Container>
   );
 }
 
-export default TableWithTab;
-
-
-// TableWithTab.displayName = "TableWithTab";
-// export {TableWithTab};
+TableWithTab.displayName = "TableWithTab";
+export { TableWithTab };

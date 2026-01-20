@@ -167,7 +167,11 @@ export default function MahatiChart() {
       });
     }
   }, [activeChartData]);
-
+{
+  [
+    'label':,"value":""
+  ]
+}
   return (
     <MahatiChartAnalyticsWidget 
     title="Mahati Systems UI Components"
@@ -180,6 +184,7 @@ export default function MahatiChart() {
       { id: 'Periodicity', label: 'Periodicity', options: ['12 months', '30 days', '7 days'] },
     ]}
     selectedFilters={selectedFilters}
+  
     chartDataMap={activeChartData}
     onApplyFilters={handleApplyFilters}
     onFiltersChange={setSelectedFilters}

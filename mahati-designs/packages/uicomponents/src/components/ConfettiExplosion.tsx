@@ -1,7 +1,8 @@
 // components/ConfettiExplosion.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import styled from "@emotion/styled";
 
 export interface ConfettiExplosionProps {
   isActive: boolean;
@@ -30,6 +31,48 @@ interface Particle {
   delay: number;
 }
 
+interface ParticleStyleProps {
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  rotation: number;
+  opacity: number;
+  shape: 'circle' | 'rectangle' | 'star';
+}
+
+const Container = styled.div<{ stageHeight: number }>`
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+  height: ${props => props.stageHeight}px;
+`;
+
+const ParticleElement = styled.div<ParticleStyleProps>`
+  position: absolute;
+  left: ${props => props.x}%;
+  bottom: ${props => props.y}%;
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
+  background-color: ${props => props.shape === 'star' ? 'transparent' : props.color};
+  border-radius: ${props => 
+    props.shape === 'circle' ? '50%' : 
+    props.shape === 'star' ? '50% 50% 0 0' : 
+    '2px'
+  };
+  transform: rotate(${props => props.rotation}deg);
+  opacity: ${props => props.opacity};
+  transform-origin: center;
+  transition: none;
+  
+  ${props => props.shape === 'star' && `
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    background: conic-gradient(from 0deg, ${props.color} 0% 20%, transparent 20% 40%, ${props.color} 40% 60%, transparent 60% 80%, ${props.color} 80% 100%);
+  `}
+`;
+
 const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
   isActive,
   particleCount = 150,
@@ -43,6 +86,13 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
   stageHeight = 800
 }) => {
   const [particles, setParticles] = useState<Particle[]>([]);
+  
+  // Use refs to avoid dependency issues
+  const animationFrameRef = useRef<number>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  
+  // Memoize colors to prevent infinite loop - this is THE FIX
+  const stableColors = useMemo(() => colors, [JSON.stringify(colors)]);
 
   useEffect(() => {
     if (isActive) {
@@ -54,7 +104,7 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
         
         return {
           id: i,
-          color: colors[Math.floor(Math.random() * colors.length)],
+          color: stableColors[Math.floor(Math.random() * stableColors.length)],
           size: Math.random() * particleSize + particleSize / 2,
           shape: ['circle', 'rectangle', 'star'][Math.floor(Math.random() * 3)] as 'circle' | 'rectangle' | 'star',
           rotation: Math.random() * 360,
@@ -72,7 +122,6 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
 
       setParticles(newParticles);
 
-      let animationFrame: number;
       let startTime: number;
 
       const animate = (timestamp: number) => {
@@ -100,59 +149,52 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
         });
 
         if (elapsed < duration) {
-          animationFrame = requestAnimationFrame(animate);
+          animationFrameRef.current = requestAnimationFrame(animate);
         }
       };
 
-      animationFrame = requestAnimationFrame(animate);
+      animationFrameRef.current = requestAnimationFrame(animate);
 
-      const timer = setTimeout(() => {
-        if (animationFrame) {
-          cancelAnimationFrame(animationFrame);
+      timerRef.current = setTimeout(() => {
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
         }
         setParticles([]);
       }, duration + 500);
 
       return () => {
-        if (animationFrame) {
-          cancelAnimationFrame(animationFrame);
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
         }
-        clearTimeout(timer);
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
       };
     } else {
       setParticles([]);
     }
-  }, [isActive, particleCount, duration, colors, force, particleSize, stageHeight]);
+  }, [isActive, particleCount, duration, stableColors, force, particleSize, stageHeight]);
+  //                                      ^^^^^^^^^^^^^ Use memoized version!
 
   if (!isActive || particles.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" style={{ height: `${stageHeight}px` }}>
-      {particles.map((particle) => {
-        const style: React.CSSProperties = {
-          position: 'absolute',
-          left: `${particle.x}%`,
-          bottom: `${particle.y}%`,
-          width: `${particle.size}px`,
-          height: `${particle.size}px`,
-          backgroundColor: particle.color,
-          borderRadius: particle.shape === 'circle' ? '50%' : particle.shape === 'star' ? '50% 50% 0 0' : '2px',
-          transform: `rotate(${particle.rotation}deg)`,
-          opacity: particle.opacity,
-          transformOrigin: 'center',
-          transition: 'none'
-        };
-
-        if (particle.shape === 'star') {
-          style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-          style.backgroundColor = 'transparent';
-          style.background = `conic-gradient(from 0deg, ${particle.color} 0% 20%, transparent 20% 40%, ${particle.color} 40% 60%, transparent 60% 80%, ${particle.color} 80% 100%)`;
-        }
-
-        return <div key={particle.id} style={style} />;
-      })}
-    </div>
+    <Container stageHeight={stageHeight}>
+      {particles.map((particle) => (
+        <ParticleElement
+          key={particle.id}
+          x={particle.x}
+          y={particle.y}
+          size={particle.size}
+          color={particle.color}
+          rotation={particle.rotation}
+          opacity={particle.opacity}
+          shape={particle.shape}
+        />
+      ))}
+    </Container>
   );
 };
 
-export default ConfettiExplosion;
+ConfettiExplosion.displayName = 'ConfettiExplosion';
+export { ConfettiExplosion };

@@ -1,157 +1,119 @@
-// import React, { useEffect, useState } from 'react';
-// import styled from 'styled-components';
+import React from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
-// interface InputProps {
-//   type?: string;
-//   name?: string;
-//   placeholder: string;
-//   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   hasError?: boolean;
-//   errorMessage?: string;
-//   value?: string;
-// }
-
-// const InputContainer = styled.div`
-//   margin-bottom: 1rem;
-// `;
-
-// const StyledInput = styled.input<{ hasError?: boolean }>`
-//   /* ===== EXACT FIGMA INPUT DETAILS =====
-//      width: 438px;
-//      height: 44px;
-//      flex-shrink: 0;
-//      border-radius: 6px;
-//      border: 1px solid #D9D9D9;
-//      background: #FFF;
-//   */
-//   width: 438px;
-//   max-width: 100%;
-//   height: 44px;
-//   flex-shrink: 0;
-
-//   border-radius: 6px;
-//   border: 1px solid ${(p) => (p.hasError ? 'red' : '#D9D9D9')};
-//   background: #FFF;
-
-//   /* Keep text legible without adding extra padding beyond Figma spec */
-//   font-size: 1rem;
-//   line-height: 1.25rem;
-
-//   /* No added box-shadows/focus rings to stay exact to Figma */
-//   outline: none;
-// `;
-
-// const ErrorText = styled.span`
-//   color: red;
-//   font-size: 0.875rem;
-//   height: 0.8rem; /* Reserve space to prevent layout shift */
-//   display: block;
-// `;
-
-// const Input: React.FC<InputProps> = ({
-//   type = 'text',
-//   name,
-//   placeholder,
-//   onChange,
-//   hasError = false,
-//   errorMessage = '',
-//   value = '',
-// }) => {
-//   const [internalValue, setInternalValue] = useState(value);
-//   const [showError, setShowError] = useState(false);
-
-//   useEffect(() => {
-//     setInternalValue(value);
-//     setShowError(hasError || value === '');
-//   }, [value, hasError]);
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const newValue = e.target.value;
-//     setInternalValue(newValue);
-//     onChange(e);
-//     setShowError(newValue === '');
-//   };
-
-//   return (
-//     <InputContainer>
-//       <StyledInput
-//         type={type}
-//         name={name}
-//         placeholder={placeholder}
-//         value={internalValue}
-//         onChange={handleChange}
-//         hasError={showError}
-//       />
-//       <ErrorText>{errorMessage}</ErrorText>
-//     </InputContainer>
-//   );
-// };
-
-// export default Input;
-"use client";
-import React, { useEffect, useState } from 'react';
-
-interface InputProps {
-  type?: string;
-  name?: string;
-  placeholder: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
   errorMessage?: string;
-  value?: string;
   className?: string;
 }
 
-const Input: React.FC<InputProps> = ({
-  type = 'text',
-  name,
-  placeholder,
-  onChange,
-  hasError = false,
-  errorMessage = '',
-  value = '',
-  className = '',
-}) => {
-  const [internalValue, setInternalValue] = useState(value);
-  const [showError, setShowError] = useState(false);
+// Styled Components
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
+`;
 
-  useEffect(() => {
-    setInternalValue(value);
-    setShowError(hasError || value === '');
-  }, [value, hasError]);
+const StyledInput = styled.input<{ hasError?: boolean }>`
+  width: 438px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+  padding: 0 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInternalValue(newValue);
-    onChange(e);
-    setShowError(newValue === '');
-  };
+  /* Error state */
+  ${props => props.hasError && css`
+    border-color: #ef4444;
+    &:focus {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  `}
 
-  return (
-    <div className="mb-4">
-      <input
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={internalValue}
-        onChange={handleChange}
-        className={`
-          w-[438px] max-w-full h-[44px] flex-shrink-0
-          rounded-[6px] border
-          ${showError ? 'border-red-500' : 'border-[#D9D9D9]'}
-          bg-white
-          text-base leading-5
-          outline-none
-          ${className}
-        `}
-      />
-      <span className="block text-sm text-red-500 h-[0.8rem]">
-        {errorMessage}
-      </span>
-    </div>
-  );
-};
-Input.displayName = "Input";
+  /* Normal focus state */
+  ${props => !props.hasError && css`
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  `}
+
+  /* Hover state */
+  &:hover:not(:focus) {
+    border-color: #9ca3af;
+  }
+
+  /* Disabled state */
+  &:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+  }
+
+  /* Placeholder */
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  /* File input specific */
+  &[type="file"] {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  /* Number input - remove spinner */
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+`;
+
+const ErrorMessage = styled.span`
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  min-height: 1.25rem;
+  display: block;
+`;
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ hasError = false, errorMessage = '', className = '', onChange, ...props }, ref) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (props.disabled) return;
+      onChange?.(e);
+    };
+
+    return (
+      <InputWrapper>
+        <StyledInput
+          ref={ref}
+          hasError={hasError}
+          className={className}
+          onChange={handleChange}
+          {...props}
+        />
+        {hasError && errorMessage && (
+          <ErrorMessage>{errorMessage}</ErrorMessage>
+        )}
+      </InputWrapper>
+    );
+  }
+);
+
+Input.displayName = 'Input';
 
 export { Input };
-
+export type { InputProps };

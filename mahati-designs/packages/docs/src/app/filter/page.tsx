@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 import {
-  MahatiCalendar,
-  CalendarDate,
-} from "@/components";
-import {
+  MahatiButton,
   MahatiActivity,
   MahatiStatus,
   MahatiSearch,
+  MahatiCalendar,
+  CalendarDate,
 } from "@/components";
 
 export default function FilterPage() {
@@ -109,7 +108,7 @@ const statusValues = [{
         code={`<MahatiButton onClick={() => setOpen(true)}>Open Filter</MahatiButton>`}
         preview={
             <div className="flex justify-center py-10 relative">
-            <button
+            <MahatiButton
             onClick={() => setOpen(true)}
             className="
                 flex items-center gap-2
@@ -127,7 +126,7 @@ const statusValues = [{
                 className="w-5 h-5 opacity-90"
             />
             Filter
-            </button>
+            </MahatiButton>
 
             {open && (
             <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">
@@ -376,7 +375,6 @@ const statusValues = [{
                     value={activityType}
                     onChange={setActivityType}
                     size="small"
-                    showIcon
                 />
                 </div>
             }
@@ -404,7 +402,6 @@ const statusValues = [{
                     value={status}
                     onChange={setStatus}
                     size="small"
-                    showIcon
                 />
                 </div>
             }

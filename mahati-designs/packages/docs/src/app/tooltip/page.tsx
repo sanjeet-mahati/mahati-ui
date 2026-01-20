@@ -7,9 +7,9 @@ import {
   ExclamationTriangleIcon,
   SparklesIcon
 } from "@heroicons/react/24/solid";
-import MahatiTooltip from "../../../../uicomponents/src/components/TooltipTailwindCSS";
-import ConfettiExplosion from "../../../../uicomponents/src/components/ConfettiExplosion";
-import RealisticConfetti from "../../../../uicomponents/src/components/RealisticConfetti";
+import {MahatiTooltip} from "@/components";
+import {ConfettiExplosion} from "@/components";
+import {RealisticConfetti} from "@/components";
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';
 
