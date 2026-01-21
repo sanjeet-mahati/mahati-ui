@@ -41,3 +41,11 @@ export { MahatiSearch } from './components/Filter';
 // Type Exports
 // It's a good practice to re-export types that consumers of your library might need.
 //export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';
+
+export { MahatiLocationAccessModal } from './components/notifications';
+export { MahatiCameraAccessModal } from './components/notifications';
+export { MahatiMicrophoneAccessModal } from './components/notifications';
+export { MahatiNotificationCard  } from './components/notifications';
+export { MahatiPromotionModal as MahatiPromotionModal_V1 } from './components/notifications';
+export { MahatiPromotionModalV2Modal as MahatiPromotionModal_V2 } from "./components/notifications";
+export { MahatiPromotionModalV3Modal as MahatiPromotionModal_V3 } from "./components/notifications";

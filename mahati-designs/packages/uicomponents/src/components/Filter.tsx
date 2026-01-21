@@ -253,6 +253,7 @@ export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
   { label: "Delete", value: "Delete" },
 ];
 
+/** ✅ MAHATI ACTIVITY (Native <select>) */
 export const MahatiActivity = ({
   value,
   onChange,
@@ -264,121 +265,38 @@ export const MahatiActivity = ({
   options?: SelectOption[];
   size?: FieldSize;
 }) => {
-  const [open, setOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{
-    top: number;
-    left: number;
-    width: number;
-  } | null>(null);
-
-  const selectedLabel =
-    options.find((o) => o.value == value)?.label || "Select Activity";
-
-  /** Calculate dropdown position */
-  const updatePosition = () => {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setPos({
-      top: rect.bottom + window.scrollY + 6,
-      left: rect.left + window.scrollX,
-      width: rect.width,
-    });
-  };
-
-  /** Keep dropdown aligned on scroll / resize */
-  useEffect(() => {
-    if (!open) return;
-    updatePosition();
-    window.addEventListener("scroll", updatePosition, true);
-    window.addEventListener("resize", updatePosition);
-    return () => {
-      window.removeEventListener("scroll", updatePosition, true);
-      window.removeEventListener("resize", updatePosition);
-    };
-  }, [open]);
-
-  /** Outside click (trigger + dropdown) */
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        triggerRef.current?.contains(e.target as Node) ||
-        dropdownRef.current?.contains(e.target as Node)
-      ) {
-        return;
-      }
-      setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
   return (
-    <>
-      {/* ===== Trigger ===== */}
-      <div
-        ref={triggerRef}
-        onClick={() => setOpen((p) => !p)}
+    <div className="relative w-full">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         className={`
           ${fieldStyles[size]}
-          cursor-pointer
-          flex items-center justify-between
-          relative
-          ${open ? "border-[#1761a3] ring-2 ring-[#1761a3]" : ""}
+          appearance-none
+          pr-10
         `}
       >
-        <span className="truncate">{selectedLabel}</span>
-        <ChevronDown
-          className={`w-4 h-4 text-slate-500 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </div>
+        {options?.map((opt) => (
+          <option key={String(opt.value)} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
 
-      {/* ===== Dropdown (PORTAL) ===== */}
-      {open &&
-        pos &&
-        createPortal(
-          <div
-            ref={dropdownRef}
-            style={{
-              position: "absolute",
-              top: pos.top,
-              left: pos.left,
-              width: pos.width,
-            }}
-            className="
-              z-[9999]
-              rounded-[6px]
-              border border-slate-300
-              bg-white
-              shadow-xl
-              max-h-[240px]
-              overflow-y-auto
-            "
-          >
-            {options.map((opt) => (
-              <div
-                key={String(opt.value)}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-                className="
-                  px-4 py-2
-                  text-sm
-                  cursor-pointer
-                  text-black hover:bg-[#1761a3] hover:text-white
-                "
-              >
-                {opt.label}
-              </div>
-            ))}
-          </div>,
-          document.body
-        )}
-    </>
+      {/* Chevron icon */}
+      <ChevronDown
+        className="
+          pointer-events-none
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          w-4
+          h-4
+          text-slate-500
+        "
+      />
+    </div>
   );
 };
 
