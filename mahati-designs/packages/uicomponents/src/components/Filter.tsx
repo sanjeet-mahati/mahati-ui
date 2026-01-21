@@ -483,102 +483,53 @@ const Section = ({
 /* ===================== PUBLISHABLE COMPONENTS ===================== */
 
 /** ✅ MAHATI ACTIVITY */
-const MahatiActivity: React.FC<MahatiActivityProps> = ({
+export const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
+  { label: "Select Activity", value: "" },
+  { label: "Activity List", value: "Activity List" },
+  { label: "Login", value: "Login" },
+  { label: "Update", value: "Update" },
+  { label: "Delete", value: "Delete" },
+];
+
+/** ✅ MAHATI ACTIVITY (Native <select>) */
+export const MahatiActivity = ({
   value,
   onChange,
   options = DEFAULT_ACTIVITY_OPTIONS,
   size = "medium",
 }) => {
-  const [open, setOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{
-    top: number;
-    left: number;
-    width: number;
-  } | null>(null);
-
-  const selectedLabel =
-    options.find((o) => o.value == value)?.label || "Select Activity";
-
-  /** Calculate dropdown position */
-  const updatePosition = () => {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setPos({
-      top: rect.bottom + window.scrollY + 6,
-      left: rect.left + window.scrollX,
-      width: rect.width,
-    });
-  };
-
-  /** Keep dropdown aligned on scroll / resize */
-  useEffect(() => {
-    if (!open) return;
-    updatePosition();
-    window.addEventListener("scroll", updatePosition, true);
-    window.addEventListener("resize", updatePosition);
-    return () => {
-      window.removeEventListener("scroll", updatePosition, true);
-      window.removeEventListener("resize", updatePosition);
-    };
-  }, [open]);
-
-  /** Outside click (trigger + dropdown) */
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        triggerRef.current?.contains(e.target as Node) ||
-        dropdownRef.current?.contains(e.target as Node)
-      ) {
-        return;
-      }
-      setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
   return (
-    <>
-      {/* ===== Trigger ===== */}
-      <CustomSelectTrigger
-        ref={triggerRef}
-        onClick={() => setOpen((p) => !p)}
-        open={open}
-        size={size}
+    <div className="relative w-full">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`
+          ${fieldStyles[size]}
+          appearance-none
+          pr-10
+        `}
       >
-        <CustomSelectLabel>{selectedLabel}</CustomSelectLabel>
-        <CustomSelectIcon open={open} />
-      </CustomSelectTrigger>
+        {options?.map((opt) => (
+          <option key={String(opt.value)} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
 
-      {/* ===== Dropdown (PORTAL) ===== */}
-      {open &&
-        pos &&
-        createPortal(
-          <CustomSelectDropdown
-            ref={dropdownRef}
-            style={{
-              top: pos.top,
-              left: pos.left,
-              width: pos.width,
-            }}
-          >
-            {options.map((opt) => (
-              <CustomSelectOption
-                key={String(opt.value)}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-              >
-                {opt.label}
-              </CustomSelectOption>
-            ))}
-          </CustomSelectDropdown>,
-          document.body
-        )}
-    </>
+      {/* Chevron icon */}
+      <ChevronDown
+        className="
+          pointer-events-none
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          w-4
+          h-4
+          text-slate-500
+        "
+      />
+    </div>
   );
 };
 
