@@ -22,8 +22,17 @@ import {
 
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid';
+import {
   faMessage
 } from '@fortawesome/free-regular-svg-icons';
+import { HiBellAlert } from "react-icons/hi2";
 import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export interface NavItem {
@@ -313,17 +322,31 @@ export const NavItems = (): NavItem[]  => {
     },
     {
       name: 'Spinner',
-      href: '/spinnerTailwindcss',
+      href: '/spinner',
       icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/spinnerTailwindcss/',
+      active: pathname === '/spinner',
       position: 'top',
+      subItems: [
+        { name: 'Ring Spinner', href: '/spinner#ring-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Circular Spinner', href: '/spinner#circular-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Loading Dots', href: '/spinner#loading-dots', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Overlay Loader', href: '/spinner#overlay-loader', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Skeleton Card', href: '/spinner#skeleton-card', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+      ]
     },
     {
       name: 'Toast Message',
-      href: '/toastMessage',
-      icon: <FontAwesomeIcon icon={faSpinner} size="lg"/>,
-      active: pathname === '/ToastMessage/',
+      href: '/toast',
+      icon: <HiBellAlert size={24} />,
+      active: pathname === '/ToastMessageDemo/',
       position: 'top',
+      subItems: [
+        { name: 'Toast Types', href: '/toastMessageDemo#toast-types', icon: <HiBellAlert size={24} /> },
+        { name: 'Background Variants', href: '/toastMessageDemo#background-variants', icon: <HiBellAlert size={14} /> },
+        { name: 'Custom Styles', href: '/toastMessageDemo#custom-styles', icon: <HiBellAlert size={24} /> },
+        { name: 'Confirmation Toast ("Accept / Decline")', href: '/toastMessageDemo#confirmation-toast-("Accept/Decline")', icon: <HiBellAlert size={14} /> },
+        { name: 'Actions', href: '/toastMessageDemo#actions', icon: <HiBellAlert size={24} /> },
+      ]
     },
     {
       name: 'Table',
@@ -379,22 +402,21 @@ export const NavItems = (): NavItem[]  => {
     // },
 
 
-    //  {
-    // {
-    //   name: 'Tab Tailwind CSS',
-    //   href: '/tabTailwindCSSDemo',
-    //   icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-    //   active: pathname === '/tabTailwindCSSDemo',
-    //   position: 'top',
-    //  },
-    // },
+
 
     {
       name: 'Table With Tab',
-      href: '/tableWithTabDemo',
+      href: '/tableWithTab',
       icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
-      active: pathname === '/tableWithTabDemo',
+      active: pathname === '/tableWithTab',
       position: 'top',
+      subItems: [
+        { name: 'Basic', href: '/tableWithTab#basic', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Rearrangeable', href: '/tableWithTab#rearrange', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Header Close Icon', href: '/tableWithTab#header-close-icon', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical (Left)', href: '/tableWithTab#vertical-tabs', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical (Right)', href: '/tableWithTab#vertical-tabs-right', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      ]
     },
 
     {

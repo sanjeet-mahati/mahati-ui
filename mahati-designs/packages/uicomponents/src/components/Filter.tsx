@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, ChevronDown } from "lucide-react";
+import styled from "@emotion/styled";
+import { createPortal } from "react-dom";
 
 import { Button } from "./Button";
 import { Card } from "./card";
@@ -9,16 +11,331 @@ import { Calendar, CalendarDateRange } from "./Calendar";
 
 /* ===================== TYPES ===================== */
 
-export type FilterValues = {
+type FilterValues = {
   date: CalendarDateRange;
   activity: string;
   status: string;
   keyword: string;
 };
 
+type FieldSize = "small" | "medium";
+
+interface SelectOption {
+  label: string;
+  value: string | number;
+}
+
+interface MahatiActivityProps {
+  value: string | number;
+  onChange: (v: string | number) => void;
+  options?: SelectOption[];
+  size?: FieldSize;
+}
+
+interface MahatiStatusProps {
+  value: string | number;
+  onChange: (v: string | number) => void;
+  options?: SelectOption[];
+  size?: FieldSize;
+}
+
+interface MahatiSearchProps {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  size?: FieldSize;
+}
+
+/* ===================== STYLED COMPONENTS ===================== */
+
+const FilterContainer = styled.div`
+  position: relative;
+`;
+
+const FilterButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(23, 97, 163, 0.35);
+  background: linear-gradient(to right, #f2fbf8, #eef6fb);
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+`;
+
+const FilterModalWrapper = styled.div`
+  position: absolute;
+  right: 0;
+  margin-top: 0.75rem;
+  z-index: 50;
+`;
+
+const FilterCard = styled(Card)`
+  width: 360px;
+  padding: 0;
+  overflow: hidden;
+  background-color: white;
+`;
+
+const FilterHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(23, 97, 163, 0.35);
+`;
+
+const FilterTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+`;
+
+const CloseButton = styled.button`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: rgb(241, 245, 249);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 200ms;
+
+  &:hover {
+    background-color: rgb(226, 232, 240);
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const SectionContainer = styled.div`
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to right, #f3fbf8, #eef6fb);
+  border-bottom: 1px solid rgba(23, 97, 163, 0.35);
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+`;
+
+const SectionTitle = styled.h6`
+  font-weight: 600;
+  font-size: 0.875rem;
+`;
+
+const ResetButton = styled.button`
+  color: #1761a3;
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 200ms;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const SelectWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const StyledSelect = styled.select`
+  width: 100%;
+  appearance: none;
+  padding: 0.75rem 1rem;
+  padding-right: 2.5rem;
+  border-radius: 6px;
+  border: 1px solid rgb(203, 213, 225);
+  background-color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #1761a3;
+    box-shadow: 0 0 0 2px rgba(23, 97, 163, 0.2);
+  }
+`;
+
+const SelectIcon = styled(ChevronDown)`
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  color: rgb(100, 116, 139);
+  pointer-events: none;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgb(203, 213, 225);
+  background-color: white;
+  font-size: 0.875rem;
+
+  &:focus {
+    outline: none;
+    border-color: #1761a3;
+    box-shadow: 0 0 0 2px rgba(23, 97, 163, 0.2);
+  }
+
+  &::placeholder {
+    color: rgb(148, 163, 184);
+  }
+`;
+
+const FilterFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to right, #f3fbf8, #eef6fb);
+`;
+
+const ResetAllButton = styled(Button)`
+  border: 1px solid #1761a3;
+  background-color: #f0f8ff;
+`;
+
+const ApplyButton = styled(Button)`
+  color: white;
+  background: linear-gradient(to right, #1761a3, #4daf83);
+`;
+
+// Custom Select Components
+const CustomSelectTrigger = styled.div<{ open: boolean; size: FieldSize }>`
+  width: 100%;
+  padding: ${(props) => (props.size === "small" ? "0.5rem 0.75rem" : "0.75rem 1rem")};
+  padding-right: ${(props) => (props.size === "small" ? "1.25rem" : "1.5rem")};
+  background-color: white;
+  border: 1px solid ${(props) => (props.open ? "#1761a3" : "rgb(203, 213, 225)")};
+  border-radius: 6px;
+  appearance: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  transition: all 200ms;
+
+  ${(props) =>
+    props.open &&
+    `
+    box-shadow: 0 0 0 2px rgba(23, 97, 163, 0.2);
+  `}
+
+  &:focus {
+    outline: none;
+    border-color: #1761a3;
+    box-shadow: 0 0 0 2px rgba(23, 97, 163, 0.2);
+  }
+`;
+
+const CustomSelectLabel = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+`;
+
+const CustomSelectIcon = styled(ChevronDown)<{ open: boolean }>`
+  width: 1rem;
+  height: 1rem;
+  color: rgb(100, 116, 139);
+  transition: transform 200ms;
+  transform: ${(props) => (props.open ? "rotate(180deg)" : "rotate(0deg)")};
+`;
+
+const CustomSelectDropdown = styled.div`
+  position: absolute;
+  z-index: 9999;
+  border-radius: 6px;
+  border: 1px solid rgb(203, 213, 225);
+  background-color: white;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-height: 240px;
+  overflow-y: auto;
+`;
+
+const CustomSelectOption = styled.div`
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: black;
+  transition: all 150ms;
+
+  &:hover {
+    background-color: #1761a3;
+    color: white;
+  }
+`;
+
+const CustomInput = styled.input<{ fieldSize: FieldSize }>`
+  width: 100%;
+  padding: ${(props) => (props.fieldSize === "small" ? "0.5rem 0.75rem" : "0.75rem 1rem")};
+  background-color: white;
+  border: 1px solid rgb(203, 213, 225);
+  border-radius: 6px;
+  font-size: 0.875rem;
+
+  &:focus {
+    outline: none;
+    border-color: #1761a3;
+    box-shadow: 0 0 0 2px rgba(23, 97, 163, 0.2);
+  }
+
+  &::placeholder {
+    color: rgb(148, 163, 184);
+  }
+`;
+
+/* ===================== CONSTANTS ===================== */
+
+const DEFAULT_ACTIVITY_OPTIONS: SelectOption[] = [
+  { label: "Select Activity", value: "" },
+  { label: "Activity List", value: "Activity List" },
+  { label: "Login", value: "Login" },
+  { label: "Update", value: "Update" },
+  { label: "Delete", value: "Delete" },
+];
+
+const DEFAULT_STATUS_OPTIONS: SelectOption[] = [
+  { label: "Select Status", value: "" },
+  { label: "Pending", value: "Pending" },
+  { label: "Approved", value: "Approved" },
+  { label: "Rejected", value: "Rejected" },
+];
+
 /* ===================== MAIN FILTER ===================== */
 
-export const Filter = () => {
+interface FilterProps {
+  onApply?: (filters: FilterValues) => void;
+  onReset?: () => void;
+  activityOptions?: SelectOption[];
+  statusOptions?: SelectOption[];
+  searchPlaceholder?: string;
+  size?: any;
+}
+
+const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, statusOptions = DEFAULT_STATUS_OPTIONS, searchPlaceholder = "Search...", size = "default" }: FilterProps) => {
   const [open, setOpen] = useState(false);
 
   const [values, setValues] = useState<FilterValues>({
@@ -44,47 +361,44 @@ export const Filter = () => {
   };
 
   const resetAll = () => {
-    setValues({
+    const newValues = {
       date: { start: null, end: null },
       activity: "",
       status: "",
       keyword: "",
-    });
+    };
+    setValues(newValues);
+    if (onReset) {
+      onReset();
+    } else if (onApply) {
+      onApply(newValues);
+    }
   };
 
   const applyFilters = () => {
     console.log("Applied Filters:", values);
+    if (onApply) onApply(values);
     setOpen(false);
   };
 
   return (
-    <div className="relative">
+    <FilterContainer>
       {/* FILTER BUTTON */}
-      <Button
-        variant="outline"
-        className="flex items-center gap-2 px-5 py-3 rounded-lg
-          border border-[rgba(23,97,163,0.35)]
-          bg-gradient-to-r from-[#f2fbf8] to-[#eef6fb]
-          text-[#0f172a] font-semibold shadow-sm"
-        onClick={() => setOpen((p) => !p)}
-      >
+      <FilterButton variant="outline" onClick={() => setOpen((p) => !p)} size={size}>
         Filter
-      </Button>
+      </FilterButton>
 
       {/* FILTER MODAL */}
       {open && (
-        <div className="absolute right-0 mt-3 z-50">
-          <Card variant="figma" className="w-[360px] p-0 overflow-hidden bg-white">
+        <FilterModalWrapper>
+          <FilterCard variant="figma">
             {/* HEADER */}
-            <div className="flex justify-between items-center px-5 py-3 border-b border-[rgba(23,97,163,0.35)]">
-              <h3 className="text-md font-semibold">Add Filter</h3>
-              <button
-                onClick={() => setOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
-              >
+            <FilterHeader>
+              <FilterTitle>Add Filter</FilterTitle>
+              <CloseButton onClick={() => setOpen(false)}>
                 <X className="w-4 h-4 text-slate-600" />
-              </button>
-            </div>
+              </CloseButton>
+            </FilterHeader>
 
             {/* DATE RANGE */}
             <Section title="Date Range" onReset={() => resetField("date")}>
@@ -97,50 +411,52 @@ export const Filter = () => {
             </Section>
 
             {/* ACTIVITY */}
-            <Section title="Activity Type" onReset={() => resetField("activity")}>
-              <MahatiActivity
+            <SelectWrapper>
+              <StyledSelect
                 value={values.activity}
-                onChange={(v) => handleChange("activity", v)}
-              />
-            </Section>
+                onChange={(e) => handleChange("activity", e.target.value)}
+                aria-label="Select Activity"
+              >
+                {activityOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </StyledSelect>
+              <SelectIcon />
+            </SelectWrapper>
 
             {/* STATUS */}
-            <Section title="Status" onReset={() => resetField("status")}>
-              <MahatiStatus
+            <SelectWrapper>
+              <StyledSelect
                 value={values.status}
-                onChange={(v) => handleChange("status", v)}
-              />
-            </Section>
+                onChange={(e) => handleChange("status", e.target.value)}
+                aria-label="Select Status"
+              >
+                {statusOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </StyledSelect>
+              <SelectIcon />
+            </SelectWrapper>
 
             {/* SEARCH */}
-            <Section title="Keyword search" onReset={() => resetField("keyword")}>
-              <MahatiSearch
-                value={values.keyword}
-                onChange={(v) => handleChange("keyword", v)}
-              />
-            </Section>
+            <SearchInput
+              value={values.keyword}
+              onChange={(e) => handleChange("keyword", e.target.value)}
+              placeholder={searchPlaceholder}
+            />
 
             {/* FOOTER */}
-            <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]">
-              <Button
-                variant="outline"
-                className="border-[#1761A3] bg-[#F0F8FF]"
-                onClick={resetAll}
-              >
+            <FilterFooter>
+              <ResetAllButton variant="outline" onClick={resetAll} type="button">
                 Reset all
-              </Button>
+              </ResetAllButton>
 
-              <Button
-                className="text-white bg-gradient-to-r from-[#1761a3] to-[#4daf83]"
-                onClick={applyFilters}
-              >
-                Apply Now
-              </Button>
-            </div>
-          </Card>
-        </div>
+              <ApplyButton onClick={applyFilters} type="button">Apply Now</ApplyButton>
+            </FilterFooter>
+          </FilterCard>
+        </FilterModalWrapper>
       )}
-    </div>
+    </FilterContainer>
   );
 };
 
@@ -155,106 +471,249 @@ const Section = ({
   onReset: () => void;
   children: React.ReactNode;
 }) => (
-  <div
-    className="px-5 py-4 bg-gradient-to-r from-[#f3fbf8] to-[#eef6fb]
-    border-b border-[rgba(23,97,163,0.35)]"
-  >
-    <div className="flex justify-between items-center mb-3">
-      <h6 className="font-semibold text-sm">{title}</h6>
-      <button
-        onClick={onReset}
-        className="text-[#1761a3] font-semibold text-sm"
-      >
-        Reset
-      </button>
-    </div>
+  <SectionContainer>
+    <SectionHeader>
+      <SectionTitle>{title}</SectionTitle>
+      <ResetButton onClick={onReset}>Reset</ResetButton>
+    </SectionHeader>
     {children}
-  </div>
+  </SectionContainer>
 );
 
-/* ===================== REUSABLE FIELDS ===================== */
+/* ===================== PUBLISHABLE COMPONENTS ===================== */
 
-const activityOptions = ["Activity List", "Login", "Update", "Delete"];
-const statusOptions = ["Active", "Inactive", "Pending"];
-
-export const MahatiActivity = ({
+/** ✅ MAHATI ACTIVITY */
+const MahatiActivity: React.FC<MahatiActivityProps> = ({
   value,
   onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) => (
-  <Select
-    value={value}
-    onChange={onChange}
-    placeholder="Select Activity"
-    options={activityOptions}
-  />
-);
+  options = DEFAULT_ACTIVITY_OPTIONS,
+  size = "medium",
+}) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
-export const MahatiStatus = ({
+  const selectedLabel =
+    options.find((o) => o.value == value)?.label || "Select Activity";
+
+  /** Calculate dropdown position */
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  };
+
+  /** Keep dropdown aligned on scroll / resize */
+  useEffect(() => {
+    if (!open) return;
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
+
+  /** Outside click (trigger + dropdown) */
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        triggerRef.current?.contains(e.target as Node) ||
+        dropdownRef.current?.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <>
+      {/* ===== Trigger ===== */}
+      <CustomSelectTrigger
+        ref={triggerRef}
+        onClick={() => setOpen((p) => !p)}
+        open={open}
+        size={size}
+      >
+        <CustomSelectLabel>{selectedLabel}</CustomSelectLabel>
+        <CustomSelectIcon open={open} />
+      </CustomSelectTrigger>
+
+      {/* ===== Dropdown (PORTAL) ===== */}
+      {open &&
+        pos &&
+        createPortal(
+          <CustomSelectDropdown
+            ref={dropdownRef}
+            style={{
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+            }}
+          >
+            {options.map((opt) => (
+              <CustomSelectOption
+                key={String(opt.value)}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+              >
+                {opt.label}
+              </CustomSelectOption>
+            ))}
+          </CustomSelectDropdown>,
+          document.body
+        )}
+    </>
+  );
+};
+
+/** ✅ MAHATI STATUS */
+const MahatiStatus: React.FC<MahatiStatusProps> = ({
   value,
   onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) => (
-  <Select
-    value={value}
-    onChange={onChange}
-    placeholder="Select Status"
-    options={statusOptions}
-  />
-);
+  options = DEFAULT_STATUS_OPTIONS,
+  size = "medium",
+}) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
-export const MahatiSearch = ({
+  const selectedLabel =
+    options?.find((o) => o.value == value)?.label || "Select Status";
+
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        triggerRef.current?.contains(e.target as Node) ||
+        dropdownRef.current?.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <>
+      {/* Trigger */}
+      <CustomSelectTrigger
+        ref={triggerRef}
+        onClick={() => setOpen((p) => !p)}
+        open={open}
+        size={size}
+      >
+        <CustomSelectLabel>{selectedLabel}</CustomSelectLabel>
+        <CustomSelectIcon open={open} />
+      </CustomSelectTrigger>
+
+      {/* Dropdown */}
+      {open &&
+        pos &&
+        createPortal(
+          <CustomSelectDropdown
+            ref={dropdownRef}
+            style={{
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+            }}
+          >
+            {options?.map((opt) => (
+              <CustomSelectOption
+                key={String(opt.value)}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+              >
+                {opt.label}
+              </CustomSelectOption>
+            ))}
+          </CustomSelectDropdown>,
+          document.body
+        )}
+    </>
+  );
+};
+
+/** ✅ MAHATI SEARCH */
+const MahatiSearch: React.FC<MahatiSearchProps> = ({
   value,
   onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
+  placeholder = "Search...",
+  size = "medium",
 }) => (
-  <input
+  <CustomInput
     type="text"
     value={value}
-    placeholder="Search..."
+    placeholder={placeholder}
     onChange={(e) => onChange(e.target.value)}
-    className="w-full px-4 py-3 rounded-[6px]
-      border border-slate-300 bg-white
-      focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
+    fieldSize={size}
   />
 );
 
-/* ===================== BASE SELECT ===================== */
+Filter.displayName = "Filter";
+MahatiActivity.displayName = "MahatiActivity";
+MahatiStatus.displayName = "MahatiStatus";
+MahatiSearch.displayName = "MahatiSearch";
 
-const Select = ({
-  value,
-  options,
-  placeholder,
-  onChange,
-}: {
-  value: string;
-  options: string[];
-  placeholder: string;
-  onChange: (v: string) => void;
-}) => (
-  <div className="relative">
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full appearance-none px-4 py-3 pr-10
-        rounded-[6px] border border-slate-300 bg-white
-        focus:outline-none focus:ring-2 focus:ring-[#1761a3]"
-    >
-      <option value="">{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt}>{opt}</option>
-      ))}
-    </select>
+export {
+  Filter,
+  MahatiActivity,
+  MahatiStatus,
+  MahatiSearch,
+  DEFAULT_ACTIVITY_OPTIONS,
+  DEFAULT_STATUS_OPTIONS,
+};
 
-    <ChevronDown
-      className="absolute right-3 top-1/2 -translate-y-1/2
-      w-4 h-4 text-slate-500 pointer-events-none"
-    />
-  </div>
-);
+export type {
+  FilterValues,
+  FieldSize,
+  SelectOption,
+  MahatiActivityProps,
+  MahatiStatusProps,
+  MahatiSearchProps,
+};

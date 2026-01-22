@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Copy, Check, Eye, Code as CodeIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
-
-type CardVariant = 'default' | 'elevated' | 'outline' | 'subtle' | 'figma';
+type CardVariant = 'default' | 'elevated' | 'outlined' | 'subtle' | 'figma';
 type CardSize = 'default' | 'sm' | 'lg' | 'figma';
 
 interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'content'> {
@@ -22,6 +22,184 @@ interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'content'
   children?: React.ReactNode;
 }
 
+// Styled components
+const PerspectiveWrapper = styled.div<{ flippable: boolean }>`
+  ${props => props.flippable && css`
+    perspective: 1000px;
+  `}
+`;
+
+const StyledCard = styled.div<{
+  variant: CardVariant;
+  size: CardSize;
+  backgroundColor?: string;
+  flippable: boolean;
+  isFlipped: boolean;
+}>`
+  /* Base styles */
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+  /* Variant styles */
+  ${props => {
+    switch (props.variant) {
+      case 'default':
+        return css`
+          background-color: white;
+          color: #1e293b;
+          border: 1px solid #e2e8f0;
+          &:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          }
+        `;
+      case 'elevated':
+        return css`
+          background-color: white;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          border: 1px solid transparent;
+        `;
+      case 'outlined':
+        return css`
+          background-color: #f8fafc;
+          border: 1px solid #e2e8f0;
+        `;
+      case 'subtle':
+        return css`
+          background-color: #f8fafc;
+          border: 1px solid transparent;
+        `;
+      case 'figma':
+        return css`
+          background-color: ${props.backgroundColor || 'rgba(77, 175, 131, 0.10)'};
+          border: 1px solid #1761A3;
+          box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+        `;
+      default:
+        return '';
+    }
+  }}
+
+  /* Size styles */
+  ${props => {
+    switch (props.size) {
+      case 'sm':
+        return css`
+          padding: 1rem;
+        `;
+      case 'lg':
+        return css`
+          padding: 2rem;
+        `;
+      case 'figma':
+        return css`
+          width: 280px;
+          padding: 1.5rem;
+        `;
+      case 'default':
+      default:
+        return css`
+          padding: 1.5rem;
+        `;
+    }
+  }}
+
+  /* Custom background color for non-figma variants */
+  ${props => props.variant !== 'figma' && props.backgroundColor && css`
+    background-color: ${props.backgroundColor};
+  `}
+
+  /* Flippable styles */
+  ${props => props.flippable && css`
+    position: relative;
+    transition: transform 0.7s ease;
+    transform-style: preserve-3d;
+    cursor: pointer;
+
+    ${props.isFlipped && css`
+      transform: rotateY(180deg);
+    `}
+  `}
+`;
+
+const CardHeader = styled.div<{ hasContent: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  ${props => props.hasContent && css`
+    margin-bottom: 1rem;
+  `}
+`;
+
+const CardTitle = styled.h4`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.75rem;
+`;
+
+const CollapseButton = styled.button`
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: #1761A3;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #1761A3;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: white;
+  }
+`;
+
+const ContentWrapper = styled.div<{ open: boolean }>`
+  display: grid;
+  overflow: hidden;
+  transition: grid-template-rows 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  
+  ${props => props.open ? css`
+    grid-template-rows: 1fr;
+    opacity: 1;
+  ` : css`
+    grid-template-rows: 0fr;
+    opacity: 0;
+  `}
+`;
+
+const ContentInner = styled.div`
+  overflow: hidden;
+`;
+
+const FrontFace = styled.div<{ flippable: boolean }>`
+  ${props => props.flippable && css`
+    backface-visibility: hidden;
+  `}
+`;
+
+const BackFace = styled.div`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+`;
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
@@ -48,35 +226,6 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const [isFlipped, setIsFlipped] = useState(false);
     const contentId = React.useId();
 
-    const getVariantStyles = () => {
-      const variants = {
-        default: 'bg-white text-slate-800 border border-slate-200 hover:shadow-lg',
-        elevated: 'bg-white shadow-md border border-transparent',
-        outline: 'bg-slate-50 border border-slate-200',
-        subtle: 'bg-slate-50 border border-transparent',
-        figma: ''
-      };
-      return variants[variant];
-    };
-
-    const getSizeStyles = () => {
-      const sizes = {
-        default: 'p-6 rounded-[14px]',
-        sm: 'p-4',
-        lg: 'p-8',
-        figma: 'w-[280px] p-6'
-      };
-      return sizes[size];
-    };
-
-    const figmaStyles = variant === 'figma' ? {
-      backgroundColor: backgroundColor || 'rgba(77, 175, 131, 0.10)',
-      border: '1px solid #1761A3',
-      boxShadow: '0 4px 4px 0 rgba(0, 0, 0, 0.25)',
-      borderRadius: '14px',
-      ...style,
-    } : (backgroundColor ? { backgroundColor, ...style } : style);
-
     const handleFlip = () => {
       if (!flippable) return;
       const newFlippedState = !isFlipped;
@@ -87,32 +236,28 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const mainContent = cardContent || children;
 
     return (
-      <div 
-        className={flippable ? 'perspective-[1000px] group' : ''}
+      <PerspectiveWrapper 
+        flippable={flippable}
         onClick={flippable ? handleFlip : undefined}
       >
-        <div
+        <StyledCard
           ref={ref}
+          variant={variant}
+          size={size}
+          backgroundColor={backgroundColor}
+          flippable={flippable}
+          isFlipped={isFlipped}
+          className={className}
+          style={style}
           {...props}
-          style={figmaStyles}
-          className={`
-            rounded-[14px] transition-all duration-300 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]
-            ${getVariantStyles()}
-            ${getSizeStyles()}
-            ${flippable ? 'relative transition-transform duration-700 [transform-style:preserve-3d]' : ''}
-            ${flippable && isFlipped ? '[transform:rotateY(180deg)]' : ''}
-            ${className}
-          `}
         >
-          <div className={flippable ? '[backface-visibility:hidden]' : ''}>
+          <FrontFace flippable={flippable}>
             {title && (
-              <div className={`flex items-center justify-between ${open && mainContent ? 'mb-4' : ''}`}>
-                <h4 className="text-xl font-semibold text-slate-800">{title}</h4>
+              <CardHeader hasContent={open && !!mainContent}>
+                <CardTitle>{title}</CardTitle>
                 {collapsible && (
-                  <button
+                  <CollapseButton
                     type="button"
-                    style={{ backgroundColor: '#1761A3' }}
-                    className="z-10 flex items-center justify-center w-8 h-8 rounded-full hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-[#1761A3] focus:ring-offset-2"
                     onClick={(e) => {
                       if (flippable) e.stopPropagation();
                       setOpen((p) => !p);
@@ -121,39 +266,28 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                     aria-expanded={open}
                     aria-controls={contentId}
                   >
-                    {open ? (
-                      <ChevronUp className="w-5 h-5 text-white" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-white" />
-                    )}
-                  </button>
+                    {open ? <ChevronUp /> : <ChevronDown />}
+                  </CollapseButton>
                 )}
-              </div>
+              </CardHeader>
             )}
 
             {mainContent && (
-              <div
-                id={contentId}
-                className={`
-                  grid overflow-hidden transition-all duration-500 ease-in-out
-                  ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}
-                `}
-              >
-                <div className="overflow-hidden">{mainContent}</div>
-              </div>
+              <ContentWrapper id={contentId} open={open}>
+                <ContentInner>{mainContent}</ContentInner>
+              </ContentWrapper>
             )}
-          </div>
+          </FrontFace>
 
           {flippable && cardBackContent && (
-            <div className="absolute inset-0 w-full h-full p-6 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-              {cardBackContent}
-            </div>
+            <BackFace>{cardBackContent}</BackFace>
           )}
-        </div>
-      </div>
+        </StyledCard>
+      </PerspectiveWrapper>
     );
   }
 );
 
 Card.displayName = 'Card';
 export { Card };
+export type { CardProps, CardVariant, CardSize };
