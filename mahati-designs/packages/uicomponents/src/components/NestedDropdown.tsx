@@ -3,9 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, X, Loader2 } from "lucide-react";
 
-/* =========================================================
-   STYLES – INLINE CSS (NO TAILWIND, SAME UI)
-========================================================= */
+
 const styles = `
 .nd-wrapper { position: relative; width: 100%; }
 
@@ -461,7 +459,7 @@ export function SearchableDropdown({
 
   return (
     <>
-       <style>{styles}</style> 
+      
 
       <div className="nd-wrapper" ref={ref}>
         <label className="nd-label">{label}</label>
@@ -569,7 +567,7 @@ export function MultiSelectDropdown({
   return (
     <>
       {/* INLINE CSS (same file) */}
-      {/* <style>{css}</style> */}
+      
 
       <div className="msd-container" ref={ref}>
         {/* LABEL */}
@@ -764,7 +762,7 @@ export function AvatarMultiSelectDropdown({
   return (
     <>
       {/* INLINE CSS */}
-      {/* <style>{css}</style> */}
+      
 
       <div className="ams-container" ref={ref}>
         {/* BUTTON */}
@@ -928,7 +926,8 @@ export function GroupedDropdown({
 
   return (
     <>
-      {/* <style>{css}</style> */}
+     
+
 
       <div ref={ref} className="gd-container">
         {label && <label className="gd-label">{label}</label>}

@@ -45,3 +45,10 @@ export * from './components/Spinner';
 // Type Exports
 export { Calendar as MahatiCalendar } from './components/Calendar';
 export type { CalendarDate, CalendarTime, CalendarDateRange, CalendarProps } from './components/Calendar';
+export {SearchableDropdown as MahatiSearchableDropdown}  from './components/NestedDropdown'
+export {MultiSelectDropdown as MahatiMultiSelectDropdown} from './components/NestedDropdown'
+export {CascadingDropdown as MahatiCascadingDropdown}  from './components/NestedDropdown'
+export { AvatarDropdown as MahatiAvatarDropdown}  from './components/NestedDropdown'
+export { AvatarMultiSelectDropdown as MahatiAvatarMultiSelectDropdown}  from './components/NestedDropdown'
+export { GroupedDropdown as MahatiGroupedDropdown}  from './components/NestedDropdown'
+export { AsyncDropdown as MahatiAsyncDropdown}  from './components/NestedDropdown'

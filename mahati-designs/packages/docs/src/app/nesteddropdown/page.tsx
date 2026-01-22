@@ -618,6 +618,7 @@ export default function SearchableDropdownPage() {
 
         {/* 1️ SEARCHABLE */}
         <div className="section">
+          <div id="searchable"></div>
           <CodePreview
             title="Searchable Dropdown"
             code={`
@@ -651,6 +652,7 @@ export default function SearchableDropdownPage() {
 
         {/* 2️ MULTI SELECT */}
         <div className="section">
+          <div id=""></div>
           <CodePreview
             title="Multi Select Dropdown"
             code={`
@@ -666,7 +668,7 @@ export default function SearchableDropdownPage() {
                 <div className="preview-card large">
                   <h3>Multi Select Dropdown</h3>
                   <MultiSelectDropdown
-                    label="Multi Select"
+                    label="multiselect"
                     options={[
                       { label: "Dashboard", value: "dashboard" },
                       { label: "Profile", value: "profile" },
@@ -684,6 +686,7 @@ export default function SearchableDropdownPage() {
 
         {/* 3️ CASCADING */}
         <div className="section">
+          <div id="cascading"></div>
           <CodePreview
             title="Cascading Dropdown"
             code={`
@@ -725,6 +728,7 @@ export default function SearchableDropdownPage() {
 
         {/* 4️AVATAR */}
         <div className="section">
+          <div id="avatar"></div>
           <CodePreview
             title="Avatar Dropdown"
             code={`
@@ -766,6 +770,7 @@ export default function SearchableDropdownPage() {
 
         {/* 5️AVATAR MULTI */}
         <div className="section">
+          <div id ="avatarmultiselect"></div>
           <CodePreview
             title="Avatar Multi Select"
             code={`
@@ -807,6 +812,7 @@ export default function SearchableDropdownPage() {
 
         {/* 6️GROUPED */}
         <div className="section">
+          <div id="grouped"></div>
           <CodePreview
             title="Grouped Dropdown"
             code={`
@@ -850,6 +856,8 @@ export default function SearchableDropdownPage() {
 
         {/* 7️ASYNC */}
         <div className="section">
+          <div id="asynd"></div>
+          
           <CodePreview
             title="Async Dropdown"
             code={`
