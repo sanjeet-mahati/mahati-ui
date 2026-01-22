@@ -231,17 +231,16 @@ export const NavItems = (): NavItem[]  => {
     { name: 'Shadow', href: '/dropdown#shadow', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Glass', href: '/dropdown#glass', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Gradient', href: '/dropdown#gradient', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    {name:'searchable',href:'/nesteddropdown#searchable',icon:<FontAwesomeIcon icon={faSearch} size="sm"/>},
-    {name:'Multi Select',href:'/nesteddropdown#multiselect',icon:<FontAwesomeIcon icon={faListCheck} size="sm"/>},
-    {name:'Grouped',href:'/nesteddropdown#grouped',icon:<FontAwesomeIcon icon={faLayerGroup} size="sm"/>},
-    {name:'Cascading/Nested',href:'/nesteddropdown#nested',icon:<FontAwesomeIcon icon={faCodeBranch} size="sm"/>},
-    {name:'Avatar',href:'/nesteddropdown#avatar',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
-    {name:'Multiselect-Avatar',href:'/nesteddropdown#multiselectavatar',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
-    {name:'Async/dynamic',href:'/nesteddropdown#async/dynamic',icon:<FontAwesomeIcon icon={faUsers} size="sm"/>},
-  
-  
-  
-  
+    {name:'searchable',href:'/dropdown/#searchable',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'multiselect',href:'/dropdown/nesteddropdown#multiselect',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'cascading',href:'/dropdown/nesteddropdown#cascading',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'Avatar',href:'/dropdown/nesteddropdown#avatar',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'Avatar multiselect',href:'/dropdown/nesteddropdown#Avatarmultiselect',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'grouped',href:'/dropdown/nesteddropdown#grouped',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    {name:'Async',href:'/dropdown/nesteddropdown#async',icon:<FontAwesomeIcon icon={faChevronDown}size="sm"/>},
+    
+    
+    
   ],
 },
 

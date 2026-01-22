@@ -38,8 +38,18 @@ export { MahatiStatus } from './components/Filter';
 export { MahatiSearch } from './components/Filter';
 
 
-export {SearchableDropdown as MahatiSearchableDropdown} from './components/NestedDropdown';
+
 
 // Type Exports
-// It's a good practice to re-export types that consumers of your library might need.
-//export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';
+// export { Calendar as MahatiCalendar } from './components/Calendar';
+// export type { CalendarDate, CalendarTime, CalendarDateRange, CalendarProps } from './components/Calendar';
+
+
+
+export {SearchableDropdown as MahatiSearchableDropdown} from './components/NestedDropdown';
+export{MultiSelectDropdown as MahatiMultiSelectDropdown} from './components/NestedDropdown';
+export{CascadingDropdown as  MahatiCascadingDropdown} from './components/NestedDropdown' ;
+export{AvatarDropdown as MahatiAvatarDropdown} from './components/NestedDropdown';
+export{AvatarMultiSelectDropdown as MahatiAvatarMultiSelectDropdown} from './components/NestedDropdown';
+export{GroupedDropdown as MahatiGroupedDropdown} from './components/NestedDropdown';
+export{AsyncDropdown as MahatiAsyncDropdown} from './components/NestedDropdown';
