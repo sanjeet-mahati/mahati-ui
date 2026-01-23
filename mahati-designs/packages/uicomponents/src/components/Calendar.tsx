@@ -114,27 +114,39 @@ const CalendarInput = styled.input<{ $showIcon: boolean; $disabled: boolean; $sc
 const CalendarDropdown = styled.div<{ $scale: number; $positionAbove: boolean }>`
   position: absolute;
   left: 0;
-  ${props => props.$positionAbove ? 'bottom: 100%;' : 'top: 100%;'}
-  ${props => props.$positionAbove ? `margin-bottom: ${props.$scale * 8}px;` : `margin-top: ${props.$scale * 8}px;`}
-  z-index: 50;
+  ${props => (props.$positionAbove ? 'bottom: 100%;' : 'top: 100%;')}
+  ${props =>
+    props.$positionAbove
+      ? `margin-bottom: ${props.$scale * 8}px;`
+      : `margin-top: ${props.$scale * 8}px;`}
+
+  z-index: 9999;
+  isolation: isolate;
+
   border: 1px solid #1761A3;
-  background-color: white;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  transition: all 300ms;
-  background: linear-gradient(to bottom, rgba(23, 97, 163, 0.08), rgba(77, 175, 131, 0.08));
+  background-color: #ffffff;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
   width: ${props => props.$scale * 406}px;
-  height: ${props => props.$scale * 580}px;
+  max-height: 90vh;     /* ✅ LIMIT height, don’t FIX it */
   border-radius: ${props => props.$scale * 22}px;
   max-width: 95vw;
+
   overflow: hidden;
 `;
 
 const CalendarContent = styled.div<{ $scale: number }>`
-  height: 100%;
   display: flex;
   flex-direction: column;
   padding: ${props => props.$scale * 24}px;
-  padding-bottom: ${props => props.$scale * 22}px;
+  padding-bottom: ${props => props.$scale * 24}px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(23, 97, 163, 0.08),
+    rgba(77, 175, 131, 0.08)
+  );
 `;
 
 const CalendarTitle = styled.div<{ $scale: number }>`
@@ -351,7 +363,9 @@ const DayButton = styled.button<{
 const FooterSection = styled.div<{ $scale: number }>`
   flex-shrink: 0;
   border-top: 1px solid #e5e7eb;
-  padding-top: ${props => props.$scale * 12}px;
+  padding: ${props => props.$scale * 8}px
+           ${props => props.$scale * 8}px
+           ${props => props.$scale * 8}px;
 `;
 
 const ButtonRow = styled.div<{ $scale: number }>`
