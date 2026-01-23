@@ -2,26 +2,108 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import styled from "@emotion/styled";
 import { X } from "lucide-react";
 
-/* ===================== TYPES ===================== */
+/* ===================== SHARED STYLES ===================== */
 
-export interface MahatiLocationAccessModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+`;
 
-  title: string;
-  description: string;
-  image?: string;
+const Card = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+  border: 2px solid #c2e2d5;
+  background: #f0f5f8;
+  padding: 40px 32px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+`;
 
-  allowText: string;
-  denyText?: string;
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
 
-  onAllow?: (coords?: GeolocationCoordinates) => void;
-  onDeny?: () => void;
-}
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+`;
 
-/* ===================== Location COMPONENT ===================== */
+const Img = styled.img`
+  width: 144px;
+  object-fit: contain;
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #4daf83;
+  margin-bottom: 12px;
+`;
+
+const Desc = styled.p`
+  text-align: center;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 32px;
+  white-space: pre-line;
+`;
+
+const PrimaryBtn = styled.button`
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+  background: linear-gradient(to right, #1b5fa7, #57b884);
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+`;
+
+const SecondaryBtn = styled.button`
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  border: 2px solid #8cb8e8;
+  background: white;
+  color: #1b5fa7;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: #f2f8ff;
+  }
+`;
+
+/* ===================== LOCATION ===================== */
 
 export const MahatiLocationAccessModal = ({
   isOpen,
@@ -33,25 +115,19 @@ export const MahatiLocationAccessModal = ({
   denyText,
   onAllow,
   onDeny,
-}: MahatiLocationAccessModalProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
+}: any) => {
+  const ref = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"granted" | "denied" | "prompt">("prompt");
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
 
-  /* Check existing browser permission */
   useEffect(() => {
     if (!navigator.permissions) return;
-
-    navigator.permissions
-      .query({ name: "geolocation" })
-      .then((res) => {
-        setStatus(res.state as any);
-        res.onchange = () => setStatus(res.state as any);
-      });
+    navigator.permissions.query({ name: "geolocation" }).then((res) => {
+      setStatus(res.state as any);
+      res.onchange = () => setStatus(res.state as any);
+    });
   }, []);
 
-  /* Auto close when granted */
   useEffect(() => {
     if (status === "granted" && location) {
       onAllow?.(location.coords);
@@ -59,7 +135,6 @@ export const MahatiLocationAccessModal = ({
     }
   }, [status, location]);
 
-  /* Ask browser for GPS */
   const requestLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -71,79 +146,45 @@ export const MahatiLocationAccessModal = ({
     );
   };
 
-  /* Outside click */
   useEffect(() => {
     if (!isOpen) return;
-
-    const handler = (e: MouseEvent) => {
-      if (!cardRef.current?.contains(e.target as Node)) onClose();
-    };
-
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const h = (e: MouseEvent) =>
+      !ref.current?.contains(e.target as Node) && onClose();
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div
-        ref={cardRef}
-        className="relative w-full max-w-md rounded-3xl border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-lg"
-      >
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center"
-        >
-          <X className="w-4 h-4 text-gray-600" />
-        </button>
+    <Overlay>
+      <Card ref={ref}>
+        <CloseBtn onClick={onClose}><X size={16} /></CloseBtn>
 
-        {/* Image */}
-        {image && (
-          <div className="flex justify-center mb-2">
-            <img src={image} alt="Location Access" className="w-36 h-auto object-contain" />
-          </div>
-        )}
+        {image && <Center><Img src={image} /></Center>}
+        <Title>{title}</Title>
+        <Desc>{description}</Desc>
 
-        {/* Title */}
-        <h2 className="text-center text-2xl font-semibold text-[#4DAF83] mb-3">
-          {title}
-        </h2>
-
-        {/* Description */}
-        <p className="text-center text-gray-700 text-sm mb-8 whitespace-pre-line">
-          {description}
-        </p>
-
-        {/* Allow */}
-        <button
-          onClick={requestLocation}
-          className="w-full rounded-[8px] py-3 text-white font-medium mb-4 bg-gradient-to-r from-[#1B5FA7] to-[#57B884] hover:shadow-lg"
-        >
+        <PrimaryBtn onClick={requestLocation}>
           {status === "granted" ? "Location Enabled" : allowText}
-        </button>
+        </PrimaryBtn>
 
-        {/* Deny */}
         {denyText && (
-          <button
-            onClick={() => {
-              setStatus("denied");
-              onDeny?.();
-              onClose();
-            }}
-            className="w-full rounded-[8px] py-3 border-2 border-[#8CB8E8] text-[#1B5FA7] bg-white hover:bg-[#F2F8FF]"
-          >
+          <SecondaryBtn onClick={() => {
+            setStatus("denied");
+            onDeny?.();
+            onClose();
+          }}>
             {denyText}
-          </button>
+          </SecondaryBtn>
         )}
-      </div>
-    </div>,
+      </Card>
+    </Overlay>,
     document.body
   );
 };
 
-/* ===================== TYPES ===================== */
+/* ===================== CAMERA ===================== */
 
 export interface MahatiCameraAccessModalProps {
   isOpen: boolean;
@@ -160,7 +201,7 @@ export interface MahatiCameraAccessModalProps {
   onDeny?: () => void;
 }
 
-/* ===================== Camera COMPONENT ===================== */
+/* ===================== COMPONENT ===================== */
 
 export const MahatiCameraAccessModal = ({
   isOpen,
@@ -174,122 +215,83 @@ export const MahatiCameraAccessModal = ({
   onDeny,
 }: MahatiCameraAccessModalProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] =
+    useState<"prompt" | "granted" | "denied">("prompt");
 
-  const [status, setStatus] = useState<"granted" | "denied" | "prompt">("prompt");
-  const [stream, setStream] = useState<MediaStream | null>(null);
-
-  /* Ask browser for camera */
+  /* ===== CAMERA REQUEST (MUST BE DIRECT USER CLICK) ===== */
   const requestCamera = async () => {
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
 
-      setStream(mediaStream);
       setStatus("granted");
-    } catch {
+      onAllow?.(stream);
+      onClose();
+    } catch (err) {
+      console.error("Camera error:", err);
       setStatus("denied");
+      onDeny?.();
     }
   };
 
-  /* Auto close when granted */
-  useEffect(() => {
-    if (status === "granted" && stream) {
-      onAllow?.(stream);
-      onClose();
-    }
-  }, [status, stream]);
-
-  /* Outside click */
+  /* ===== OUTSIDE CLICK (CLICK, NOT MOUSEDOWN) ===== */
   useEffect(() => {
     if (!isOpen) return;
 
     const handler = (e: MouseEvent) => {
-      if (!cardRef.current?.contains(e.target as Node)) onClose();
+      if (!cardRef.current?.contains(e.target as Node)) {
+        onClose();
+      }
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [isOpen]);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div
+    <Overlay>
+      <Card
         ref={cardRef}
-        className="relative w-full max-w-md rounded-3xl border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-lg"
+        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center"
-        >
-          <X className="w-4 h-4 text-gray-600" />
-        </button>
+        <CloseBtn onClick={onClose}>
+          <X size={16} />
+        </CloseBtn>
 
-        {/* Image */}
         {image && (
-          <div className="flex justify-center mb-2">
-            <img src={image} alt="Camera Access" className="w-36 h-auto object-contain" />
-          </div>
+          <Center>
+            <Img src={image} alt="Camera Access" />
+          </Center>
         )}
 
-        {/* Title */}
-        <h2 className="text-center text-2xl font-semibold text-[#4DAF83] mb-3">
-          {title}
-        </h2>
+        <Title>{title}</Title>
+        <Desc>{description}</Desc>
 
-        {/* Description */}
-        <p className="text-center text-gray-700 text-sm mb-8 whitespace-pre-line">
-          {description}
-        </p>
-
-        {/* Allow */}
-        <button
-          onClick={requestCamera}
-          className="w-full rounded-[8px] py-3 text-white font-medium mb-4 bg-gradient-to-r from-[#1B5FA7] to-[#57B884] hover:shadow-lg"
-        >
+        <PrimaryBtn onClick={requestCamera}>
           {status === "granted" ? "Camera Enabled" : allowText}
-        </button>
+        </PrimaryBtn>
 
-        {/* Deny */}
         {denyText && (
-          <button
+          <SecondaryBtn
             onClick={() => {
               setStatus("denied");
               onDeny?.();
               onClose();
             }}
-            className="w-full rounded-[8px] py-3 border-2 border-[#8CB8E8] text-[#1B5FA7] bg-white hover:bg-[#F2F8FF]"
           >
             {denyText}
-          </button>
+          </SecondaryBtn>
         )}
-      </div>
-    </div>,
+      </Card>
+    </Overlay>,
     document.body
   );
 };
 
-/* ===================== TYPES ===================== */
-
-export interface MahatiMicrophoneAccessModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-
-  title: string;
-  description: string;
-  image?: string;
-
-  allowText: string;
-  denyText?: string;
-
-  onAllow?: (stream?: MediaStream) => void;
-  onDeny?: () => void;
-}
-
-/* ===================== Microphone COMPONENT ===================== */
+/* ===================== MICROPHONE ===================== */
 
 export const MahatiMicrophoneAccessModal = ({
   isOpen,
@@ -301,122 +303,195 @@ export const MahatiMicrophoneAccessModal = ({
   denyText,
   onAllow,
   onDeny,
-}: MahatiMicrophoneAccessModalProps) => {
+}: any) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] =
+    useState<"prompt" | "granted" | "denied">("prompt");
 
-  const [status, setStatus] = useState<"granted" | "denied" | "prompt">("prompt");
-  const [stream, setStream] = useState<MediaStream | null>(null);
-
-  /* Ask browser for microphone */
-  const requestMicrophone = async () => {
+  /* ===== MICROPHONE REQUEST ===== */
+  const requestMic = async () => {
     try {
-      const micStream = await navigator.mediaDevices.getUserMedia({
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
 
-      setStream(micStream);
       setStatus("granted");
-    } catch {
+      onAllow?.(stream);
+      onClose();
+    } catch (err) {
+      console.error("Microphone error:", err);
       setStatus("denied");
+      onDeny?.();
     }
   };
 
-  /* Auto close when granted */
-  useEffect(() => {
-    if (status === "granted" && stream) {
-      onAllow?.(stream);
-      onClose();
-    }
-  }, [status, stream]);
-
-  /* Outside click */
+  /* ===== OUTSIDE CLICK (CLICK ONLY) ===== */
   useEffect(() => {
     if (!isOpen) return;
 
     const handler = (e: MouseEvent) => {
-      if (!cardRef.current?.contains(e.target as Node)) onClose();
+      if (!cardRef.current?.contains(e.target as Node)) {
+        onClose();
+      }
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [isOpen]);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div
+    <Overlay>
+      <Card
         ref={cardRef}
-        className="relative w-full max-w-md rounded-3xl border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-lg"
+        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center"
-        >
-          <X className="w-4 h-4 text-gray-600" />
-        </button>
+        <CloseBtn onClick={onClose}>
+          <X size={16} />
+        </CloseBtn>
 
-        {/* Image */}
         {image && (
-          <div className="flex justify-center mb-2">
-            <img
-              src={image}
-              alt="Microphone Access"
-              className="w-36 h-auto object-contain"
-            />
-          </div>
+          <Center>
+            <Img src={image} alt="Microphone Access" />
+          </Center>
         )}
 
-        {/* Title */}
-        <h2 className="text-center text-2xl font-semibold text-[#4DAF83] mb-3">
-          {title}
-        </h2>
+        <Title>{title}</Title>
+        <Desc>{description}</Desc>
 
-        {/* Description */}
-        <p className="text-center text-gray-700 text-sm mb-8 whitespace-pre-line">
-          {description}
-        </p>
-
-        {/* Allow */}
-        <button
-          onClick={requestMicrophone}
-          className="w-full rounded-[8px] py-3 text-white font-medium mb-4 bg-gradient-to-r from-[#1B5FA7] to-[#57B884] hover:shadow-lg"
-        >
+        <PrimaryBtn onClick={requestMic}>
           {status === "granted" ? "Microphone Enabled" : allowText}
-        </button>
+        </PrimaryBtn>
 
-        {/* Deny */}
         {denyText && (
-          <button
+          <SecondaryBtn
             onClick={() => {
               setStatus("denied");
               onDeny?.();
               onClose();
             }}
-            className="w-full rounded-[8px] py-3 border-2 border-[#8CB8E8] text-[#1B5FA7] bg-white hover:bg-[#F2F8FF]"
           >
             {denyText}
-          </button>
+          </SecondaryBtn>
         )}
-      </div>
-    </div>,
+      </Card>
+    </Overlay>,
     document.body
   );
 };
+
+const PromoOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+`;
+
+const PromoCard = styled.div`
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: 2px solid #c5d9e6;
+  background: #f1f7f7;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+`;
+
+const PromoHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(to right, #1761a3, #4daf83);
+`;
+
+const PromoHeaderTitle = styled.h3`
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const PromoCloseBtn = styled.button`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+`;
+
+const PromoContent = styled.div`
+  padding: 24px 20px;
+`;
+
+const PromoTitle = styled.h4`
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+`;
+
+const PromoDesc = styled.p`
+  font-size: 14px;
+  color: #878787;
+  margin-bottom: 24px;
+`;
+
+const PromoInput = styled.input`
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 2px solid #c2dae8;
+  background: #eaf2f6;
+  font-size: 14px;
+  margin-bottom: 16px;
+
+  &:focus {
+    outline: none;
+    border-color: #1b5fa7;
+  }
+`;
+
+const PromoCtaBtn = styled.button`
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: #1761a3;
+  cursor: pointer;
+
+  &:hover {
+    background: #174f8a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+/* ===================== CARD ===================== */
 
 export interface MahatiPromotionCardProps {
   headerTitle: string;
   title: string;
   description: string;
-
   ctaText: string;
   onCtaClick?: () => void;
-
   showInput?: boolean;
   inputPlaceholder?: string;
   onInputChange?: (value: string) => void;
-
   onClose?: () => void;
 }
 
@@ -432,71 +507,49 @@ export const MahatiPromotionCard = ({
   onClose,
 }: MahatiPromotionCardProps) => {
   return (
-    <div className="w-full max-w-md rounded-2xl border-2 border-[#c5d9e6] bg-[#f1f7f7] shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-[#1761A3] to-[#4DAF83]">
-        <h3 className="text-white text-base md:text-lg font-medium">
-          {headerTitle}
-        </h3>
+    <PromoCard>
+      <PromoHeader>
+        <PromoHeaderTitle>{headerTitle}</PromoHeaderTitle>
 
         {onClose && (
-          <button
-            onClick={onClose}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 hover:bg-white/30"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
+          <PromoCloseBtn onClick={onClose}>
+            <X size={14} color="white" />
+          </PromoCloseBtn>
         )}
-      </div>
+      </PromoHeader>
 
-      {/* Content */}
-      <div className="px-5 py-6 md:px-6 md:py-8">
-        <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-          {title}
-        </h4>
+      <PromoContent>
+        <PromoTitle>{title}</PromoTitle>
+        <PromoDesc>{description}</PromoDesc>
 
-        <p className="text-sm md:text-base text-[#878787] mb-6">
-          {description}
-        </p>
-
-        {/* Optional Input */}
         {showInput && (
-          <input
+          <PromoInput
             type="email"
             placeholder={inputPlaceholder}
             onChange={(e) => onInputChange?.(e.target.value)}
-            className="w-full rounded-lg border-2 border-[#C2DAE8] bg-[#EAF2F6] px-4 py-3 text-sm md:text-base placeholder-gray-500 focus:outline-none focus:border-[#1B5FA7] mb-4"
           />
         )}
 
-        {/* CTA */}
-        <button
-          onClick={onCtaClick}
-          className="w-full rounded-lg py-3 text-sm md:text-base font-medium text-white bg-[#1761A3] hover:bg-[#174F8A] hover:shadow-md"
-        >
-          {ctaText}
-        </button>
-      </div>
-    </div>
+        <PromoCtaBtn onClick={onCtaClick}>{ctaText}</PromoCtaBtn>
+      </PromoContent>
+    </PromoCard>
   );
 };
+
+/* ===================== MODAL ===================== */
 
 export interface MahatiPromotionModalProps {
   isOpen: boolean;
   onClose: () => void;
-
   headerTitle: string;
   title: string;
   description: string;
-
   ctaText: string;
   onCtaClick?: (value?: string) => void;
   ctaLink?: string;
   openInNewTab?: boolean;
-
   showInput?: boolean;
   inputPlaceholder?: string;
-  onInputChange?: (value: string) => void;
 }
 
 export const MahatiPromotionModal = ({
@@ -506,13 +559,11 @@ export const MahatiPromotionModal = ({
   openInNewTab,
   onCtaClick,
   ...cardProps
-}: MahatiPromotionModalProps & {
-  ctaLink?: string;
-  openInNewTab?: boolean;
-}) => {
+}: MahatiPromotionModalProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
 
+  /* ✅ CLICK — NOT MOUSEDOWN */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -522,8 +573,8 @@ export const MahatiPromotionModal = ({
       }
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -532,30 +583,128 @@ export const MahatiPromotionModal = ({
     onCtaClick?.(email);
 
     if (ctaLink) {
-      if (openInNewTab) {
-        window.open(ctaLink, "_blank");
-      } else {
-        window.location.href = ctaLink;
-      }
+      openInNewTab
+        ? window.open(ctaLink, "_blank")
+        : (window.location.href = ctaLink);
     }
 
     onClose();
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div ref={ref}>
+    <PromoOverlay>
+      <div ref={ref} onClick={(e) => e.stopPropagation()}>
         <MahatiPromotionCard
           {...cardProps}
           onClose={onClose}
-          onInputChange={(v) => setEmail(v)}
+          onInputChange={setEmail}
           onCtaClick={handleCta}
         />
       </div>
-    </div>,
+    </PromoOverlay>,
     document.body
   );
 };
+
+const PromoV2Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  padding: 16px;
+`;
+
+const PromoV2Card = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    #4daf83,
+    #2f8fa0,
+    #1761a3
+  );
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  color: white;
+`;
+
+const PromoV2Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+`;
+
+const PromoV2HeaderTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const PromoV2CloseBtn = styled.button`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+`;
+
+const PromoV2Content = styled.div`
+  padding: 40px 24px;
+`;
+
+const PromoV2Title = styled.h4`
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+`;
+
+const PromoV2Desc = styled.p`
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  max-width: 80%;
+`;
+
+const PromoV2CtaBtn = styled.button`
+  padding: 12px 32px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: #1761a3;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: #f2f6fa;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const PromoV2Badge = styled.img`
+  position: absolute;
+  bottom: 24px;
+  right: -24px;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+`;
+
+/* ===================== TYPES ===================== */
 
 export interface MahatiPromotionModalV2Props {
   isOpen: boolean;
@@ -575,6 +724,8 @@ export interface MahatiPromotionModalV2Props {
   badgeImageSrc?: string;
 }
 
+/* ===================== COMPONENT ===================== */
+
 export const MahatiPromotionModalV2Modal = ({
   isOpen,
   onClose,
@@ -590,6 +741,7 @@ export const MahatiPromotionModalV2Modal = ({
 }: MahatiPromotionModalV2Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
+  /* ✅ CLICK — NOT MOUSEDOWN */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -599,8 +751,8 @@ export const MahatiPromotionModalV2Modal = ({
       }
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -609,73 +761,149 @@ export const MahatiPromotionModalV2Modal = ({
     onCtaClick?.();
 
     if (ctaLink) {
-      if (openInNewTab) {
-        window.open(ctaLink, "_blank");
-      } else {
-        window.location.href = ctaLink;
-      }
+      openInNewTab
+        ? window.open(ctaLink, "_blank")
+        : (window.location.href = ctaLink);
     }
 
     onClose();
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-      <div
+    <PromoV2Overlay>
+      <PromoV2Card
         ref={ref}
-        className="relative w-full max-w-md rounded-2xl overflow-hidden
-                   bg-gradient-to-b from-[#4DAF83] via-[#2F8FA0] to-[#1761A3]
-                   shadow-xl text-white"
+        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4">
-          <h3 className="text-base md:text-lg font-medium">
-            {headerTitle}
-          </h3>
+        <PromoV2Header>
+          <PromoV2HeaderTitle>{headerTitle}</PromoV2HeaderTitle>
 
-          <button
-            onClick={onClose}
-            className="flex h-7 w-7 items-center justify-center rounded-full
-                       bg-white/20 transition-all hover:bg-white/30"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
-        </div>
+          <PromoV2CloseBtn onClick={onClose}>
+            <X size={14} color="white" />
+          </PromoV2CloseBtn>
+        </PromoV2Header>
 
         {/* Content */}
-        <div className="px-6 py-10">
-          <h4 className="text-2xl md:text-3xl font-semibold mb-4">
-            {title}
-          </h4>
+        <PromoV2Content>
+          <PromoV2Title>{title}</PromoV2Title>
+          <PromoV2Desc>{description}</PromoV2Desc>
 
-          <p className="text-sm md:text-base text-white/90 mb-10 max-w-[80%]">
-            {description}
-          </p>
-
-          {/* CTA */}
-          <button
-            onClick={handleCta}
-            className="rounded-lg px-8 py-3 text-sm md:text-base font-semibold
-                       bg-white text-[#1761A3]
-                       transition-all hover:bg-[#F2F6FA] hover:shadow-md"
-          >
+          <PromoV2CtaBtn onClick={handleCta}>
             {ctaText}
-          </button>
-        </div>
+          </PromoV2CtaBtn>
+        </PromoV2Content>
 
-        {/* Badge Image */}
+        {/* Badge */}
         {showBadgeImage && badgeImageSrc && (
-          <img
-            src={badgeImageSrc}
-            alt="Promotion Badge"
-            className="absolute bottom-6 -right-6 w-[120px] h-[120px] object-contain"
-          />
+          <PromoV2Badge src={badgeImageSrc} alt="Promotion Badge" />
         )}
-      </div>
-    </div>,
+      </PromoV2Card>
+    </PromoV2Overlay>,
     document.body
   );
 };
+
+const PromoV3Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  padding: 16px;
+`;
+
+const PromoV3Card = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: 2px solid #cfe8dc;
+  background: #f9fbfb;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+`;
+
+const PromoV3CloseBtn = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+`;
+
+const PromoV3ImageWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+`;
+
+const PromoV3Image = styled.img`
+  width: 160px;
+  height: 130px;
+  object-fit: contain;
+`;
+
+const PromoV3Title = styled.h3`
+  font-size: 22px;
+  font-weight: 600;
+  color: #4daf83;
+  margin-bottom: 12px;
+`;
+
+const PromoV3Desc = styled.p`
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 32px;
+`;
+
+const PromoV3CtaBtn = styled.button`
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #1761a3, #4daf83);
+
+  &:hover {
+    background: linear-gradient(to right, #174f8a, #4ca676);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+`;
+
+const PromoV3SecondaryBtn = styled.button`
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1761a3;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+/* ===================== TYPES ===================== */
 
 export interface MahatiPromotionModalV3Props {
   isOpen: boolean;
@@ -696,26 +924,24 @@ export interface MahatiPromotionModalV3Props {
   openInNewTab?: boolean;
 }
 
+/* ===================== COMPONENT ===================== */
+
 export const MahatiPromotionModalV3Modal = ({
   isOpen,
   onClose,
-
   title,
   description,
-
   ctaText,
   onCtaClick,
-
   secondaryText = "Later",
   onSecondaryClick,
-
   imageSrc,
-
   ctaLink,
   openInNewTab = false,
 }: MahatiPromotionModalV3Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
+  /* ✅ CLICK — NOT MOUSEDOWN */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -725,8 +951,8 @@ export const MahatiPromotionModalV3Modal = ({
       }
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -744,91 +970,254 @@ export const MahatiPromotionModalV3Modal = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-      <div
+    <PromoV3Overlay>
+      <PromoV3Card
         ref={ref}
-        className="relative w-full max-w-md rounded-2xl
-                   border-2 border-[#CFE8DC]
-                   bg-[#F9FBFB]
-                   px-6 py-8 text-center shadow-sm"
+        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
         {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute right-5 top-5 flex h-7 w-7 items-center
-                     justify-center rounded-full bg-gray-100 hover:bg-gray-200"
-        >
-          <X className="w-4 h-4 text-gray-600" />
-        </button>
+        <PromoV3CloseBtn onClick={onClose}>
+          <X size={14} />
+        </PromoV3CloseBtn>
 
         {/* Image */}
         {imageSrc && (
-          <div className="flex justify-center mb-6">
-            <img
-              src={imageSrc}
-              alt="Promotion"
-              className="w-[150px] md:w-[160px] h-[115px] md:h-[130px] object-contain"
-            />
-          </div>
+          <PromoV3ImageWrap>
+            <PromoV3Image src={imageSrc} alt="Promotion" />
+          </PromoV3ImageWrap>
         )}
 
         {/* Title */}
-        <h3 className="text-xl md:text-2xl font-semibold text-[#4DAF83] mb-3">
-          {title}
-        </h3>
+        <PromoV3Title>{title}</PromoV3Title>
 
         {/* Description */}
-        <p className="text-sm md:text-base text-gray-600 mb-8">
-          {description}
-        </p>
+        <PromoV3Desc>{description}</PromoV3Desc>
 
         {/* CTA */}
-        <button
-          onClick={handleCta}
-          className="w-full rounded-lg py-3 text-sm md:text-base
-                     font-medium text-white
-                     bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
-                     hover:from-[#174F8A] hover:to-[#4CA676]
-                     transition-all hover:shadow-md"
-        >
+        <PromoV3CtaBtn onClick={handleCta}>
           {ctaText}
-        </button>
+        </PromoV3CtaBtn>
 
         {/* Secondary */}
         {secondaryText && (
-          <button
+          <PromoV3SecondaryBtn
             onClick={() => {
               onSecondaryClick?.();
               onClose();
             }}
-            className="mt-4 text-sm md:text-base font-medium
-                       text-[#1761A3] hover:underline"
           >
             {secondaryText}
-          </button>
+          </PromoV3SecondaryBtn>
         )}
-      </div>
-    </div>,
+      </PromoV3Card>
+    </PromoV3Overlay>,
     document.body
   );
 };
 
 /* ===================== TYPES ===================== */
 
+const NotificationWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 16px;
+  border: 2px solid #c2e2d5;
+  background: #f1f7f7;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+`;
+
+const LeftVisual = styled.div`
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+
+  @media (min-width: 768px) {
+    width: 64px;
+    height: 64px;
+  }
+`;
+
+const IconBox = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(to bottom right, #1761a3, #4daf83);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const IconImg = styled.img`
+  width: 20px;
+  height: 20px;
+
+  @media (min-width: 768px) {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const AvatarImg = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+`;
+
+const Badge = styled.div<{ bg: string }>`
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+  border: 2px solid white;
+
+  background: ${({ bg }) => bg};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BadgeText = styled.span`
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+`;
+
+const BadgeImg = styled.img`
+  width: 12px;
+  height: 12px;
+`;
+
+const Content = styled.div`
+  flex: 1;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+`;
+
+const NotificationTitle = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
+`;
+
+const Time = styled.span`
+  font-size: 10px;
+  color: #6b7280;
+  white-space: nowrap;
+
+  @media (min-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+const Description = styled.p`
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 12px;
+
+  @media (min-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
+const PrimaryAction = styled.button`
+  flex: 1;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #1761a3, #4daf83);
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const SecondaryAction = styled.button`
+  flex: 1;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid #b7d9c9;
+  background: #eaf6f1;
+  color: #2f6f5e;
+  cursor: pointer;
+
+  &:hover {
+    background: #dff1ea;
+  }
+`;
+
+const NotificationCloseBtn = styled.button`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #d7e5ed;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    width: 32px;
+    height: 32px;
+  }
+
+  &:hover {
+    background: #dcefe6;
+  }
+`;
+
+/* ===================== TYPES ===================== */
+
+type BadgeType = "like" | "mention" | "follow" | "comment" | "add";
+
 export interface MahatiNotificationCardProps {
   title: string;
   description?: string;
   time?: string;
 
-  /* Left visual */
-  iconSrc?: string;          // for system notifications
-  avatarSrc?: string;        // for user notifications
+  iconSrc?: string;
+  avatarSrc?: string;
 
-  /* Badge */
   badgeIconSrc?: string;
-  badgeBgClass?: string;     // tailwind bg or gradient
+  badgeType?: BadgeType;
 
-  /* Actions */
   primaryActionText?: string;
   onPrimaryAction?: () => void;
 
@@ -838,126 +1227,82 @@ export interface MahatiNotificationCardProps {
   onClose?: () => void;
 }
 
+/* ===================== CONSTANTS ===================== */
+const BADGE_BG_MAP: Record<BadgeType, string> = {
+  like: "#F9595F",
+  mention: "#E02424",
+  follow: "linear-gradient(to bottom right, #1761A3, #4DAF83)",
+  comment: "linear-gradient(to bottom right, #1761A3, #4DAF83)",
+  add: "linear-gradient(to bottom right, #1761A3, #4DAF83)",
+};
+
 /* ===================== COMPONENT ===================== */
 
 export const MahatiNotificationCard = ({
   title,
   description,
   time,
-
   iconSrc,
   avatarSrc,
-
   badgeIconSrc,
-  badgeBgClass = "bg-gradient-to-br from-[#1761A3] to-[#4DAF83]",
-
+  badgeType,
   primaryActionText,
   onPrimaryAction,
-
   secondaryActionText,
   onSecondaryAction,
-
   onClose,
 }: MahatiNotificationCardProps) => {
   return (
-    <div
-      className="flex items-start gap-4 w-full max-w-xl
-                 rounded-2xl border-2 border-[#c2e2d5]
-                 bg-[#f1f7f7] px-4 py-3 shadow-sm"
-    >
+    <NotificationWrapper>
       {/* LEFT VISUAL */}
-      <div className="relative h-14 md:h-16 w-14 md:w-16 shrink-0">
+      <LeftVisual>
         {iconSrc ? (
-          <div
-            className="flex h-full w-full items-center justify-center
-                       rounded-[10px]
-                       bg-gradient-to-br from-[#1761A3] to-[#4DAF83]"
-          >
-            <img src={iconSrc} alt="" className="w-5 md:w-6 h-5 md:h-6" />
-          </div>
+          <IconBox>
+            <IconImg src={iconSrc} alt="" />
+          </IconBox>
         ) : (
-          avatarSrc && (
-            <img
-              src={avatarSrc}
-              alt="User"
-              className="h-full w-full rounded-[10px] object-cover"
-            />
-          )
+          avatarSrc && <AvatarImg src={avatarSrc} alt="User" />
         )}
 
-        {/* BADGE */}
-        {badgeIconSrc && (
-          <div
-            className={`absolute -bottom-1 -right-1
-                        flex h-6 w-6 items-center justify-center
-                        rounded-full border-2 border-white
-                        ${badgeBgClass}`}
-          >
-            <img src={badgeIconSrc} alt="" className="h-3 w-3" />
-          </div>
+        {badgeIconSrc && badgeType && (
+          <Badge bg={BADGE_BG_MAP[badgeType]}>
+            <BadgeImg src={badgeIconSrc} alt="" />
+          </Badge>
         )}
-      </div>
+      </LeftVisual>
 
       {/* CONTENT */}
-      <div className="flex-1">
-        <div className="flex items-center gap-3 mb-1">
-          <p className="text-sm md:text-base font-semibold text-gray-900">
-            {title}
-          </p>
+      <Content>
+        <TitleRow>
+          <NotificationTitle>{title}</NotificationTitle>
+          {time && <Time>{time}</Time>}
+        </TitleRow>
 
-          {time && (
-            <span className="text-[10px] md:text-[12px] text-gray-500 whitespace-nowrap">
-              {time}
-            </span>
-          )}
-        </div>
+        {description && <Description>{description}</Description>}
 
-        {description && (
-          <p className="text-xs md:text-sm text-gray-500 mb-3">
-            {description}
-          </p>
-        )}
-
-        {/* ACTION BUTTONS */}
         {(primaryActionText || secondaryActionText) && (
-          <div className="flex flex-col sm:flex-row gap-3">
+          <Actions>
             {primaryActionText && (
-              <button
-                onClick={onPrimaryAction}
-                className="flex-1 rounded-lg py-2.5 text-sm font-medium text-white
-                           bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
-                           hover:shadow-md transition"
-              >
+              <PrimaryAction onClick={onPrimaryAction}>
                 {primaryActionText}
-              </button>
+              </PrimaryAction>
             )}
 
             {secondaryActionText && (
-              <button
-                onClick={onSecondaryAction}
-                className="flex-1 rounded-lg py-2.5 text-sm font-medium
-                           border-2 border-[#B7D9C9]
-                           text-[#2F6F5E] bg-[#EAF6F1]
-                           hover:bg-[#DFF1EA] transition"
-              >
+              <SecondaryAction onClick={onSecondaryAction}>
                 {secondaryActionText}
-              </button>
+              </SecondaryAction>
             )}
-          </div>
+          </Actions>
         )}
-      </div>
+      </Content>
 
       {/* CLOSE */}
       {onClose && (
-        <button
-          onClick={onClose}
-          className="flex h-6 md:h-8 w-6 md:w-8 items-center justify-center
-                     rounded-full bg-[#d7e5ed]
-                     hover:bg-[#DCEFE6] transition"
-        >
-          <X className="w-4 h-4 text-gray-600" />
-        </button>
+        <NotificationCloseBtn onClick={onClose}>
+          <X size={14} />
+        </NotificationCloseBtn>
       )}
-    </div>
+    </NotificationWrapper>
   );
 };

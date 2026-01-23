@@ -700,7 +700,7 @@ useEffect(() => {
             description="You got a new like"
             avatarSrc="/images/avatar-1.jpg"
             badgeIconSrc="/images/heart-white.png"
-            badgeBgClass="bg-[#F9595F]"
+            badgeType="like"
             time="1h ago"
         />
 
@@ -710,6 +710,7 @@ useEffect(() => {
             description="You have one new follower"
             avatarSrc="/images/avatar-2.jpg"
             badgeIconSrc="/images/check-white.png"
+            badgeType="follow"
             time="2h ago"
         />
 
@@ -719,6 +720,7 @@ useEffect(() => {
             description="You have a new comment"
             avatarSrc="/images/avatar-3.jpg"
             badgeIconSrc="/images/chat-white.png"
+            badgeType="comment"
             time="1h ago"
         />
 
@@ -728,7 +730,7 @@ useEffect(() => {
             description="Check the conversation."
             avatarSrc="/images/avatar-4.jpg"
             badgeIconSrc="/images/sign-white.png"
-            badgeBgClass="bg-[#E02424]"
+            badgeType="mention"
             time="2h ago"
         />
 
@@ -773,7 +775,7 @@ useEffect(() => {
                     description="You got a new like"
                     avatarSrc="resources/images/notifications/avatar-1.jpg"
                     badgeIconSrc="resources/images/notifications/heart-white.png"
-                    badgeBgClass="bg-[#F9595F]"
+                    badgeType="like"
                     time="1h ago"
                     onClose={() => setShowNotifications(false)}
                     />
@@ -783,6 +785,7 @@ useEffect(() => {
                     description="You have one new follower"
                     avatarSrc="resources/images/notifications/avatar-2.jpg"
                     badgeIconSrc="resources/images/notifications/check-white.png"
+                    badgeType="follow"
                     time="2h ago"
                     onClose={() => setShowNotifications(false)}
                     />
@@ -792,6 +795,7 @@ useEffect(() => {
                     description="You have a new comment"
                     avatarSrc="resources/images/notifications/avatar-3.jpg"
                     badgeIconSrc="resources/images/notifications/chat-white.png"
+                    badgeType="comment"
                     time="1h ago"
                     onClose={() => setShowNotifications(false)}
                     />
@@ -801,7 +805,7 @@ useEffect(() => {
                     description="Check the conversation."
                     avatarSrc="resources/images/notifications/avatar-4.jpg"
                     badgeIconSrc="resources/images/notifications/sign-white.png"
-                    badgeBgClass="bg-[#E02424]"
+                    badgeType="mention"
                     time="2h ago"
                     onClose={() => setShowNotifications(false)}
                     />
@@ -811,6 +815,7 @@ useEffect(() => {
                     description="An agent is available to assist you."
                     avatarSrc="resources/images/notifications/avatar-5.jpg"
                     badgeIconSrc="resources/images/notifications/add-white.png"
+                    badgeType="add"
                     primaryActionText="Accept"
                     secondaryActionText="Decline"
                     time="3h ago"
