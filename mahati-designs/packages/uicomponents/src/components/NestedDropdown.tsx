@@ -239,7 +239,7 @@ export function SearchableDropdown({
     return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const filtered = options.filter((o: any) =>
+  const filtered = (options??[]).filter((o: any) =>
     o.label.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -248,7 +248,7 @@ export function SearchableDropdown({
       {label && <Label>{label}</Label>}
 
       <Button onClick={() => setOpen(o => !o)}>
-        {options.find((o: any) => o.value === value)?.label || placeholder}
+        {(options??[]).find((o: any) => o.value === value)?.label || placeholder}
         <ChevronDown size={16} />
       </Button>
 
@@ -377,6 +377,7 @@ export function MultiSelectDropdown({
 </Wrapper>
   );
 }
+
 type CascadeOption = {
   label: string;
   value: string;
