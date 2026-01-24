@@ -21,7 +21,8 @@ interface TabbedInterfaceProps {
     | "shadow"
     | "glass"
     | "dark";
-  onTabChange?: (label: string) => void;
+  defaultActiveTab?: number;
+  onTabChange?: (index: number) => void;
   draggableTabs?: boolean;
   onReorderTabs?: (fromIndex: number, toIndex: number) => void;
   orientation?: "horizontal" | "vertical";
@@ -469,6 +470,7 @@ const ContentPanel = styled.div<{ active: boolean }>`
 const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
   tabs,
   variant = "underline",
+  defaultActiveTab = 0,
   onTabChange,
   draggableTabs = false,
   onReorderTabs,
@@ -483,13 +485,21 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
   sectionTitleFont,
   sectionDescriptionFont,
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(defaultActiveTab);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
   const effectiveCloseIconContent = tabCloseIconContent ?? "×";
   const tabHeaderFontFamily = getFontFamily(tabHeaderFont);
   const tabContentFontFamily = getFontFamily(tabContentFont);
 
+  // Handle external defaultActiveTab changes
+  useEffect(() => {
+    if (defaultActiveTab !== activeIndex) {
+      setActiveIndex(defaultActiveTab);
+    }
+  }, [defaultActiveTab]);
+
+  // Keep activeIndex in range if tabs are added/removed by parent
   useEffect(() => {
     if (!tabs.length) {
       setActiveIndex(0);
@@ -502,7 +512,7 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
 
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
-    onTabChange?.(tabs[index].label);
+    onTabChange?.(index);
   };
 
   const handleDragStart = (index: number) => {
