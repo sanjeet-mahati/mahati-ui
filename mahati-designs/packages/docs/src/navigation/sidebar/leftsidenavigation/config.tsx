@@ -14,6 +14,12 @@ import {
   faCalendarDays,
   faChevronDown,
   faLayerGroup,
+  faSearch,
+  faListCheck,
+  faCodeBranch,
+  faUserCircle,
+  faUsers
+
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faBell,
@@ -246,6 +252,15 @@ export const NavItems = (): NavItem[]  => {
     { name: 'Shadow', href: '/dropdown#shadow', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Glass', href: '/dropdown#glass', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     { name: 'Gradient', href: '/dropdown#gradient', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+   { name: 'searchable', href: ' dropdown/#searchable', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'multiselect', href: 'dropdown/#multiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'cascading', href: 'dropdown/#cascading', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'avatar', href: 'dropdown/#avatar', icon: <FontAwesomeIcon icon={faSquareCaretDown }size="sm" /> },
+  { name: 'avatarmultiselect', href:'dropdown/#avatarmultiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'grouped', href: 'dropdown/#grouped', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'async', href: 'dropdown/#async', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    
+    
   ],
 },
 

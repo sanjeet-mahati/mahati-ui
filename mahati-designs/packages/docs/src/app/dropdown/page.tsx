@@ -3,6 +3,7 @@ import React from "react";
 import { MahatiDropdown } from "@/components";
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';
+import { SearchableDropdownPage } from "./nesteddropdown/nestedropdowndemo";
 
 const dropdownProps = [
   {
@@ -109,6 +110,14 @@ export default function DropdownDemoPage() {
       />
 
       <PropsTable props={dropdownProps} title="Props" />
+      {/* ===== NESTED / ADVANCED DROPDOWNS ===== */}
+<div className="mt-20">
+  <h2 className="text-2xl font-bold mb-6">
+   Advanced Dropdowns
+  </h2>
+
+  <SearchableDropdownPage />
+</div>
     </div>
   );
 }
