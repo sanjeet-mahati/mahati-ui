@@ -22,6 +22,18 @@ import {
 
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  faBell,
+  faCamera,
+  faMicrophone,
+  faLocationDot,
+  faEnvelope,
+  faEnvelopeOpenText,
+  faPaperPlane,
+  faTag,
+  faPercent,
+  faGift,
+} from '@fortawesome/free-solid-svg-icons';
+import {
   CheckCircleIcon,
   XCircleIcon,
   ExclamationTriangleIcon,
@@ -514,6 +526,67 @@ export const NavItems = (): NavItem[]  => {
     },
   ],
 },
+
+{
+  name: 'Notifications',
+  href: '/notifications',
+  icon: <HiBellAlert size={22} />, // Main notifications section
+  active: pathname === '/notifications',
+  position: 'top',
+  subItems: [
+    /* ================= PERMISSION MODALS ================= */
+
+    {
+      name: 'Location Access Modal',
+      href: '/notifications#location-modal',
+      icon: <FontAwesomeIcon icon={faLocationDot} size="sm" />,
+    },
+    {
+      name: 'Camera Access Modal',
+      href: '/notifications#camera-modal',
+      icon: <FontAwesomeIcon icon={faCamera} size="sm" />,
+    },
+    {
+      name: 'Microphone Access Modal',
+      href: '/notifications#mic-modal',
+      icon: <FontAwesomeIcon icon={faMicrophone} size="sm" />,
+    },
+
+    /* ================= PROMOTION ================= */
+
+    {
+      name: 'Promotion Modal (V1)',
+      href: '/notifications#promotion-modal-v1',
+      icon: <FontAwesomeIcon icon={faEnvelopeOpenText} size="sm" />,
+    },
+
+    {
+      name: 'Promotion Modal (V2)',
+      href: '/notifications#promotion-modal-v2',
+      icon: <FontAwesomeIcon icon={faEnvelope} size="sm" />,
+    },
+
+    {
+      name: 'Promotion Modal (V3)',
+      href: '/notifications#promotion-modal-v3',
+      icon: <FontAwesomeIcon icon={faPaperPlane} size="sm" />,
+    },
+
+    /* ================= NOTIFICATION CARDS ================= */
+
+    {
+      name: 'Notification Cards',
+      href: '/notifications#notification-cards',
+      icon: <FontAwesomeIcon icon={faBell} size="sm" />,
+    },
+
+    {
+      name: 'Icons',
+      href: '/notifications#file-action-icons',
+      icon: <FontAwesomeIcon icon={faAlignJustify} size="sm" />,
+    },
+  ],
+}
     
     
   ];

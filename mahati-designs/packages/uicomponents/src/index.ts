@@ -45,10 +45,13 @@ export * from './components/Spinner';
 // Type Exports
 export { Calendar as MahatiCalendar } from './components/Calendar';
 export type { CalendarDate, CalendarTime, CalendarDateRange, CalendarProps } from './components/Calendar';
-export {SearchableDropdown as MahatiSearchableDropdown}  from './components/NestedDropdown'
-export {MultiSelectDropdown as MahatiMultiSelectDropdown} from './components/NestedDropdown'
-export {CascadingDropdown as MahatiCascadingDropdown}  from './components/NestedDropdown'
-export { AvatarDropdown as MahatiAvatarDropdown}  from './components/NestedDropdown'
-export { AvatarMultiSelectDropdown as MahatiAvatarMultiSelectDropdown}  from './components/NestedDropdown'
-export { GroupedDropdown as MahatiGroupedDropdown}  from './components/NestedDropdown'
-export { AsyncDropdown as MahatiAsyncDropdown}  from './components/NestedDropdown'
+// It's a good practice to re-export types that consumers of your library might need.
+//export type { CalendarDate, CalendarTime, CalendarDateRange } from './components/Calendar';
+
+export { MahatiLocationAccessModal } from './components/notifications';
+export { MahatiCameraAccessModal } from './components/notifications';
+export { MahatiMicrophoneAccessModal } from './components/notifications';
+export { MahatiNotificationCard  } from './components/notifications';
+export { MahatiPromotionModal as MahatiPromotionModal_V1 } from './components/notifications';
+export { MahatiPromotionModalV2Modal as MahatiPromotionModal_V2 } from "./components/notifications";
+export { MahatiPromotionModalV3Modal as MahatiPromotionModal_V3 } from "./components/notifications";
