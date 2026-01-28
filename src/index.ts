@@ -33,6 +33,7 @@ export { TabbedInterface as MahatiTabbedInterface } from './components/TabedInte
 export { Dropdown as MahatiDropdown } from './components/Dropdown';
 export { TableWithTab as MahatiTableWithTab } from './components/TableWithTab';
 export { Table as MahatiTable } from './components/Table';
+export { MahatiChartAnalyticsWidget } from './components/MahatiChartAnalyticsWidget';
 export { Tooltip as MahatiTooltip } from './components/Tooltip';
 export { ToastMessage as MahatiToastMessage } from './components/ToastMessage';
 export {  ConfettiExplosion as MahatiConfettiExplosion} from './components/ConfettiExplosion';
