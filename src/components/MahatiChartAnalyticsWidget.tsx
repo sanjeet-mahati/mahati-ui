@@ -2329,10 +2329,10 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
                       <GoalHealthTitle>Goal Health</GoalHealthTitle>
                       <GoalHealthBadge>
                         <GoalHealthBadgeText>On Track</GoalHealthBadgeText>
-                        <GoalHealthCheckmark width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        {/* <GoalHealthCheckmark width="16" height="16" viewBox="0 0 16 16" fill="none">
                           <circle cx="8" cy="8" r="6" fill="rgba(46,158,120,0.1)" stroke="rgba(46,158,120,1)" strokeWidth="1.5"/>
                           <path d="M6 8L7.5 9.5L10 6.5" stroke="rgba(46,158,120,1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </GoalHealthCheckmark>
+                        </GoalHealthCheckmark> */}
                         <GoalHealthMenuButton>
                           <GoalHealthMenuIcon width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                             <circle cx="8" cy="4" r="1"/>
