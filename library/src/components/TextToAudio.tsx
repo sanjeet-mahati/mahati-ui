@@ -44,7 +44,7 @@ const TextArea = styled.textarea`
   resize: none;
   outline: none;
 
-  overflow-y: auto;           /* ✅ SCROLL INSIDE */
+  overflow-y: auto;          
   line-height: 1.6;
 
   @media (max-width: 600px) {
@@ -67,7 +67,7 @@ const Controls = styled.div`
 `;
 const Body = styled.div`
   flex: 1;
-  overflow: hidden;       /* ✅ VERY IMPORTANT */
+  overflow: hidden;     
   display: flex;
 `;
 
@@ -279,64 +279,7 @@ const speedRef = useRef(speed);
 
   /* ================= CORE ================= */
 
-// const categorizeText = (input: string) => {
-//   if (!input.trim()) return "General content";
 
-//   const text = input.toLowerCase();
-
-//   const categories: Record<string, string[]> = {
-//     Technology: [
-//       "technology", "software", "hardware", "ai", "artificial intelligence",
-//       "machine learning", "computer", "internet", "digital", "platform", "app"
-//     ],
-//     Business: [
-//       "business", "marketing", "sales", "brand", "strategy",
-//       "market", "customer", "startup", "company", "growth"
-//     ],
-//     Education: [
-//       "education", "learning", "teaching", "students",
-//       "training", "course", "knowledge", "research", "study"
-//     ],
-//     Media: [
-//       "content", "video", "audio", "blog", "podcast",
-//       "social media", "youtube", "linkedin", "posts"
-//     ],
-//     Human: [
-//       "human", "people", "communication", "engagement",
-//       "interaction", "society", "culture", "behavior"
-//     ],
-//     Geography: [
-//       "geography", "location", "region", "country",
-//       "city", "map", "area", "population"
-//     ],
-//     Nature: [
-//       "nature", "environment", "climate", "earth",
-//       "ecosystem", "forest", "water", "animals", "plants"
-//     ],
-//     Health: [
-//       "health", "medical", "fitness", "wellness",
-//       "mental", "physical", "disease"
-//     ]
-//   };
-
-//   const matchedCategories: string[] = [];
-
-//   for (const category in categories) {
-//     const hasMatch = categories[category].some(keyword =>
-//       text.includes(keyword)
-//     );
-
-//     if (hasMatch) {
-//       matchedCategories.push(category);
-//     }
-//   }
-
-//   if (matchedCategories.length === 0) {
-//     return "This content covers general topics";
-//   }
-
-//   return `This content relates to ${matchedCategories.join(", ")}`;
-// };
 const categorizeText = (input: string) => {
   if (!input.trim()) return "This content covers general topics.";
 
@@ -460,64 +403,7 @@ const formatTime = (sec: number) => {
 };
   const getSourceText = () =>text
    
-// const speakFromTime = (time: number):void => {
-//   // loopCountRef.current=0;
-//   const source = text;
-//   if (!source.trim()) return;
 
-//   const words = source.split(/\s+/);
-//   const startWordIndex = Math.floor(time * WORDS_PER_SECOND);
-
-//   const charOffset =
-//     words.slice(0, startWordIndex).join(" ").length +
-//     (startWordIndex > 0 ? 1 : 0);
-
-//   window.speechSynthesis.cancel();
-//   stopTimer();
-
-//   const u = new SpeechSynthesisUtterance(source.slice(charOffset));
-//   u.rate = speedRef.current;
-//   u.volume = volumeRef.current;
-
-//   u.onboundary = (e: any) => {
-//     if (e.name !== "word") return;
-//     highlightWordAt(charOffset + e.charIndex);
-//   };
-//   // u.rate=speed;
-//   // u.volume;
-//   // u.onend = () => {
-//   //   stop(); // 🔑 ONLY place we stop
-//   // };
-//   u.onend = () => {
-//   stopTimer();
-//    setPlaying(false);
-//  setCurrentTime(duration);
-//   }
-//   utteranceRef.current=u;
-//   window.speechSynthesis.speak(u);
-//   setPlaying(true);
-//   startTimer(time)
-
-//   // 🔁 LOOP ONCE (•)
-//   if (loopMode === 1 && loopCountRef.current === 0) {
-//     loopCountRef.current = 1;
-//     setCurrentTime(0);
-//     speakFromTime(0);
-//     return;
-//   }
-
-//   // 🔁 LOOP CONTINUOUS (1)
-//   if (loopMode === 2) {
-//     setCurrentTime(0);
-//     speakFromTime(0);
-//     return;
-//   }
-
-//   // ⛔ NORMAL END (no loop)
-//   loopCountRef.current = 0;
-//   setPlaying(false);
-//   setCurrentTime(duration);
-// };
 
   const speakFromTime = (time: number): void => {
   const source = text;
@@ -543,21 +429,11 @@ const formatTime = (sec: number) => {
     }
   };
 
-  // u.onend = () => {
-  //   stopTimer();
-
-  //   if (loopMode === 2) {
-  //     speakFromTime(0);
-  //     return;
-  //   }
-
-  //   setPlaying(false);
-  //   setCurrentTime(duration);
-  // };
+  
   u.onend = () => {
   stopTimer();
 
-  // 🔁 LOOP ONCE
+  
   if (loopMode === 1 && loopCountRef.current === 0) {
     loopCountRef.current = 1;
     setCurrentTime(0);
@@ -565,14 +441,14 @@ const formatTime = (sec: number) => {
     return;
   }
 
-  // 🔁 LOOP FOREVER
+  
   if (loopMode === 2) {
     setCurrentTime(0);
     speakFromTime(0);
     return;
   }
 
-  // ⛔ NORMAL END
+
   loopCountRef.current = 0;
   setPlaying(false);
   setCurrentTime(duration);
@@ -605,12 +481,12 @@ const togglePlay = () => {
   if (playing) {
     // ⏸ Pause
     window.speechSynthesis.pause();
-    stopTimer();          // ✅ STOP seek bar
+    stopTimer();          
     setPlaying(false);
   } else {
     // ▶ Resume
     window.speechSynthesis.resume();
-    startTimer(currentTime);         // ✅ RESUME seek bar
+    startTimer(currentTime);        
     setPlaying(true);
   }
 };
@@ -663,9 +539,7 @@ const downloadAudio = () => {
   setPlaying(false);
   setCurrentTime(0); 
  
-  // seekbar ends EXACTLY here
-
-  // Clear highlight
+  
   textAreaRef.current?.setSelectionRange(0, 0);
 };
 
@@ -684,20 +558,7 @@ useEffect(()=>{
   speakFromTime(currentTime);
 },[volume])
 
-// useEffect(() => {
-//   const source = text.trim();
-//   if (!source) {
-//     setDuration(0);
-//     setCurrentTime(0);
-//     return;
-//   }
-// const words= text.trim().split(/\s+/).length;
-// ///const estimated=words/WORDS_PER_SECOND;
-//   // const words = source.split(/\s+/).length;
-//   const total = words / WORDS_PER_SECOND;
 
-//   setDuration(Number(total.toFixed(2)));
-// }, [text]);
 useEffect(() => {
   if (!text.trim()) {
     
@@ -740,26 +601,7 @@ useEffect(() => {
   speakFromTime(0);
 }, [text]);
 
-
-
-
-//   useEffect(() => {
-//   if (!utteranceRef.current) return;
-//   if (!playing) return;
-
-//   window.speechSynthesis.cancel();
-//   stopTimer();
-//   speakFromTime(currentTime);
-// }, [volume, speed]);
-//   useEffect(() => {
-//   if (!playing) return;
-
-//   window.speechSynthesis.cancel();
-//   stopTimer();
-//   speakFromTime(currentTime);
-// }, [volume,speed]);
-
-  /* ================= UI ================= */
+ /* ================= UI ================= */
 
   return (
  <Container>
@@ -804,7 +646,7 @@ useEffect(() => {
       backgroundRepeat: "no-repeat",
       backgroundPosition: "center",
       backgroundSize: "contain",
-      transform: "scaleX(-1)",   // ✅ THIS MAKES IT FORWARD
+      transform: "scaleX(-1)",   
     }}
   
    />
@@ -818,7 +660,7 @@ useEffect(() => {
 <IconBtn
   onClick={() => {
     setLoopMode(prev => (prev === 2 ? 0 : (prev + 1) as 0 | 1 | 2));
-    // loopCountRef.current = 0;
+    
   }}
   title={
     loopMode === 0
@@ -865,9 +707,6 @@ useEffect(() => {
 </IconBtn>
         </Player>
 
-        
-          
-      
 <SeekWrapper>
   <Seek
     type="range"
@@ -896,7 +735,6 @@ useEffect(() => {
       textAlign: "right",
     }}
   >
-    {/* {formatTime(currentTime)} */}
      {formatTime(currentTime)}.{formatTime(duration)} 
   </span>
 
@@ -906,17 +744,11 @@ useEffect(() => {
 <GenerateBtn
   onClick={() => {
     const pageText = getPageContent();
-    // window.speechSynthesis.cancel();
-    // stopTimer();
-    loopCountRef.current=0;
-    // autoPlayRef.current=true;
-
+     loopCountRef.current=0;
     setText(pageText);      
     setMode("page");        
     setCurrentTime(0); 
-    // setPlaying(false)
-
-     speakFromTime(0);  
+    speakFromTime(0);  
   }}
 >
   Reads Full page
@@ -957,23 +789,11 @@ useEffect(() => {
             
             onChange={(e) => 
   setVolume(Number(e.target.value))}
-//   setVolume(v);
-//   volumeRef.current=v;
-//   if (!playing)return;
-//   window.speechSynthesis.cancel();
-//   stopTimer();
-//   speakFromTime(currentTime);
- 
 
-//   if (utteranceRef.current) {
-//     utteranceRef.current.volume = v;
-//   }
-// // }}
           />
         </SliderBox>
       </SettingsCard>
 
-      {/* Playback Speed ✅ NOW IT WILL SHOW */}
       <SideCard>
         <SideHeader>
           <span>Playback Speed</span>
@@ -993,18 +813,7 @@ useEffect(() => {
             
             onChange={(e) => 
               setSpeed(Number(e.target.value))}
-//   setSpeed(s);
-//   speedRef.current=s;
-//   if (!playing)return;
-//   window.speechSynthesis.cancel();
-//   stopTimer();
-//   speakFromTime(currentTime)
-  
 
-//   if (utteranceRef.current) {
-//     utteranceRef.current.rate = s;
-//   }
-// }}
           />
         </SliderWrap>
 
@@ -1022,7 +831,7 @@ useEffect(() => {
         </div>
       </SideCard>
 
-      {/* Quick Summary */}
+      
       <SideCard>
         <SideHeader>
           <span>Quick Summary</span>
