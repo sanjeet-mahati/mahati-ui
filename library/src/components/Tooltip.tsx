@@ -1,9 +1,9 @@
 'use client';
 import React, { useState } from "react";
 import styled from '@emotion/styled';
-
+ 
 export interface TooltipProps {
-  text?: string;
+  text?: string | React.ReactNode;
   position?: "top" | "right" | "bottom" | "left";
   children: React.ReactNode;
   variant?: "default" | "transparent";
@@ -22,12 +22,12 @@ export interface TooltipProps {
     triggerDelay?: number;
   };
 }
-
+ 
 const TooltipWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
-
+ 
 const TooltipContent = styled.div<{
   $visible: boolean;
   $position: string;
@@ -44,13 +44,13 @@ const TooltipContent = styled.div<{
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
   white-space: nowrap;
-  
+ 
   opacity: ${props => (props.$visible && props.$isReady) ? 1 : 0};
   visibility: ${props => (props.$visible && props.$isReady) ? 'visible' : 'hidden'};
   pointer-events: ${props => (props.$visible && props.$isReady) ? 'auto' : 'none'};
-  
+ 
   display: ${props => (!props.$hasText && !props.$hasImage) ? 'none' : 'flex'};
-  
+ 
   ${props => props.$variant === 'default' ? `
     background: linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1));
     color: rgba(255, 255, 255, 1);
@@ -70,13 +70,13 @@ const TooltipContent = styled.div<{
     padding: ${props.$hasImage ? '4px' : '8px 12px'};
   `}
 `;
-
+ 
 const TooltipArrow = styled.div<{ $position: string }>`
   position: absolute;
   width: 0;
   height: 0;
   border-style: solid;
-  
+ 
   ${props => {
     switch(props.$position) {
       case 'top':
@@ -116,16 +116,16 @@ const TooltipArrow = styled.div<{ $position: string }>`
     }
   }}
 `;
-
+ 
 const TooltipImage = styled.img`
   border-radius: 4px;
   object-fit: cover;
   display: block;
 `;
-
-const Tooltip: React.FC<TooltipProps> = ({ 
-  text, 
-  position = "top", 
+ 
+const Tooltip: React.FC<TooltipProps> = ({
+  text,
+  position = "top",
   children,
   variant = "default",
   className = "",
@@ -141,66 +141,66 @@ const Tooltip: React.FC<TooltipProps> = ({
   const [adjustedPosition, setAdjustedPosition] = useState(position);
   const triggerRef = React.useRef<HTMLDivElement>(null);
   const tooltipRef = React.useRef<HTMLDivElement>(null);
-
+ 
   const hasContent = !!(text || image);
-
+ 
   const calculatePosition = () => {
     if (!triggerRef.current || !tooltipRef.current) return;
-    
+   
     const rect = triggerRef.current.getBoundingClientRect();
     const tooltipRect = tooltipRef.current.getBoundingClientRect();
     const scrollY = window.scrollY;
     const scrollX = window.scrollX;
-    
+   
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    
+   
     let top = 0;
     let left = 0;
     let finalPosition = position;
-    
+   
     const offset = 12;
     const padding = 10; // Padding from viewport edges
-    
+   
     // Calculate initial position
     switch(position) {
       case 'top':
         top = rect.top + scrollY - tooltipRect.height - offset;
         left = rect.left + scrollX + rect.width / 2 - tooltipRect.width / 2;
-        
+       
         // Flip to bottom if no space at top
         if (rect.top < tooltipRect.height + offset + padding) {
           finalPosition = 'bottom';
           top = rect.bottom + scrollY + offset;
         }
         break;
-        
+       
       case 'right':
         top = rect.top + scrollY + rect.height / 2 - tooltipRect.height / 2;
         left = rect.right + scrollX + offset;
-        
+       
         // Flip to left if no space on right
         if (rect.right + tooltipRect.width + offset + padding > viewportWidth) {
           finalPosition = 'left';
           left = rect.left + scrollX - tooltipRect.width - offset;
         }
         break;
-        
+       
       case 'bottom':
         top = rect.bottom + scrollY + offset;
         left = rect.left + scrollX + rect.width / 2 - tooltipRect.width / 2;
-        
+       
         // Flip to top if no space at bottom
         if (rect.bottom + tooltipRect.height + offset + padding > viewportHeight) {
           finalPosition = 'top';
           top = rect.top + scrollY - tooltipRect.height - offset;
         }
         break;
-        
+       
       case 'left':
         top = rect.top + scrollY + rect.height / 2 - tooltipRect.height / 2;
         left = rect.left + scrollX - tooltipRect.width - offset;
-        
+       
         // Flip to right if no space on left
         if (rect.left < tooltipRect.width + offset + padding) {
           finalPosition = 'right';
@@ -208,71 +208,71 @@ const Tooltip: React.FC<TooltipProps> = ({
         }
         break;
     }
-    
+   
     // Ensure tooltip stays within horizontal bounds
     if (left < padding) {
       left = padding;
     } else if (left + tooltipRect.width > viewportWidth - padding) {
       left = viewportWidth - tooltipRect.width - padding;
     }
-    
+   
     // Ensure tooltip stays within vertical bounds
     if (top < scrollY + padding) {
       top = scrollY + padding;
     } else if (top + tooltipRect.height > scrollY + viewportHeight - padding) {
       top = scrollY + viewportHeight - tooltipRect.height - padding;
     }
-    
+   
     setTooltipPosition({ top, left });
     setAdjustedPosition(finalPosition);
     setIsReady(true);
   };
-
+ 
   const showTooltip = () => {
     if (!hasContent) return;
-    
+   
     setIsReady(false);
     setVisible(true);
-    
+   
     // Calculate position after render
     requestAnimationFrame(() => {
       calculatePosition();
     });
-    
+   
     if (animation) {
       const delay = animation.triggerDelay || 100;
       setTimeout(() => setShowAnimation(true), delay);
     }
   };
-  
+ 
   const hideTooltip = () => {
     setVisible(false);
     setIsReady(false);
     setShowAnimation(false);
     setAdjustedPosition(position);
   };
-
+ 
   React.useEffect(() => {
     if (visible) {
       const handleUpdate = () => {
         requestAnimationFrame(calculatePosition);
       };
-      
+     
       window.addEventListener('scroll', handleUpdate, { passive: true });
       window.addEventListener('resize', handleUpdate);
-      
+     
       return () => {
         window.removeEventListener('scroll', handleUpdate);
         window.removeEventListener('resize', handleUpdate);
       };
     }
   }, [visible]);
-
+ 
   const renderTooltipContent = () => {
     if (image) {
       return (
         <TooltipImage
-          src={image.src} 
+          src={image.src}
           alt={image.alt || "Tooltip image"}
           width={image.width || 200}
           height={image.height || 150}
@@ -282,23 +282,23 @@ const Tooltip: React.FC<TooltipProps> = ({
     }
     return text;
   };
-
+ 
   const renderAnimation = () => {
     if (!animation || !showAnimation) return null;
-    
+   
     const AnimationComponent = animation.component;
     return (
-      <AnimationComponent 
-        isActive={showAnimation} 
-        {...animation.props} 
+      <AnimationComponent
+        isActive={showAnimation}
+        {...animation.props}
       />
     );
   };
-
+ 
   if (!hasContent) {
     return <>{children}</>;
   }
-
+ 
   return (
     <TooltipWrapper
       ref={triggerRef}
@@ -309,9 +309,9 @@ const Tooltip: React.FC<TooltipProps> = ({
       onBlur={hideTooltip}
     >
       {children}
-      
+     
       {renderAnimation()}
-      
+     
       <TooltipContent
         ref={tooltipRef}
         $visible={visible}
@@ -329,7 +329,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         }}
       >
         {renderTooltipContent()}
-        
+       
         {variant === "default" && !image && (
           <TooltipArrow $position={adjustedPosition} />
         )}
@@ -337,8 +337,8 @@ const Tooltip: React.FC<TooltipProps> = ({
     </TooltipWrapper>
   );
 };
-
+ 
 export default Tooltip;
-
+ 
 Tooltip.displayName = "Tooltip";
 export { Tooltip };
