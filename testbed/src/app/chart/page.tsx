@@ -60,10 +60,6 @@ const UploadHint = styled.p`
   line-height: 1.25rem;
 `;
 
-// ========================================
-// TYPE DEFINITIONS
-// ========================================
-
 interface DetailItem {
   label: string;
   value: string;
@@ -88,13 +84,6 @@ const GANTT_COLOR_MAP = {
 type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
 
-// ========================================
-// HELPER FUNCTIONS
-// ========================================
-
-/**
- * Creates gradient for area charts
- */
 const createAreaGradient = (color: string, opacityStart: number = 0.3, opacityEnd: number = 0) => {
   return (context: any) => {
     const ctx = context.chart.ctx;
@@ -117,9 +106,6 @@ const createAreaGradient = (color: string, opacityStart: number = 0.3, opacityEn
   };
 };
 
-/**
- * Process area chart data to add gradients
- */
 const processAreaData = (data: any): ChartData<"line"> => {
   return {
     ...data,
@@ -136,14 +122,50 @@ const processAreaData = (data: any): ChartData<"line"> => {
   };
 };
 
-// ========================================
-// MAIN COMPONENT
-// ========================================
+const getAreaChartData = (areaData: any, filters: Record<string, string>) => {
+  if (!areaData) return null;
+
+  let current = areaData;
+
+  if (filters.Relationship && current?.Relationship?.[filters.Relationship]) {
+    current = current.Relationship[filters.Relationship];
+  }
+
+  if (filters.DebtCollector && current?.DebtCollector?.[filters.DebtCollector]) {
+    current = current.DebtCollector[filters.DebtCollector];
+  }
+
+  if (filters.CollectionAgency && current?.CollectionAgency?.[filters.CollectionAgency]) {
+    current = current.CollectionAgency[filters.CollectionAgency];
+  }
+
+  if (filters.Periodicity && current?.Periodicity?.[filters.Periodicity]) {
+    current = current.Periodicity[filters.Periodicity];
+  }
+
+  if (current?.labels && current?.datasets) {
+    return current;
+  }
+
+  if (areaData.Periodicity?.[filters.Periodicity]?.labels) {
+    return areaData.Periodicity[filters.Periodicity];
+  }
+  if (areaData.Relationship?.[filters.Relationship]?.labels) {
+    return areaData.Relationship[filters.Relationship];
+  }
+  if (areaData.DebtCollector?.[filters.DebtCollector]?.labels) {
+    return areaData.DebtCollector[filters.DebtCollector];
+  }
+  if (areaData.CollectionAgency?.[filters.CollectionAgency]?.labels) {
+    return areaData.CollectionAgency[filters.CollectionAgency];
+  }
+
+  return areaData.default || areaData;
+};
 
 export default function MahatiChart() {
-
   const [chartData, setChartData] = useState(chartDataJson);
-  const [currentChartType, setCurrentChartType] = useState<ChartType>("pie");
+  const [currentChartType, setCurrentChartType] = useState<ChartType>("area");
 
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>({
     Relationship: "Partner",
@@ -175,136 +197,171 @@ export default function MahatiChart() {
     SelectType: "Development",
   });
 
-  const [currentStats, setCurrentStats] = useState(chartData.quickStats.pie);
-  const [activeChartDataMap, setActiveChartDataMap] = useState<Record<ChartType, ChartData<any>>>({} as any);
+  const [currentStats, setCurrentStats] = useState(chartData.quickStats?.pie || {});
+
+  const [activeChartDataMap, setActiveChartDataMap] = useState<Record<ChartType, ChartData<any>>>({
+    pie: {} as any,
+    doughnut: {} as any,
+    line: {} as any,
+    area: {} as any,
+    bar: {} as any,
+    bullet: { labels: [], datasets: [] },
+    gauge: { labels: [], datasets: [] },
+    gantt: { labels: [], datasets: [] },
+    calendarheatmap: { labels: [], datasets: [] },
+    horizontalbar: { labels: [], datasets: [] },
+  });
 
   useEffect(() => {
-    const initialDataMap: Record<ChartType, ChartData<any>> = {
-      pie: chartData.chartData.pie as ChartData<"doughnut">,
-      doughnut: chartData.chartData.doughnut as ChartData<"doughnut">,
-      line: chartData.chartData.line as ChartData<"line">,
-      area: processAreaData(chartData.chartData.area) as ChartData<"line">,
-      bar: chartData.chartData.bar as ChartData<"bar">,
-      
-      bullet: { labels: [], datasets: [] } as ChartData<"bar">,
-      gauge: { labels: [], datasets: [] } as ChartData<"bar">,
-      gantt: { labels: [], datasets: [] } as ChartData<"bar">,
-      calendarheatmap: { labels: [], datasets: [] } as ChartData<"bar">,
-      horizontalbar: { labels: [], datasets: [] } as ChartData<"bar">,
+    const initialMap: Record<ChartType, ChartData<any>> = {
+      pie: chartData.chartData?.pie as ChartData<"doughnut"> || {},
+      doughnut: chartData.chartData?.doughnut as ChartData<"doughnut"> || {},
+      line: chartData.chartData?.line as ChartData<"line"> || {},
+      area: processAreaData(
+        getAreaChartData(chartData.chartData?.area, selectedFilters) ||
+        chartData.chartData?.area?.default ||
+        {}
+      ),
+      bar: chartData.chartData?.bar as ChartData<"bar"> || {},
+      bullet: { labels: [], datasets: [] },
+      gauge: { labels: [], datasets: [] },
+      gantt: { labels: [], datasets: [] },
+      calendarheatmap: { labels: [], datasets: [] },
+      horizontalbar: { labels: [], datasets: [] },
     };
 
-    setActiveChartDataMap(initialDataMap);
+    setActiveChartDataMap(initialMap);
+    setCurrentStats(chartData.quickStats?.[currentChartType] || chartData.quickStats?.pie || {});
   }, [chartData]);
 
   const currentSelectedFilters = useMemo(() => {
-    if (currentChartType === 'gantt') {
-      return ganttSelectedFilters;
+    switch (currentChartType) {
+      case 'gantt': return ganttSelectedFilters;
+      case 'horizontalbar': return horizontalBarSelectedFilters;
+      case 'calendarheatmap': return calendarHeatmapSelectedFilters;
+      case 'bullet':
+      case 'gauge': return bulletGaugeSelectedFilters;
+      default: return selectedFilters;
     }
-    if (currentChartType === 'horizontalbar') {
-      return horizontalBarSelectedFilters;
-    }
-    if (currentChartType === 'calendarheatmap') {
-      return calendarHeatmapSelectedFilters;
-    }
-    if (currentChartType === 'bullet' || currentChartType === 'gauge') {
-      return bulletGaugeSelectedFilters;
-    }
-    return selectedFilters;
   }, [currentChartType, selectedFilters, bulletGaugeSelectedFilters, ganttSelectedFilters, horizontalBarSelectedFilters, calendarHeatmapSelectedFilters]);
 
   const currentFilters = useMemo(() => {
-    if (currentChartType === 'gantt') {
-      return chartData.filters.gantt;
+    switch (currentChartType) {
+      case 'gantt': return chartData.filters?.gantt || [];
+      case 'horizontalbar': return chartData.filters?.horizontalbar || [];
+      case 'calendarheatmap': return chartData.filters?.calendarheatmap || [];
+      case 'bullet':
+      case 'gauge': return chartData.filters?.bulletGauge || [];
+      default: return chartData.filters?.default || [];
     }
-    if (currentChartType === 'horizontalbar') {
-      return chartData.filters.horizontalbar;
-    }
-    if (currentChartType === 'calendarheatmap') {
-      return chartData.filters.calendarheatmap;
-    }
-    if (currentChartType === 'bullet' || currentChartType === 'gauge') {
-      return chartData.filters.bulletGauge;
-    }
-    return chartData.filters.default;
   }, [currentChartType, chartData.filters]);
 
   const handleChartTypeChange = (chartType: ChartType) => {
     setCurrentChartType(chartType);
-    setCurrentStats((chartData.quickStats as any)[chartType]);
+    setCurrentStats(chartData.quickStats?.[chartType] || chartData.quickStats?.pie || {});
   };
 
-  const handleFiltersChange = (filters: Record<string, string>) => {
+  const handleFiltersChange = (newFilters: Record<string, string>) => {
     if (currentChartType === 'gantt') {
-      setGanttSelectedFilters(filters);
+      setGanttSelectedFilters(newFilters);
     } else if (currentChartType === 'horizontalbar') {
-      setHorizontalBarSelectedFilters(filters);
+      setHorizontalBarSelectedFilters(newFilters);
     } else if (currentChartType === 'calendarheatmap') {
-      setCalendarHeatmapSelectedFilters(filters);
+      setCalendarHeatmapSelectedFilters(newFilters);
     } else if (currentChartType === 'bullet' || currentChartType === 'gauge') {
-      setBulletGaugeSelectedFilters(filters);
+      setBulletGaugeSelectedFilters(newFilters);
     } else {
-      setSelectedFilters(filters);
+      setSelectedFilters(newFilters);
+
+      if (currentChartType === 'area') {
+        const updatedData = getAreaChartData(chartData.chartData?.area, newFilters);
+        if (updatedData?.labels && updatedData?.datasets) {
+          setActiveChartDataMap(prev => ({
+            ...prev,
+            area: processAreaData(updatedData)
+          }));
+        }
+      }
     }
   };
 
   const handleApplyFilters = () => {
-    if (currentChartType === 'gantt') {
-      console.log('Applying gantt filters:', ganttSelectedFilters);
-      
-    } else if (currentChartType === 'horizontalbar') {
-      console.log('Applying horizontalbar filters:', horizontalBarSelectedFilters);
-      
-    } else if (currentChartType === 'calendarheatmap') {
-      console.log('Applying calendar heatmap filters:', calendarHeatmapSelectedFilters);
-      
-    } else {
-      console.log('Applying filters:', selectedFilters);
-    }
+    console.log(`Applying filters for ${currentChartType}:`, currentSelectedFilters);
   };
 
   const currentDetails = useMemo((): DetailItem[] => {
+    const data = activeChartDataMap[currentChartType];
+    if (!data || !data.datasets?.length) return [];
+
+    if (currentChartType === 'area' || currentChartType === 'line') {
+      const boxColors = [
+        "rgba(37, 99, 235, 1)",   // Outstanding / first
+        "rgba(22, 163, 74, 1)",   // Collected / second
+        "rgba(239, 68, 68, 1)",   // Pending / third
+      ];
+
+      return data.datasets.map((dataset: any, idx: number) => ({
+        label: dataset.label || `Series ${idx + 1}`,
+        value: dataset.data?.[dataset.data.length - 1]?.toString() || '0',
+        color: dataset.borderColor || '#6b7280',
+        description: `Latest value for ${dataset.label || 'series'}`,
+        // Add box style info (will be used in the widget to render the square)
+        boxStyle: {
+          width: "12px",
+          height: "12px",
+          borderRadius: "2px",
+          backgroundColor: boxColors[idx] || "#6b7280",
+        },
+      }));
+    }
+
+    // Bullet chart details
     if (currentChartType === 'bullet') {
       const year = bulletGaugeSelectedFilters.SelectYear || '2026';
       const month = bulletGaugeSelectedFilters.SelectMonth || 'January';
       const type = bulletGaugeSelectedFilters.SelectType || 'Sales';
-      const bulletMonthData = (chartData.bullet as any)[year]?.[type]?.[month];
-      
-      if (!bulletMonthData || !bulletMonthData.bullets) return [];
+      const bulletMonthData = (chartData.bullet as any)?.[year]?.[type]?.[month];
 
-      return bulletMonthData.bullets.map((b: any) => {
-        const percentageAchieved = Math.round((b.achieved / b.target) * 100);
-        return {
-          label: b.name,
-          value: `${percentageAchieved}%`,
-          description: `${b.achieved.toLocaleString()} / ${b.target.toLocaleString()}`,
-          color: "rgba(23,97,163,1)",
-        };
-      });
+      if (bulletMonthData?.bullets) {
+        return bulletMonthData.bullets.map((b: any) => {
+          const percentage = Math.round((b.achieved / b.target) * 100);
+          return {
+            label: b.name,
+            value: `${percentage}%`,
+            description: `${b.achieved.toLocaleString()} / ${b.target.toLocaleString()}`,
+            color: "rgba(23,97,163,1)",
+          };
+        });
+      }
+      return [];
     }
 
+    // Gauge details
     if (currentChartType === 'gauge') {
       const year = bulletGaugeSelectedFilters.SelectYear || '2026';
       const month = bulletGaugeSelectedFilters.SelectMonth || 'January';
       const type = bulletGaugeSelectedFilters.SelectType || 'Sales';
-      const gaugeMonthData = (chartData.gauge as any)[year]?.[type]?.[month];
-      
-      if (!gaugeMonthData || !gaugeMonthData.gauges) return [];
+      const gaugeMonthData = (chartData.gauge as any)?.[year]?.[type]?.[month];
 
-      return gaugeMonthData.gauges.map((gauge: any) => {
-        const percentageAchieved = Math.round((gauge.value / gauge.max) * 100);
-        return {
-          label: gauge.name,
-          value: `${percentageAchieved}%`,
-          description: `${gauge.value.toLocaleString()} / ${gauge.max.toLocaleString()}`,
-          color: "rgba(23,97,163,1)",
-        };
-      });
+      if (gaugeMonthData?.gauges) {
+        return gaugeMonthData.gauges.map((g: any) => {
+          const percentage = Math.round((g.value / g.max) * 100);
+          return {
+            label: g.name,
+            value: `${percentage}%`,
+            description: `${g.value.toLocaleString()} / ${g.max.toLocaleString()}`,
+            color: "rgba(23,97,163,1)",
+          };
+        });
+      }
+      return [];
     }
 
+    // Gantt details
     if (currentChartType === 'gantt') {
       const year = ganttSelectedFilters.SelectYear || '2026';
       const type = ganttSelectedFilters.SelectType || 'Development';
-      const ganttTaskData = (chartData.gantt as any)[year]?.[type]?.tasks || [];
+      const ganttTaskData = (chartData.gantt as any)?.[year]?.[type]?.tasks || [];
       
       return ganttTaskData.map((task: any) => {
         const taskColor = GANTT_COLOR_MAP[task.color as keyof typeof GANTT_COLOR_MAP] || GANTT_COLOR_MAP.blue;
@@ -318,11 +375,12 @@ export default function MahatiChart() {
       });
     }
 
+    // Calendar heatmap details
     if (currentChartType === 'calendarheatmap') {
       const year = calendarHeatmapSelectedFilters.SelectYear || '2026';
       const type = calendarHeatmapSelectedFilters.SelectType || 'Development';
       const project = 'Project 1'; 
-      const calendarHeatmapProjectData = (chartData.calendarheatmap as any)[project]?.[year]?.[type];
+      const calendarHeatmapProjectData = (chartData.calendarheatmap as any)?.[project]?.[year]?.[type];
       
       if (!calendarHeatmapProjectData) return [];
 
@@ -352,9 +410,9 @@ export default function MahatiChart() {
       });
     }
 
+    // Horizontal bar details
     if (currentChartType === 'horizontalbar') {
-      
-      const products = chartData.horizontalbar.products;
+      const products = chartData.horizontalbar?.products;
       const firstProduct = products ? Object.keys(products)[0] : null;
       const productData = firstProduct ? products[firstProduct] : null;
       
@@ -365,55 +423,44 @@ export default function MahatiChart() {
       
       return metrics.map((metric, index) => ({
         label: metric,
-        value: `${productData[metric]}`,
-        description: `${metric}: ${productData[metric]}`,
+        value: `${productData[metric] || 0}`,
+        description: `${metric}: ${productData[metric] || 0}`,
         color: colors[index],
       }));
     }
 
-    const data = activeChartDataMap[currentChartType];
-    if (!data || !data.datasets || data.datasets.length === 0) return [];
+    // Fallback for pie/doughnut/bar
+    const total = data.datasets[0]?.data?.reduce((sum: number, v: number) => sum + v, 0) || 0;
+    return (data.labels || []).map((label: string, idx: number) => {
+      const value = data.datasets[0]?.data?.[idx] || 0;
+      const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : '0';
+      const bgColor = Array.isArray(data.datasets[0]?.backgroundColor)
+        ? data.datasets[0].backgroundColor[idx]
+        : data.datasets[0]?.backgroundColor || '#6b7280';
 
-    if ((currentChartType === 'line' || currentChartType === 'area') && data.datasets.length > 1) {
-      return data.datasets.map((dataset: any) => ({
-        label: dataset.label || '',
-        value: dataset.data[dataset.data.length - 1].toString(),
-        color: dataset.borderColor,
-        description: `Latest value for ${dataset.label}`
-      }));
-    } 
-
-    else {
-      const total = data.datasets[0].data.reduce((sum: number, val: number) => sum + val, 0);
-      return (data.labels || []).map((label: any, index: number) => {
-        const value = data.datasets[0].data[index];
-        const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : 0;
-        const colors = data.datasets[0].backgroundColor;
-        const color = Array.isArray(colors) ? colors[index] : (colors as string);
-        return {
-          label: label,
-          value: `${percentage}%`,
-          description: `Represents ${label}`,
-          color: color,
-        };
-      });
-    }
-  }, [activeChartDataMap, currentChartType, chartData, ganttSelectedFilters, horizontalBarSelectedFilters]);
+      return {
+        label: label,
+        value: `${percentage}%`,
+        description: `Represents ${label}`,
+        color: bgColor,
+      };
+    });
+  }, [activeChartDataMap, currentChartType, chartData, bulletGaugeSelectedFilters, ganttSelectedFilters, calendarHeatmapSelectedFilters]);
 
   const chartFiltersConfig = {
-    pie: chartData.filters.default,
-    doughnut: chartData.filters.default,
-    line: chartData.filters.default,
-    area: chartData.filters.default,
-    bar: chartData.filters.default,
-    bullet: chartData.filters.bulletGauge,
-    gauge: chartData.filters.bulletGauge,
-    gantt: chartData.filters.gantt,
-    heatmap: chartData.filters.heatmap,
-    calendarheatmap: chartData.filters.calendarheatmap,
+    pie: chartData.filters?.default,
+    doughnut: chartData.filters?.default,
+    line: chartData.filters?.default,
+    area: chartData.filters?.default,
+    bar: chartData.filters?.default,
+    bullet: chartData.filters?.bulletGauge,
+    gauge: chartData.filters?.bulletGauge,
+    gantt: chartData.filters?.gantt,
+    heatmap: chartData.filters?.heatmap,
+    calendarheatmap: chartData.filters?.calendarheatmap,
   };
 
-  const actionButtons = chartData.actionButtons.map((btn) => ({
+  const actionButtons = (chartData.actionButtons || []).map((btn: any) => ({
     label: btn.label,
     style: btn.style as "danger" | "primary" | "success" | "mahati",
     onClick: () => alert(`${btn.label} clicked!`),
@@ -426,33 +473,33 @@ export default function MahatiChart() {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const uploadedData = JSON.parse(e.target?.result as string);
-
-        if (!uploadedData.chartData || !uploadedData.filters || !uploadedData.quickStats) {
-          alert("Invalid JSON structure. Please check the sample-chart-data.json format.");
+        const uploaded = JSON.parse(e.target?.result as string);
+        if (!uploaded.chartData || !uploaded.filters) {
+          alert("Invalid JSON structure.");
           return;
         }
+        setChartData(uploaded);
 
-        setChartData(uploadedData);
-
-        const newDataMap: Record<ChartType, ChartData<any>> = {
-          pie: uploadedData.chartData.pie as ChartData<"doughnut">,
-          doughnut: uploadedData.chartData.doughnut as ChartData<"doughnut">,
-          line: uploadedData.chartData.line as ChartData<"line">,
-          area: processAreaData(uploadedData.chartData.area) as ChartData<"line">,
-          bar: uploadedData.chartData.bar as ChartData<"bar">,
-          bullet: { labels: [], datasets: [] } as ChartData<"bar">,
-          gauge: { labels: [], datasets: [] } as ChartData<"bar">,
-          gantt: { labels: [], datasets: [] } as ChartData<"bar">,
+        const newMap: Record<ChartType, ChartData<any>> = {
+          pie: uploaded.chartData.pie || {},
+          doughnut: uploaded.chartData.doughnut || {},
+          line: uploaded.chartData.line || {},
+          area: processAreaData(
+            getAreaChartData(uploaded.chartData.area, selectedFilters) ||
+            uploaded.chartData.area?.default ||
+            {}
+          ),
+          bar: uploaded.chartData.bar || {},
+          bullet: { labels: [], datasets: [] },
+          gauge: { labels: [], datasets: [] },
+          gantt: { labels: [], datasets: [] },
+          calendarheatmap: { labels: [], datasets: [] },
+          horizontalbar: { labels: [], datasets: [] },
         };
-        setActiveChartDataMap(newDataMap);
-
-        setCurrentStats(uploadedData.quickStats[currentChartType]);
-        
-        console.log("Custom data loaded successfully!");
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-        alert("Invalid JSON file. Please check the file format.");
+        setActiveChartDataMap(newMap);
+      } catch (err) {
+        console.error("JSON parse error:", err);
+        alert("Invalid JSON file.");
       }
     };
     reader.readAsText(file);
@@ -461,31 +508,42 @@ export default function MahatiChart() {
   return (
     <DemoContainer>
       <div className="mx-auto w-full max-w-6xl">
-        <br></br>
+        <br />
         <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-[rgba(17,24,39,1)]">
           Charts
         </h1>
         <p className="text-lg text-gray-600 leading-relaxed mb-8">
-          Charts UI provides various types of charts like 
-          <b> "Pie"</b>, <b>"Doughnut"</b>, <b>"Line"</b>, <b>"Area"</b>, <b>"Bar"</b>, <b>"Bullet"</b>, <b>"Gauge"</b>, <b>"Gantt"</b>, <b>"Calendar Heatmap"</b>, <b>"Horizontal Bar"</b>.
+          Charts UI provides various types of charts like{" "}
+          <b>"Pie"</b>, <b>"Doughnut"</b>, <b>"Line"</b>, <b>"Area"</b>, <b>"Bar"</b>, <b>"Bullet"</b>,{" "}
+          <b>"Gauge"</b>, <b>"Gantt"</b>, <b>"Calendar Heatmap"</b>, <b>"Horizontal Bar"</b>.
         </p>
       </div>
+
       <UploadCard>
         <UploadTitle>Upload Custom Data (Optional)</UploadTitle>
-        <FileInput
-          type="file"
-          accept=".json"
-          onChange={handleFileUpload}
-        />
+        <FileInput type="file" accept=".json" onChange={handleFileUpload} />
         <UploadHint>
           Upload a JSON file with the same structure as sample-chart-data.json
         </UploadHint>
       </UploadCard>
 
       <MahatiChartAnalyticsWidget
-        title={chartData.metadata.title}
-        chartTypes={["pie", "doughnut", "line", "area", "bar", "bullet", "gauge", "gantt", "calendarheatmap", "horizontalbar"] as const}
-        initialChartType={"pie" as const}
+        title={chartData.metadata?.title || "Mahati Systems Chart Analytics"}
+        chartTypes={
+          [
+            "pie",
+            "doughnut",
+            "line",
+            "area",
+            "bar",
+            "bullet",
+            "gauge",
+            "gantt",
+            "calendarheatmap",
+            "horizontalbar",
+          ] as const
+        }
+        initialChartType="area"
         filters={currentFilters}
         chartFilters={chartFiltersConfig}
         selectedFilters={currentSelectedFilters}
@@ -494,7 +552,6 @@ export default function MahatiChart() {
         gaugeData={chartData.gauge}
         horizontalBarData={chartData.horizontalbar}
         ganttData={chartData.gantt as any}
-        heatmapData={chartData.heatmap as any}
         calendarheatmapData={chartData.calendarheatmap as any}
         onApplyFilters={handleApplyFilters}
         onFiltersChange={handleFiltersChange}
