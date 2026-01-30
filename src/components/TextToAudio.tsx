@@ -265,6 +265,7 @@ export const TexttoAudio = ({icons=defaultIcons}:{icons?:IconSet}) => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const wordIndexRef = useRef(0);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const highlightOnSkipRef=useRef(false);
   const [summary, setSummary] = useState<string>("");
   // 0 = OFF, 1 = LOOP ONCE (•), 2 = LOOP FOREVER (1)
 const [loopMode, setLoopMode] = useState<0 | 1 | 2>(0);
@@ -423,15 +424,21 @@ const formatTime = (sec: number) => {
   u.rate = speedRef.current;
   u.volume = volumeRef.current;
 
-  u.onboundary = (e: any) => {
-    if (e.name === "word") {
-      highlightWordAt(charOffset + e.charIndex);
-    }
-  };
+  // u.onboundary = (e: any) => {
+  //   if (e.name === "word")&& 
+  //   highlightWordOnSkipRef.current)} {
+  //     highlightWordAt(charOffset + e.charIndex);
+  //   }
+  // };
 
-  
+  u.onboundary = (e: SpeechSynthesisEvent) => {
+  if (e.name === "word" && highlightOnSkipRef.current) {
+    highlightWordAt(charOffset + e.charIndex);
+  }
+};
   u.onend = () => {
   stopTimer();
+  highlightOnSkipRef.current=false;
 
   
   if (loopMode === 1 && loopCountRef.current === 0) {
@@ -524,6 +531,7 @@ const downloadAudio = () => {
 };
   const skip = (sec: number) => {
     const next = Math.max(0, Math.min(currentTime + sec, duration));
+    highlightOnSkipRef.current=true;
     window.speechSynthesis.cancel();
     stopTimer()
     setCurrentTime(next);
@@ -677,24 +685,27 @@ useEffect(() => {
     {loopMode === 1 && (
       <span
         style={{
+          
           position: "absolute",
-          right: -2,
-          bottom: -2,
+          right: -4,
+          bottom: -4,
           width: 6,
           height: 6,
           borderRadius: "50%",
           background: "#1761a3",
         }}
+
       />
     )}
+    
 
-    {/* 1 */}
+    
     {loopMode === 2 && (
       <span
         style={{
           position: "absolute",
-          right: -6,
-          bottom: -6,
+          right: -4,
+          bottom: -4,
           fontSize: 10,
           fontWeight: 700,
           color: "#1761a3",
