@@ -95,20 +95,11 @@ export interface MahatiChartAnalyticsWidgetProps {
   }[];
 }
 
-// ============================================================================
-// STYLED COMPONENTS - Complete CSS-in-JS Conversion
-// ============================================================================
-
-// Main Container
 const MainContainer = styled.div`
   min-height: 100vh;
   background: white;
   overflow-x: hidden;
 `;
-
-// ============================================================================
-// TABS SECTION
-// ============================================================================
 
 const TabsSection = styled.div`
   background: white;
@@ -584,7 +575,7 @@ const TwoColumnGrid = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 276px);
-    gap: 24px;
+    gap: 0px;
   }
 
   @media (min-width: 640px) {
@@ -669,6 +660,64 @@ const SidebarDetailItem = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 8px;
+`;
+
+const PercentageBadge = styled.div<{ $bgColor: string }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: ${props => props.$bgColor};
+  font-weight: 700;
+  font-size: 10px;
+  color: rgba(17, 24, 39, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+`;
+
+const DetailsCardFooter = styled.div`
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(229, 231, 235, 1);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+const DetailsCardFooterIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: rgba(96, 165, 250, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+`;
+
+const DetailsCardFooterIconText = styled.span`
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+`;
+
+const DetailsCardFooterText = styled.div`
+  flex: 1;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 1);
+  line-height: 1.5;
+`;
+
+const DetailsCardFooterBold = styled.span`
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
 `;
 
 const SidebarColorBlock = styled.span<{ $color: string }>`
@@ -1022,7 +1071,7 @@ const CalendarGrid = styled.div`
   overflow: hidden;
 
   @media (min-width: 1024px) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 160px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 165px);
     gap: 0px;
   }
 
@@ -1584,6 +1633,233 @@ const GaugeActiveAvg = styled.div`
 // Goal Health Card
 const GoalHealthCard = styled(SidebarCard)``;
 
+// ============================================================================
+// PERFORMANCE SUMMARY CARD (Bullet Chart)
+// ============================================================================
+
+const PerformanceSummaryCard = styled(SidebarCard)``;
+
+const PerformanceSummaryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+const PerformanceSummaryTitle = styled.h3`
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+`;
+
+const PerformanceSummaryMenuButton = styled.button`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(156, 163, 175, 1);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    color: rgba(75, 85, 99, 1);
+  }
+`;
+
+const PerformanceSummaryList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const PerformanceSummaryItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const PerformanceSummaryLabel = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(17, 24, 39, 1);
+`;
+
+const PerformanceSummaryBadge = styled.div<{ $variant: 'success' | 'danger' | 'info' }>`
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  
+  ${props => {
+    switch (props.$variant) {
+      case 'success':
+        return `
+          background-color: rgba(220, 252, 231, 1);
+          color: rgba(22, 163, 74, 1);
+        `;
+      case 'danger':
+        return `
+          background-color: rgba(254, 226, 226, 1);
+          color: rgba(220, 38, 38, 1);
+        `;
+      case 'info':
+        return `
+          background-color: rgba(219, 234, 254, 1);
+          color: rgba(37, 99, 235, 1);
+        `;
+      default:
+        return `
+          background-color: rgba(243, 244, 246, 1);
+          color: rgba(75, 85, 99, 1);
+        `;
+    }
+  }}
+`;
+
+const PerformanceSummaryFooter = styled.div`
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(229, 231, 235, 1);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+const PerformanceSummaryIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: rgba(96, 165, 250, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+`;
+
+const PerformanceSummaryIconText = styled.span`
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+`;
+
+const PerformanceSummaryActionText = styled.div`
+  flex: 1;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 1);
+  line-height: 1.5;
+`;
+
+const PerformanceSummaryActionBold = styled.span`
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+`;
+
+// Bullet Chart Details Card - NEW Components for colored percentage boxes
+const BulletDetailItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(229, 231, 235, 1);
+  }
+`;
+
+const BulletDetailLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const BulletDetailLabel = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(17, 24, 39, 1);
+`;
+
+const BulletDetailDescription = styled.span`
+  font-size: 12px;
+  color: rgba(107, 114, 128, 1);
+`;
+
+const BulletPercentageBox = styled.div<{ $label: string }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  
+  ${props => {
+    // Determine background color based on label
+    const label = props.$label.toLowerCase();
+    if (label.includes('revenue')) {
+      return `
+        background-color: rgba(70, 194, 155, 0.15);
+        color: rgba(22, 163, 74, 1);
+      `;
+    } else if (label.includes('profit')) {
+      return `
+        background-color: rgba(239, 68, 68, 0.15);
+        color: rgba(220, 38, 38, 1);
+      `;
+    } else if (label.includes('customer')) {
+      return `
+        background-color: rgba(23, 97, 163, 0.15);
+        color: rgba(23, 97, 163, 1);
+      `;
+    } else {
+      // Default color
+      return `
+        background-color: rgba(229, 231, 235, 1);
+        color: rgba(55, 65, 81, 1);
+      `;
+    }
+  }}
+`;
+
+const BulletDetailsCardFooter = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(229, 231, 235, 1);
+`;
+
+const BulletDetailsIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: rgba(96, 165, 250, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+`;
+
+const BulletDetailsIconText = styled.span`
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+`;
+
+const BulletDetailsFooterText = styled.p`
+  font-size: 12px;
+  color: rgba(107, 114, 128, 1);
+  margin: 0;
+  line-height: 1.5;
+`;
+
+const BulletDetailsFooterBold = styled.span`
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+`;
+
 const GoalHealthHeader = styled.div`
   display: flex;
   align-items: center;
@@ -1752,6 +2028,22 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
 
   const isLineFamily = chartType === "line" || chartType === "area";
   const isPieFamily = chartType === "pie" || chartType === "doughnut";
+
+  // Generate bullet details from bulletData
+  const bulletDetails = useMemo(() => {
+    if (chartType === 'bullet' && bulletData && bulletData.bullets) {
+      return bulletData.bullets.map((bullet) => {
+        const percentageAchieved = Math.round((bullet.achieved / bullet.target) * 100);
+        return {
+          label: bullet.name,
+          value: `${percentageAchieved}% Done`,
+          description: `${percentageAchieved}% of target achieved`,
+          color: "rgba(183, 232, 214, 0.9)",
+        };
+      });
+    }
+    return [];
+  }, [chartType, bulletData]);
 
   // Current Gantt data
   const currentGanttData = useMemo(() => {
@@ -1945,6 +2237,37 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
     }
   };
 
+  // Get filtered bullet data based on selected year/month/type
+  const currentBulletData = useMemo(() => {
+    if (!bulletData) return null;
+
+    // Get the selected filters for bullet chart
+    const year = selectedFilters.SelectYear || '2026';
+    const month = selectedFilters.SelectMonth || 'January';
+    const type = selectedFilters.SelectType || 'Sales';
+
+    // Try to access filtered data: bulletData[year][type][month]
+    const yearData = (bulletData as any)[year];
+    if (yearData) {
+      const typeData = yearData[type];
+      if (typeData) {
+        const monthData = typeData[month];
+        if (monthData && monthData.bullets) {
+          return {
+            title: monthData.title || bulletData.title,
+            bullets: monthData.bullets
+          };
+        }
+      }
+    }
+
+    // Fallback to default bullets if filtered data not found
+    return {
+      title: bulletData.title,
+      bullets: bulletData.bullets
+    };
+  }, [bulletData, selectedFilters]);
+
   const renderChart = () => {
     switch (chartType) {
       case "pie":
@@ -1963,11 +2286,11 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
         return null;
 
       case "bullet":
-        if (bulletData) {
+        if (currentBulletData) {
           return (
             <BulletChart
-              title={bulletData.title}
-              bullets={bulletData.bullets}
+              title={currentBulletData.title}
+              bullets={currentBulletData.bullets}
             />
           );
         }
@@ -2226,21 +2549,38 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
             <Sidebar>
               <SidebarCard>
                 <SidebarTitle>Details</SidebarTitle>
-                <SidebarDetailsList>
-                  {details.slice(0, 3).map((item, idx) => (
-                    <SidebarDetailItem key={idx}>
-                      <SidebarColorBlock $color={colorToClass(item.color)} />
-                      <SidebarDetailContent>
-                        <SidebarDetailLabel>{item.label}</SidebarDetailLabel>
-                        <SidebarDetailDescription>{item.description}</SidebarDetailDescription>
-                      </SidebarDetailContent>
-                      <SidebarDetailValue>{item.value}</SidebarDetailValue>
-                    </SidebarDetailItem>
-                  ))}
-                </SidebarDetailsList>
+                <div>
+                  {currentBulletData?.bullets.map((bullet, idx) => {
+                    // Calculate percentage dynamically from bullet data
+                    const percentage = Math.round((bullet.achieved / bullet.target) * 100);
+                    
+                    return (
+                      <BulletDetailItem key={idx}>
+                        <BulletDetailLeft>
+                          <BulletDetailLabel>{bullet.name}</BulletDetailLabel>
+                          <BulletDetailDescription>
+                            {bullet.achieved.toLocaleString()} / {bullet.target.toLocaleString()}
+                          </BulletDetailDescription>
+                        </BulletDetailLeft>
+                        <BulletPercentageBox $label={bullet.name}>
+                          {percentage}%
+                        </BulletPercentageBox>
+                      </BulletDetailItem>
+                    );
+                  })}
+                </div>
+                
+                <BulletDetailsCardFooter>
+                  <BulletDetailsIcon>
+                    <BulletDetailsIconText>i</BulletDetailsIconText>
+                  </BulletDetailsIcon>
+                  <BulletDetailsFooterText>
+                    Suggested Actions:<BulletDetailsFooterBold> Optimizing pricing or reduce operational costs.</BulletDetailsFooterBold>
+                  </BulletDetailsFooterText>
+                </BulletDetailsCardFooter>
               </SidebarCard>
 
-              {/* Quick Insights Card - Same as Gauge */}
+              {/* Quick Insights Card */}
               <GaugeQuickInsightsCard>
                 <GaugeInsightsHeader>
                   <GaugeInsightsTitle>Quick Insights</GaugeInsightsTitle>
@@ -2679,17 +3019,38 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
               <SidebarCard>
                 <SidebarTitle>Details</SidebarTitle>
                 <SidebarDetailsList>
-                  {details.slice(0, 3).map((item, idx) => (
-                    <SidebarDetailItem key={idx}>
-                      <SidebarColorBlock $color={colorToClass(item.color)} />
-                      <SidebarDetailContent>
-                        <SidebarDetailLabel>{item.label}</SidebarDetailLabel>
-                        <SidebarDetailDescription>{item.description}</SidebarDetailDescription>
-                      </SidebarDetailContent>
-                      <SidebarDetailValue>{item.value}</SidebarDetailValue>
-                    </SidebarDetailItem>
-                  ))}
+                  {details.map((item, idx) => {
+                    // Determine background color based on item label
+                    let bgColor = "rgba(229, 231, 235, 0.5)";
+                    if (item.label === "Revenue") {
+                      bgColor = "rgba(70, 194, 155, 0.15)";
+                    } else if (item.label === "Profit") {
+                      bgColor = "rgba(239, 68, 68, 0.15)";
+                    } else if (item.label === "New Customers") {
+                      bgColor = "rgba(23, 97, 163, 0.15)";
+                    }
+                    
+                    return (
+                      <SidebarDetailItem key={idx}>
+                        <SidebarDetailContent>
+                          <SidebarDetailLabel>{item.label}</SidebarDetailLabel>
+                          <SidebarDetailDescription>{item.description}</SidebarDetailDescription>
+                        </SidebarDetailContent>
+                        <PercentageBadge $bgColor={bgColor}>
+                          {item.value}
+                        </PercentageBadge>
+                      </SidebarDetailItem>
+                    );
+                  })}
                 </SidebarDetailsList>
+                {/* <DetailsCardFooter>
+                  <DetailsCardFooterIcon>
+                    <DetailsCardFooterIconText>i</DetailsCardFooterIconText>
+                  </DetailsCardFooterIcon>
+                  <DetailsCardFooterText>
+                    <DetailsCardFooterBold>Note:</DetailsCardFooterBold> Percentages show progress towards monthly targets
+                  </DetailsCardFooterText>
+                </DetailsCardFooter> */}
               </SidebarCard>
 
               <SidebarCard>
