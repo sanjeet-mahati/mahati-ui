@@ -762,7 +762,7 @@ useEffect(() => {
     speakFromTime(0);  
   }}
 >
-  Reads Full page
+  Reads Entire page
 </GenerateBtn>
 
 <GenerateBtn
@@ -774,7 +774,7 @@ useEffect(() => {
     speakFromTime(0);
   }}
 >
-  Reads given text
+  Reads input text
 </GenerateBtn>
 
     </Controls>
