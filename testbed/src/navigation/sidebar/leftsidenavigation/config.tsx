@@ -265,6 +265,13 @@ export const NavItems = (): NavItem[]  => {
         { name: 'Celebration', href: '/tooltip#celebration', icon: <FontAwesomeIcon icon={faMessage} size="sm" /> },
       ],
     },
+   {
+  name: 'Text To Audio',
+  href: '/texttoaudio',
+  icon: <FontAwesomeIcon icon={faMicrophone} size="lg" />,
+  active: pathname === '/texttoaudio',
+  position: 'top',
+},
     {
       name: 'Form',
       href: '/form',
@@ -557,8 +564,8 @@ export const NavItems = (): NavItem[]  => {
     },
   ],
 }
-    
-    
+
+ 
   ];
 };
 
