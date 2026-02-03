@@ -57,5 +57,6 @@ export * from './components/Spinner';
 export { Calendar as MahatiCalendar } from './components/Calendar';
 export type { CalendarDate, CalendarTime, CalendarDateRange, CalendarProps } from './components/Calendar';
 export{SearchableDropdown as MahatiSearchableDropdown} from "./components/NestedDropdown";
+export{TexttoAudio as MahatiTexttoAudio} from "./components/TextToAudio";
 
 export { MahatiCameraAccessModal,MahatiLocationAccessModal,MahatiMicrophoneAccessModal,MahatiNotificationCard,MahatiPromotionModal as MahatiPromotionModal_V1,MahatiPromotionModalV2Modal as MahatiPromotionModal_V2, MahatiPromotionModalV3Modal as MahatiPromotionModal_V3   } from './components/Notifications';
