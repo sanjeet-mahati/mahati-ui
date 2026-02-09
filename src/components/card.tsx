@@ -274,19 +274,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
             {mainContent && (
               <ContentWrapper id={contentId} open={open}>
-                <ContentInner>{mainContent}</ContentInner>
+                <ContentInner>{mainContent as any}</ContentInner>
               </ContentWrapper>
             )}
           </FrontFace>
 
           {flippable && cardBackContent && (
-            <BackFace>{cardBackContent}</BackFace>
+            <BackFace>{cardBackContent as any}</BackFace>
           )}
         </StyledCard>
       </PerspectiveWrapper>
     );
   }
-);
+) as any;
 
 Card.displayName = 'Card';
 export { Card };

@@ -227,7 +227,7 @@ export interface HorizontalBarTopPerformer {
 export interface HorizontalBarProductData {
   title: string;
   xAxis?: Record<string, HorizontalBarXAxisConfig>;
-  [year: string]: string | Record<string, any>;
+  [year: string]: string | Record<string, any> | undefined;
 }
 
 export interface HorizontalBarData {
@@ -238,7 +238,7 @@ export interface HorizontalBarData {
     step: number;
     labels: number[];
   }>;
-  [year: string]: string | Record<string, any>;
+  [year: string]: string | Record<string, any> | undefined;
 }
 
 export interface HorizontalBarChartData {

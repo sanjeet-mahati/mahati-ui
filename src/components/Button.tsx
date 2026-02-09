@@ -395,7 +395,7 @@ const IconButtonGroupWrapper = styled.div<{
  * IconButtonGroup - Groups icon buttons with consistent spacing
  */
 const IconButtonGroup = React.forwardRef<HTMLDivElement, IconButtonGroupProps>(
-  ({ className, direction = "row", gapClass, ...props }, ref) => {
+  ({ className, direction = "row", gapClass, children, ...props }, ref) => {
     const gap = parseGap(gapClass);
     
     return (
@@ -405,7 +405,9 @@ const IconButtonGroup = React.forwardRef<HTMLDivElement, IconButtonGroupProps>(
         $gap={gap}
         className={className}
         {...props}
-      />
+      >
+        {children as any}
+      </IconButtonGroupWrapper>
     );
   }
 );
@@ -457,7 +459,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
             $intensity={iconButtonHoverIntensity}
             $name={name}
           >
-            {children}
+            {children as any}
           </IconButtonInner>
         </StyledButton>
       );
@@ -473,11 +475,11 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {children}
+        {children as any}
       </StyledButton>
     );
   }
-);
+) as any;
 
 ButtonBase.displayName = "Button";
 
@@ -486,7 +488,7 @@ type ButtonWithGroup = typeof ButtonBase & {
   IconButtonGroup: typeof IconButtonGroup;
 };
 
-const Button = ButtonBase as ButtonWithGroup;
+const Button = ButtonBase as any as ButtonWithGroup;
 Button.IconButtonGroup = IconButtonGroup;
 
 export { Button };
