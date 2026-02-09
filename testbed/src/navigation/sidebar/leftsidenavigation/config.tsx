@@ -339,11 +339,10 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/ToastMessageDemo/',
       position: 'top',
       subItems: [
-        { name: 'Toast Types', href: '/toastMessageDemo#toast-types', icon: <HiBellAlert size={24} /> },
-        { name: 'Background Variants', href: '/toastMessageDemo#background-variants', icon: <HiBellAlert size={14} /> },
-        { name: 'Custom Styles', href: '/toastMessageDemo#custom-styles', icon: <HiBellAlert size={24} /> },
-        { name: 'Confirmation Toast ("Accept / Decline")', href: '/toastMessageDemo#confirmation-toast-("Accept/Decline")', icon: <HiBellAlert size={14} /> },
-        { name: 'Actions', href: '/toastMessageDemo#actions', icon: <HiBellAlert size={24} /> },
+        { name: 'Solid Toast Types', href: '/toast#solid-toast-types', icon: <HiBellAlert size={24} /> },
+        { name: 'Transparent Background - Toast Variants', href: '/toast#transparent-background-toast-variants', icon: <HiBellAlert size={14} /> },
+        { name: 'Custom Toast Examples', href: '/toast#custom-toast-examples', icon: <HiBellAlert size={24} /> },
+        { name: 'Toast with Action Buttons', href: '/toast#toast-with-action-buttons', icon: <HiBellAlert size={14} /> },
       ]
     },
     {
