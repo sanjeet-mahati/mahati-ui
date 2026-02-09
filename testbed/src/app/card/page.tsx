@@ -71,7 +71,7 @@ export default function CardPage() {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">Card</h1>
@@ -117,23 +117,32 @@ export default function CardPage() {
   <p>Subtle Card</p>
 </MahatiCard>`}
         preview={
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+            <div className="w-full min-w-0 max-w-full">
             <MahatiCard variant="default">
               <h4 className="font-semibold mb-2">Default Card</h4>
               <p className="text-slate-600">Standard card style with subtle shadow.</p>
             </MahatiCard>
+            </div>
+            <div className="w-full min-w-0 max-w-full">
             <MahatiCard variant="elevated">
               <h4 className="font-semibold mb-2">Elevated Card</h4>
               <p className="text-slate-600">Enhanced shadow for emphasis.</p>
             </MahatiCard>
+            </div>
+            <div className="w-full min-w-0 max-w-full">
             <MahatiCard variant="outlined">
               <h4 className="font-semibold mb-2">Outlined Card</h4>
               <p className="text-slate-600">Border with minimal shadow.</p>
+              
             </MahatiCard>
+            </div>
+            <div className="w-full min-w-0 max-w-full">
             <MahatiCard variant="subtle">
               <h4 className="font-semibold mb-2">Subtle Card</h4>
               <p className="text-slate-600">Minimal styling for backgrounds.</p>
             </MahatiCard>
+            </div>
           </div>
         }
       />
@@ -236,7 +245,8 @@ export default function CardPage() {
 
       <CodePreview
         title="Figma Card Grid"
-        code={`<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        code={`<div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+
   <MahatiCard 
     variant="figma" 
     size="figma"
@@ -260,7 +270,8 @@ export default function CardPage() {
   />
 </div>`}
         preview={
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
+            <div className="w-full min-w-0">
             <MahatiCard 
               variant="figma" 
               size="figma"
@@ -268,13 +279,19 @@ export default function CardPage() {
               collapsible={true}
               cardContent={<p className="text-slate-600">First feature description</p>}
             />
+            </div>
+              <div className="w-full min-w-0">
             <MahatiCard 
+             
+            
               variant="figma" 
               size="figma"
               title="Feature 2"
               collapsible={true}
               cardContent={<p className="text-slate-600">Second feature description</p>}
             />
+            </div>
+             <div className="w-full min-w-0">
             <MahatiCard 
               variant="figma" 
               size="figma"
@@ -282,6 +299,7 @@ export default function CardPage() {
               collapsible={true}
               cardContent={<p className="text-slate-600">Third feature description</p>}
             />
+            </div>
           </div>
         }
       />
@@ -325,6 +343,7 @@ export default function CardPage() {
                 <h3 className="text-xl font-semibold text-slate-800 mb-2">Enterprise Solution</h3>
                 <p className="text-slate-600 mb-4">Advanced enterprise software solution.</p>
                 <div className="flex justify-between items-center">
+
                   <span className="text-2xl font-bold text-slate-800">$999</span>
                   <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Learn More
@@ -483,10 +502,11 @@ export default function CardPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MahatiCard 
               variant="figma"
+              className="w-full max-w-full min-w-0 overflow-hidden box-border"
               backgroundColor="#e0f2fe"
               title="Blue Theme"
               cardContent={
-                <p className="text-slate-700">Custom blue background</p>
+                <p className="text-slate-600">Custom blue background</p>
               }
             />
             <MahatiCard 

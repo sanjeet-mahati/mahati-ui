@@ -267,7 +267,7 @@ alert({
           />
 
           {/* Background Variants */}
-          <CodePreview
+          {/* <CodePreview
             title="Transparent Toast Types"
             code={`// Transparent Success Background
 alert({
@@ -299,7 +299,7 @@ alert({
 `}
             preview={
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
+                <div className=" w-full p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col gap-3">
                 <Button
                   onClick={() =>
                     alert({
@@ -371,7 +371,91 @@ alert({
               </div>
             </div>
             }
-          />
+          /> */}
+          preview={
+  <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      
+      {/* Success */}
+      <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
+        <Button
+          onClick={() =>
+            alert({
+              type: 'Success',
+              message: '',
+              background: 'transparent',
+              duration: 0,
+            })
+          }
+          color="neutral"
+          radius="large"
+          className="border border-[rgba(229,231,235,1)] bg-white text-gray-900 hover:bg-gray-100"
+        >
+          Transparent Success Background
+        </Button>
+      </div>
+
+      {/* Error */}
+      <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
+        <Button
+          onClick={() =>
+            alert({
+              type: 'Error',
+              message: 'Error message description',
+              background: 'transparent',
+              duration: 0,
+            })
+          }
+          color="neutral"
+          radius="large"
+          className="border border-[rgba(229,231,235,1)] bg-white text-gray-900 hover:bg-gray-100"
+        >
+          Transparent Error Background
+        </Button>
+      </div>
+
+      {/* Warning */}
+      <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
+        <Button
+          onClick={() =>
+            alert({
+              type: 'Warning',
+              message: 'Warning message description',
+              background: 'transparent',
+              duration: 0,
+            })
+          }
+          color="neutral"
+          radius="large"
+          className="border border-[rgba(229,231,235,1)] bg-white text-gray-900 hover:bg-gray-100"
+        >
+          Transparent Warning Background
+        </Button>
+      </div>
+
+      {/* Notification */}
+      <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 flex flex-col items-center gap-3">
+        <Button
+          onClick={() =>
+            alert({
+              type: 'Notification',
+              message: '',
+              background: 'transparent',
+              duration: 0,
+            })
+          }
+          color="neutral"
+          radius="large"
+          className="border border-[rgba(229,231,235,1)] bg-white text-gray-900 hover:bg-gray-100"
+        >
+          Transparent Notification Background
+        </Button>
+      </div>
+
+    </div>
+  </div>
+}
+
 
           {/* Additional Variants */}
           <CodePreview
