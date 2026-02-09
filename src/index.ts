@@ -38,17 +38,6 @@ export { Tooltip as MahatiTooltip } from './components/Tooltip';
 export { ToastMessage as MahatiToastMessage } from './components/ToastMessage';
 export {  ConfettiExplosion as MahatiConfettiExplosion} from './components/ConfettiExplosion';
 export { RealisticConfetti as MahatiRealisticConfetti } from './components/RealisticConfetti';
-export type { 
-  Toast,
-  ToastType,
-  ToastPosition,
-  ToastBackground,
-  ToastAction,
-  ToastClassNames,
-  ToastContainerProps,
-  AlertArgs,
-  ToastSlots
-} from './components/ToastMessage';
 
 // Spinner
 export * from './components/Spinner';

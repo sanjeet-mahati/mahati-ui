@@ -1,4 +1,3 @@
-// tsup.config.ts
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -8,6 +7,13 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: [],
+  external: ['react', 'react-dom'],
   inject: [],
+  loader: {
+    '.png': 'dataurl',
+    '.jpg': 'dataurl',
+    '.jpeg': 'dataurl',
+    '.gif': 'dataurl',
+    '.svg': 'dataurl',
+  },
 });
