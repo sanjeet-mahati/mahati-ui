@@ -133,8 +133,8 @@ const RealisticConfetti: React.FC<RealisticConfettiProps> = ({
   const [particles, setParticles] = useState<ConfettiParticle[]>(() => 
     isActive ? createParticles(particleCount, explosionForce, wind, colors) : []
   );
-  const animationRef = useRef<number>();
-  const startTimeRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
+  const startTimeRef = useRef<number | undefined>(undefined);
   
   // ✅ CRITICAL FIX: Memoize colors to prevent infinite loop
   const stableColors = useMemo(() => colors, [JSON.stringify(colors)]);

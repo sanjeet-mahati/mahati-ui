@@ -198,7 +198,7 @@ interface ToastItemProps {
   onClose: (id: string) => void;
 }
 
-const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
+const ToastItem = ({ toast, onClose }: ToastItemProps): any => {
   const [isExiting, setIsExiting] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -376,7 +376,7 @@ const posClass = (p: ToastPosition) => {
   }
 };
 
-const ToastMessageBase: React.FC<ToastContainerProps> = ({ toasts, position, onClose }) => (
+const ToastMessageBase = ({ toasts, position, onClose }: ToastContainerProps): any => (
   <div className={cn('fixed z-[9999] flex flex-col gap-3 pointer-events-none', posClass(position))}>
     {toasts.map((t) => (
       <div key={t.id} className="pointer-events-auto">

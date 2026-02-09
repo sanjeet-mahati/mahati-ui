@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, type ReactNode } from "react";
+import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import styled from "@emotion/styled";
 
@@ -84,7 +84,7 @@ const IconWrapper = styled.span`
 
 interface AccordionProps {
   title: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
   defaultOpen?: boolean;
 }
 
@@ -112,7 +112,7 @@ function Accordion({
       {/* CONTENT */}
       {open && (
         <AccordionContent>
-          <ContentWrapper>{children}</ContentWrapper>
+          <ContentWrapper>{children as any}</ContentWrapper>
         </AccordionContent>
       )}
     </AccordionContainer>

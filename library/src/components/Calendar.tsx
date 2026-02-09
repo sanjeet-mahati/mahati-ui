@@ -551,7 +551,7 @@ const StyledSelect = styled.select<{ $scale: number; $fullWidth?: boolean }>`
   }
 `;
 
-const SelectIcon = styled(HiChevronDown)<{ $scale: number }>`
+const SelectIcon = styled(HiChevronDown as any)<{ $scale: number }>`
   pointer-events: none;
   position: absolute;
   top: 50%;
@@ -873,7 +873,7 @@ const getDeviceScale = (): number => {
   return 1;
 };
 
-const Calendar: React.FC<CalendarProps> = ({
+const Calendar = ({
   value,
   onChange,
   enableRangeSelection = false,
@@ -902,11 +902,11 @@ const Calendar: React.FC<CalendarProps> = ({
   onDateFormatChange,
   showTimeZoneSelector = false,
   timeZoneFormat = "none",
-  previewTextStyles={},
-  globalTypography={},
   onTimeZoneFormatChange,
   blockDateConfig,
-}) => {
+  previewTextStyles={},
+  globalTypography={}
+}: CalendarProps) => {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(
     value?.year || today.getFullYear()
@@ -1590,7 +1590,7 @@ const Calendar: React.FC<CalendarProps> = ({
       <InputWrapper>
         {showIcon && (
           <IconWrapper style={{ paddingLeft: `${scaled(12)}px` }}>
-            {icon || defaultIcon}
+            {(icon || defaultIcon) as any}
           </IconWrapper>
         )}
         <CalendarInput
@@ -1672,7 +1672,7 @@ const Calendar: React.FC<CalendarProps> = ({
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    {React.cloneElement(defaultIcon as React.ReactElement, {
+                    {React.cloneElement(defaultIcon as React.ReactElement<any>, {
                       style: { 
                         width: `${scaled(14)}px`, 
                         height: `${scaled(14)}px`,
@@ -1786,7 +1786,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
                 <CalendarGrid $scale={scale}>
                   <GridContainer $scale={scale}>
-                    {renderDays()}
+                    {renderDays() as any}
                   </GridContainer>
                 </CalendarGrid>
 

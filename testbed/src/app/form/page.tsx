@@ -55,7 +55,7 @@ export default function InputsPage() {
   <MahatiInput
     placeholder="Enter Name"
     value={form.name}
-    onChange={(e) => handleChange("name", e.target.value)}
+    onChange={(e: any) => handleChange("name", e.target.value)}
     hasError={!form.name}
     errorMessage={errors.name}
   />
@@ -64,7 +64,7 @@ export default function InputsPage() {
     type="email"
     placeholder="Enter Email"
     value={form.email}
-    onChange={(e) => handleChange("email", e.target.value)}
+    onChange={(e: any) => handleChange("email", e.target.value)}
     hasError={!form.email}
     errorMessage={errors.email}
   />
@@ -72,7 +72,7 @@ export default function InputsPage() {
   <MahatiInput
     placeholder="Mobile Number"
     value={form.mobile}
-    onChange={(e) => handleChange("mobile", e.target.value)}
+    onChange={(e: any) => handleChange("mobile", e.target.value)}
     hasError={!form.mobile}
     errorMessage={errors.mobile}
   />
@@ -80,7 +80,7 @@ export default function InputsPage() {
   <MahatiInput
     placeholder="Address"
     value={form.address}
-    onChange={(e) => handleChange("address", e.target.value)}
+    onChange={(e: any) => handleChange("address", e.target.value)}
     hasError={!form.address}
     errorMessage={errors.address}
   />
@@ -90,7 +90,7 @@ export default function InputsPage() {
             <MahatiInput
               placeholder="Enter Name"
               value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              onChange={(e: any) => handleChange("name", e.target.value)}
               hasError={!form.name}
               errorMessage={errors.name}
             />
@@ -99,7 +99,7 @@ export default function InputsPage() {
               type="email"
               placeholder="Enter Email"
               value={form.email}
-              onChange={(e) => handleChange("email", e.target.value)}
+              onChange={(e: any) => handleChange("email", e.target.value)}
               hasError={!form.email}
               errorMessage={errors.email}
             />
@@ -107,7 +107,7 @@ export default function InputsPage() {
             <MahatiInput
               placeholder="Mobile Number"
               value={form.mobile}
-              onChange={(e) => handleChange("mobile", e.target.value)}
+              onChange={(e: any) => handleChange("mobile", e.target.value)}
               hasError={!form.mobile}
               errorMessage={errors.mobile}
             />
@@ -115,7 +115,7 @@ export default function InputsPage() {
             <MahatiInput
               placeholder="Address"
               value={form.address}
-              onChange={(e) => handleChange("address", e.target.value)}
+              onChange={(e: any) => handleChange("address", e.target.value)}
               hasError={!form.address}
               errorMessage={errors.address}
             />
@@ -130,14 +130,14 @@ export default function InputsPage() {
   <MahatiInput
     placeholder="Rounded Input"
     value={form.name}
-    onChange={(e) => handleChange("name", e.target.value)}
+    onChange={(e: any) => handleChange("name", e.target.value)}
     className="rounded-xl"
   />
 
   <MahatiInput
     placeholder="Bordered Input"
     value={form.email}
-    onChange={(e) => handleChange("email", e.target.value)}
+    onChange={(e: any) => handleChange("email", e.target.value)}
     className="border-2 border-blue-500"
   />
 </MahatiFormContainer>`}
@@ -146,14 +146,14 @@ export default function InputsPage() {
             <MahatiInput
               placeholder="Rounded Input"
               value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              onChange={(e: any) => handleChange("name", e.target.value)}
               className="rounded-xl"
             />
 
             <MahatiInput
               placeholder="Bordered Input"
               value={form.email}
-              onChange={(e) => handleChange("email", e.target.value)}
+              onChange={(e: any) => handleChange("email", e.target.value)}
               className="border-2 border-blue-500"
             />
           </MahatiFormContainer>
@@ -187,7 +187,7 @@ export default function InputsPage() {
     type="file"
     ref={fileInputRef}
     className="hidden"
-    onChange={(e) => {
+    onChange={(e: any) => {
       const file = e.target.files?.[0] || null;
       setSelectedFile(file);
       setFileError(file ? "" : "Please upload a document");
@@ -228,7 +228,7 @@ export default function InputsPage() {
                 type="file"
                 ref={fileInputRef}
                 className="hidden"
-                onChange={(e) => {
+                onChange={(e: any) => {
                   const file = e.target.files?.[0] || null;
                   setSelectedFile(file);
                   setFileError(file ? "" : "Please upload a document");
@@ -248,7 +248,7 @@ export default function InputsPage() {
   <MahatiInput
     placeholder=" "
     value={form.email}
-    onChange={(e) => handleChange("email", e.target.value)}
+    onChange={(e: any) => handleChange("email", e.target.value)}
   />
 
   <label
@@ -271,7 +271,7 @@ export default function InputsPage() {
               <MahatiInput
                 placeholder=" "
                 value={form.email}
-                onChange={(e) => handleChange("email", e.target.value)}
+                onChange={(e: any) => handleChange("email", e.target.value)}
               />
 
               <label

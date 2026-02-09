@@ -6,7 +6,6 @@ import styled from "@emotion/styled";
 import { createPortal } from "react-dom";
 
 import { Button } from "./Button";
-import { Card } from "./card";
 import { Calendar, CalendarDateRange } from "./Calendar";
 
 /* ===================== TYPES ===================== */
@@ -52,7 +51,7 @@ const FilterContainer = styled.div`
   position: relative;
 `;
 
-const FilterButton = styled(Button)`
+const FilterButton = styled.button`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -63,6 +62,18 @@ const FilterButton = styled(Button)`
   color: #0f172a;
   font-weight: 600;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background: linear-gradient(to right, #e8f5f0, #e0f0f6);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &:focus {
+    outline: 2px solid rgba(23, 97, 163, 0.5);
+    outline-offset: 2px;
+  }
 `;
 
 const FilterModalWrapper = styled.div`
@@ -72,11 +83,14 @@ const FilterModalWrapper = styled.div`
   z-index: 50;
 `;
 
-const FilterCard = styled(Card)`
+const FilterCard = styled.div`
   width: 360px;
   padding: 0;
   overflow: hidden;
   background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 `;
 
 const FilterHeader = styled.div`
@@ -172,7 +186,7 @@ const StyledSelect = styled.select`
   }
 `;
 
-const SelectIcon = styled(ChevronDown)`
+const SelectIcon = styled.span`
   position: absolute;
   right: 0.75rem;
   top: 50%;
@@ -181,6 +195,14 @@ const SelectIcon = styled(ChevronDown)`
   height: 1rem;
   color: rgb(100, 116, 139);
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -210,14 +232,33 @@ const FilterFooter = styled.div`
   background: linear-gradient(to right, #f3fbf8, #eef6fb);
 `;
 
-const ResetAllButton = styled(Button)`
+const ResetAllButton = styled.button`
   border: 1px solid #1761a3;
   background-color: #f0f8ff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background-color: #e6f3ff;
+  }
 `;
 
-const ApplyButton = styled(Button)`
+const ApplyButton = styled.button`
   color: white;
   background: linear-gradient(to right, #1761a3, #4daf83);
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background: linear-gradient(to right, #1347a3, #3d8f63);
+  }
 `;
 
 // Custom Select Components
@@ -256,12 +297,20 @@ const CustomSelectLabel = styled.span`
   font-size: 0.875rem;
 `;
 
-const CustomSelectIcon = styled(ChevronDown)<{ open: boolean }>`
+const CustomSelectIcon = styled.span<{ open: boolean }>`
   width: 1rem;
   height: 1rem;
   color: rgb(100, 116, 139);
   transition: transform 200ms;
   transform: ${(props) => (props.open ? "rotate(180deg)" : "rotate(0deg)")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
 `;
 
 const CustomSelectDropdown = styled.div`
@@ -376,7 +425,7 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
   };
 
   const applyFilters = () => {
-    console.log("Applied Filters:", values);
+    // console.log("Applied Filters:", values);
     if (onApply) onApply(values);
     setOpen(false);
   };
@@ -384,14 +433,14 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
   return (
     <FilterContainer>
       {/* FILTER BUTTON */}
-      <FilterButton variant="outline" onClick={() => setOpen((p) => !p)} size={size}>
+      <FilterButton onClick={() => setOpen((p) => !p)}>
         Filter
       </FilterButton>
 
       {/* FILTER MODAL */}
       {open && (
         <FilterModalWrapper>
-          <FilterCard variant="figma">
+          <FilterCard>
             {/* HEADER */}
             <FilterHeader>
               <FilterTitle>Add Filter</FilterTitle>
@@ -421,7 +470,7 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </StyledSelect>
-              <SelectIcon />
+              <SelectIcon><ChevronDown /></SelectIcon>
             </SelectWrapper>
 
             {/* STATUS */}
@@ -435,7 +484,7 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </StyledSelect>
-              <SelectIcon />
+              <SelectIcon><ChevronDown /></SelectIcon>
             </SelectWrapper>
 
             {/* SEARCH */}
@@ -447,7 +496,7 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
 
             {/* FOOTER */}
             <FilterFooter>
-              <ResetAllButton variant="outline" onClick={resetAll} type="button">
+              <ResetAllButton onClick={resetAll} type="button">
                 Reset all
               </ResetAllButton>
 
@@ -476,19 +525,19 @@ const Section = ({
       <SectionTitle>{title}</SectionTitle>
       <ResetButton onClick={onReset}>Reset</ResetButton>
     </SectionHeader>
-    {children}
+    {children as any}
   </SectionContainer>
 );
 
 /* ===================== PUBLISHABLE COMPONENTS ===================== */
 
 /** ✅ MAHATI ACTIVITY */
-const MahatiActivity: React.FC<MahatiActivityProps> = ({
+const MahatiActivity = ({
   value,
   onChange,
   options = DEFAULT_ACTIVITY_OPTIONS,
   size = "medium",
-}) => {
+}: MahatiActivityProps) => {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -549,7 +598,7 @@ const MahatiActivity: React.FC<MahatiActivityProps> = ({
         size={size}
       >
         <CustomSelectLabel>{selectedLabel}</CustomSelectLabel>
-        <CustomSelectIcon open={open} />
+        <CustomSelectIcon open={open}><ChevronDown /></CustomSelectIcon>
       </CustomSelectTrigger>
 
       {/* ===== Dropdown (PORTAL) ===== */}
@@ -583,12 +632,12 @@ const MahatiActivity: React.FC<MahatiActivityProps> = ({
 };
 
 /** ✅ MAHATI STATUS */
-const MahatiStatus: React.FC<MahatiStatusProps> = ({
+const MahatiStatus = ({
   value,
   onChange,
   options = DEFAULT_STATUS_OPTIONS,
   size = "medium",
-}) => {
+}: MahatiStatusProps) => {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -646,7 +695,7 @@ const MahatiStatus: React.FC<MahatiStatusProps> = ({
         size={size}
       >
         <CustomSelectLabel>{selectedLabel}</CustomSelectLabel>
-        <CustomSelectIcon open={open} />
+        <CustomSelectIcon open={open}><ChevronDown /></CustomSelectIcon>
       </CustomSelectTrigger>
 
       {/* Dropdown */}
@@ -680,12 +729,12 @@ const MahatiStatus: React.FC<MahatiStatusProps> = ({
 };
 
 /** ✅ MAHATI SEARCH */
-const MahatiSearch: React.FC<MahatiSearchProps> = ({
+const MahatiSearch = ({
   value,
   onChange,
   placeholder = "Search...",
   size = "medium",
-}) => (
+}: MahatiSearchProps) => (
   <CustomInput
     type="text"
     value={value}

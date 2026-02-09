@@ -1,9 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 /* @import '../app/installations/drupal/drupal.css'; */
 @import './common-styles.css';
 @import './common.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
 

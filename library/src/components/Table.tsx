@@ -427,7 +427,7 @@ const ResetButton = styled.button`
   }
 `;
 
-const Table: React.FC<TableProps> = ({
+const Table = ({
   headers,
   data,
 
@@ -460,7 +460,7 @@ const Table: React.FC<TableProps> = ({
   textWrapColumns,
   textWrapMaxLength = 120,
   textWrapColumnMaxLengths,
-}) => {
+}: TableProps): any => {
   const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(
     searchModeOptions[0]
   );
@@ -573,7 +573,7 @@ const Table: React.FC<TableProps> = ({
             Previous
           </PaginationButton>
 
-          {renderPageNumbers()}
+          {renderPageNumbers() as any}
 
           <PaginationButton
             onClick={() => goToPage(currentPage + 1)}
@@ -675,7 +675,7 @@ const Table: React.FC<TableProps> = ({
                   isFirst={idx === 0}
                   isLast={!actions && idx === headers.length - 1}
                 >
-                  {header.label}
+                  {header.label as any}
                 </TableHeader>
               ))}
               {actions && (
@@ -751,7 +751,7 @@ const Table: React.FC<TableProps> = ({
                               if (value == null) return "-";
 
                               if (React.isValidElement(value)) {
-                                return <TruncatedText>{value}</TruncatedText>;
+                                return <TruncatedText>{value as any}</TruncatedText>;
                               }
 
                               let fullText: string;
@@ -790,7 +790,7 @@ const Table: React.FC<TableProps> = ({
                               if (value == null) return "-";
 
                               if (React.isValidElement(value)) {
-                                return <TruncatedText>{value}</TruncatedText>;
+                                return <TruncatedText>{value as any}</TruncatedText>;
                               }
 
                               let fullText: string;
@@ -871,7 +871,7 @@ const Table: React.FC<TableProps> = ({
                           })()}
                         </TableCell>
                       ))}
-                      {actions && <TableCell>{actions(row)}</TableCell>}
+                      {actions && <TableCell>{actions(row) as any}</TableCell>}
                     </TableRow>
 
                     {isExpandable && isExpanded && (
@@ -893,7 +893,7 @@ const Table: React.FC<TableProps> = ({
                                 </SummaryCloseButton>
                               </SummaryHeader>
                               <SummaryText>
-                                {summaryValue == null
+                                {(summaryValue == null
                                   ? "-"
                                   : React.isValidElement(summaryValue)
                                   ? summaryValue
@@ -901,7 +901,7 @@ const Table: React.FC<TableProps> = ({
                                   ? summaryValue
                                   : typeof summaryValue === "object"
                                   ? JSON.stringify(summaryValue)
-                                  : String(summaryValue)}
+                                  : String(summaryValue)) as any}
                               </SummaryText>
                             </SummaryInner>
                           </SummaryContent>

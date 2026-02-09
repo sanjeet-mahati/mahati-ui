@@ -296,7 +296,7 @@ describe('Tooltip', () => {
     await waitFor(() => {
       const styledContent = screen.getByText('Styled content');
       expect(styledContent).toBeInTheDocument();
-      expect(styledContent).toHaveStyle({ color: 'red' });
+      expect(styledContent).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
   });
 
