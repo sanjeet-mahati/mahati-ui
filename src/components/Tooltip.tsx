@@ -28,6 +28,62 @@ const TooltipWrapper = styled.div`
   display: inline-block;
 `;
  
+// const TooltipContent = styled.div<{
+//   $visible: boolean;
+//   $position: string;
+//   $variant: string;
+//   $hasImage: boolean;
+//   $hasText: boolean;
+//   $isReady: boolean;
+// }>`
+
+//  position: fixed;
+//   z-index: 99999;
+
+//   max-width: calc(100vw - 16px);
+//   box-sizing: border-box;
+
+//   font-family: 'Poppins', sans-serif;
+//   font-weight: 500;
+//   border-radius: 6px;
+//   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),
+//               0 2px 4px -1px rgba(0,0,0,0.06);
+
+//   white-space: normal;
+//   word-break: break-word;
+//   overflow-wrap: anywhere;
+
+//   display: inline-flex;
+//   flex-wrap: wrap;
+
+//   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+
+ 
+//   opacity: ${props => (props.$visible && props.$isReady) ? 1 : 0};
+//   visibility: ${props => (props.$visible && props.$isReady) ? 'visible' : 'hidden'};
+//   pointer-events: ${props => (props.$visible && props.$isReady) ? 'auto' : 'none'};
+ 
+//   display: ${props => (!props.$hasText && !props.$hasImage) ? 'none' : 'flex'};
+ 
+//   ${props => props.$variant === 'default' ? `
+//     background: linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1));
+//     color: rgba(255, 255, 255, 1);
+//     font-size: 11px;
+//     line-height: 1.4;
+//     min-width: 98px;
+//     min-height: 26px;
+//     align-items: center;
+//     justify-content: center;
+//     padding: ${props.$hasImage ? '4px' : '8px 16px'};
+//   ` : `
+//     background: rgba(255, 255, 255, 0.95);
+//     color: rgba(55, 65, 81, 1);
+//     border: 1px solid rgba(229, 231, 235, 1);
+//     font-size: 13px;
+//     transform: scale(${props.$visible && props.$isReady ? 1 : 0.95});
+//     padding: ${props.$hasImage ? '4px' : '8px 12px'};
+//   `}
+// `;
 const TooltipContent = styled.div<{
   $visible: boolean;
   $position: string;
@@ -38,36 +94,45 @@ const TooltipContent = styled.div<{
 }>`
   position: fixed;
   z-index: 99999;
+
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   border-radius: 6px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+
+  display: ${p => (!p.$hasText && !p.$hasImage ? 'none' : 'inline-flex')};
+  flex-wrap: wrap;
+
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),
+              0 2px 4px -1px rgba(0,0,0,0.06);
+
   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
-  white-space: nowrap;
- 
-  opacity: ${props => (props.$visible && props.$isReady) ? 1 : 0};
-  visibility: ${props => (props.$visible && props.$isReady) ? 'visible' : 'hidden'};
-  pointer-events: ${props => (props.$visible && props.$isReady) ? 'auto' : 'none'};
- 
-  display: ${props => (!props.$hasText && !props.$hasImage) ? 'none' : 'flex'};
- 
-  ${props => props.$variant === 'default' ? `
-    background: linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1));
-    color: rgba(255, 255, 255, 1);
+
+  opacity: ${p => (p.$visible && p.$isReady ? 1 : 0)};
+  visibility: ${p => (p.$visible && p.$isReady ? 'visible' : 'hidden')};
+  pointer-events: ${p => (p.$visible && p.$isReady ? 'auto' : 'none')};
+
+  ${p => p.$variant === 'default' ? `
+    background: linear-gradient(to right, rgba(23,97,163,1), rgba(77,175,131,1));
+    color: white;
     font-size: 11px;
     line-height: 1.4;
-    min-width: 98px;
-    min-height: 26px;
+    min-width: 0;
+    padding: ${p.$hasImage ? '4px' : '8px 12px'};
     align-items: center;
     justify-content: center;
-    padding: ${props.$hasImage ? '4px' : '8px 16px'};
   ` : `
-    background: rgba(255, 255, 255, 0.95);
-    color: rgba(55, 65, 81, 1);
-    border: 1px solid rgba(229, 231, 235, 1);
+    background: rgba(255,255,255,0.95);
+    color: rgba(55,65,81,1);
+    border: 1px solid rgba(229,231,235,1);
     font-size: 13px;
-    transform: scale(${props.$visible && props.$isReady ? 1 : 0.95});
-    padding: ${props.$hasImage ? '4px' : '8px 12px'};
+    padding: ${p.$hasImage ? '4px' : '8px 12px'};
   `}
 `;
  
@@ -76,6 +141,7 @@ const TooltipArrow = styled.div<{ $position: string }>`
   width: 0;
   height: 0;
   border-style: solid;
+  pointer-events:none;
  
   ${props => {
     switch(props.$position) {
@@ -118,7 +184,11 @@ const TooltipArrow = styled.div<{ $position: string }>`
 `;
  
 const TooltipImage = styled.img`
-  border-radius: 4px;
+  
+max-width:100%;
+height:auto;
+
+border-radius: 4px;
   object-fit: cover;
   display: block;
 `;
@@ -161,6 +231,8 @@ const Tooltip = ({
    
     const offset = 12;
     const padding = 10; // Padding from viewport edges
+
+    
    
     // Calculate initial position
     switch(position) {

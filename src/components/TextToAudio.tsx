@@ -71,6 +71,14 @@ const Body = styled.div`
   display: flex;
 `;
 
+// const Player = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   background: #d1e4e7;
+//   padding: 8px 12px;
+//   border-radius: 999px;
+// `;
 const Player = styled.div`
   display: flex;
   align-items: center;
@@ -78,8 +86,16 @@ const Player = styled.div`
   background: #d1e4e7;
   padding: 8px 12px;
   border-radius: 999px;
-`;
 
+  /* ✅ KEY FIX */
+  overflow-x: auto;
+  scrollbar-width: none;      
+  -ms-overflow-style: none;   
+  
+  &::-webkit-scrollbar {
+    display: none;            
+  }
+`;
 const IconBtn = styled.button`
   border: 1px solid #4daf83;
   background: #d4e4eb;

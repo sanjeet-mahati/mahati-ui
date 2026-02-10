@@ -62,16 +62,14 @@ interface TableProps {
 // Styled Components
 const TableContainer = styled.div`
   margin-top: 0.25rem;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y:hidden;
   border-radius: 0.75rem;
   border: 1px solid #1761A3;
   background-color: white;
+  webkit-overflow-scrolling:touch;
 `;
 
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
 
 const TableHead = styled.thead`
   background: linear-gradient(to right, #1e73be, #28a97d);
@@ -129,9 +127,21 @@ const TableRow = styled.tr<{
     background-color: ${props.highlightColor};
   `}
 `;
+const StyledTable = styled.table`
+  width: 100%;
+  min-width: 900px;      
+  border-collapse: collapse;
+  table-layout: fixed;
+`;
 
 const TableCell = styled.td`
   padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  white-space: nowrap;        
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 1px;             
+  word-break:break-word
 `;
 
 const TruncatedText = styled.div`
@@ -218,6 +228,11 @@ const EmptyContent = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+`;
+const ActionsCell = styled.td`
+  width: 96px;        /* or 120px */
+  min-width: 96px;
+  text-align: center;
 `;
 
 const ControlsWrapper = styled.div`
