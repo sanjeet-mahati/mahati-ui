@@ -35,6 +35,16 @@ const FormDemo = styled.div`
   width: 100%;
 `;
 
+const RoundedClamp = styled.div`
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+`;
+const InputClamp = styled.div`
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+`;
 const SuccessMessage = styled.div`padding: 12px 16px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 20px; color: #166534; font-size: .875rem; text-align: center;`;
 const ErrorMessage = styled.div`padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 20px; color: #dc2626; font-size: .875rem; text-align: center;`;
 
@@ -299,12 +309,23 @@ const FloatingIconInput: React.FC<FloatingIconInputProps> = ({
 };
 
 const ToggleIconStyles = styled.div`
-  .input-float { position: relative; width: 300px; max-width: 100%; margin: 0 auto; }
-  .input {
-    width: 100%; box-sizing: border-box; padding: 14px 12px; padding-left: 42px; padding-right: 42px;
-    border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; font-size: 1rem;
-    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-  }
+  .input-float { position: relative; width: 300px; max-width: 100%; min-width:0; margin: 0 auto; }
+ .input {
+  width: 100%;
+  box-sizing: border-box;
+
+  /* base padding */
+  padding: 14px 12px;
+
+  /* reserve space for icons */
+  padding-left: 42px;
+  padding-right: 48px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+}
   .input:focus { outline: none; border-color: #1e73be; box-shadow: 0 0 0 3px rgba(30,115,190,0.15); }
   .input.error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
   .input-label {
@@ -394,8 +415,8 @@ const PasswordToggleInput: React.FC<PasswordToggleInputProps> = ({
 };
 
 const AvatarInputStyles = styled.div`
-  .column { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .row { display: flex; align-items: center; gap: 12px; justify-content: center; }
+  .column {  width:100% max-width:420px; margin-inline:auto;display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .row { width:100%;min-width:0;display: flex; align-items: center; gap: 12px; justify-content: center; }
   .row.reverse { flex-direction: row-reverse; }
 
   .avatar {
@@ -404,7 +425,7 @@ const AvatarInputStyles = styled.div`
     color: #4b5563; font-weight: 600; user-select: none;
   }
 
-  .input-float { position: relative; width: 300px; max-width: 100%; }
+  .input-float { position: relative; width: 100%; min-width: 0; }
   .input {
     width: 100%; box-sizing: border-box; padding: 14px 12px;
     border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; font-size: 1rem;
@@ -715,30 +736,142 @@ const FilesList = styled.ul`
   li { padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; margin-top: 6px; word-break: break-all; }
 `;
 
-const InlineFileWrap = styled.div<{ $buttonSide: 'left'|'right' }>`
-  position: relative; width: 300px; max-width: 100%; margin: 0 auto;
-  display: flex; align-items: stretch;
-  border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; overflow: hidden;
+// const InlineFileWrap = styled.div<{ $buttonSide: 'left'|'right' }>`
+//   position: relative; width: 300px; max-width: 100%; margin: 0 auto;
+//   display: flex; align-items: stretch;
+//   border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; overflow: hidden;
 
+//   .file-btn {
+//     padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+//     font-size: 0.95rem; white-space: nowrap; border: none; background: transparent; cursor: pointer; user-select: none;
+//     transition: background .15s ease, color .15s ease;
+//   }
+//   .file-btn.colored { background: linear-gradient(to right, #1e73be, #28a97d); color: #fff; }
+//   .file-btn:not(.colored):hover { background: #f3f4f6; }
+
+//   .file-text {
+//     flex: 1; display: inline-flex; align-items: center; padding: 12px; font-size: 0.95rem; color: #374151;
+//     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+//   }
+//     .file-wrapper {
+//   width: 100%;
+//   max-width: 420px;
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+// }
+
+// .file-label {
+//   flex-shrink: 0;
+//   padding: 10px 14px;
+//   border-radius: 8px;
+//   background: #e5e7eb;
+//   cursor: pointer;
+// }
+
+// .file-label input {
+//   display: none; /* 🔑 hide native file input */
+// }
+
+// .file-name {
+//   flex: 1;
+//   min-width: 0;
+//   font-size: 12px;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+
+//   ${({ $buttonSide }) => $buttonSide === 'left'
+//     ? `.file-btn { border-right: 1px solid #e5e7eb; }`
+//     : `.file-btn { order: 2; border-left: 1px solid #e5e7eb; } .file-text { order: 1; }`
+//   }
+// `;
+const InlineFileWrap = styled.div<{ $buttonSide: 'left' | 'right' }>`
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 0;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+
+  /* ---------- Button ---------- */
   .file-btn {
-    padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    font-size: 0.95rem; white-space: nowrap; border: none; background: transparent; cursor: pointer; user-select: none;
-    transition: background .15s ease, color .15s ease;
+    padding: 0 14px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    user-select: none;
   }
-  .file-btn.colored { background: linear-gradient(to right, #1e73be, #28a97d); color: #fff; }
-  .file-btn:not(.colored):hover { background: #f3f4f6; }
 
+  .file-btn.colored {
+    background: linear-gradient(to right, #1e73be, #28a97d);
+    color: #fff;
+  }
+
+  /* ---------- Text ---------- */
   .file-text {
-    flex: 1; display: inline-flex; align-items: center; padding: 12px; font-size: 0.95rem; color: #374151;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+    flex: 1;
+    min-width: 0;                 
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 12px;
+    font-size: 0.95rem;
+    color: #374151;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
   }
 
-  ${({ $buttonSide }) => $buttonSide === 'left'
-    ? `.file-btn { border-right: 1px solid #e5e7eb; }`
-    : `.file-btn { order: 2; border-left: 1px solid #e5e7eb; } .file-text { order: 1; }`
+  
+  ${({ $buttonSide }) =>
+    $buttonSide === 'left'
+      ? `.file-btn { border-right: 1px solid #e5e7eb; }`
+      : `
+        flex-direction: row-reverse;
+        .file-btn { border-left: 1px solid #e5e7eb; }
+      `}
+
+  
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .file-btn {
+      width: 100%;
+      justify-content: center;
+      border-right: none;
+      border-left: none;
+      border-bottom: 1px solid #e5e7eb;
+      border-radius: 0;
+    }
+
+    .file-text {
+      width: 100%;
+      height: auto;
+      padding: 10px 12px;
+      white-space: normal;        
+      text-align: center;
+    }
   }
 `;
-
 type InlineFileInputProps = {
   buttonSide?: 'left' | 'right';
   coloredButton?: boolean;
@@ -775,7 +908,7 @@ const InlineFileInput: React.FC<InlineFileInputProps> = ({
         </button>
         <div className="file-text" onClick={openDialog} title={text}>{text}</div>
       </InlineFileWrap>
-      <MahatiInput ref={inputRef} type="file" style={{ display: 'none' }} multiple={multiple} onChange={handleChange} />
+      <input ref={inputRef} type="file"  style={{ display: 'none' }} multiple={multiple} onChange={handleChange} />
     </>
   );
 };
@@ -956,9 +1089,11 @@ const BGFormContainer = styled(MahatiFormContainer)<{ $bg: string; $opacity: num
 
 const OverImageReadable = styled.div`
   width: 100%;
+  max-width:420px;
+  margin-inline:auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
   gap: 16px;
 
   color: #0f172a;
@@ -976,6 +1111,11 @@ const OverImageReadable = styled.div`
 `;
 
 const CompactFormArea = styled.div`
+width:100%;
+max-width;420px;
+margin-inline:auto;
+display:flex;
+justify-content:center;
   /* reduce widths inside forms so right icons sit closer to the edge */
   .input-float { width: 430px !important; }
   .error-text { width: 260px !important; }
@@ -1359,7 +1499,10 @@ export default function ForMahatiInputDemoPage() {
 />`}
         preview={
           <div className="flex flex-col items-center gap-4 p-6 border border-gray-200 rounded-lg bg-white">
+            <InputClamp>
             <FloatingInput name="demoFloating" label="Your Name" />
+            </InputClamp>
+
           </div>
         }
       />
@@ -1377,19 +1520,28 @@ export default function ForMahatiInputDemoPage() {
         preview={
           <div className="space-y-6 p-6 border border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-2">
+              <InputClamp>
               <FloatingInput size="sm" name="sizeSm" label="Small size" />
+              </InputClamp>
               <span className="text-sm text-gray-700 font-medium">Small</span>
             </div>
             <div className="flex flex-col items-center gap-2">
+              <InputClamp>
               <FloatingInput size="md" name="sizeMd" label="Medium size" />
+              </InputClamp>
               <span className="text-sm text-gray-700 font-medium">Medium</span>
             </div>
             <div className="flex flex-col items-center gap-2">
+              <InputClamp>
               <FloatingInput size="lg" name="sizeLg" label="Large size" />
+              </InputClamp>
               <span className="text-sm text-gray-700 font-medium">Large</span>
+
             </div>
             <div className="flex flex-col items-center gap-2">
+              <InputClamp>
               <FloatingInput size="xl" name="sizeXl" label="Extra large size" />
+              </InputClamp>
               <span className="text-sm text-gray-700 font-medium">Extra Large</span>
             </div>
           </div>
@@ -1514,6 +1666,7 @@ export default function ForMahatiInputDemoPage() {
             <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ padding: 24 }}>
               <CompactFormArea>
                 <FormDemo>
+                  <InputClamp>
                   <FloatingIconInput 
                     type="email" 
                     name="email" 
@@ -1543,6 +1696,7 @@ export default function ForMahatiInputDemoPage() {
                     errorMessage={validationErrors.confirmPassword}
                     autoComplete="new-password"
                   />
+                  </InputClamp>
                   <SubmitButton type="button" onClick={handleValidationSubmit} disabled={validationDisabled}>
                     {isValidationSubmitting ? "Creating Account..." : "Create Account"}
                   </SubmitButton>
@@ -1584,8 +1738,10 @@ export default function ForMahatiInputDemoPage() {
             <MahatiFormContainer onSubmit={(e) => e.preventDefault()} style={{ paddingTop: 56, paddingBottom: 78, paddingLeft: 24, paddingRight: 24 }}>
               <CompactFormArea>
                 <FormDemo>
+                  <InputClamp>
                   <FloatingInput name="firstName" label="First Name" value={fullForm.firstName} onChange={handleFullFormChange} />
                   <FloatingInput name="lastName" label="Last Name" value={fullForm.lastName} onChange={handleFullFormChange} />
+              
                   <FloatingIconInput 
                     type="email" 
                     name="email" 
@@ -1595,8 +1751,11 @@ export default function ForMahatiInputDemoPage() {
                     icon={<HiUserIcon />}
                   />
                   <PasswordToggleInput name="password" label="Password" value={fullForm.password} onChange={handleFullFormChange} />
+                  </InputClamp>
+                  <InputClamp>
                   <FloatingInput type="tel" name="phone" label="Phone Number" value={fullForm.phone} onChange={handleFullFormChange} />
                   <FloatingInput name="message" label="Additional Notes (Optional)" value={fullForm.message} onChange={handleFullFormChange} />
+                  </InputClamp>
                   <SubmitButton type="button" onClick={handleFullFormSubmit} disabled={isFullSubmitting}>
                     {isFullSubmitting ? "Registering..." : "Complete Registration"}
                   </SubmitButton>
@@ -1655,7 +1814,10 @@ const LOGIN_BG_OPACITY = 0.35;
                   <OverImageReadable>
                     <CompactFormArea>
                       <FormDemo>
+                        <InputClamp>
                         <FloatingIconInput
+                        
+
                           type="email"
                           name="bgLoginEmail"
                           label="Email address"
@@ -1665,6 +1827,7 @@ const LOGIN_BG_OPACITY = 0.35;
                           name="bgLoginPassword"
                           label="Password"
                         />
+                        </InputClamp>
                         <SubmitButton type="submit">Sign In</SubmitButton>
                       </FormDemo>
                     </CompactFormArea>
@@ -1762,12 +1925,14 @@ const LOGIN_BG_OPACITY = 0.35;
                   </Pill>
                 ))}
               </PillRow>
+              <RoundedClamp>
               <RoundedBasicInput 
                 radiusClass={roundedBasic} 
                 placeholder="Rounded basic input" 
                 value={roundedBasicValue}
                 onChange={(e) => setRoundedBasicValue(e.target.value)}
               />
+              </RoundedClamp>
               <span className="text-sm text-gray-700 font-medium">Basic Input • {roundedBasic}</span>
             </div>
             
@@ -1779,6 +1944,7 @@ const LOGIN_BG_OPACITY = 0.35;
                   </Pill>
                 ))}
               </PillRow>
+              <RoundedClamp>
               <AvatarImageRoundedInput
                 radiusClass={roundedAvatar}
                 placeholder="Rounded input with avatar"
@@ -1786,6 +1952,7 @@ const LOGIN_BG_OPACITY = 0.35;
                 onChange={(e) => setRoundedAvatarValue(e.target.value)}
                 avatarUrl="https://i.pravatar.cc/100?img=24"
               />
+              </RoundedClamp>
               <span className="text-sm text-gray-700 font-medium">Avatar Input • {roundedAvatar}</span>
             </div>
           </div>
