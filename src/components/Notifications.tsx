@@ -115,7 +115,7 @@ export const MahatiLocationAccessModal = ({
   denyText,
   onAllow,
   onDeny,
-}: any) => {
+}: any): any => {
   const ref = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"granted" | "denied" | "prompt">("prompt");
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
@@ -213,7 +213,7 @@ export const MahatiCameraAccessModal = ({
   denyText,
   onAllow,
   onDeny,
-}: MahatiCameraAccessModalProps) => {
+}: MahatiCameraAccessModalProps): any => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] =
     useState<"prompt" | "granted" | "denied">("prompt");
@@ -303,7 +303,7 @@ export const MahatiMicrophoneAccessModal = ({
   denyText,
   onAllow,
   onDeny,
-}: any) => {
+}: any): any => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] =
     useState<"prompt" | "granted" | "denied">("prompt");
@@ -559,7 +559,7 @@ export const MahatiPromotionModal = ({
   openInNewTab,
   onCtaClick,
   ...cardProps
-}: MahatiPromotionModalProps) => {
+}: MahatiPromotionModalProps): any => {
   const ref = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
 
@@ -738,7 +738,7 @@ export const MahatiPromotionModalV2Modal = ({
   openInNewTab = false,
   showBadgeImage = false,
   badgeImageSrc,
-}: MahatiPromotionModalV2Props) => {
+}: MahatiPromotionModalV2Props): any => {
   const ref = useRef<HTMLDivElement>(null);
 
   /* ✅ CLICK — NOT MOUSEDOWN */
@@ -938,7 +938,7 @@ export const MahatiPromotionModalV3Modal = ({
   imageSrc,
   ctaLink,
   openInNewTab = false,
-}: MahatiPromotionModalV3Props) => {
+}: MahatiPromotionModalV3Props): any => {
   const ref = useRef<HTMLDivElement>(null);
 
   /* ✅ CLICK — NOT MOUSEDOWN */

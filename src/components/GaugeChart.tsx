@@ -135,6 +135,7 @@ export interface GaugeItem {
 export interface GaugeData {
   title: string;
   gauges: GaugeItem[];
+  [year: string]: any; // Allow year-month indexing
 }
 
 export interface GaugeChartData {

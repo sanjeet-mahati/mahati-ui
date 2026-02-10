@@ -124,10 +124,16 @@ const Description = styled.p<{ fontFamily: string }>`
 `;
 
 const TableWrapper = styled.div`
-  overflow: hidden;
+  overflow-x: auto;
+  width:100%;
   border-radius: 0.75rem;
   border: 1px solid #e2e8f0;
+
 `;
+const TableInner=styled.div`
+min-width:900px;
+
+`
 
 const StyledTable = styled.table`
   min-width: 100%;
@@ -248,6 +254,14 @@ const DefaultContentContainer = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
+const TabsPanel = styled.div`
+  flex-shrink: 0;
+  width: 360px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
 
 const DetailRow = styled.div`
   display: flex;
@@ -328,8 +342,8 @@ function DefaultTabContent<RowType extends Record<string, any>>({
     <DefaultContentContainer>
       {headers.map((h) => (
         <DetailRow key={h.key}>
-          <DetailLabel>{h.label}</DetailLabel>
-          <DetailValue>{renderCellValue((row as any)[h.key])}</DetailValue>
+          <DetailLabel>{h.label as any}</DetailLabel>
+          <DetailValue>{renderCellValue((row as any)[h.key]) as any}</DetailValue>
         </DetailRow>
       ))}
     </DefaultContentContainer>
@@ -337,6 +351,7 @@ function DefaultTabContent<RowType extends Record<string, any>>({
 }
 
 function TableWithTab<RowType extends Record<string, any>>({
+  
   tableProps,
   tabProps,
   rearrange = false,
@@ -350,6 +365,8 @@ function TableWithTab<RowType extends Record<string, any>>({
   sectionDescriptionFont,
 }: TableWithTabProps<RowType>) {
   const { headers, data } = tableProps;
+
+  
 
   const [tabs, setTabs] = useState<SelectedTab<RowType>[]>([]);
 
@@ -460,11 +477,11 @@ function TableWithTab<RowType extends Record<string, any>>({
           </CloseButton>
         </CloseButtonWrapper>
 
-        {renderTabContent ? (
+        {(renderTabContent ? (
           renderTabContent(t.row)
         ) : (
           <DefaultTabContent<RowType> headers={headers} row={t.row} />
-        )}
+        )) as any}
       </TabContentWrapper>
     ),
   }));
@@ -492,12 +509,13 @@ function TableWithTab<RowType extends Record<string, any>>({
 
       {/* Clickable Table */}
       <TableWrapper>
+        <TableInner>
         <StyledTable>
           <TableHead>
             <TableHeadRow>
               {headers.map((header) => (
                 <TableHeadCell key={header.key}>
-                  {header.label}
+                  {header.label as any}
                 </TableHeadCell>
               ))}
             </TableHeadRow>
@@ -523,7 +541,7 @@ function TableWithTab<RowType extends Record<string, any>>({
                 >
                   {headers.map((header) => (
                     <TableCell key={header.key}>
-                      {renderCellValue((row as any)[header.key])}
+                      {renderCellValue((row as any)[header.key]) as any}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -531,6 +549,7 @@ function TableWithTab<RowType extends Record<string, any>>({
             })}
           </TableBody>
         </StyledTable>
+        </TableInner>
       </TableWrapper>
 
       {/* Tabs below table */}

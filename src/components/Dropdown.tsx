@@ -21,7 +21,10 @@ interface DropdownProps {
 // Styled Components
 const DropdownContainer = styled.div`
   position: relative;
-  width: 14rem; /* 56 * 0.25rem = 14rem */
+  width: 100%;
+  max-width: 14rem; /* desktop cap */
+  min-width: 0;
+  box-sizing:border-box;
 `;
 
 const DropdownButton = styled.button<{ 
@@ -203,7 +206,7 @@ const DropdownItem = styled.div<{ variant: string }>`
   `}
 `;
 
-const Dropdown: React.FC<DropdownProps> = ({ 
+const Dropdown = ({ 
   options, 
   value, 
   onSelect, 
@@ -211,7 +214,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   className = "", 
   placeholder = "Select an option",
   disabled = false
-}) => {
+}: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const [internalSelected, setInternalSelected] = useState<DropdownOption | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -240,7 +243,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const handleSelect = (option: DropdownOption) => {
     if (disabled) return;
     
-    console.log(option);
+    // console.log(option);
     if (value === undefined) setInternalSelected(option);
     onSelect(option.value);
     setOpen(false);
