@@ -141,7 +141,7 @@ const ErrorMessage = styled.span`
 `;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ hasError = false, errorMessage = '', className = '', onChange, ...props }, ref) => {
+  ({ hasError = false, errorMessage = '', className = '', onChange, children, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (props.disabled) return;
       onChange?.(e);
@@ -162,7 +162,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       </InputWrapper>
     );
   }
-);
+) as any;
 
 Input.displayName = 'Input';
 

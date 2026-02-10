@@ -193,7 +193,7 @@ border-radius: 4px;
   display: block;
 `;
  
-const Tooltip: React.FC<TooltipProps> = ({
+const Tooltip = ({
   text,
   position = "top",
   children,
@@ -203,7 +203,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   backgroundColor,
   image,
   animation
-}) => {
+}: TooltipProps): any => {
   const [visible, setVisible] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -380,7 +380,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       onFocus={showTooltip}
       onBlur={hideTooltip}
     >
-      {children}
+      {children as any}
      
       {renderAnimation()}
      
@@ -400,7 +400,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           background: backgroundColor
         }}
       >
-        {renderTooltipContent()}
+        {renderTooltipContent() as any}
        
         {variant === "default" && !image && (
           <TooltipArrow $position={adjustedPosition} />

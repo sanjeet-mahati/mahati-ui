@@ -108,15 +108,18 @@ const StyledForm = styled.form`
   }
 `;
 
-const FormContainer: React.FC<FormContainerProps> = ({
-  children,
-  onSubmit,
+const FormContainer = ({ 
+  children, 
+  onSubmit, 
   style,
-  className = "",
-}) => {
+  className = '' 
+}: FormContainerProps) => {
   return (
-    <StyledForm onSubmit={onSubmit} className={className} style={style}>
-      {children}
+    <StyledForm 
+      onSubmit={onSubmit}
+      className={className}
+    >
+      {children as any}
     </StyledForm>
   );
 };

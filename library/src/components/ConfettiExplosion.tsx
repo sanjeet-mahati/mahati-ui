@@ -88,8 +88,8 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
   const [particles, setParticles] = useState<Particle[]>([]);
   
   // Use refs to avoid dependency issues
-  const animationFrameRef = useRef<number>();
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   
   // Memoize colors to prevent infinite loop - this is THE FIX
   const stableColors = useMemo(() => colors, [JSON.stringify(colors)]);

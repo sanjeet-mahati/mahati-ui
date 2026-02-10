@@ -412,7 +412,7 @@ export default function MahatiChart() {
 
     // Horizontal bar details
     if (currentChartType === 'horizontalbar') {
-      const products = chartData.horizontalbar?.products;
+      const products = (chartData.horizontalbar as any)?.products;
       const firstProduct = products ? Object.keys(products)[0] : null;
       const productData = firstProduct ? products[firstProduct] : null;
       
@@ -431,7 +431,7 @@ export default function MahatiChart() {
 
     // Fallback for pie/doughnut/bar
     const total = data.datasets[0]?.data?.reduce((sum: number, v: number) => sum + v, 0) || 0;
-    return (data.labels || []).map((label: string, idx: number) => {
+    return (data.labels || []).map((label: any, idx: number) => {
       const value = data.datasets[0]?.data?.[idx] || 0;
       const percentage = total > 0 ? ((value / total) * 100).toFixed(0) : '0';
       const bgColor = Array.isArray(data.datasets[0]?.backgroundColor)
@@ -456,7 +456,7 @@ export default function MahatiChart() {
     bullet: chartData.filters?.bulletGauge,
     gauge: chartData.filters?.bulletGauge,
     gantt: chartData.filters?.gantt,
-    heatmap: chartData.filters?.heatmap,
+    heatmap: (chartData.filters as any)?.heatmap,
     calendarheatmap: chartData.filters?.calendarheatmap,
   };
 

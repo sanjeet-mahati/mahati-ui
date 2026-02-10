@@ -342,8 +342,8 @@ function DefaultTabContent<RowType extends Record<string, any>>({
     <DefaultContentContainer>
       {headers.map((h) => (
         <DetailRow key={h.key}>
-          <DetailLabel>{h.label}</DetailLabel>
-          <DetailValue>{renderCellValue((row as any)[h.key])}</DetailValue>
+          <DetailLabel>{h.label as any}</DetailLabel>
+          <DetailValue>{renderCellValue((row as any)[h.key]) as any}</DetailValue>
         </DetailRow>
       ))}
     </DefaultContentContainer>
@@ -477,11 +477,11 @@ function TableWithTab<RowType extends Record<string, any>>({
           </CloseButton>
         </CloseButtonWrapper>
 
-        {renderTabContent ? (
+        {(renderTabContent ? (
           renderTabContent(t.row)
         ) : (
           <DefaultTabContent<RowType> headers={headers} row={t.row} />
-        )}
+        )) as any}
       </TabContentWrapper>
     ),
   }));
@@ -515,7 +515,7 @@ function TableWithTab<RowType extends Record<string, any>>({
             <TableHeadRow>
               {headers.map((header) => (
                 <TableHeadCell key={header.key}>
-                  {header.label}
+                  {header.label as any}
                 </TableHeadCell>
               ))}
             </TableHeadRow>
@@ -541,7 +541,7 @@ function TableWithTab<RowType extends Record<string, any>>({
                 >
                   {headers.map((header) => (
                     <TableCell key={header.key}>
-                      {renderCellValue((row as any)[header.key])}
+                      {renderCellValue((row as any)[header.key]) as any}
                     </TableCell>
                   ))}
                 </TableRow>

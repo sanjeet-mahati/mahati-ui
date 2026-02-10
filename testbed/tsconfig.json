@@ -2,14 +2,28 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/lib/*": ["../library/src/*"],                    // Library components
-      "@/lib": ["../library/src"],                        // Library root
-      "@/components": ["../library/src/components"],       // Direct to library components
-      "@/components/*": ["../library/src/components/*"],   // Individual library components
-      "@/*": ["./src/*"]                                   // Testbed's own files
+      "@/lib/*": [
+        "../library/src/*"
+      ], // Library components
+      "@/lib": [
+        "../library/src"
+      ], // Library root
+      "@/components": [
+        "../library/src/components"
+      ], // Direct to library components
+      "@/components/*": [
+        "../library/src/components/*"
+      ], // Individual library components
+      "@/*": [
+        "./src/*"
+      ] // Testbed's own files
     },
     "target": "ES2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +33,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -27,6 +41,14 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
