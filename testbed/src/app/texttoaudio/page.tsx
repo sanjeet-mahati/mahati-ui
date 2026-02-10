@@ -64,8 +64,8 @@ export default function Page() {
 
       <CodePreview
         title="Text To Audio"
-        code={`<MahatiTexttoAudio mode="page" />`}
-        preview={<MahatiTexttoAudio mode="page" />}
+        code={`<MahatiTexttoAudio />`}
+        preview={<MahatiTexttoAudio />}
       />
     </div>
   );

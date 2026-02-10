@@ -309,7 +309,7 @@ export default function ButtonPage() {
   </MahatiButton>
 </MahatiButton.IconButtonGroup>`}
         preview={
-          <div className={`flex items-center justify-between rounded-md px-3 py-2 ${breadcrumbBg}`}>
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-md px-3 py-2 ${breadcrumbBg}`}>
             <div className="flex items-center gap-2 text-sm text-white/90">
               <span>Dashboard</span>
               <span className="text-white/60">/</span>
@@ -399,7 +399,7 @@ export default function ButtonPage() {
   <FiMoreVertical className="h-4 w-4" />
 </MahatiButton>`}
         preview={
-          <div className={`flex items-center justify-between rounded-md px-3 py-2 ${breadcrumbBg}`}>
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-md px-3 py-2 ${breadcrumbBg}`}>
             <div className="flex items-center gap-2 text-sm text-white/90">
               <span>Settings</span>
               <span className="text-white/60">/</span>
@@ -488,7 +488,7 @@ export default function ButtonPage() {
   <FiCheck className="h-4 w-4" />
 </MahatiButton>`}
         preview={
-          <div className={`flex items-center justify-between rounded-md px-3 py-2 ${breadcrumbBg}`}>
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-md px-3 py-2 ${breadcrumbBg}`}>
             <div className="flex items-center gap-2 text-sm text-white/90">
               <span>Intensity</span>
               <span className="text-white/60">/</span>
@@ -591,7 +591,7 @@ export default function ButtonPage() {
   <FiMoreVertical className="h-4 w-4" />
 </MahatiButton>`}
         preview={
-          <div className={`flex items-center justify-between rounded-md px-3 py-2 ${breadcrumbBg}`}>
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-md px-3 py-2 ${breadcrumbBg}`}>
             <div className="flex items-center gap-2 text-sm text-white/90">
               <span>Padding</span>
               <span className="text-white/60">/</span>

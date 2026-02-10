@@ -13,9 +13,9 @@ import { GanttChart, GANTT_COLORS } from "./GanttChart";
 import { CalendarHeatmapChart } from "./CalendarHeatmapChart";
 
 // Import types
-import type { BulletData } from "./BulletChart";
+import type { BulletData, BulletItem } from "./BulletChart";
 import type { GaugeData } from "./GaugeChart";
-import type { HorizontalBarData, HorizontalBarItem } from "./HorizontalBarChart";
+import type { HorizontalBarData, HorizontalBarItem, HorizontalBarTopPerformer } from "./HorizontalBarChart";
 import type { GanttData } from "./GanttChart";
 import type { HeatmapData } from "./CalendarHeatmapChart";
 
@@ -55,7 +55,8 @@ export interface ChartFiltersConfig {
   bullet?: Filter[];
   gauge?: Filter[];
   gantt?: Filter[];
-  heatmap?: Filter[];
+  calendarheatmap?: Filter[];
+  horizontalbar?: Filter[];
 }
 
 export interface DetailItem {
@@ -1937,7 +1938,7 @@ const GoalHealthStatValue = styled.div`
 // UTILITY FUNCTIONS
 // ============================================================================
 
-const colorToClass = (color: unknown) => {
+const colorToClass = (color: unknown): string => {
   const c = typeof color === "string" ? color.toLowerCase() : "";
   
   // If it's already an rgba or rgb color, return it directly
@@ -1952,7 +1953,7 @@ const colorToClass = (color: unknown) => {
     "#f59e0b": "#F59E0B", "#8b5cf6": "#8B5CF6", "#ec4899": "#EC4899",
     "#6366f1": "#6366F1",
   };
-  return map[c] || color || "#D1D5DB";
+  return map[c] || (typeof color === "string" ? color : "#D1D5DB");
 };
 
 const getStatusColors = (status: string) => {
@@ -1978,7 +1979,6 @@ const tabLabel = (type: ChartType) => {
   if (type === "bullet") return "Bullet Chart";
   if (type === "gauge") return "Gauge Chart";
   if (type === "gantt") return "Gantt Chart";
-  if (type === "heatmap") return "Heat Map";
   if (type === "calendarheatmap") return "Calendar Heat Map";
   if (type === "horizontalbar") return "Horizontal Bar Chart";
   return `${type.charAt(0).toUpperCase() + type.slice(1)} Chart`;
@@ -1988,7 +1988,7 @@ const tabLabel = (type: ChartType) => {
 // MAIN COMPONENT
 // ============================================================================
 
-export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProps> = ({
+export const MahatiChartAnalyticsWidget = ({
   title,
   chartTypes,
   initialChartType,
@@ -2008,7 +2008,7 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
   onChartTypeChange,
   onFiltersChange,
   details,
-}) => {
+}: MahatiChartAnalyticsWidgetProps) => {
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [selectedGanttProject, setSelectedGanttProject] = useState<string>("Project 1");
   const [selectedCalendarHeatmapProject, setSelectedCalendarHeatmapProject] = useState<string>("Project 1");
@@ -2084,8 +2084,8 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
 
   // Current horizontal bar top performer
   // Calculate horizontal bar top performer
-  const currentHorizontalBarTopPerformer = useMemo(() => {
-    if (chartType !== 'horizontalbar' || !horizontalBarData) return null;
+  const currentHorizontalBarTopPerformer = useMemo((): HorizontalBarTopPerformer | undefined => {
+    if (chartType !== 'horizontalbar' || !horizontalBarData) return undefined;
     
     const selectedYear = selectedFilters['SelectYear'] || '2026';
     const selectedMonth = selectedFilters['SelectMonth'] || 'January';
@@ -2093,7 +2093,7 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
     const yearData = horizontalBarData[selectedYear] as Record<string, Record<string, {Revenue: number, Profit: number, Cost: number}>>;
     const monthData = yearData?.[selectedMonth];
     
-    if (!monthData) return null;
+    if (!monthData) return undefined;
     
     const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 
                         'July', 'August', 'September', 'October', 'November', 'December'];
@@ -2550,7 +2550,7 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
               <SidebarCard>
                 <SidebarTitle>Details</SidebarTitle>
                 <div>
-                  {currentBulletData?.bullets.map((bullet, idx) => {
+                  {currentBulletData?.bullets.map((bullet: BulletItem, idx: number) => {
                     // Calculate percentage dynamically from bullet data
                     const percentage = Math.round((bullet.achieved / bullet.target) * 100);
                     
@@ -2960,7 +2960,7 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
                         : 'rgba(220, 38, 38, 1)'}
                     >
                       <TopPerformerArrow 
-                        $isIncrease={currentHorizontalBarTopPerformer.isIncrease}
+                        $isIncrease={currentHorizontalBarTopPerformer.isIncrease || false}
                         width="14" 
                         height="14" 
                         viewBox="0 0 14 14" 
@@ -3007,7 +3007,7 @@ export const MahatiChartAnalyticsWidget: React.FC<MahatiChartAnalyticsWidgetProp
         )}
 
         {/* LINE/AREA/BAR LAYOUT */}
-        {(isLineFamily || chartType === "bar") && !isPieFamily && chartType !== "bullet" && chartType !== "gauge" && chartType !== "gantt" && chartType !== "calendarheatmap" && chartType !== "horizontalbar" ? (
+        {(isLineFamily || chartType === "bar") && !isPieFamily && chartType !== ("bullet" as any) && chartType !== ("gauge" as any) && chartType !== ("gantt" as any) && chartType !== ("calendarheatmap" as any) && chartType !== ("horizontalbar" as any) ? (
           <TwoColumnGrid>
             <MainChartCard>
               <ChartWrapper>

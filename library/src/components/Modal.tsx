@@ -369,7 +369,7 @@ export default function Modal({
             <HeaderContent>
               {headerIcon && (
                 <HeaderIconWrapper>
-                  {headerIcon}
+                  {headerIcon as any}
                 </HeaderIconWrapper>
               )}
               <HeaderTextWrapper>
@@ -384,7 +384,7 @@ export default function Modal({
           </ModalHeader>
 
           {/* Body */}
-          <ModalBody>{children}</ModalBody>
+          <ModalBody>{children as any}</ModalBody>
 
           {/* Footer */}
           {(primaryAction || secondaryAction) && (
@@ -394,7 +394,7 @@ export default function Modal({
                   onClick={secondaryAction.onClick}
                   type="button"
                 >
-                  {secondaryAction.label ?? "Cancel"}
+                  {(secondaryAction.label ?? "Cancel") as any}
                 </SecondaryButton>
               )}
 
@@ -404,7 +404,7 @@ export default function Modal({
                   disabled={primaryAction.disabled}
                   type="button"
                 >
-                  {primaryAction.label ?? "Save"}
+                  {(primaryAction.label ?? "Save") as any}
                 </PrimaryButton>
               )}
             </ModalFooter>

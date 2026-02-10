@@ -467,7 +467,7 @@ const ContentPanel = styled.div<{ active: boolean }>`
   }
 `;
 
-const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
+const TabbedInterface = ({
   tabs,
   variant = "underline",
   defaultActiveTab = 0,
@@ -484,7 +484,7 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
   tabContentFont,
   sectionTitleFont,
   sectionDescriptionFont,
-}) => {
+}: TabbedInterfaceProps): any => {
   const [activeIndex, setActiveIndex] = useState(defaultActiveTab);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
@@ -577,7 +577,7 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
               onCloseTab?.(index);
             }}
           >
-            {effectiveCloseIconContent}
+            {effectiveCloseIconContent as any}
           </CloseIcon>
         ) : null;
 
@@ -622,7 +622,7 @@ const TabbedInterface: React.FC<TabbedInterfaceProps> = ({
         const active = index === activeIndex;
         return (
           <ContentPanel key={index} active={active}>
-            {tab.content}
+            {tab.content as any}
           </ContentPanel>
         );
       })}

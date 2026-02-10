@@ -62,16 +62,14 @@ interface TableProps {
 // Styled Components
 const TableContainer = styled.div`
   margin-top: 0.25rem;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y:hidden;
   border-radius: 0.75rem;
   border: 1px solid #1761A3;
   background-color: white;
+  webkit-overflow-scrolling:touch;
 `;
 
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
 
 const TableHead = styled.thead`
   background: linear-gradient(to right, #1e73be, #28a97d);
@@ -129,9 +127,21 @@ const TableRow = styled.tr<{
     background-color: ${props.highlightColor};
   `}
 `;
+const StyledTable = styled.table`
+  width: 100%;
+  min-width: 900px;      
+  border-collapse: collapse;
+  table-layout: fixed;
+`;
 
 const TableCell = styled.td`
   padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  white-space: nowrap;        
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 1px;             
+  word-break:break-word
 `;
 
 const TruncatedText = styled.div`
@@ -218,6 +228,11 @@ const EmptyContent = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+`;
+const ActionsCell = styled.td`
+  width: 96px;        /* or 120px */
+  min-width: 96px;
+  text-align: center;
 `;
 
 const ControlsWrapper = styled.div`
@@ -427,7 +442,7 @@ const ResetButton = styled.button`
   }
 `;
 
-const Table: React.FC<TableProps> = ({
+const Table = ({
   headers,
   data,
 
@@ -460,7 +475,7 @@ const Table: React.FC<TableProps> = ({
   textWrapColumns,
   textWrapMaxLength = 120,
   textWrapColumnMaxLengths,
-}) => {
+}: TableProps): any => {
   const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(
     searchModeOptions[0]
   );
@@ -573,7 +588,7 @@ const Table: React.FC<TableProps> = ({
             Previous
           </PaginationButton>
 
-          {renderPageNumbers()}
+          {renderPageNumbers() as any}
 
           <PaginationButton
             onClick={() => goToPage(currentPage + 1)}
@@ -675,7 +690,7 @@ const Table: React.FC<TableProps> = ({
                   isFirst={idx === 0}
                   isLast={!actions && idx === headers.length - 1}
                 >
-                  {header.label}
+                  {header.label as any}
                 </TableHeader>
               ))}
               {actions && (
@@ -751,7 +766,7 @@ const Table: React.FC<TableProps> = ({
                               if (value == null) return "-";
 
                               if (React.isValidElement(value)) {
-                                return <TruncatedText>{value}</TruncatedText>;
+                                return <TruncatedText>{value as any}</TruncatedText>;
                               }
 
                               let fullText: string;
@@ -790,7 +805,7 @@ const Table: React.FC<TableProps> = ({
                               if (value == null) return "-";
 
                               if (React.isValidElement(value)) {
-                                return <TruncatedText>{value}</TruncatedText>;
+                                return <TruncatedText>{value as any}</TruncatedText>;
                               }
 
                               let fullText: string;
@@ -871,7 +886,7 @@ const Table: React.FC<TableProps> = ({
                           })()}
                         </TableCell>
                       ))}
-                      {actions && <TableCell>{actions(row)}</TableCell>}
+                      {actions && <TableCell>{actions(row) as any}</TableCell>}
                     </TableRow>
 
                     {isExpandable && isExpanded && (
@@ -893,7 +908,7 @@ const Table: React.FC<TableProps> = ({
                                 </SummaryCloseButton>
                               </SummaryHeader>
                               <SummaryText>
-                                {summaryValue == null
+                                {(summaryValue == null
                                   ? "-"
                                   : React.isValidElement(summaryValue)
                                   ? summaryValue
@@ -901,7 +916,7 @@ const Table: React.FC<TableProps> = ({
                                   ? summaryValue
                                   : typeof summaryValue === "object"
                                   ? JSON.stringify(summaryValue)
-                                  : String(summaryValue)}
+                                  : String(summaryValue)) as any}
                               </SummaryText>
                             </SummaryInner>
                           </SummaryContent>

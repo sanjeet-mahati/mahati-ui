@@ -84,14 +84,14 @@ const SpinnerContainer = styled.div<SpinnerProps>`
   animation: ${spinAnimation} ${props => props.speed}s linear infinite;
 `;
 
-export const Spinner: React.FC<SpinnerProps> = ({ 
+export const Spinner = ({ 
   size = 24,
   borderWidth = 4,
   borderRadius = 10,
   primaryColor = '#007bff',
   backgroundColor = 'rgba(0, 123, 255, 0.2)',
   speed = 1
-}) => {
+}: SpinnerProps): any => {
   return (
     <SpinnerContainer
       role="status"
@@ -145,12 +145,12 @@ const CircularSpinnerRing = styled.span<{
   animation: ${circularSpinAccelerateAnimation} ${props => props.speed}s linear infinite;
 `;
 
-export const CircularSpinner: React.FC<CircularSpinnerProps> = ({
+export const CircularSpinner = ({
   size = 48,
   color = 'rgba(37, 99, 235, 1)',
   speed = 1.5,
   ringCount = 1,
-}) => {
+}: CircularSpinnerProps): any => {
   const rings = Array.from({ length: Math.max(1, ringCount) });
   
   return (
@@ -218,7 +218,7 @@ const OverlayLabel = styled.span`
   color: rgba(31, 41, 55, 1);
 `;
 
-export const CardOverlayLoader: React.FC<CardOverlayLoaderProps> = ({
+export const CardOverlayLoader = ({
   show = true,
   spinnerSize = 32,
   spinnerBorderWidth = 4,
@@ -226,7 +226,7 @@ export const CardOverlayLoader: React.FC<CardOverlayLoaderProps> = ({
   spinnerTrack = 'rgba(229, 231, 235, 1)',
   backdrop = 'rgba(255, 255, 255, 0.65)',
   label = 'Loading...'
-}) => {
+}: CardOverlayLoaderProps): any => {
   if (!show) return null;
   
   return (
@@ -283,13 +283,13 @@ const Dot = styled.span<{
   animation: ${dotsBounceAnimation} ${props => props.speed}s ease-in-out ${props => props.animationDelay}s infinite;
 `;
 
-export const LoadingDots: React.FC<LoadingDotsProps> = ({
+export const LoadingDots = ({
   size = 8,
   color = 'rgba(55, 65, 81, 1)',
   gap = 6,
   speed = 1.2,
   count = 3,
-}) => {
+}: LoadingDotsProps): any => {
   const dots = Array.from({ length: Math.max(0, count) });
 
   return (
@@ -338,13 +338,13 @@ const DotLinear = styled.span<{
   animation: ${dotsLinearAnimation} ${props => props.speed}s ease-in-out ${props => props.animationDelay}s infinite;
 `;
 
-export const LoadingDotsLinear: React.FC<LoadingDotsLinearProps> = ({
+export const LoadingDotsLinear = ({
   size = 8,
   color = 'rgba(55, 65, 81, 1)',
   gap = 6,
   speed = 1.2,
   count = 5,
-}) => {
+}: LoadingDotsLinearProps): any => {
   const dots = Array.from({ length: Math.max(1, count) });
   const animationDelay = speed / count;
 
@@ -453,12 +453,12 @@ const SkeletonLine = styled.div<{ width: string }>`
   animation: ${shimmerAnimation} 1.5s ease-in-out infinite;
 `;
 
-export const CardWithLoading: React.FC<CardWithLoadingProps> = ({
+export const CardWithLoading = ({
   loading = true,
   imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Adirondacks_2016_Cascade_mountain_hike.jpg',
   title = 'Amazing Landscape',
   content = 'Discover breathtaking views and natural wonders from around the world. Experience the beauty of nature through stunning photography.',
-}) => {
+}: CardWithLoadingProps): any => {
   return (
     <Card>
       <ImageContainer>

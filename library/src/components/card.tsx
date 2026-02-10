@@ -74,6 +74,7 @@ const StyledCard = styled.div<{
           background-color: ${props.backgroundColor || 'rgba(77, 175, 131, 0.10)'};
           border: 1px solid #1761A3;
           box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
         `;
       default:
         return '';
@@ -93,8 +94,10 @@ const StyledCard = styled.div<{
         `;
       case 'figma':
         return css`
-          width: 280px;
-          padding: 1.5rem;
+          width: 100%;
+          max-width:100%;
+          padding: 1.25rem;
+          box-sizing:border-box;
         `;
       case 'default':
       default:
@@ -274,19 +277,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
             {mainContent && (
               <ContentWrapper id={contentId} open={open}>
-                <ContentInner>{mainContent}</ContentInner>
+                <ContentInner>{mainContent as any}</ContentInner>
               </ContentWrapper>
             )}
           </FrontFace>
 
           {flippable && cardBackContent && (
-            <BackFace>{cardBackContent}</BackFace>
+            <BackFace>{cardBackContent as any}</BackFace>
           )}
         </StyledCard>
       </PerspectiveWrapper>
     );
   }
-);
+) as any;
 
 Card.displayName = 'Card';
 export { Card };
