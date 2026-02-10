@@ -116,7 +116,7 @@ const MahatiRealisticConfettiProps = [
 
 export default function TooltipDemo() {
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 overflow-x-hidden">
       {/* Page Header */}
       <header className="mb-12">
         <br/>
@@ -288,7 +288,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </div>
 </MahatiTooltip>`}
         preview={
-          <div className="flex flex-wrap gap-6 items-center justify-center p-6 border border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border  overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <MahatiTooltip 
                 position="top"
@@ -361,7 +361,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </div>
 </div>`}
         preview={
-          <div className="flex flex-wrap gap-6 items-center justify-center p-6 border border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <div className="relative inline-block group cursor-help">
                 <div className="p-3 rounded-lg bg-red-100 border border-red-200">
@@ -432,7 +432,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </div>
 </div>`}
         preview={
-          <div className="flex flex-wrap gap-6 items-center justify-center p-6 border border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <div className="relative inline-block group cursor-help">
                 <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity">
@@ -503,7 +503,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </button>
 </MahatiTooltip>`}
         preview={
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-center p-6 border border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <MahatiTooltip text="Tooltip on top" position="top">
                 <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
@@ -581,7 +581,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   {" "}to improve results.
 </div>`}
         preview={
-          <div className="space-y-6 p-6 border border-gray-200 rounded-lg bg-white">
+          <div className="space-y-6 p-4 md:p-6  border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <div className="text-lg">
                 Learn about{" "}
@@ -675,19 +675,19 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
             </div>
             
             <div className="flex flex-col items-center gap-3">
-              <div className="flex flex-col gap-2 w-64">
+              <div className="flex flex-col gap-2 w-64 max-w-full">
                 <label htmlFor="username" className="text-sm font-medium text-gray-700">
                   Username
                 </label>
-                <div className="relative">
+                <div className="relative w-full ">
                   <input
                     id="username"
                     type="text"
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-help w-full"
+                    className="px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-help w-full"
                     placeholder="Enter username"
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <MahatiTooltip text="Username must be 3-20 characters long and can contain letters, numbers, and underscores" position="right">
+                  <div className="absolute right-2 top-1/2-translate-y-1/2">
+                    <MahatiTooltip text="Username must be 3-20 characters long and can contain letters, numbers, and underscores" position="top">
                       <InformationCircleIcon className="h-5 w-5 text-gray-400 cursor-help" />
                     </MahatiTooltip>
                   </div>

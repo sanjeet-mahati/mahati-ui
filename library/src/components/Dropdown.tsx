@@ -21,7 +21,10 @@ interface DropdownProps {
 // Styled Components
 const DropdownContainer = styled.div`
   position: relative;
-  width: 14rem; /* 56 * 0.25rem = 14rem */
+  width: 100%;
+  max-width: 14rem; /* desktop cap */
+  min-width: 0;
+  box-sizing:border-box;
 `;
 
 const DropdownButton = styled.button<{ 
