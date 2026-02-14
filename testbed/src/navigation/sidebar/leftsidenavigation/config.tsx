@@ -26,11 +26,12 @@ import {
 
 
 import { HiBellAlert } from "react-icons/hi2";
+import React from "react";
 
 export interface NavItem {
   name: string;
   href: string;
-  icon: JSX.Element | null;
+  icon: React.ReactElement | null;
   position?: 'top' | 'bottom';
   active?: boolean;
   subItems?: NavItem [];
