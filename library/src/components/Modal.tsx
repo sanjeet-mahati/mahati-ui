@@ -9,6 +9,7 @@ export type MahatiModalSize = "default" | "sm" | "md" | "lg" | "xl";
 
 export type MahatiModalProps = {
   isOpen: boolean;
+  testId?:string;
   onOpenChange?: (open: boolean) => void;
   onClose: () => void;
   title?: string;
@@ -309,6 +310,7 @@ const PrimaryButton = styled.button<{ disabled?: boolean }>`
 `;
 
 export default function Modal({
+  testId,
   isOpen,
   onClose,
   title,
@@ -351,10 +353,10 @@ export default function Modal({
 
   return (
     <>
-      <Overlay onClick={onClose} aria-hidden="true" />
+      <Overlay onClick={onClose} aria-hidden="true"  data-testid={testId?`${testId}-overlay`:undefined}/>
       
       <ModalContainer position={position}>
-        <ModalContent
+        <ModalContent data-testid={testId}
           width={typeof width === 'number' ? `${width}px` : width}
           height={height}
           margin={margin}
@@ -365,7 +367,7 @@ export default function Modal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <ModalHeader>
+          <ModalHeader data-testid={testId?`${testId}-header`:undefined}>
             <HeaderContent>
               {headerIcon && (
                 <HeaderIconWrapper>
@@ -373,24 +375,25 @@ export default function Modal({
                 </HeaderIconWrapper>
               )}
               <HeaderTextWrapper>
-                {title && <ModalTitle>{title}</ModalTitle>}
-                {subtitle && <ModalSubtitle>{subtitle}</ModalSubtitle>}
+                {title && <ModalTitle data-testid={testId?`${testId}-title`:undefined}>{title}</ModalTitle>}
+                {subtitle && <ModalSubtitle data-testid={testId?`${testId}-subtitle`:undefined}>{subtitle}</ModalSubtitle>}
               </HeaderTextWrapper>
             </HeaderContent>
             
-            <CloseButton onClick={onClose} aria-label="Close dialog">
+            <CloseButton  onClick={onClose} aria-label="Close dialog" data-testid={testId?`${testId}-close-btn`:undefined}>
               <X size={20} strokeWidth={2} />
             </CloseButton>
           </ModalHeader>
 
           {/* Body */}
-          <ModalBody>{children as any}</ModalBody>
+          <ModalBody data-testid={testId?`${testId}-body`:undefined}>{children as any}</ModalBody>
 
           {/* Footer */}
           {(primaryAction || secondaryAction) && (
-            <ModalFooter>
+            <ModalFooter data-testid={testId?`${testId}-footer`:undefined}>
               {secondaryAction && (
                 <SecondaryButton
+                data-testid={testId?`${testId}-secondary-btn`:undefined}
                   onClick={secondaryAction.onClick}
                   type="button"
                 >
@@ -399,7 +402,7 @@ export default function Modal({
               )}
 
               {primaryAction && (
-                <PrimaryButton
+                <PrimaryButton data-testid={testId?`${testId}-primary-btn`:undefined}
                   onClick={primaryAction.onClick}
                   disabled={primaryAction.disabled}
                   type="button"

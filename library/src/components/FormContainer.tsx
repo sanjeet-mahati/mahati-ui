@@ -61,6 +61,7 @@ interface FormContainerProps {
   onSubmit?: (e: React.FormEvent) => void;
   className?: string;
   style?: React.CSSProperties;
+  testId?:string;
 }
 
 const StyledForm = styled.form`
@@ -112,10 +113,12 @@ const FormContainer = ({
   children, 
   onSubmit, 
   style,
+  testId,
   className = '' 
 }: FormContainerProps) => {
   return (
     <StyledForm 
+    data-testid={testId}
       onSubmit={onSubmit}
       className={className}
     >

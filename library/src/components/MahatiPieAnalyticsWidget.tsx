@@ -33,6 +33,7 @@ export interface MahatiPieAnalyticsWidgetProps {
   // Header
   title?: string;
   subtitle?: string;
+  testId?:string;
 
   // Filters row (top)
   filters?: FilterItem[];                 // renders selects in order
@@ -122,6 +123,7 @@ const MahatiAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
   totalVolume,
   transactions,
   className = "",
+  testId
 }) => {
   const [hover, setHover] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -160,7 +162,7 @@ const MahatiAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
   };
 
   return (
-    <div className={`w-full max-w-6xl mx-auto p-6 bg-transparent ${className}`}>
+    <div className={`w-full max-w-6xl mx-auto p-6 bg-transparent ${className} data-testid={testId}`}>
       {/* Card */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {/* Top header: title + global dropdowns + filter row */}

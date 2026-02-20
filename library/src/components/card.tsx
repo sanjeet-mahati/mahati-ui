@@ -20,6 +20,7 @@ interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'content'
   size?: CardSize;
   className?: string;
   children?: React.ReactNode;
+  testId?:string;
 }
 
 // Styled components
@@ -221,6 +222,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       defaultOpen = true,
       onFlip,
       style,
+      testId,
       ...props
     },
     ref
@@ -244,6 +246,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={flippable ? handleFlip : undefined}
       >
         <StyledCard
+          data-testid={testId}
           ref={ref}
           variant={variant}
           size={size}

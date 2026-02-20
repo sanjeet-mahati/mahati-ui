@@ -145,11 +145,12 @@ export interface GaugeChartData {
 export interface GaugeChartProps {
   title: string;
   gauges: GaugeItem[];
+  testId?:string;
 }
 
-export const GaugeChart: React.FC<GaugeChartProps> = ({ title, gauges }) => {
+export const GaugeChart: React.FC<GaugeChartProps> = ({ title, gauges,testId}) => {
   return (
-    <Container>
+    <Container data-testid={testId}>
       <Title>{title}</Title>
 
       <GaugesContainer>
