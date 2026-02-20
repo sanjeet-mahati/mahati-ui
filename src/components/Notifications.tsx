@@ -115,6 +115,7 @@ export const MahatiLocationAccessModal = ({
   denyText,
   onAllow,
   onDeny,
+  testId,
 }: any): any => {
   const ref = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"granted" | "denied" | "prompt">("prompt");
@@ -158,7 +159,7 @@ export const MahatiLocationAccessModal = ({
 
   return createPortal(
     <Overlay>
-      <Card ref={ref}>
+      <Card ref={ref} data-testid={testId}>
         <CloseBtn onClick={onClose}><X size={16} /></CloseBtn>
 
         {image && <Center><Img src={image} /></Center>}
@@ -187,6 +188,7 @@ export const MahatiLocationAccessModal = ({
 /* ===================== CAMERA ===================== */
 
 export interface MahatiCameraAccessModalProps {
+  testId?:string;
   isOpen: boolean;
   onClose: () => void;
 
@@ -213,6 +215,7 @@ export const MahatiCameraAccessModal = ({
   denyText,
   onAllow,
   onDeny,
+  testId
 }: MahatiCameraAccessModalProps): any => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] =
@@ -255,6 +258,7 @@ export const MahatiCameraAccessModal = ({
     <Overlay>
       <Card
         ref={cardRef}
+        data-testid={testId}
         onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
         <CloseBtn onClick={onClose}>
@@ -303,6 +307,7 @@ export const MahatiMicrophoneAccessModal = ({
   denyText,
   onAllow,
   onDeny,
+  testId
 }: any): any => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] =
@@ -345,6 +350,7 @@ export const MahatiMicrophoneAccessModal = ({
     <Overlay>
       <Card
         ref={cardRef}
+        data-testid={testId}
         onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
         <CloseBtn onClick={onClose}>
@@ -493,11 +499,13 @@ export interface MahatiPromotionCardProps {
   inputPlaceholder?: string;
   onInputChange?: (value: string) => void;
   onClose?: () => void;
+  testId?:string;
 }
 
 export const MahatiPromotionCard = ({
   headerTitle,
   title,
+  testId,
   description,
   ctaText,
   onCtaClick,
@@ -507,7 +515,7 @@ export const MahatiPromotionCard = ({
   onClose,
 }: MahatiPromotionCardProps) => {
   return (
-    <PromoCard>
+    <PromoCard data-testid={testId}>
       <PromoHeader>
         <PromoHeaderTitle>{headerTitle}</PromoHeaderTitle>
 
@@ -550,6 +558,7 @@ export interface MahatiPromotionModalProps {
   openInNewTab?: boolean;
   showInput?: boolean;
   inputPlaceholder?: string;
+  testId?:string;
 }
 
 export const MahatiPromotionModal = ({
@@ -558,6 +567,7 @@ export const MahatiPromotionModal = ({
   ctaLink,
   openInNewTab,
   onCtaClick,
+  testId, 
   ...cardProps
 }: MahatiPromotionModalProps): any => {
   const ref = useRef<HTMLDivElement>(null);
@@ -593,7 +603,7 @@ export const MahatiPromotionModal = ({
 
   return createPortal(
     <PromoOverlay>
-      <div ref={ref} onClick={(e) => e.stopPropagation()}>
+      <div ref={ref} data-testid={testId} onClick={(e) => e.stopPropagation()}>
         <MahatiPromotionCard
           {...cardProps}
           onClose={onClose}
@@ -708,6 +718,7 @@ const PromoV2Badge = styled.img`
 
 export interface MahatiPromotionModalV2Props {
   isOpen: boolean;
+  testId?:string;
   onClose: () => void;
 
   headerTitle: string;
@@ -728,6 +739,7 @@ export interface MahatiPromotionModalV2Props {
 
 export const MahatiPromotionModalV2Modal = ({
   isOpen,
+  testId,
   onClose,
   headerTitle,
   title,
@@ -772,6 +784,7 @@ export const MahatiPromotionModalV2Modal = ({
   return createPortal(
     <PromoV2Overlay>
       <PromoV2Card
+       data-testid={testId}
         ref={ref}
         onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
@@ -908,6 +921,7 @@ const PromoV3SecondaryBtn = styled.button`
 export interface MahatiPromotionModalV3Props {
   isOpen: boolean;
   onClose: () => void;
+  testId?:string;
 
   title: string;
   description: string;
@@ -928,6 +942,7 @@ export interface MahatiPromotionModalV3Props {
 
 export const MahatiPromotionModalV3Modal = ({
   isOpen,
+  testId,
   onClose,
   title,
   description,
@@ -971,7 +986,7 @@ export const MahatiPromotionModalV3Modal = ({
 
   return createPortal(
     <PromoV3Overlay>
-      <PromoV3Card
+      <PromoV3Card data-testid={testId}
         ref={ref}
         onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
       >
@@ -1211,6 +1226,7 @@ export interface MahatiNotificationCardProps {
   title: string;
   description?: string;
   time?: string;
+  testId?:string;
 
   iconSrc?: string;
   avatarSrc?: string;
@@ -1240,6 +1256,7 @@ const BADGE_BG_MAP: Record<BadgeType, string> = {
 
 export const MahatiNotificationCard = ({
   title,
+  testId,
   description,
   time,
   iconSrc,
@@ -1253,7 +1270,7 @@ export const MahatiNotificationCard = ({
   onClose,
 }: MahatiNotificationCardProps) => {
   return (
-    <NotificationWrapper>
+    <NotificationWrapper data-testid={testId}>
       {/* LEFT VISUAL */}
       <LeftVisual>
         {iconSrc ? (

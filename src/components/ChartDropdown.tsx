@@ -41,6 +41,7 @@ interface DropdownProps {
     | "gradient"
     | "mahatiFilter";
   className?: string;
+  testId?:string;
 }
 
 // ============================================================================
@@ -288,6 +289,7 @@ export const ChartDropdown: React.FC<DropdownProps> = ({
   label,
   variant = "basic",
   className,
+  testId,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -319,7 +321,9 @@ export const ChartDropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <DropdownContainer ref={dropdownRef} className={className}>
+    <DropdownContainer ref={dropdownRef} className={className}
+    data-testid={testId}
+    >
       {label && <DropdownLabel>{label}</DropdownLabel>}
 
       <DropdownTrigger
