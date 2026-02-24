@@ -698,6 +698,7 @@ const MahatiStatus = ({
     <>
       {/* Trigger */}
       <CustomSelectTrigger
+      data-testid={testId?`${testId}-trigger`:undefined}
         ref={triggerRef}
         onClick={() => setOpen((p) => !p)}
         open={open}
@@ -712,6 +713,7 @@ const MahatiStatus = ({
         pos &&
         createPortal(
           <CustomSelectDropdown
+           data-testid={testId?`${testId}-dropdown`:undefined}
             ref={dropdownRef}
             style={{
               top: pos.top,
