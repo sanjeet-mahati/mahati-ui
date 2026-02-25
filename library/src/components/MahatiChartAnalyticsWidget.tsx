@@ -7,10 +7,27 @@ import { ChartDropdown, DropdownOption } from "./ChartDropdown";
 // Import all chart components
 import { PieLineBarChart, PieLineBarChartType, makeAreaDataStraight } from "./PieLineBarChart";
 import { BulletChart } from "./BulletChart";
-import { GaugeChart } from "./GaugeChart";
+import { GaugeChart, RiskGaugeChart } from "./GaugeChart";
 import { HorizontalBarChart } from "./HorizontalBarChart";
 import { GanttChart, GANTT_COLORS } from "./GanttChart";
 import { CalendarHeatmapChart } from "./CalendarHeatmapChart";
+
+// LollipopChart
+import { LollipopChart } from "./LollipopChart";
+import type { LollipopData, LollipopItem } from "./LollipopChart";
+
+// Column Chart
+import { ColumnChart } from "./ColumnChart";
+import type { ColumnChartData, ColumnItem } from "./ColumnChart";
+
+// KPI Chart
+import { KPIChart } from "./KPIChart";
+import type { KPIChartData } from "./KPIChart";
+
+// Group Bar Chart
+// Group Bar Chart
+import { GroupBarChart } from "./GroupBarChart";
+import type { GroupBarChartData, GroupBarItem, GroupBarLegendItem } from "./GroupBarChart";  // ✅ ADD GroupBarLegendItem
 
 // Import types
 import type { BulletData, BulletItem } from "./BulletChart";
@@ -18,6 +35,10 @@ import type { GaugeData } from "./GaugeChart";
 import type { HorizontalBarData, HorizontalBarItem, HorizontalBarTopPerformer } from "./HorizontalBarChart";
 import type { GanttData } from "./GanttChart";
 import type { HeatmapData } from "./CalendarHeatmapChart";
+
+/* ============================================================================
+   ASSET HELPERS
+   ============================================================================ */
 
 type AssetModule =
   | string
@@ -35,10 +56,41 @@ const assetSrc = (m: AssetModule): string => {
   return '';
 };
 
-const performancePeakIcon = require('../assets/icons/performance-peak-icon.png') as AssetModule;
-const calendarIcon = require('../assets/icons/calendar-3.png') as AssetModule;
+// ✅ ADD FALLBACK CONSTANTS
+const FALLBACK_ICONS = {
+  performancePeakIcon: '/chart-icons/performance-peak-icon.png',
+  calendarIcon: '/chart-icons/calendar-3.png',
+  increaseIcon: '/chart-icons/increase.png',  // ✅ ADD THIS LINE
+  decreaseIcon: '/chart-icons/decrease.png',  // ✅ ADD THIS
+};
 
-export type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar";
+// ✅ ADD HELPER FUNCTION
+const getIconSrc = (imported: AssetModule, fallback: string): string => {
+  const src = assetSrc(imported);
+  return src || fallback;
+};
+
+// ✅ WRAP IMPORTS IN TRY-CATCH
+let performancePeakIcon: AssetModule = '';
+let calendarIcon: AssetModule = '';
+let increaseIcon: AssetModule = '';  // ✅ ADD THIS LINE
+let decreaseIcon: AssetModule = '';  // ✅ ADD THIS
+
+
+try {
+  performancePeakIcon = require('../assets/icons/performance-peak-icon.png') as AssetModule;
+  calendarIcon = require('../assets/icons/calendar-3.png') as AssetModule;
+  increaseIcon = require('../assets/icons/increase.png') as AssetModule;  // ✅ ADD THIS LINE
+  decreaseIcon = require('../assets/icons/decrease.png') as AssetModule;  // ✅ ADD THIS (optional, can rotate increase icon instead)
+} catch (e) {
+  // Will use fallback paths if imports fail
+}
+
+/* ============================================================================
+   TYPES & INTERFACES
+   ============================================================================ */
+
+export type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar" | "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge";
 
 export interface Filter {
   id: string;
@@ -46,6 +98,7 @@ export interface Filter {
   options: string[];
 }
 
+// REPLACE with:
 export interface ChartFiltersConfig {
   pie?: Filter[];
   doughnut?: Filter[];
@@ -55,8 +108,14 @@ export interface ChartFiltersConfig {
   bullet?: Filter[];
   gauge?: Filter[];
   gantt?: Filter[];
+  heatmap?: Filter[];
   calendarheatmap?: Filter[];
   horizontalbar?: Filter[];
+  columnchart?: Filter[];
+  groupbar?: Filter[];
+  lollipop?: Filter[];
+  kpi?: Filter[];
+  riskgauge?: Filter[];
 }
 
 export interface DetailItem {
@@ -67,6 +126,7 @@ export interface DetailItem {
   status?: "In Progress" | "Overdue" | "On Target";
 }
 
+// REPLACE with (ADD riskgaugeData):
 export interface MahatiChartAnalyticsWidgetProps {
   title: string;
   chartTypes: ChartType[];
@@ -78,6 +138,11 @@ export interface MahatiChartAnalyticsWidgetProps {
   bulletData?: BulletData;
   gaugeData?: GaugeData;
   horizontalBarData?: HorizontalBarData;
+  columnChartData?: ColumnChartData;  // ✅ ADD THIS LINE
+  groupBarData?: GroupBarChartData;  // ✅ ADD THIS LINE
+  lollipopData?: LollipopData;
+  kpiData?: Record<string, KPIChartData>;
+  riskGaugeData?: any;
   ganttData?: Record<string, Record<string, GanttData>>;
   heatmapData?: Record<string, HeatmapData>;
   calendarheatmapData?: Record<string, any>;
@@ -95,12 +160,19 @@ export interface MahatiChartAnalyticsWidgetProps {
     onClick: () => void;
   }[];
 }
+/* ============================================================================
+   STYLED COMPONENTS - MAIN CONTAINER
+   ============================================================================ */
 
 const MainContainer = styled.div`
   min-height: 100vh;
   background: white;
   overflow-x: hidden;
 `;
+
+/* ============================================================================
+   STYLED COMPONENTS - TABS SECTION
+   ============================================================================ */
 
 const TabsSection = styled.div`
   background: white;
@@ -123,7 +195,6 @@ const TabsWrapper = styled.div`
   gap: 8px;
 `;
 
-// PILL-SHAPED TABS (rounded-full = 9999px border-radius)
 const TabButton = styled.button<{ $isActive: boolean }>`
   position: relative;
   padding: 8px 16px;
@@ -164,9 +235,9 @@ const TabButton = styled.button<{ $isActive: boolean }>`
   }
 `;
 
-// ============================================================================
-// FILTERS SECTION
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - FILTERS SECTION
+   ============================================================================ */
 
 const FiltersSection = styled.div`
   padding: 16px;
@@ -218,9 +289,9 @@ const ApplyButton = styled.button`
   }
 `;
 
-// ============================================================================
-// CONTENT SECTION
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - CONTENT SECTION
+   ============================================================================ */
 
 const ContentSection = styled.div`
   padding: 16px;
@@ -238,9 +309,9 @@ const ContentSection = styled.div`
   }
 `;
 
-// ============================================================================
-// PIE/DOUGHNUT LAYOUT
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - PIE/DOUGHNUT LAYOUT
+   ============================================================================ */
 
 const PieGrid = styled.div`
   display: grid;
@@ -388,7 +459,6 @@ const DetailValue = styled.span`
   }
 `;
 
-// Details Card (Second card)
 const DetailsCard = styled(Card)``;
 
 const DetailsCardTitle = styled.h3`
@@ -500,7 +570,6 @@ const DetailItemValue = styled.div`
   }
 `;
 
-// Quick Stats Column
 const QuickStatsColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -564,9 +633,9 @@ const StatDescription = styled.div`
   }
 `;
 
-// ============================================================================
-// TWO-COLUMN LAYOUT (Bullet, Gauge, Horizontal Bar)
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - TWO-COLUMN LAYOUT (Bullet, Gauge, Horizontal Bar)
+   ============================================================================ */
 
 const TwoColumnGrid = styled.div`
   display: grid;
@@ -778,7 +847,6 @@ const SidebarDetailValue = styled.div`
   }
 `;
 
-// Action Buttons
 const ActionButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -835,9 +903,9 @@ const ActionButton = styled.button<{ $variant: "danger" | "primary" | "success" 
   }}
 `;
 
-// ============================================================================
-// GANTT LAYOUT
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - GANTT LAYOUT
+   ============================================================================ */
 
 const GanttGrid = styled.div`
   display: grid;
@@ -985,7 +1053,6 @@ const GanttTaskStatus = styled.div<{ $bgColor: string; $color: string }>`
   color: ${props => props.$color};
 `;
 
-// Project Summary Card
 const ProjectSummaryCard = styled(SidebarCard)``;
 
 const ProjectSummaryTitle = styled(SidebarTitle)``;
@@ -1060,9 +1127,9 @@ const ProjectExpectedDate = styled.div`
   }
 `;
 
-// ============================================================================
-// CALENDAR HEATMAP LAYOUT
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - CALENDAR HEATMAP LAYOUT
+   ============================================================================ */
 
 const CalendarGrid = styled.div`
   display: grid;
@@ -1147,7 +1214,6 @@ const ActivityLegendLabel = styled.span`
   }
 `;
 
-// Quick Insights Card for Calendar (exact positioning)
 const CalendarQuickInsightsCard = styled.div`
   width: 100%;
   max-width: 280px;
@@ -1311,9 +1377,9 @@ const CalendarActiveDayAvg = styled.div`
   white-space: nowrap;
 `;
 
-// ============================================================================
-// HORIZONTAL BAR LAYOUT
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - HORIZONTAL BAR LAYOUT
+   ============================================================================ */
 
 const HorizontalBarSidebar = styled(Sidebar)``;
 
@@ -1328,6 +1394,18 @@ const DemoLegendsList = styled.div`
 
   @media (min-width: 640px) {
     gap: 12px;
+  }
+`;
+
+
+const GroupBarLegendsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;  /* ✅ INCREASED SPACING */
+  height: 130px;
+
+  @media (min-width: 640px) {
+    gap: 20px;  /* ✅ EVEN MORE ON LARGER SCREENS */
   }
 `;
 
@@ -1354,7 +1432,6 @@ const DemoLegendLabel = styled.span`
   }
 `;
 
-// Top Performer Card
 const TopPerformerCard = styled(SidebarCard)``;
 
 const TopPerformerHeader = styled.div`
@@ -1450,9 +1527,201 @@ const TopPerformerNeedsFocusValue = styled.span`
   color: rgba(220, 38, 38, 1);
 `;
 
-// ============================================================================
-// GAUGE SPECIFIC COMPONENTS
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - LOLLIPOP CHART LAYOUT
+   ============================================================================ */
+
+const LollipopSidebar = styled(Sidebar)``;
+
+const LollipopLegendsCard = styled(SidebarCard)``;
+
+const LollipopLegendsTitle = styled(SidebarTitle)``;
+
+const LollipopLegendsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (min-width: 640px) {
+    gap: 12px;
+  }
+`;
+
+const LollipopLegendItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const LollipopLegendColor = styled.div<{ $bgColor: string }>`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: ${props => props.$bgColor};
+`;
+
+const LollipopLegendLabel = styled.span`
+  font-size: 10px;
+  color: rgba(55, 65, 81, 1);
+
+  @media (min-width: 640px) {
+    font-size: 12px;
+  }
+`;
+
+const LollipopInsightsCard = styled(SidebarCard)``;
+
+const LollipopInsightsTitle = styled(SidebarTitle)``;
+
+const LollipopSummaryCard = styled(SidebarCard)``;
+
+const LollipopSummaryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+const LollipopSummaryTitle = styled.h3`
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+  font-family: Poppins, sans-serif;
+`;
+
+const LollipopSummaryMenuButton = styled.button`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(156, 163, 175, 1);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    color: rgba(75, 85, 99, 1);
+  }
+`;
+
+const LollipopSummaryContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const LollipopSummaryRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const LollipopSummaryItem = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const LollipopSummaryLabel = styled.div`
+  font-size: 10px;
+  color: rgba(107, 114, 128, 1);
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+`;
+
+const LollipopSummaryValue = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+  font-family: Poppins, sans-serif;
+`;
+
+const LollipopSummaryFullWidth = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const LollipopTrendWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const LollipopTrendIndicator = styled.div<{ $isPositive: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: ${props => props.$isPositive ? 'rgba(46, 158, 120, 1)' : 'rgba(220, 38, 38, 1)'};
+`;
+
+const LollipopTrendArrow = styled.svg<{ $isPositive: boolean }>`
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  transform: ${props => props.$isPositive ? 'rotate(0deg)' : 'rotate(180deg)'};
+`;
+
+const LollipopTrendText = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Poppins, sans-serif;
+`;
+
+const LollipopNeedsFocusWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-family: Poppins, sans-serif;
+`;
+
+const LollipopNeedsFocusLabel = styled.span`
+  color: rgba(107, 114, 128, 1);
+  font-weight: 500;
+`;
+
+const LollipopNeedsFocusValue = styled.span`
+  color: rgba(220, 38, 38, 1);
+  font-weight: 600;
+`;
+
+
+const LollipopInsightsContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const LollipopInsightItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const LollipopInsightLabel = styled.div`
+  font-size: 10px;
+  color: rgba(107, 114, 128, 1);
+`;
+
+const LollipopInsightValue = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 1);
+`;
+
+const LollipopInsightChange = styled.div<{ $isPositive: boolean }>`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${props => props.$isPositive ? 'rgba(22, 163, 74, 1)' : 'rgba(220, 38, 38, 1)'};
+`;
+
+/* ============================================================================
+   STYLED COMPONENTS - GAUGE SPECIFIC COMPONENTS
+   ============================================================================ */
 
 const GaugeQuickInsightsCard = styled.div`
   width: 276px;
@@ -1544,7 +1813,7 @@ const GaugePeakLabel = styled.div`
   position: absolute;
   top: 134px;
   left: 48.35px;
-  width: 38.277px;
+  width: 98.277px;
   color: rgba(23, 97, 163, 1);
   font-family: Poppins, sans-serif;
   font-size: 8px;
@@ -1631,12 +1900,11 @@ const GaugeActiveAvg = styled.div`
   line-height: normal;
 `;
 
-// Goal Health Card
 const GoalHealthCard = styled(SidebarCard)``;
 
-// ============================================================================
-// PERFORMANCE SUMMARY CARD (Bullet Chart)
-// ============================================================================
+/* ============================================================================
+   STYLED COMPONENTS - PERFORMANCE SUMMARY CARD (Bullet Chart)
+   ============================================================================ */
 
 const PerformanceSummaryCard = styled(SidebarCard)``;
 
@@ -1759,7 +2027,6 @@ const PerformanceSummaryActionBold = styled.span`
   color: rgba(17, 24, 39, 1);
 `;
 
-// Bullet Chart Details Card - NEW Components for colored percentage boxes
 const BulletDetailItem = styled.div`
   display: flex;
   justify-content: space-between;
@@ -1795,7 +2062,6 @@ const BulletPercentageBox = styled.div<{ $label: string }>`
   font-weight: 500;
   
   ${props => {
-    // Determine background color based on label
     const label = props.$label.toLowerCase();
     if (label.includes('revenue')) {
       return `
@@ -1813,7 +2079,6 @@ const BulletPercentageBox = styled.div<{ $label: string }>`
         color: rgba(23, 97, 163, 1);
       `;
     } else {
-      // Default color
       return `
         background-color: rgba(229, 231, 235, 1);
         color: rgba(55, 65, 81, 1);
@@ -1934,14 +2199,13 @@ const GoalHealthStatValue = styled.div`
   color: rgba(17, 24, 39, 1);
 `;
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
+/* ============================================================================
+   UTILITY FUNCTIONS
+   ============================================================================ */
 
-const colorToClass = (color: unknown): string => {
+const colorToClass = (color: unknown): string => {  // ✅ Added ': string'
   const c = typeof color === "string" ? color.toLowerCase() : "";
   
-  // If it's already an rgba or rgb color, return it directly
   if (c.startsWith("rgba(") || c.startsWith("rgb(")) {
     return c;
   }
@@ -1953,7 +2217,7 @@ const colorToClass = (color: unknown): string => {
     "#f59e0b": "#F59E0B", "#8b5cf6": "#8B5CF6", "#ec4899": "#EC4899",
     "#6366f1": "#6366F1",
   };
-  return map[c] || (typeof color === "string" ? color : "#D1D5DB");
+  return map[c] || (typeof color === "string" ? color : "#D1D5DB");  // ✅ Fixed
 };
 
 const getStatusColors = (status: string) => {
@@ -1974,19 +2238,25 @@ const getStatusColors = (status: string) => {
   return statusConfig[status] || statusConfig["In Progress"];
 };
 
+// REPLACE with (ADD riskgauge):
 const tabLabel = (type: ChartType) => {
   if (type === "area") return "Area Line Chart";
   if (type === "bullet") return "Bullet Chart";
   if (type === "gauge") return "Gauge Chart";
+  if (type === "riskgauge") return "KPI Risk Gauge Chart";
   if (type === "gantt") return "Gantt Chart";
   if (type === "calendarheatmap") return "Calendar Heat Map";
   if (type === "horizontalbar") return "Horizontal Bar Chart";
+  if (type === "columnchart") return "Column Chart";  // ✅ ADD THIS LINE
+  if (type === "groupbar") return "Group Bar Chart";  // ✅ ADD THIS LINE
+  if (type === "lollipop") return "Lollipop Chart";
+  if (type === "kpi") return "KPI Chart";
   return `${type.charAt(0).toUpperCase() + type.slice(1)} Chart`;
 };
 
-// ============================================================================
-// MAIN COMPONENT
-// ============================================================================
+/* ============================================================================
+   MAIN COMPONENT
+   ============================================================================ */
 
 export const MahatiChartAnalyticsWidget = ({
   title,
@@ -1999,6 +2269,11 @@ export const MahatiChartAnalyticsWidget = ({
   bulletData,
   gaugeData,
   horizontalBarData,
+  columnChartData,  // ✅ ADD THIS LINE
+  groupBarData,  // ✅ ADD THIS LINE
+  lollipopData,
+  kpiData,
+  riskGaugeData,
   ganttData,
   heatmapData,
   calendarheatmapData,
@@ -2014,11 +2289,11 @@ export const MahatiChartAnalyticsWidget = ({
   const [selectedCalendarHeatmapProject, setSelectedCalendarHeatmapProject] = useState<string>("Project 1");
 
   const currentFilters = useMemo(() => {
-    if (chartFilters && chartFilters[chartType]) {
-      return chartFilters[chartType] || [];
-    }
-    return filters;
-  }, [chartType, chartFilters, filters]);
+  if (chartFilters && chartFilters[chartType]) {
+    return chartFilters[chartType] || [];
+  }
+  return filters;
+}, [chartType, chartFilters, filters]);
 
   const currentData = useMemo(() => {
     const base = chartDataMap[chartType];
@@ -2029,7 +2304,6 @@ export const MahatiChartAnalyticsWidget = ({
   const isLineFamily = chartType === "line" || chartType === "area";
   const isPieFamily = chartType === "pie" || chartType === "doughnut";
 
-  // Generate bullet details from bulletData
   const bulletDetails = useMemo(() => {
     if (chartType === 'bullet' && bulletData && bulletData.bullets) {
       return bulletData.bullets.map((bullet) => {
@@ -2045,7 +2319,6 @@ export const MahatiChartAnalyticsWidget = ({
     return [];
   }, [chartType, bulletData]);
 
-  // Current Gantt data
   const currentGanttData = useMemo(() => {
     if (chartType === 'gantt' && ganttData) {
       const year = selectedFilters['SelectYear'] || '2026';
@@ -2082,72 +2355,69 @@ export const MahatiChartAnalyticsWidget = ({
     return undefined;
   }, [chartType, ganttData, selectedFilters, selectedGanttProject]);
 
-  // Current horizontal bar top performer
-  // Calculate horizontal bar top performer
-  const currentHorizontalBarTopPerformer = useMemo((): HorizontalBarTopPerformer | undefined => {
-    if (chartType !== 'horizontalbar' || !horizontalBarData) return undefined;
-    
-    const selectedYear = selectedFilters['SelectYear'] || '2026';
-    const selectedMonth = selectedFilters['SelectMonth'] || 'January';
-    
-    const yearData = horizontalBarData[selectedYear] as Record<string, Record<string, {Revenue: number, Profit: number, Cost: number}>>;
-    const monthData = yearData?.[selectedMonth];
-    
-    if (!monthData) return undefined;
-    
-    const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 
-                        'July', 'August', 'September', 'October', 'November', 'December'];
-    const currentMonthIndex = monthOrder.indexOf(selectedMonth);
-    const previousMonth = currentMonthIndex > 0 ? monthOrder[currentMonthIndex - 1] : 'December';
-    const previousYear = currentMonthIndex > 0 ? selectedYear : String(Number(selectedYear) - 1);
-    
-    const previousYearData = horizontalBarData[previousYear] as Record<string, Record<string, {Revenue: number, Profit: number, Cost: number}>> | undefined;
-    const previousMonthData = previousYearData?.[previousMonth];
-    
-    const products = Object.keys(monthData);
-    let maxRevenue = 0;
-    let topProduct = '';
-    let minRevenue = Infinity;
-    let needsFocusProduct = '';
-    
-    products.forEach(product => {
-      const revenue = monthData[product].Revenue;
-      if (revenue > maxRevenue) {
-        maxRevenue = revenue;
-        topProduct = product;
-      }
-      if (revenue < minRevenue) {
-        minRevenue = revenue;
-        needsFocusProduct = product;
-      }
-    });
-    
-    let percentageChange = 0;
-    let isIncrease = true;
-    
-    if (previousMonthData && previousMonthData[topProduct]) {
-      const currentRevenue = monthData[topProduct].Revenue;
-      const previousRevenue = previousMonthData[topProduct].Revenue;
-      
-      if (previousRevenue !== 0) {
-        percentageChange = ((currentRevenue - previousRevenue) / previousRevenue) * 100;
-        isIncrease = percentageChange >= 0;
-      }
+  const currentHorizontalBarTopPerformer = useMemo(() => {
+  if (chartType !== 'horizontalbar' || !horizontalBarData) return undefined;  // CHANGED: null → undefined
+  
+  const selectedYear = selectedFilters['SelectYear'] || '2026';
+  const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+  
+  const yearData = horizontalBarData[selectedYear] as Record<string, Record<string, {Revenue: number, Profit: number, Cost: number}>>;
+  const monthData = yearData?.[selectedMonth];
+  
+  if (!monthData) return undefined;  // CHANGED: null → undefined
+  
+  const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  const currentMonthIndex = monthOrder.indexOf(selectedMonth);
+  const previousMonth = currentMonthIndex > 0 ? monthOrder[currentMonthIndex - 1] : 'December';
+  const previousYear = currentMonthIndex > 0 ? selectedYear : String(Number(selectedYear) - 1);
+  
+  const previousYearData = horizontalBarData[previousYear] as Record<string, Record<string, {Revenue: number, Profit: number, Cost: number}>> | undefined;
+  const previousMonthData = previousYearData?.[previousMonth];
+  
+  const products = Object.keys(monthData);
+  let maxRevenue = 0;
+  let topProduct = '';
+  let minRevenue = Infinity;
+  let needsFocusProduct = '';
+  
+  products.forEach(product => {
+    const revenue = monthData[product].Revenue;
+    if (revenue > maxRevenue) {
+      maxRevenue = revenue;
+      topProduct = product;
     }
+    if (revenue < minRevenue) {
+      minRevenue = revenue;
+      needsFocusProduct = product;
+    }
+  });
+  
+  let percentageChange = 0;
+  let isIncrease = true;
+  
+  if (previousMonthData && previousMonthData[topProduct]) {
+    const currentRevenue = monthData[topProduct].Revenue;
+    const previousRevenue = previousMonthData[topProduct].Revenue;
     
-    const topProductData = monthData[topProduct];
-    return {
-      category: "Category",
-      name: topProduct,
-      revenue: `${topProductData.Revenue}k`,
-      profit: `${topProductData.Profit}k`,
-      needsFocus: needsFocusProduct,
-      change: `${Math.abs(percentageChange).toFixed(0)}%`,
-      isIncrease: isIncrease
-    };
-  }, [chartType, horizontalBarData, selectedFilters]);
+    if (previousRevenue !== 0) {
+      percentageChange = ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+      isIncrease = percentageChange >= 0;
+    }
+  }
+  
+  const topProductData = monthData[topProduct];
+  return {
+    category: "Category",
+    name: topProduct,
+    revenue: `${topProductData.Revenue}k`,
+    profit: `${topProductData.Profit}k`,
+    needsFocus: needsFocusProduct,
+    change: `${Math.abs(percentageChange).toFixed(0)}%`,
+    isIncrease: isIncrease
+  };
+}, [chartType, horizontalBarData, selectedFilters]);
 
-  // Calendar peak and active day
   const calendarPeakAndActiveDay = useMemo(() => {
     if (chartType !== 'calendarheatmap' || !calendarheatmapData) {
       return {
@@ -2237,16 +2507,13 @@ export const MahatiChartAnalyticsWidget = ({
     }
   };
 
-  // Get filtered bullet data based on selected year/month/type
   const currentBulletData = useMemo(() => {
     if (!bulletData) return null;
 
-    // Get the selected filters for bullet chart
     const year = selectedFilters.SelectYear || '2026';
     const month = selectedFilters.SelectMonth || 'January';
     const type = selectedFilters.SelectType || 'Sales';
 
-    // Try to access filtered data: bulletData[year][type][month]
     const yearData = (bulletData as any)[year];
     if (yearData) {
       const typeData = yearData[type];
@@ -2261,12 +2528,39 @@ export const MahatiChartAnalyticsWidget = ({
       }
     }
 
-    // Fallback to default bullets if filtered data not found
     return {
       title: bulletData.title,
       bullets: bulletData.bullets
     };
   }, [bulletData, selectedFilters]);
+
+
+
+  // ADD KPI data memoization - CORRECTED VERSION
+const currentKPIData = useMemo(() => {
+  if (chartType !== 'kpi' || !kpiData) return null;
+  
+  const kpiKey = selectedFilters['SelectKPI'];
+  
+  console.log('KPI Chart - Selected Filter:', kpiKey); // DEBUG LOG
+  console.log('KPI Chart - Available Keys:', Object.keys(kpiData)); // DEBUG LOG
+  
+  if (!kpiKey) {
+    const firstKey = Object.keys(kpiData)[0];
+    console.log('KPI Chart - Using first key:', firstKey); // DEBUG LOG
+    return kpiData[firstKey] || null;
+  }
+  
+  const data = kpiData[kpiKey];
+  console.log('KPI Chart - Data for key:', data); // DEBUG LOG
+  
+  return data || null;
+}, [chartType, kpiData, selectedFilters]);
+
+
+  /* ==========================================================================
+     RENDER CHART FUNCTION
+     ========================================================================== */
 
   const renderChart = () => {
     switch (chartType) {
@@ -2296,14 +2590,15 @@ export const MahatiChartAnalyticsWidget = ({
         }
         return null;
 
-      case "gauge":
+      case "gauge": {
         if (gaugeData) {
           const selectedYear = selectedFilters['SelectYear'] || '2026';
           const selectedMonth = selectedFilters['SelectMonth'] || 'January';
           let currentGauge = gaugeData.gauges || [];
           
-          if (gaugeData[selectedYear]?.[selectedMonth]) {
-            currentGauge = gaugeData[selectedYear][selectedMonth];
+          // FIXED: Cast to any for dynamic access
+          if ((gaugeData as any)[selectedYear]?.[selectedMonth]) {
+            currentGauge = (gaugeData as any)[selectedYear][selectedMonth];
           }
           
           return (
@@ -2314,8 +2609,9 @@ export const MahatiChartAnalyticsWidget = ({
           );
         }
         return null;
+      }
 
-      case "gantt":
+      case "gantt": {
         if (currentGanttData) {
           const month = selectedFilters['SelectMonth'] || 'Jan - Feb';
           const year = selectedFilters['SelectYear'] || '2026';
@@ -2330,8 +2626,9 @@ export const MahatiChartAnalyticsWidget = ({
           );
         }
         return null;
+      }
 
-      case "calendarheatmap":
+      case "calendarheatmap": {
         if (calendarheatmapData && calendarheatmapData[selectedCalendarHeatmapProject]) {
           const year = selectedFilters['SelectYear'] || '2026';
           const type = selectedFilters['SelectType'] || 'Development';
@@ -2356,8 +2653,9 @@ export const MahatiChartAnalyticsWidget = ({
           );
         }
         return null;
+      }
 
-      case "horizontalbar":
+      case "horizontalbar": {
         if (!horizontalBarData) return null;
         
         const selectedYear = selectedFilters['SelectYear'] || '2026';
@@ -2387,15 +2685,133 @@ export const MahatiChartAnalyticsWidget = ({
             topPerformer={currentHorizontalBarTopPerformer} 
           />
         );
+      }
+
+      case "columnchart": {
+        if (!columnChartData) return null;
+        
+        const selectedYear = selectedFilters['SelectYear'] || '2026';
+        const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+        const selectedType = selectedFilters['SelectType'] || 'Category A';
+        
+        const yearData = (columnChartData as any)?.[selectedYear];
+        const monthData = yearData?.[selectedMonth];
+        const typeData = monthData?.[selectedType] || [];
+        
+        const yAxisConfig = columnChartData.yAxis?.[selectedYear];
+        
+        const columns: ColumnItem[] = typeData.map((item: any) => ({
+          name: item.name,
+          value: item.value,
+          gradient: item.gradient || 'linear-gradient(180deg, rgba(77, 175, 131, 1) 0%, rgba(23, 97, 163, 1) 100%)'
+        }));
+        
+        return (
+          <ColumnChart 
+            title={columnChartData.title} 
+            columns={columns}
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            selectedType={selectedType}
+            yAxisConfig={yAxisConfig}
+          />
+        );
+      }
+
+      case "lollipop": {
+        if (!lollipopData) return null;
+        
+        const lollipopYear = selectedFilters['SelectYear'] || '2026';
+        const lollipopMonth = selectedFilters['SelectMonth'] || 'January';
+        const lollipopCategory = selectedFilters['SelectType'] || 'Category A';
+        const lollipopOrientation = selectedFilters['SelectOrientation'] || 'horizontal';
+        
+        // FIXED: Cast lollipopData to any before accessing dynamic property
+        const lollipopYearData = ((lollipopData as any)[lollipopYear] || {}) as Record<string, Record<string, LollipopItem[]>>;
+        const lollipopMonthData = lollipopYearData?.[lollipopMonth];
+        const lollipopCategoryData = lollipopMonthData?.[lollipopCategory] || [];
+        
+        return (
+          <LollipopChart 
+            title={lollipopData.title} 
+            items={lollipopCategoryData}
+            selectedYear={lollipopYear}
+            selectedMonth={lollipopMonth}
+            selectedCategory={lollipopCategory}
+            orientation={lollipopOrientation as "horizontal" | "vertical"}
+          />
+        );
+      }
+
+
+      case "kpi": {
+      if (currentKPIData) {
+        return <KPIChart 
+                  data={currentKPIData} 
+                />;
+      }
+      return null;
+      }
+
+      case "riskgauge": {
+        if (riskGaugeData) {
+          const selectedYear = selectedFilters['SelectYear'] || '2026';
+          const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+          const selectedType = selectedFilters['SelectType'] || 'Credit Score';
+          
+          let currentRiskGauges = riskGaugeData.gauges || [];
+          
+          if ((riskGaugeData as any)[selectedYear]?.[selectedMonth]?.[selectedType]) {
+            currentRiskGauges = (riskGaugeData as any)[selectedYear][selectedMonth][selectedType];
+          }
+          
+          return (
+            <RiskGaugeChart
+              title="KPI Risk Assessment Metrics"
+              gauges={currentRiskGauges}
+            />
+          );
+        }
+        return null;
+      }
+
+      case "groupbar": {
+        if (!groupBarData) return null;
+        
+        const selectedYear = selectedFilters['SelectYear'] || '2026';
+        const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+        
+        const yearData = (groupBarData as any)?.[selectedYear];
+        const monthData = yearData?.[selectedMonth];
+        const groups: GroupBarItem[] = monthData || [];
+        
+        const yAxisConfig = groupBarData.yAxis?.[selectedYear];
+        const legends = groupBarData.legends;  // ✅ GET LEGENDS FROM DATA
+        
+        return (
+          <GroupBarChart 
+            title={groupBarData.title} 
+            groups={groups}
+            legends={legends}  // ✅ PASS LEGENDS
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            yAxisConfig={yAxisConfig}
+          />
+        );
+      }
 
       default:
         return null;
     }
   };
 
+  /* ==========================================================================
+     MAIN RENDER
+     ========================================================================== */
+
   return (
     <MainContainer>
-      {/* Tabs Section */}
+      {/* ===== TABS SECTION ===== */}
       <TabsSection>
         <TabsWrapper>
           {chartTypes.map((type) => {
@@ -2418,30 +2834,32 @@ export const MahatiChartAnalyticsWidget = ({
         </TabsWrapper>
       </TabsSection>
 
-      {/* Filters Section */}
+      {/* ===== FILTERS SECTION ===== */}
       <FiltersSection>
         <FiltersWrapper>
           {currentFilters.map((filter: Filter, index: number) => {
-            const options: DropdownOption[] = filter.options.map((opt: string) => ({
-              key: opt,
-              value: opt,
-            }));
+    const options: DropdownOption[] = filter.options.map((opt: string) => ({
+      key: opt,
+      value: opt,
+    }));
+
 
             return (
               <FilterDropdownWrapper 
-                key={filter.id}
-                $zIndex={50 + (currentFilters.length - index)}
-              >
-                <ChartDropdown
-                  options={options}
-                  value={selectedFilters[filter.id]}
-                  onSelect={(val) =>
-                    onFiltersChange({ ...selectedFilters, [filter.id]: String(val) })
-                  }
-                  variant="mahatiFilter"
-                  label={filter.label}
-                />
-              </FilterDropdownWrapper>
+        key={filter.id}
+        $zIndex={50 + (currentFilters.length - index)}
+      >
+        <ChartDropdown
+          options={options}
+          value={selectedFilters[filter.id]} // This should show current value
+          onSelect={(val) => {
+            console.log('Dropdown onSelect called:', val, 'for filter:', filter.id); // ADD THIS
+            onFiltersChange({ ...selectedFilters, [filter.id]: String(val) })
+          }}
+          variant="mahatiFilter"
+          label={filter.label}
+        />
+      </FilterDropdownWrapper>
             );
           })}
           <ApplyButton
@@ -2453,12 +2871,11 @@ export const MahatiChartAnalyticsWidget = ({
         </FiltersWrapper>
       </FiltersSection>
 
-      {/* Content Section */}
+      {/* ===== CONTENT SECTION ===== */}
       <ContentSection>
-        {/* PIE/DOUGHNUT LAYOUT */}
+        {/* ===== PIE/DOUGHNUT LAYOUT ===== */}
         {isPieFamily && (
           <PieGrid>
-            {/* Chart Card */}
             <Card style={{ overflow: 'visible' }}>
               <CardHeaderRow>
                 <MenuButton type="button">
@@ -2487,7 +2904,6 @@ export const MahatiChartAnalyticsWidget = ({
               </DetailsSection>
             </Card>
 
-            {/* Details Card */}
             <DetailsCard>
               <DetailsCardTitle>Details</DetailsCardTitle>
               <DetailsList>
@@ -2517,7 +2933,6 @@ export const MahatiChartAnalyticsWidget = ({
               </DetailsList>
             </DetailsCard>
 
-            {/* Quick Stats Column */}
             <QuickStatsColumn>
               <QuickStatCard>
                 <StatLabel>Total Volume</StatLabel>
@@ -2537,7 +2952,7 @@ export const MahatiChartAnalyticsWidget = ({
           </PieGrid>
         )}
 
-        {/* BULLET CHART LAYOUT */}
+        {/* ===== BULLET CHART LAYOUT ===== */}
         {chartType === "bullet" && (
           <TwoColumnGrid>
             <MainChartCard>
@@ -2550,25 +2965,24 @@ export const MahatiChartAnalyticsWidget = ({
               <SidebarCard>
                 <SidebarTitle>Details</SidebarTitle>
                 <div>
-                  {currentBulletData?.bullets.map((bullet: BulletItem, idx: number) => {
-                    // Calculate percentage dynamically from bullet data
-                    const percentage = Math.round((bullet.achieved / bullet.target) * 100);
-                    
-                    return (
-                      <BulletDetailItem key={idx}>
-                        <BulletDetailLeft>
-                          <BulletDetailLabel>{bullet.name}</BulletDetailLabel>
-                          <BulletDetailDescription>
-                            {bullet.achieved.toLocaleString()} / {bullet.target.toLocaleString()}
-                          </BulletDetailDescription>
-                        </BulletDetailLeft>
-                        <BulletPercentageBox $label={bullet.name}>
-                          {percentage}%
-                        </BulletPercentageBox>
-                      </BulletDetailItem>
-                    );
-                  })}
-                </div>
+  {currentBulletData?.bullets.map((bullet: any, idx: number) => {  // ADDED TYPES
+    const percentage = Math.round((bullet.achieved / bullet.target) * 100);
+    
+    return (
+      <BulletDetailItem key={idx}>
+        <BulletDetailLeft>
+          <BulletDetailLabel>{bullet.name}</BulletDetailLabel>
+          <BulletDetailDescription>
+            {bullet.achieved.toLocaleString()} / {bullet.target.toLocaleString()}
+          </BulletDetailDescription>
+        </BulletDetailLeft>
+        <BulletPercentageBox $label={bullet.name}>
+          {percentage}%
+        </BulletPercentageBox>
+      </BulletDetailItem>
+    );
+  })}
+</div>
                 
                 <BulletDetailsCardFooter>
                   <BulletDetailsIcon>
@@ -2580,7 +2994,6 @@ export const MahatiChartAnalyticsWidget = ({
                 </BulletDetailsCardFooter>
               </SidebarCard>
 
-              {/* Quick Insights Card */}
               <GaugeQuickInsightsCard>
                 <GaugeInsightsHeader>
                   <GaugeInsightsTitle>Quick Insights</GaugeInsightsTitle>
@@ -2594,14 +3007,14 @@ export const MahatiChartAnalyticsWidget = ({
                 <GaugeDivider />
 
                 <GaugePeakDay>
-                  <GaugePeakIcon src={assetSrc(performancePeakIcon)} alt="" />
+                  <GaugePeakIcon src={getIconSrc(performancePeakIcon, FALLBACK_ICONS.performancePeakIcon)} alt="" />
                 </GaugePeakDay>
                 <GaugePeakLabel>Peak Day</GaugePeakLabel>
                 <GaugePeakDate>Wed, 12 Jun</GaugePeakDate>
                 <GaugePeakEvents>5,600 events</GaugePeakEvents>
 
                 <GaugeActiveDayBox>
-                  <GaugeActiveIcon src={assetSrc(calendarIcon)} alt="" />
+                  <GaugeActiveIcon src={getIconSrc(calendarIcon, FALLBACK_ICONS.calendarIcon)} alt="" />
                 </GaugeActiveDayBox>
                 <GaugeActiveLabel>Most Active Day</GaugeActiveLabel>
                 <GaugeActiveDayValue>Wednesday</GaugeActiveDayValue>
@@ -2611,7 +3024,7 @@ export const MahatiChartAnalyticsWidget = ({
           </TwoColumnGrid>
         )}
 
-        {/* GAUGE CHART LAYOUT */}
+        {/* ===== GAUGE CHART LAYOUT ===== */}
         {chartType === "gauge" && gaugeData && (
           <TwoColumnGrid>
             <MainChartCard>
@@ -2621,7 +3034,6 @@ export const MahatiChartAnalyticsWidget = ({
             </MainChartCard>
 
             <Sidebar>
-              {/* Goal Health Card */}
               {(() => {
                 const selectedYear = selectedFilters['SelectYear'] || '2026';
                 const selectedMonth = selectedFilters['SelectMonth'] || 'January';
@@ -2669,10 +3081,6 @@ export const MahatiChartAnalyticsWidget = ({
                       <GoalHealthTitle>Goal Health</GoalHealthTitle>
                       <GoalHealthBadge>
                         <GoalHealthBadgeText>On Track</GoalHealthBadgeText>
-                        {/* <GoalHealthCheckmark width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <circle cx="8" cy="8" r="6" fill="rgba(46,158,120,0.1)" stroke="rgba(46,158,120,1)" strokeWidth="1.5"/>
-                          <path d="M6 8L7.5 9.5L10 6.5" stroke="rgba(46,158,120,1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </GoalHealthCheckmark> */}
                         <GoalHealthMenuButton>
                           <GoalHealthMenuIcon width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                             <circle cx="8" cy="4" r="1"/>
@@ -2708,7 +3116,6 @@ export const MahatiChartAnalyticsWidget = ({
                 );
               })()}
 
-              {/* Quick Insights Card */}
               <GaugeQuickInsightsCard>
                 <GaugeInsightsHeader>
                   <GaugeInsightsTitle>Quick Insights</GaugeInsightsTitle>
@@ -2722,206 +3129,962 @@ export const MahatiChartAnalyticsWidget = ({
                 <GaugeDivider />
 
                 <GaugePeakDay>
-                  <GaugePeakIcon src={assetSrc(performancePeakIcon)} alt="" />
+                  <GaugePeakIcon src={getIconSrc(performancePeakIcon, FALLBACK_ICONS.performancePeakIcon)} alt="" />
                 </GaugePeakDay>
                 <GaugePeakLabel>Peak Day</GaugePeakLabel>
                 <GaugePeakDate>Wed, 12 Jun</GaugePeakDate>
                 <GaugePeakEvents>5,600 events</GaugePeakEvents>
 
                 <GaugeActiveDayBox>
-                  <GaugeActiveIcon src={assetSrc(calendarIcon)} alt="" />
-                </GaugeActiveDayBox>
-                <GaugeActiveLabel>Most Active Day</GaugeActiveLabel>
-                <GaugeActiveDayValue>Wednesday</GaugeActiveDayValue>
-                <GaugeActiveAvg>Avg 920 / day</GaugeActiveAvg>
-              </GaugeQuickInsightsCard>
-            </Sidebar>
-          </TwoColumnGrid>
-        )}
+                  <GaugeActiveIcon src={getIconSrc(calendarIcon, FALLBACK_ICONS.calendarIcon)} alt="" />
+                  </GaugeActiveDayBox>
+                  <GaugeActiveLabel>Most Active Day</GaugeActiveLabel>
+                  <GaugeActiveDayValue>Wednesday</GaugeActiveDayValue>
+                  <GaugeActiveAvg>Avg 920 / day</GaugeActiveAvg>
+                  </GaugeQuickInsightsCard>
+                  </Sidebar>
+                  </TwoColumnGrid>
+                  )}
 
-        {/* GANTT CHART LAYOUT */}
-        {chartType === "gantt" && (
-          <GanttGrid>
-            <GanttChartCard>
-              <GanttChartWrapper>
-                {renderChart()}
-              </GanttChartWrapper>
-            </GanttChartCard>
 
-            <GanttSidebar>
-              {/* Quick Insights - All Titles */}
-              <GanttQuickInsightsCard>
-                <GanttInsightsTitle>Quick Insights - All Titles</GanttInsightsTitle>
-                <GanttProjectInfo>
-                  Showing data for: {selectedGanttProject}
-                </GanttProjectInfo>
-                <GanttTaskList>
-                  {currentGanttData?.tasks.map((task) => {
-                    const taskColor = GANTT_COLORS[task.color] || GANTT_COLORS.blue;
-                    return (
-                      <GanttTaskItem key={task.id}>
-                        <GanttTaskDot $color={taskColor} />
-                        <GanttTaskContent>
-                          <GanttTaskName>{task.name}</GanttTaskName>
-                          <GanttTaskProgress>{task.progress}% complete</GanttTaskProgress>
-                        </GanttTaskContent>
-                        <GanttTaskStatus
-                          $bgColor={getStatusColors(task.status).backgroundColor}
-                          $color={getStatusColors(task.status).textColor}
-                        >
-                          {task.status}
-                        </GanttTaskStatus>
-                      </GanttTaskItem>
-                    );
-                  })}
-                </GanttTaskList>
-              </GanttQuickInsightsCard>
+        {/* // FIND the GAUGE CHART LAYOUT section and ADD this AFTER it: */}
 
-              {/* Project Summary */}
-              <ProjectSummaryCard>
-                <ProjectSummaryTitle>Project Summary</ProjectSummaryTitle>
-                <ProjectSummaryContent>
-                  <div>
-                    <ProjectSummaryLabel>Overall Status</ProjectSummaryLabel>
-                    <ProjectStatusGrid>
-                      <ProjectStatusBox $bgColor="rgba(254, 242, 242, 1)">
-                        <ProjectStatusLabel $color="rgba(220, 38, 38, 1)">Overdue</ProjectStatusLabel>
-                        <ProjectStatusValue>
-                          {currentGanttData?.tasks.filter(task => task.status === "Overdue").length || 0}
-                        </ProjectStatusValue>
-                      </ProjectStatusBox>
-                      <ProjectStatusBox $bgColor="rgba(239, 246, 255, 1)">
-                        <ProjectStatusLabel $color="rgba(37, 99, 235, 1)">In Progress</ProjectStatusLabel>
-                        <ProjectStatusValue>
-                          {currentGanttData?.tasks.filter(task => task.status === "In Progress").length || 0}
-                        </ProjectStatusValue>
-                      </ProjectStatusBox>
-                    </ProjectStatusGrid>
-                    <ProjectStatusGridFull>
-                      <ProjectStatusBox $bgColor="rgba(240, 253, 244, 1)">
-                        <ProjectStatusLabel $color="rgba(22, 163, 74, 1)">On Target</ProjectStatusLabel>
-                        <ProjectStatusValue>
-                          {currentGanttData?.tasks.filter(task => task.status === "On Target").length || 0}
-                        </ProjectStatusValue>
-                      </ProjectStatusBox>
-                    </ProjectStatusGridFull>
-                  </div>
-                  <ProjectExpectedDate>
-                    {(() => {
-                      if (!currentGanttData?.tasks || currentGanttData.tasks.length === 0) {
-                        return "Expected by 25 Feb 2025";
-                      }
-                      
-                      const lastTask = currentGanttData.tasks[currentGanttData.tasks.length - 1];
-                      const endDate = lastTask.endDate;
-                      
-                      const [day, month] = endDate.split('/');
-                      
-                      const monthNames: Record<string, string> = {
-                        '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
-                        '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
-                        '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'
-                      };
-                      
-                      const monthName = monthNames[month] || 'Jan';
-                      const year = selectedFilters['SelectYear'] || '2026';
-                      
-                      return `Expected by ${day} ${monthName} ${year}`;
-                    })()}
-                  </ProjectExpectedDate>
-                </ProjectSummaryContent>
-              </ProjectSummaryCard>
-            </GanttSidebar>
-          </GanttGrid>
-        )}
+      {/* ===== RISK GAUGE CHART LAYOUT ===== */}
+      {/* ===== RISK GAUGE CHART LAYOUT ===== */}
+{/* ===== RISK GAUGE CHART LAYOUT ===== */}
+{chartType === "riskgauge" && riskGaugeData && (
+  <TwoColumnGrid>
+    <MainChartCard>
+      <ChartWrapper>
+        {renderChart()}
+      </ChartWrapper>
+    </MainChartCard>
 
-        {/* CALENDAR HEATMAP LAYOUT */}
-        {chartType === "calendarheatmap" && (
-          <CalendarGrid>
-            <CalendarChartCard>
-              <CalendarChartWrapper>
-                {renderChart()}
-              </CalendarChartWrapper>
-            </CalendarChartCard>
+    <Sidebar>
+      {(() => {
+        const selectedYear = selectedFilters['SelectYear'] || '2026';
+        const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+        const selectedType = selectedFilters['SelectType'] || 'Credit Score';
+        
+        let currentRiskGauge = riskGaugeData.gauges && riskGaugeData.gauges.length > 0 ? riskGaugeData.gauges[0] : null;
+        
+        if ((riskGaugeData as any)[selectedYear]?.[selectedMonth]?.[selectedType]) {
+          const filteredRiskGauges = (riskGaugeData as any)[selectedYear][selectedMonth][selectedType];
+          if (filteredRiskGauges && filteredRiskGauges.length > 0) {
+            currentRiskGauge = filteredRiskGauges[0];
+          }
+        }
+        
+        if (!currentRiskGauge) return null;
+        
+        const gauge = currentRiskGauge;
+        const maxScore = gauge.max || 100;
+        const dailyAvgNeeded = Math.round(gauge.score / 30);
+        const currentPace = Math.round(gauge.score / 20);
+        const daysRemaining = 8;
 
-            <CalendarSidebar>
-              {/* Activity Legend */}
-              <ActivityLegendCard>
-                <ActivityLegendTitle>Activity Legend</ActivityLegendTitle>
-                <ActivityLegendList>
-                  <ActivityLegendItem>
-                    <ActivityLegendColor $bgColor="rgba(154, 219, 255, 1)" />
-                    <ActivityLegendLabel>&lt;1K: Low activity</ActivityLegendLabel>
-                  </ActivityLegendItem>
-                  <ActivityLegendItem>
-                    <ActivityLegendColor $bgColor="rgba(102, 194, 241, 1)" />
-                    <ActivityLegendLabel>1K - 3K: Moderate activity</ActivityLegendLabel>
-                  </ActivityLegendItem>
-                  <ActivityLegendItem>
-                    <ActivityLegendColor $bgColor="rgba(43, 160, 209, 1)" />
-                    <ActivityLegendLabel>3K - 5K: High activity</ActivityLegendLabel>
-                  </ActivityLegendItem>
-                  <ActivityLegendItem>
-                    <ActivityLegendColor $bgColor="rgba(23, 97, 163, 1)" />
-                    <ActivityLegendLabel>&gt;5K: Very high activity</ActivityLegendLabel>
-                  </ActivityLegendItem>
-                </ActivityLegendList>
-              </ActivityLegendCard>
+        return (
+          <GoalHealthCard>
+            <GoalHealthHeader>
+              <GoalHealthTitle>Risk Health</GoalHealthTitle>
+              <GoalHealthBadge>
+                <GoalHealthBadgeText>On Track</GoalHealthBadgeText>
+                <GoalHealthMenuButton>
+                  <GoalHealthMenuIcon width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <circle cx="8" cy="4" r="1"/>
+                    <circle cx="8" cy="8" r="1"/>
+                    <circle cx="8" cy="12" r="1"/>
+                  </GoalHealthMenuIcon>
+                </GoalHealthMenuButton>
+              </GoalHealthBadge>
+            </GoalHealthHeader>
+            
+            <GoalHealthStatsGrid>
+              <GoalHealthStat>
+                <GoalHealthStatLabel>Current Pace</GoalHealthStatLabel>
+                <GoalHealthStatValue>{currentPace} / day</GoalHealthStatValue>
+              </GoalHealthStat>
+              <GoalHealthStat>
+                <GoalHealthStatLabel>Required Pace</GoalHealthStatLabel>
+                <GoalHealthStatValue>{dailyAvgNeeded} / day</GoalHealthStatValue>
+              </GoalHealthStat>
+            </GoalHealthStatsGrid>
+            
+            <GoalHealthStatsGrid>
+              <GoalHealthStat>
+                <GoalHealthStatLabel>Days Remaining</GoalHealthStatLabel>
+                <GoalHealthStatValue>{daysRemaining} days</GoalHealthStatValue>
+              </GoalHealthStat>
+              <GoalHealthStat>
+                <GoalHealthStatLabel>Max Score</GoalHealthStatLabel>
+                <GoalHealthStatValue>{maxScore}</GoalHealthStatValue>
+              </GoalHealthStat>
+            </GoalHealthStatsGrid>
+          </GoalHealthCard>
+        );
+      })()}
 
-              {/* Quick Insights */}
-              <CalendarQuickInsightsCard>
-                <CalendarInsightsHeader>
-                  <CalendarInsightsTitle>Quick Insights</CalendarInsightsTitle>
-                  <CalendarInsightsSubtitle>
-                    {selectedFilters['SelectYear'] || '2026'}, {selectedCalendarHeatmapProject}, {selectedFilters['SelectType'] || 'Development'}
-                  </CalendarInsightsSubtitle>
-                </CalendarInsightsHeader>
+      <GaugeQuickInsightsCard>
+  <GaugeInsightsHeader>
+    <GaugeInsightsTitle>Quick Insights</GaugeInsightsTitle>
+    <GaugeInsightsDate>
+  {`${selectedFilters['SelectYear'] || '2026'} : ${selectedFilters['SelectMonth'] || 'January'} : ${selectedFilters['SelectType'] || 'Credit Score'}`}
+</GaugeInsightsDate>
+  </GaugeInsightsHeader>
 
+  <GaugeVolume>Risk Score</GaugeVolume>
+  <GaugeVolumeValue>
+    {(() => {
+      const selectedYear = selectedFilters['SelectYear'] || '2026';
+      const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+      const selectedType = selectedFilters['SelectType'] || 'Credit Score';
+      return (riskGaugeData as any)?.[selectedYear]?.[selectedMonth]?.[selectedType]?.[0]?.score || 0;
+    })()}
+  </GaugeVolumeValue>
+  <GaugeDivider />
+
+  {/* DYNAMIC PEAK PERFORMANCE */}
+  {(() => {
+    const selectedYear = selectedFilters['SelectYear'] || '2026';
+    const selectedType = selectedFilters['SelectType'] || 'Credit Score';
+    
+    let peakMonth = '';
+    let peakScore = -1;
+    let peakDate = '';
+    let peakLabel = '';
+    
+    // Find peak performance across all months for selected year and type
+    const yearData = (riskGaugeData as any)?.[selectedYear];
+    if (yearData) {
+      Object.keys(yearData).forEach(month => {
+        const monthData = yearData[month]?.[selectedType];
+        if (monthData && Array.isArray(monthData)) {
+          monthData.forEach((item: any, index: number) => {
+            if (item.score > peakScore) {
+              peakScore = item.score;
+              peakMonth = month;
+              
+              // Check if there's a date property (daily data)
+              if (item.date) {
+                peakDate = item.date;
+              } else {
+                // Use middle of the month (15th)
+                const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                   'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month);
+                const date = new Date(parseInt(selectedYear), monthIndex, 15);
+                peakDate = date.toISOString().split('T')[0];
+              }
+            }
+          });
+        }
+      });
+    }
+    
+    // Format peak date
+    if (peakDate) {
+      const date = new Date(peakDate);
+      peakLabel = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    } else {
+      peakLabel = 'N/A';
+    }
+    
+    return (
+      <>
+        <GaugePeakDay>
+          <GaugePeakIcon src={getIconSrc(performancePeakIcon, FALLBACK_ICONS.performancePeakIcon)} alt="" />
+        </GaugePeakDay>
+        <GaugePeakLabel>Peak Performance</GaugePeakLabel>
+        <GaugePeakDate>{peakLabel}</GaugePeakDate>
+        <GaugePeakEvents>{peakScore > 0 ? `Score: ${peakScore}` : 'No data'}</GaugePeakEvents>
+      </>
+    );
+  })()}
+
+  {/* DYNAMIC ASSESSMENT DAY */}
+  {/* DYNAMIC ASSESSMENT DAY */}
+{(() => {
+  const selectedYear = selectedFilters['SelectYear'] || '2026';
+  const selectedType = selectedFilters['SelectType'] || 'Credit Score';
+  
+  let peakMonth = '';
+  let peakScore = -1;
+  let peakDate = '';
+  let assessmentDay = 'Wednesday'; // Default
+  let avgScore = 0;
+  let totalScore = 0;
+  let count = 0;
+  
+  // Find peak performance to determine assessment day
+  const yearData = (riskGaugeData as any)?.[selectedYear];
+  if (yearData) {
+    Object.keys(yearData).forEach(month => {
+      const monthData = yearData[month]?.[selectedType];
+      if (monthData && Array.isArray(monthData)) {
+        monthData.forEach((item: any) => {
+          totalScore += item.score || 0;
+          count++;
+          
+          // Track peak performance
+          if (item.score > peakScore) {
+            peakScore = item.score;
+            peakMonth = month;
+            
+            // Get the date of peak performance
+            if (item.date) {
+              const date = new Date(item.date);
+              assessmentDay = date.toLocaleDateString('en-US', { weekday: 'long' });
+            } else {
+              // Use middle of month (15th) if no date
+              const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month);
+              const date = new Date(parseInt(selectedYear), monthIndex, 15);
+              assessmentDay = date.toLocaleDateString('en-US', { weekday: 'long' });
+            }
+          }
+        });
+      }
+    });
+  }
+  
+  // Calculate average score
+  avgScore = count > 0 ? Math.round(totalScore / count) : 0;
+  
+  return (
+    <>
+      <GaugeActiveDayBox>
+        <GaugeActiveIcon src={getIconSrc(calendarIcon, FALLBACK_ICONS.calendarIcon)} alt="" />
+      </GaugeActiveDayBox>
+      <GaugeActiveLabel>Assessment Day</GaugeActiveLabel>
+      <GaugeActiveDayValue>{assessmentDay}</GaugeActiveDayValue>
+      <GaugeActiveAvg>Avg Score: {avgScore}</GaugeActiveAvg>
+    </>
+  );
+})()}
+</GaugeQuickInsightsCard>
+    </Sidebar>
+  </TwoColumnGrid>
+)}
+
+
+              {/* ===== GANTT CHART LAYOUT ===== */}
+    {chartType === "gantt" && (
+      <GanttGrid>
+        <GanttChartCard>
+          <GanttChartWrapper>
+            {renderChart()}
+          </GanttChartWrapper>
+        </GanttChartCard>
+
+        <GanttSidebar>
+          <GanttQuickInsightsCard>
+            <GanttInsightsTitle>Quick Insights - All Titles</GanttInsightsTitle>
+            <GanttProjectInfo>
+              Showing data for: {selectedGanttProject}
+            </GanttProjectInfo>
+            <GanttTaskList>
+              {currentGanttData?.tasks.map((task) => {
+                const taskColor = GANTT_COLORS[task.color] || GANTT_COLORS.blue;
+                return (
+                  <GanttTaskItem key={task.id}>
+                    <GanttTaskDot $color={taskColor} />
+                    <GanttTaskContent>
+                      <GanttTaskName>{task.name}</GanttTaskName>
+                      <GanttTaskProgress>{task.progress}% complete</GanttTaskProgress>
+                    </GanttTaskContent>
+                    <GanttTaskStatus
+                      $bgColor={getStatusColors(task.status).backgroundColor}
+                      $color={getStatusColors(task.status).textColor}
+                    >
+                      {task.status}
+                    </GanttTaskStatus>
+                  </GanttTaskItem>
+                );
+              })}
+            </GanttTaskList>
+          </GanttQuickInsightsCard>
+
+          <ProjectSummaryCard>
+            <ProjectSummaryTitle>Project Summary</ProjectSummaryTitle>
+            <ProjectSummaryContent>
+              <div>
+                <ProjectSummaryLabel>Overall Status</ProjectSummaryLabel>
+                <ProjectStatusGrid>
+                  <ProjectStatusBox $bgColor="rgba(254, 242, 242, 1)">
+                    <ProjectStatusLabel $color="rgba(220, 38, 38, 1)">Overdue</ProjectStatusLabel>
+                    <ProjectStatusValue>
+                      {currentGanttData?.tasks.filter(task => task.status === "Overdue").length || 0}
+                    </ProjectStatusValue>
+                  </ProjectStatusBox>
+                  <ProjectStatusBox $bgColor="rgba(239, 246, 255, 1)">
+                    <ProjectStatusLabel $color="rgba(37, 99, 235, 1)">In Progress</ProjectStatusLabel>
+                    <ProjectStatusValue>
+                      {currentGanttData?.tasks.filter(task => task.status === "In Progress").length || 0}
+                    </ProjectStatusValue>
+                  </ProjectStatusBox>
+                </ProjectStatusGrid>
+                <ProjectStatusGridFull>
+                  <ProjectStatusBox $bgColor="rgba(240, 253, 244, 1)">
+                    <ProjectStatusLabel $color="rgba(22, 163, 74, 1)">On Target</ProjectStatusLabel>
+                    <ProjectStatusValue>
+                      {currentGanttData?.tasks.filter(task => task.status === "On Target").length || 0}
+                    </ProjectStatusValue>
+                  </ProjectStatusBox>
+                </ProjectStatusGridFull>
+              </div>
+              <ProjectExpectedDate>
+                {(() => {
+                  if (!currentGanttData?.tasks || currentGanttData.tasks.length === 0) {
+                    return "Expected by 25 Feb 2025";
+                  }
+                  
+                  const lastTask = currentGanttData.tasks[currentGanttData.tasks.length - 1];
+                  const endDate = lastTask.endDate;
+                  
+                  const [day, month] = endDate.split('/');
+                  
+                  const monthNames: Record<string, string> = {
+                    '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
+                    '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
+                    '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'
+                  };
+                  
+                  const monthName = monthNames[month] || 'Jan';
+                  const year = selectedFilters['SelectYear'] || '2026';
+                  
+                  return `Expected by ${day} ${monthName} ${year}`;
+                })()}
+              </ProjectExpectedDate>
+            </ProjectSummaryContent>
+          </ProjectSummaryCard>
+        </GanttSidebar>
+      </GanttGrid>
+    )}
+
+    {/* ===== CALENDAR HEATMAP LAYOUT ===== */}
+    {chartType === "calendarheatmap" && (
+      <CalendarGrid>
+        <CalendarChartCard>
+          <CalendarChartWrapper>
+            {renderChart()}
+          </CalendarChartWrapper>
+        </CalendarChartCard>
+
+        <CalendarSidebar>
+          <ActivityLegendCard>
+            <ActivityLegendTitle>Activity Legend</ActivityLegendTitle>
+            <ActivityLegendList>
+              <ActivityLegendItem>
+                <ActivityLegendColor $bgColor="rgba(154, 219, 255, 1)" />
+                <ActivityLegendLabel>&lt;1K: Low activity</ActivityLegendLabel>
+              </ActivityLegendItem>
+              <ActivityLegendItem>
+                <ActivityLegendColor $bgColor="rgba(102, 194, 241, 1)" />
+                <ActivityLegendLabel>1K - 3K: Moderate activity</ActivityLegendLabel>
+              </ActivityLegendItem>
+              <ActivityLegendItem>
+                <ActivityLegendColor $bgColor="rgba(43, 160, 209, 1)" />
+                <ActivityLegendLabel>3K - 5K: High activity</ActivityLegendLabel>
+              </ActivityLegendItem>
+              <ActivityLegendItem>
+                <ActivityLegendColor $bgColor="rgba(23, 97, 163, 1)" />
+                <ActivityLegendLabel>&gt;5K: Very high activity</ActivityLegendLabel>
+              </ActivityLegendItem>
+            </ActivityLegendList>
+          </ActivityLegendCard>
+
+          <CalendarQuickInsightsCard>
+            <CalendarInsightsHeader>
+              <CalendarInsightsTitle>Quick Insights</CalendarInsightsTitle>
+              <CalendarInsightsSubtitle>
+                {selectedFilters['SelectYear'] || '2026'}, {selectedCalendarHeatmapProject}, {selectedFilters['SelectType'] || 'Development'}
+              </CalendarInsightsSubtitle>
+            </CalendarInsightsHeader>
+
+            <div>
+              <CalendarTotalVolumeLabel>Total Volume</CalendarTotalVolumeLabel>
+              <CalendarTotalVolumeValue>${quickStats.totalVolume.value}</CalendarTotalVolumeValue>
+            </div>
+            
+            <CalendarDivider />
+
+            <CalendarPeakDayWrapper>
+              <CalendarPeakDayIconBox>
+                <CalendarIcon src={getIconSrc(performancePeakIcon, FALLBACK_ICONS.performancePeakIcon)} alt="" />
+              </CalendarPeakDayIconBox>
+              <CalendarPeakDayContent>
+                <CalendarPeakDayLabel>Peak Day</CalendarPeakDayLabel>
+                <CalendarPeakDayValue>
+                  {formatPeakDate(calendarPeakAndActiveDay.peakDay.date)}
+                </CalendarPeakDayValue>
+                <CalendarPeakDayCount>
+                  {calendarPeakAndActiveDay.peakDay.value 
+                    ? `${calendarPeakAndActiveDay.peakDay.value.toLocaleString()} events`
+                    : '5,600 events'}
+                </CalendarPeakDayCount>
+              </CalendarPeakDayContent>
+            </CalendarPeakDayWrapper>
+
+            <CalendarActiveDayWrapper>
+              <CalendarActiveDayIconBox>
+                <CalendarIcon src={getIconSrc(calendarIcon, FALLBACK_ICONS.calendarIcon)} alt="" />
+              </CalendarActiveDayIconBox>
+              <CalendarActiveDayContent>
+                <CalendarActiveDayLabel>Most Active Day</CalendarActiveDayLabel>
+                <CalendarActiveDayValue>
+                  {calendarPeakAndActiveDay.mostActiveDay.dayName || 'Wednesday'}
+                </CalendarActiveDayValue>
+                <CalendarActiveDayAvg>
+                  Avg {calendarPeakAndActiveDay.mostActiveDay.average || 920} / day
+                </CalendarActiveDayAvg>
+              </CalendarActiveDayContent>
+            </CalendarActiveDayWrapper>
+          </CalendarQuickInsightsCard>
+        </CalendarSidebar>
+      </CalendarGrid>
+    )}
+
+    {/* ===== HORIZONTAL BAR LAYOUT ===== */}
+    {chartType === "horizontalbar" && (
+      <TwoColumnGrid>
+        <MainChartCard style={{ minHeight: '350px' }}>
+          <ChartWrapper>
+            {renderChart()}
+          </ChartWrapper>
+        </MainChartCard>
+
+        <HorizontalBarSidebar>
+          <DemoLegendsCard>
+            <DemoLegendsTitle>Demo Legends</DemoLegendsTitle>
+            <DemoLegendsList>
+              <DemoLegendItem>
+                <DemoLegendColor $bgColor="rgba(23, 97, 163, 1)" />
+                <DemoLegendLabel>Revenue</DemoLegendLabel>
+              </DemoLegendItem>
+              <DemoLegendItem>
+                <DemoLegendColor $bgColor="rgba(70, 194, 155, 1)" />
+                <DemoLegendLabel>Profit</DemoLegendLabel>
+              </DemoLegendItem>
+              <DemoLegendItem>
+                <DemoLegendColor $bgColor="rgba(47, 164, 169, 1)" />
+                <DemoLegendLabel>Cost</DemoLegendLabel>
+              </DemoLegendItem>
+            </DemoLegendsList>
+          </DemoLegendsCard>
+
+          {currentHorizontalBarTopPerformer && (
+            <TopPerformerCard>
+              <TopPerformerHeader>
+                <TopPerformerTitle>Top Performer</TopPerformerTitle>
+                <TopPerformerIndicator 
+                  $color={currentHorizontalBarTopPerformer.isIncrease 
+                    ? 'rgba(46, 158, 120, 1)' 
+                    : 'rgba(220, 38, 38, 1)'}
+                >
+                  <TopPerformerArrow 
+                    $isIncrease={currentHorizontalBarTopPerformer.isIncrease}
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 14 14" 
+                    fill="none"
+                  >
+                    <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
+                  </TopPerformerArrow>
+                  <TopPerformerChange>{currentHorizontalBarTopPerformer.change}</TopPerformerChange>
+                </TopPerformerIndicator>
+              </TopPerformerHeader>
+              
+              <TopPerformerContent>
                 <div>
-                  <CalendarTotalVolumeLabel>Total Volume</CalendarTotalVolumeLabel>
-                  <CalendarTotalVolumeValue>${quickStats.totalVolume.value}</CalendarTotalVolumeValue>
+                  <TopPerformerLabel>Category</TopPerformerLabel>
+                  <TopPerformerValue>{currentHorizontalBarTopPerformer.name}</TopPerformerValue>
                 </div>
                 
-                <CalendarDivider />
+                <TopPerformerStatsGrid>
+                  <TopPerformerStat>
+                    <TopPerformerStatLabel>Revenue</TopPerformerStatLabel>
+                    <TopPerformerStatValue $color="rgba(37,99,235,1)">
+                      {currentHorizontalBarTopPerformer.revenue}
+                    </TopPerformerStatValue>
+                  </TopPerformerStat>
+                  <TopPerformerStat>
+                    <TopPerformerStatLabel>Profit</TopPerformerStatLabel>
+                    <TopPerformerStatValue $color="rgba(77,175,131,1)">
+                      {currentHorizontalBarTopPerformer.profit}
+                    </TopPerformerStatValue>
+                  </TopPerformerStat>
+                </TopPerformerStatsGrid>
+                
+                <TopPerformerNeedsFocus>
+                  <TopPerformerNeedsFocusLabel>Needs Focus:</TopPerformerNeedsFocusLabel>
+                  <TopPerformerNeedsFocusValue>
+                    {currentHorizontalBarTopPerformer.needsFocus}
+                  </TopPerformerNeedsFocusValue>
+                </TopPerformerNeedsFocus>
+              </TopPerformerContent>
+            </TopPerformerCard>
+          )}
+        </HorizontalBarSidebar>
+      </TwoColumnGrid>
+    )}
 
-                <CalendarPeakDayWrapper>
-                  <CalendarPeakDayIconBox>
-                    <CalendarIcon src={assetSrc(performancePeakIcon)} alt="" />
-                  </CalendarPeakDayIconBox>
-                  <CalendarPeakDayContent>
-                    <CalendarPeakDayLabel>Peak Day</CalendarPeakDayLabel>
-                    <CalendarPeakDayValue>
-                      {formatPeakDate(calendarPeakAndActiveDay.peakDay.date)}
-                    </CalendarPeakDayValue>
-                    <CalendarPeakDayCount>
-                      {calendarPeakAndActiveDay.peakDay.value 
-                        ? `${calendarPeakAndActiveDay.peakDay.value.toLocaleString()} events`
-                        : '5,600 events'}
-                    </CalendarPeakDayCount>
-                  </CalendarPeakDayContent>
-                </CalendarPeakDayWrapper>
+    {/* ===== COLUMN CHART LAYOUT ===== */}
+    {/* ===== COLUMN CHART LAYOUT ===== */}
+    {/* ===== COLUMN CHART LAYOUT ===== */}
+    {chartType === "columnchart" && (
+      <TwoColumnGrid>
+        <MainChartCard style={{ minHeight: '350px' }}>
+          <ChartWrapper>
+            {renderChart()}
+          </ChartWrapper>
+        </MainChartCard>
 
-                <CalendarActiveDayWrapper>
-                  <CalendarActiveDayIconBox>
-                    <CalendarIcon src={assetSrc(calendarIcon)} alt="" />
-                  </CalendarActiveDayIconBox>
-                  <CalendarActiveDayContent>
-                    <CalendarActiveDayLabel>Most Active Day</CalendarActiveDayLabel>
-                    <CalendarActiveDayValue>
-                      {calendarPeakAndActiveDay.mostActiveDay.dayName || 'Wednesday'}
-                    </CalendarActiveDayValue>
-                    <CalendarActiveDayAvg>
-                      Avg {calendarPeakAndActiveDay.mostActiveDay.average || 920} / day
-                    </CalendarActiveDayAvg>
-                  </CalendarActiveDayContent>
-                </CalendarActiveDayWrapper>
-              </CalendarQuickInsightsCard>
-            </CalendarSidebar>
-          </CalendarGrid>
-        )}
+        <Sidebar>
+          {/* TOP CATEGORY CARD */}
+          <TopPerformerCard>
+            <TopPerformerHeader>
+              <TopPerformerTitle>Top Category</TopPerformerTitle>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                background: 'rgba(77, 175, 131, 0.15)',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                fontSize: '10px',
+                fontWeight: '600',
+                color: 'rgba(77, 175, 131, 1)',
+                fontFamily: 'Poppins, sans-serif'
+              }}>
+                Leading
+              </div>
+            </TopPerformerHeader>
+            
+            <TopPerformerContent>
+              {(() => {
+                if (!columnChartData) return null;
+                
+                const selectedYear = selectedFilters['SelectYear'] || '2026';
+                const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+                const selectedType = selectedFilters['SelectType'] || 'Category A';
+                
+                const yearData = (columnChartData as any)?.[selectedYear];
+                const monthData = yearData?.[selectedMonth];
+                const typeData = monthData?.[selectedType] || [];
+                
+                const topPerformer = typeData.reduce((max: any, item: any) => 
+                  item.value > max.value ? item : max, 
+                  typeData[0] || { name: 'N/A', value: 0 }
+                );
+                
+                const totalRevenue = typeData.reduce((sum: number, item: any) => sum + item.value, 0);
+                const contribution = totalRevenue > 0 
+                  ? Math.round((topPerformer.value / totalRevenue) * 100) 
+                  : 0;
+                
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                  'July', 'August', 'September', 'October', 'November', 'December'];
+                const currentMonthIndex = monthNames.indexOf(selectedMonth);
+                const previousMonth = currentMonthIndex > 0 
+                  ? monthNames[currentMonthIndex - 1] 
+                  : 'December';
+                const previousYear = currentMonthIndex > 0 
+                  ? selectedYear 
+                  : String(Number(selectedYear) - 1);
+                
+                const prevYearData = (columnChartData as any)?.[previousYear];
+                const prevMonthData = prevYearData?.[previousMonth];
+                const prevTypeData = prevMonthData?.[selectedType] || [];
+                const prevTopPerformer = prevTypeData.find((item: any) => item.name === topPerformer.name);
+                
+                const growth = prevTopPerformer && prevTopPerformer.value > 0
+                  ? Math.round(((topPerformer.value - prevTopPerformer.value) / prevTopPerformer.value) * 100)
+                  : 14;
+                
+                const sortedByValue = [...typeData].sort((a: any, b: any) => b.value - a.value);
+                const rank = sortedByValue.findIndex((item: any) => item.name === topPerformer.name) + 1;
+                
+                return (
+                  <>
+                    <div style={{ 
+                      fontSize: '16px', 
+                      fontWeight: '600',
+                      color: 'rgba(23, 97, 163, 1)',
+                      fontFamily: 'Poppins, sans-serif',
+                      marginBottom: '20px'
+                    }}>
+                      {topPerformer.name}
+                    </div>
+                    
+                    <TopPerformerStatsGrid>
+                      <TopPerformerStat>
+                        <TopPerformerStatLabel>Revenue</TopPerformerStatLabel>
+                        <TopPerformerStatValue>
+                          {topPerformer.value >= 1000 
+                            ? `${(topPerformer.value / 1000).toFixed(1)}k` 
+                            : topPerformer.value}
+                        </TopPerformerStatValue>
+                      </TopPerformerStat>
+                      
+                      <TopPerformerStat>
+                        <TopPerformerStatLabel>Contribution</TopPerformerStatLabel>
+                        <TopPerformerStatValue>{contribution}%</TopPerformerStatValue>
+                      </TopPerformerStat>
+                    </TopPerformerStatsGrid>
+                    
+                    <TopPerformerStatsGrid style={{ marginTop: '16px' }}>
+                      <TopPerformerStat>
+                        <TopPerformerStatLabel>Growth</TopPerformerStatLabel>
+                        <TopPerformerStatValue $color={growth >= 0 ? 'rgba(46, 158, 120, 1)' : 'rgba(220, 38, 38, 1)'}>
+                          {growth >= 0 ? '+' : ''}{growth}%
+                        </TopPerformerStatValue>
+                      </TopPerformerStat>
+                      
+                      <TopPerformerStat>
+                        <TopPerformerStatLabel>Rank</TopPerformerStatLabel>
+                        <TopPerformerStatValue>#{rank}</TopPerformerStatValue>
+                      </TopPerformerStat>
+                    </TopPerformerStatsGrid>
+                  </>
+                );
+              })()}
+            </TopPerformerContent>
+          </TopPerformerCard>
 
-        {/* HORIZONTAL BAR LAYOUT */}
-        {chartType === "horizontalbar" && (
+          {/* QUICK INSIGHTS CARD - WITH FLEX ALIGNMENT */}
+          {/* QUICK INSIGHTS CARD - WITH FLEX ALIGNMENT */}
+    {/* QUICK INSIGHTS CARD - WITH FLEX ALIGNMENT AND DYNAMIC PERCENTAGE */}
+    <SidebarCard style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '40px'
+      }}>
+        <SidebarTitle style={{ marginBottom: '0' }}>Quick Insights</SidebarTitle>
+        <div style={{ 
+          fontSize: '10px',
+          color: 'rgba(107, 114, 128, 1)',
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '500'
+        }}>
+          {(() => {
+            const month = selectedFilters['SelectMonth'] || 'January';
+            const year = selectedFilters['SelectYear'] || '2026';
+            return `${month} ${year}`;
+          })()}
+        </div>
+      </div>
+      
+      <div style={{ 
+        fontSize: '12px',
+        color: 'rgba(17, 24, 39, 1)',
+        fontWeight: '600',
+        marginBottom: '30px',
+        fontFamily: 'Poppins, sans-serif'
+      }}>
+        Total Volume
+      </div>
+      
+      {(() => {
+        if (!columnChartData) return null;
+        
+        const selectedYear = selectedFilters['SelectYear'] || '2026';
+        const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+        const selectedType = selectedFilters['SelectType'] || 'Category A';
+        
+        // Get current month data
+        const yearData = (columnChartData as any)?.[selectedYear];
+        const monthData = yearData?.[selectedMonth];
+        const typeData = monthData?.[selectedType] || [];
+        const currentTotal = typeData.reduce((sum: number, item: any) => sum + item.value, 0);
+        
+        // Calculate previous month
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+        const currentMonthIndex = monthNames.indexOf(selectedMonth);
+        const previousMonth = currentMonthIndex > 0 
+          ? monthNames[currentMonthIndex - 1] 
+          : 'December';
+        const previousYear = currentMonthIndex > 0 
+          ? selectedYear 
+          : String(Number(selectedYear) - 1);
+        
+        // Get previous month data
+        const prevYearData = (columnChartData as any)?.[previousYear];
+        const prevMonthData = prevYearData?.[previousMonth];
+        const prevTypeData = prevMonthData?.[selectedType] || [];
+        const previousTotal = prevTypeData.reduce((sum: number, item: any) => sum + item.value, 0);
+        
+        // Calculate percentage change
+        let percentageChange = 0;
+        if (previousTotal > 0) {
+          percentageChange = Math.round(((currentTotal - previousTotal) / previousTotal) * 100);
+        }
+        
+        const isIncrease = percentageChange >= 0;
+        const absPercentage = Math.abs(percentageChange);
+        
+        // Colors for increase/decrease
+        const bgColor = isIncrease ? 'rgba(209, 250, 229, 1)' : 'rgba(254, 226, 226, 1)';
+        const textColor = isIncrease ? 'rgba(5, 150, 105, 1)' : 'rgba(220, 38, 38, 1)';
+        
+        return (
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px' 
+          }}>
+            <div style={{ 
+              fontSize: '24px',
+              fontWeight: '700',
+              color: 'rgba(17, 24, 39, 1)',
+              fontFamily: 'Poppins, sans-serif',
+              letterSpacing: '-0.5px'
+            }}>
+              ${currentTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            
+            {/* Dynamic Badge - Green for Increase, Red for Decrease */}
+            {/* Dynamic Badge - Green for Increase, Red for Decrease */}
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '4px',
+      padding: '6px 10px',
+      borderRadius: '6px',
+      background: bgColor,
+      flexShrink: 0
+    }}>
+      <img 
+        src={isIncrease 
+          ? getIconSrc(increaseIcon, FALLBACK_ICONS.increaseIcon)
+          : getIconSrc(decreaseIcon, FALLBACK_ICONS.decreaseIcon)
+        }
+        alt={isIncrease ? "increase" : "decrease"}
+        style={{
+          width: '14px',
+          height: '14px',
+          objectFit: 'contain'
+        }}
+      />
+      <span style={{
+        fontSize: '12px',
+        fontWeight: '600',
+        color: textColor,
+        fontFamily: 'Poppins, sans-serif'
+      }}>
+        {absPercentage}%
+      </span>
+    </div>
+          </div>
+        );
+      })()}
+    </SidebarCard>
+        </Sidebar>
+      </TwoColumnGrid>
+    )}
+
+    {/* ===== GROUP BAR CHART LAYOUT ===== */}
+    {/* ===== GROUP BAR CHART LAYOUT ===== */}
+    {chartType === "groupbar" && (
+      <TwoColumnGrid>
+        <MainChartCard style={{ minHeight: '350px' }}>
+          <ChartWrapper>
+            {renderChart()}
+          </ChartWrapper>
+        </MainChartCard>
+
+        <Sidebar>  {/* ✅ ADD OPENING TAG HERE */}
+          {/* LEGENDS CARD - DYNAMIC FROM JSON */}
+          {(() => {
+            if (!groupBarData) return null;
+            
+            // Get legends from JSON data
+            const legends: GroupBarLegendItem[] = groupBarData.legends || [];
+            
+            // Fallback to default if no legends in JSON
+            if (legends.length === 0) {
+              return (
+                <SidebarCard>
+                  <SidebarTitle>Legends</SidebarTitle>
+                  <GroupBarLegendsList>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(23, 97, 163, 1)" />
+                      <DemoLegendLabel>Revenue</DemoLegendLabel>
+                    </DemoLegendItem>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(77, 175, 131, 1)" />
+                      <DemoLegendLabel>Profit</DemoLegendLabel>
+                    </DemoLegendItem>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(220, 38, 38, 1)" />
+                      <DemoLegendLabel>Loss</DemoLegendLabel>
+                    </DemoLegendItem>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(47, 164, 169, 1)" />
+                      <DemoLegendLabel>Cost</DemoLegendLabel>
+                    </DemoLegendItem>
+                  </GroupBarLegendsList>
+                </SidebarCard>
+              );
+            }
+            
+            // Render dynamic legends from JSON
+            return (
+              <SidebarCard>
+                <SidebarTitle>Legends</SidebarTitle>
+                <GroupBarLegendsList>
+                  {legends.map((legend, index) => (
+                    <DemoLegendItem key={legend.key || index}>
+                      <DemoLegendColor $bgColor={legend.color} />
+                      <DemoLegendLabel>{legend.label}</DemoLegendLabel>
+                    </DemoLegendItem>
+                  ))}
+                </GroupBarLegendsList>
+              </SidebarCard>
+            );
+          })()}
+
+          {/* TOP PERFORMER CARD - USE DYNAMIC COLORS */}
+          {(() => {
+            if (!groupBarData) return null;
+            
+            const selectedYear = selectedFilters['SelectYear'] || '2026';
+            const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+            
+            const yearData = (groupBarData as any)?.[selectedYear];
+            const monthData = yearData?.[selectedMonth];
+            const groups: GroupBarItem[] = monthData || [];
+            
+            if (groups.length === 0) return null;
+            
+            // ✅ GET COLORS FROM LEGENDS
+            const legends: GroupBarLegendItem[] = groupBarData.legends || [];
+            const getColor = (key: string, fallback: string): string => {
+              const legend = legends.find(l => l.key === key);
+              return legend?.color || fallback;
+            };
+            
+            const revenueColor = getColor('revenue', 'rgba(37,99,235,1)');
+            const profitColor = getColor('profit', 'rgba(77,175,131,1)');
+            const lossColor = getColor('loss', 'rgba(220,38,38,1)');
+            
+            // ✅ Helper to get profit/loss (auto-calculate if not provided)
+            const getProfitOrLoss = (group: GroupBarItem): number => {
+              if (group.profitOrLoss !== undefined && group.profitOrLoss !== null) {
+                return group.profitOrLoss;
+              }
+              return group.revenue - group.cost;
+            };
+            
+            // Find top performer by revenue
+            const topPerformer = groups.reduce((max, item) => 
+              item.revenue > max.revenue ? item : max, 
+              groups[0]
+            );
+            
+            // Check if top performer has profit or loss
+            const topPerformerProfitLoss = getProfitOrLoss(topPerformer);
+            const isTopPerformerProfitable = topPerformerProfitLoss >= 0;
+            const topPerformerProfitLossAbs = Math.abs(topPerformerProfitLoss);
+            
+            // Calculate month-over-month change
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentMonthIndex = monthNames.indexOf(selectedMonth);
+            const previousMonth = currentMonthIndex > 0 
+              ? monthNames[currentMonthIndex - 1] 
+              : 'December';
+            const previousYear = currentMonthIndex > 0 
+              ? selectedYear 
+              : String(Number(selectedYear) - 1);
+            
+            const prevYearData = (groupBarData as any)?.[previousYear];
+            const prevMonthData = prevYearData?.[previousMonth];
+            const prevGroups: GroupBarItem[] = prevMonthData || [];
+            const prevTopPerformer = prevGroups.find(item => item.name === topPerformer.name);
+            
+            const percentageChange = prevTopPerformer && prevTopPerformer.revenue > 0
+              ? Math.round(((topPerformer.revenue - prevTopPerformer.revenue) / prevTopPerformer.revenue) * 100)
+              : 12;
+            
+            const isIncrease = percentageChange >= 0;
+            
+            // Find product needing focus (lowest revenue OR highest loss)
+            let needsFocus = groups.reduce((min, item) => 
+              item.revenue < min.revenue ? item : min, 
+              groups[0]
+            );
+            
+            // Check if any product has loss
+            const lossProducts = groups.filter(item => getProfitOrLoss(item) < 0);
+            if (lossProducts.length > 0) {
+              // Find product with highest loss
+              needsFocus = lossProducts.reduce((maxLoss, item) => 
+                getProfitOrLoss(item) < getProfitOrLoss(maxLoss) ? item : maxLoss,
+                lossProducts[0]
+              );
+            }
+            
+            const needsFocusProfitLoss = getProfitOrLoss(needsFocus);
+            const needsFocusHasLoss = needsFocusProfitLoss < 0;
+            
+            return (
+              <TopPerformerCard>
+                <TopPerformerHeader>
+                  <TopPerformerTitle>Top Performer</TopPerformerTitle>
+                  <TopPerformerIndicator 
+                    $color={isIncrease ? 'rgba(46, 158, 120, 1)' : 'rgba(220, 38, 38, 1)'}
+                  >
+                    <TopPerformerArrow 
+                      $isIncrease={isIncrease}
+                      width="14" 
+                      height="14" 
+                      viewBox="0 0 14 14" 
+                      fill="none"
+                    >
+                      <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
+                    </TopPerformerArrow>
+                    <TopPerformerChange>{Math.abs(percentageChange)}%</TopPerformerChange>
+                  </TopPerformerIndicator>
+                </TopPerformerHeader>
+                
+                <TopPerformerContent>
+                  <div>
+                    <TopPerformerLabel>Category</TopPerformerLabel>
+                    <TopPerformerValue>{topPerformer.name}</TopPerformerValue>
+                  </div>
+                  
+                  <TopPerformerStatsGrid>
+                    <TopPerformerStat>
+                      <TopPerformerStatLabel>Revenue</TopPerformerStatLabel>
+                      <TopPerformerStatValue $color={revenueColor}>
+                        {topPerformer.revenue}k
+                      </TopPerformerStatValue>
+                    </TopPerformerStat>
+                    <TopPerformerStat>
+                      <TopPerformerStatLabel>{isTopPerformerProfitable ? 'Profit' : 'Loss'}</TopPerformerStatLabel>
+                      <TopPerformerStatValue $color={isTopPerformerProfitable ? profitColor : lossColor}>
+                        {topPerformerProfitLossAbs}k
+                      </TopPerformerStatValue>
+                    </TopPerformerStat>
+                  </TopPerformerStatsGrid>
+                  
+                  <TopPerformerNeedsFocus>
+                    <TopPerformerNeedsFocusLabel>Needs Focus:</TopPerformerNeedsFocusLabel>
+                    <TopPerformerNeedsFocusValue>
+                      {needsFocus.name} {needsFocusHasLoss ? '(Loss)' : '(Low Revenue)'}
+                    </TopPerformerNeedsFocusValue>
+                  </TopPerformerNeedsFocus>
+                </TopPerformerContent>
+              </TopPerformerCard>
+            );
+          })()}
+        </Sidebar>  {/* ✅ CLOSING TAG IS NOW CORRECT */}
+      </TwoColumnGrid>
+    )}
+
+    {/* ===== LOLLIPOP CHART LAYOUT ===== */}
+        {chartType === "lollipop" && (
           <TwoColumnGrid>
             <MainChartCard style={{ minHeight: '350px' }}>
               <ChartWrapper>
@@ -2929,157 +4092,300 @@ export const MahatiChartAnalyticsWidget = ({
               </ChartWrapper>
             </MainChartCard>
 
-            <HorizontalBarSidebar>
-              {/* Demo Legends */}
-              <DemoLegendsCard>
-                <DemoLegendsTitle>Demo Legends</DemoLegendsTitle>
-                <DemoLegendsList>
-                  <DemoLegendItem>
-                    <DemoLegendColor $bgColor="rgba(23, 97, 163, 1)" />
-                    <DemoLegendLabel>Revenue</DemoLegendLabel>
-                  </DemoLegendItem>
-                  <DemoLegendItem>
-                    <DemoLegendColor $bgColor="rgba(70, 194, 155, 1)" />
-                    <DemoLegendLabel>Profit</DemoLegendLabel>
-                  </DemoLegendItem>
-                  <DemoLegendItem>
-                    <DemoLegendColor $bgColor="rgba(47, 164, 169, 1)" />
-                    <DemoLegendLabel>Cost</DemoLegendLabel>
-                  </DemoLegendItem>
-                </DemoLegendsList>
-              </DemoLegendsCard>
+            <LollipopSidebar>
+              <LollipopLegendsCard>
+                <LollipopLegendsTitle>
+  {(() => {
+    const firstFilterId = currentFilters[currentFilters.length - 2]?.id;
+    const firstFilter = currentFilters.find((f: Filter) => f.id === firstFilterId);
+    return firstFilter?.label || 'Categories';
+  })()}
+</LollipopLegendsTitle>
+<LollipopLegendsList>
+  {(() => {
+    const firstFilterId = currentFilters[currentFilters.length - 2]?.id;
+    const firstFilter = currentFilters.find((f: Filter) => f.id === firstFilterId);
+    const colors = [
+      'rgba(37, 99, 235, 1)',
+      'rgba(16, 185, 129, 1)',
+      'rgba(245, 158, 11, 1)',
+      'rgba(239, 68, 68, 1)',
+      'rgba(147, 51, 234, 1)',
+    ];
+    
+    return (firstFilter?.options || []).map((option: string, idx: number) => (
+      <LollipopLegendItem key={option}>
+        <LollipopLegendColor $bgColor={colors[idx % colors.length]} />
+        <LollipopLegendLabel>{option}</LollipopLegendLabel>
+      </LollipopLegendItem>
+    ));
+  })()}
+</LollipopLegendsList>
+              </LollipopLegendsCard>
 
-              {/* Top Performer */}
-              {currentHorizontalBarTopPerformer && (
-                <TopPerformerCard>
-                  <TopPerformerHeader>
-                    <TopPerformerTitle>Top Performer</TopPerformerTitle>
-                    <TopPerformerIndicator 
-                      $color={currentHorizontalBarTopPerformer.isIncrease 
-                        ? 'rgba(46, 158, 120, 1)' 
-                        : 'rgba(220, 38, 38, 1)'}
-                    >
-                      <TopPerformerArrow 
-                        $isIncrease={currentHorizontalBarTopPerformer.isIncrease || false}
-                        width="14" 
-                        height="14" 
-                        viewBox="0 0 14 14" 
-                        fill="none"
-                      >
-                        <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
-                      </TopPerformerArrow>
-                      <TopPerformerChange>{currentHorizontalBarTopPerformer.change}</TopPerformerChange>
-                    </TopPerformerIndicator>
-                  </TopPerformerHeader>
+              <LollipopSummaryCard>
+                <LollipopSummaryHeader>
+                  <LollipopSummaryTitle>Monthly Summary</LollipopSummaryTitle>
+                  <LollipopSummaryMenuButton>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <circle cx="8" cy="4" r="1"/>
+                      <circle cx="8" cy="8" r="1"/>
+                      <circle cx="8" cy="12" r="1"/>
+                    </svg>
+                  </LollipopSummaryMenuButton>
+                </LollipopSummaryHeader>
+                
+                <LollipopSummaryContent>
+                  {/* Best Product and Lowest Product Row */}
+                  <LollipopSummaryRow>
+                    <LollipopSummaryItem>
+                      <LollipopSummaryLabel>Best Product</LollipopSummaryLabel>
+                      <LollipopSummaryValue>
+  {lollipopData && (() => {
+    const firstFilterId = currentFilters[0]?.id;
+    const secondFilterId = currentFilters[1]?.id;
+    const thirdFilterId = currentFilters[2]?.id;
+    
+    const year = selectedFilters[firstFilterId] || currentFilters[0]?.options[0] || '2026';
+    const month = selectedFilters[secondFilterId] || currentFilters[1]?.options[0] || 'January';
+    const category = selectedFilters[thirdFilterId] || currentFilters[2]?.options[0] || 'Category A';
+    
+    // FIXED: Cast lollipopData to any before accessing dynamic property
+    const yearData = ((lollipopData as any)[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
+    const monthData = yearData?.[month];
+    const categoryData = monthData?.[category] || [];
+    
+    if (categoryData.length === 0) return 'N/A';
+    
+    const maxItem = categoryData.reduce((max, item) => 
+      item.value > max.value ? item : max, 
+      categoryData[0]
+    );
+    
+    return maxItem.label;
+  })()}
+</LollipopSummaryValue>
+                    </LollipopSummaryItem>
+                    
+                    <LollipopSummaryItem>
+                      <LollipopSummaryLabel>Lowest Product</LollipopSummaryLabel>
+                      <LollipopSummaryValue>
+  {lollipopData && (() => {
+    const firstFilterId = currentFilters[0]?.id;
+    const secondFilterId = currentFilters[1]?.id;
+    const thirdFilterId = currentFilters[2]?.id;
+    
+    const year = selectedFilters[firstFilterId] || currentFilters[0]?.options[0] || '2026';
+    const month = selectedFilters[secondFilterId] || currentFilters[1]?.options[0] || 'January';
+    const category = selectedFilters[thirdFilterId] || currentFilters[2]?.options[0] || 'Category A';
+    
+    // FIXED: Add fallback for empty object
+    const yearData = ((lollipopData as any)[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
+    const monthData = yearData?.[month];
+    const categoryData = monthData?.[category] || [];
+    
+    if (categoryData.length === 0) return 'N/A';
+    
+    const minItem = categoryData.reduce((min, item) => 
+      item.value < min.value ? item : min, 
+      categoryData[0]
+    );
+    
+    return minItem.label;
+  })()}
+</LollipopSummaryValue>
+                    </LollipopSummaryItem>
+                  </LollipopSummaryRow>
                   
-                  <TopPerformerContent>
-                    <div>
-                      <TopPerformerLabel>Category</TopPerformerLabel>
-                      <TopPerformerValue>{currentHorizontalBarTopPerformer.name}</TopPerformerValue>
-                    </div>
+                  {/* Average and Trend Row */}
+                  <LollipopSummaryRow>
+                    <LollipopSummaryItem>
+                      <LollipopSummaryLabel>Average</LollipopSummaryLabel>
+                      <LollipopSummaryValue>
+  {lollipopData && (() => {
+    const firstFilterId = currentFilters[0]?.id;
+    const secondFilterId = currentFilters[1]?.id;
+    const thirdFilterId = currentFilters[2]?.id;
+    
+    const year = selectedFilters[firstFilterId] || currentFilters[0]?.options[0] || '2026';
+    const month = selectedFilters[secondFilterId] || currentFilters[1]?.options[0] || 'January';
+    const category = selectedFilters[thirdFilterId] || currentFilters[2]?.options[0] || 'Category A';
+    
+    // FIXED: Cast lollipopData to any
+    const yearData = ((lollipopData as any)[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
+    const monthData = yearData?.[month];
+    const categoryData = monthData?.[category] || [];
+    
+    if (categoryData.length === 0) return 0;
+    
+    const total = categoryData.reduce((sum, item) => sum + item.value, 0);
+    const avg = Math.round(total / categoryData.length);
+    
+    return avg;
+  })()}
+</LollipopSummaryValue>
+                    </LollipopSummaryItem>
                     
-                    <TopPerformerStatsGrid>
-                      <TopPerformerStat>
-                        <TopPerformerStatLabel>Revenue</TopPerformerStatLabel>
-                        <TopPerformerStatValue $color="rgba(37,99,235,1)">
-                          {currentHorizontalBarTopPerformer.revenue}
-                        </TopPerformerStatValue>
-                      </TopPerformerStat>
-                      <TopPerformerStat>
-                        <TopPerformerStatLabel>Profit</TopPerformerStatLabel>
-                        <TopPerformerStatValue $color="rgba(77,175,131,1)">
-                          {currentHorizontalBarTopPerformer.profit}
-                        </TopPerformerStatValue>
-                      </TopPerformerStat>
-                    </TopPerformerStatsGrid>
-                    
-                    <TopPerformerNeedsFocus>
-                      <TopPerformerNeedsFocusLabel>Needs Focus:</TopPerformerNeedsFocusLabel>
-                      <TopPerformerNeedsFocusValue>
-                        {currentHorizontalBarTopPerformer.needsFocus}
-                      </TopPerformerNeedsFocusValue>
-                    </TopPerformerNeedsFocus>
-                  </TopPerformerContent>
-                </TopPerformerCard>
-              )}
-            </HorizontalBarSidebar>
+                    <LollipopSummaryItem>
+                      <LollipopSummaryLabel>Trend</LollipopSummaryLabel>
+                      <LollipopTrendWrapper>
+  {lollipopData && (() => {
+    const firstFilterId = currentFilters[0]?.id;
+    const secondFilterId = currentFilters[1]?.id;
+    const thirdFilterId = currentFilters[2]?.id;
+    
+    const year = selectedFilters[firstFilterId] || currentFilters[0]?.options[0] || '2026';
+    const month = selectedFilters[secondFilterId] || currentFilters[1]?.options[0] || 'January';
+    const category = selectedFilters[thirdFilterId] || currentFilters[2]?.options[0] || 'Category A';
+    
+    // FIXED: Cast lollipopData to any
+    const yearData = ((lollipopData as any)[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
+    const monthData = yearData?.[month];
+    const categoryData = monthData?.[category] || [];
+    
+    if (categoryData.length === 0) {
+      return (
+        <LollipopTrendIndicator $isPositive={true}>
+          <LollipopTrendArrow $isPositive={true} width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
+          </LollipopTrendArrow>
+          <LollipopTrendText>Positive</LollipopTrendText>
+        </LollipopTrendIndicator>
+      );
+    }
+    
+    const total = categoryData.reduce((sum, item) => sum + item.value, 0);
+    const average = total / categoryData.length;
+    const itemsAboveAverage = categoryData.filter(item => item.value > average).length;
+    const itemsBelowOrEqualAverage = categoryData.length - itemsAboveAverage;
+    const isPositive = itemsAboveAverage > itemsBelowOrEqualAverage;
+    
+    return (
+      <LollipopTrendIndicator $isPositive={isPositive}>
+        <LollipopTrendArrow $isPositive={isPositive} width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
+        </LollipopTrendArrow>
+        <LollipopTrendText>{isPositive ? 'Positive' : 'Negative'}</LollipopTrendText>
+      </LollipopTrendIndicator>
+    );
+  })()}
+</LollipopTrendWrapper>
+                    </LollipopSummaryItem>
+
+                  </LollipopSummaryRow>
+                  
+                  {/* Needs Focus Row */}
+                  <LollipopSummaryFullWidth>
+                    <LollipopNeedsFocusWrapper>
+                      <LollipopNeedsFocusLabel>Needs Focus:</LollipopNeedsFocusLabel>
+                      <LollipopNeedsFocusValue>
+  {lollipopData && (() => {
+    const firstFilterId = currentFilters[0]?.id;
+    const secondFilterId = currentFilters[1]?.id;
+    const thirdFilterId = currentFilters[2]?.id;
+    
+    const year = selectedFilters[firstFilterId] || currentFilters[0]?.options[0] || '2026';
+    const month = selectedFilters[secondFilterId] || currentFilters[1]?.options[0] || 'January';
+    const category = selectedFilters[thirdFilterId] || currentFilters[2]?.options[0] || 'Category A';
+    
+    // FIXED: Cast lollipopData to any
+    const yearData = ((lollipopData as any)[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
+    const monthData = yearData?.[month];
+    const categoryData = monthData?.[category] || [];
+    
+    if (categoryData.length === 0) return 'N/A';
+    
+    const minItem = categoryData.reduce((min, item) => 
+      item.value < min.value ? item : min, 
+      categoryData[0]
+    );
+    
+    return minItem.label;
+  })()}
+</LollipopNeedsFocusValue>
+                    </LollipopNeedsFocusWrapper>
+                  </LollipopSummaryFullWidth>
+                </LollipopSummaryContent>
+              </LollipopSummaryCard>
+            </LollipopSidebar>
           </TwoColumnGrid>
         )}
 
-        {/* LINE/AREA/BAR LAYOUT */}
-        {(isLineFamily || chartType === "bar") && !isPieFamily && chartType !== ("bullet" as any) && chartType !== ("gauge" as any) && chartType !== ("gantt" as any) && chartType !== ("calendarheatmap" as any) && chartType !== ("horizontalbar" as any) ? (
-          <TwoColumnGrid>
-            <MainChartCard>
-              <ChartWrapper>
-                {renderChart()}
-              </ChartWrapper>
-            </MainChartCard>
 
-            <Sidebar>
-              <SidebarCard>
-                <SidebarTitle>Details</SidebarTitle>
-                <SidebarDetailsList>
-                  {details.map((item, idx) => {
-                    // Determine background color based on item label
-                    let bgColor = "rgba(229, 231, 235, 0.5)";
-                    if (item.label === "Revenue") {
-                      bgColor = "rgba(70, 194, 155, 0.15)";
-                    } else if (item.label === "Profit") {
-                      bgColor = "rgba(239, 68, 68, 0.15)";
-                    } else if (item.label === "New Customers") {
-                      bgColor = "rgba(23, 97, 163, 0.15)";
-                    }
-                    
-                    return (
-                      <SidebarDetailItem key={idx}>
-                        <SidebarDetailContent>
-                          <SidebarDetailLabel>{item.label}</SidebarDetailLabel>
-                          <SidebarDetailDescription>{item.description}</SidebarDetailDescription>
-                        </SidebarDetailContent>
-                        <PercentageBadge $bgColor={bgColor}>
-                          {item.value}
-                        </PercentageBadge>
-                      </SidebarDetailItem>
-                    );
-                  })}
-                </SidebarDetailsList>
-                {/* <DetailsCardFooter>
-                  <DetailsCardFooterIcon>
-                    <DetailsCardFooterIconText>i</DetailsCardFooterIconText>
-                  </DetailsCardFooterIcon>
-                  <DetailsCardFooterText>
-                    <DetailsCardFooterBold>Note:</DetailsCardFooterBold> Percentages show progress towards monthly targets
-                  </DetailsCardFooterText>
-                </DetailsCardFooter> */}
-              </SidebarCard>
+      {/* ===== KPI CHART LAYOUT ===== */}
+  {chartType === "kpi" && currentKPIData && (
+  <div style={{ width: '100%' }}>
+    {renderChart()}
+  </div>
+)}
 
-              <SidebarCard>
-                <SidebarTitle>Quick Stats</SidebarTitle>
-                <div style={{ marginBottom: '12px' }}>
-                  <StatLabel>Total Volume</StatLabel>
-                  <StatValue style={{ fontSize: '20px', marginTop: '8px' }}>
-                    {quickStats.totalVolume.value}
-                  </StatValue>
-                  <StatDescription style={{ marginTop: '4px' }}>
-                    {quickStats.totalVolume.description}
-                  </StatDescription>
-                </div>
-                <div>
-                  <StatLabel>Transactions</StatLabel>
-                  <StatValue style={{ fontSize: '20px', marginTop: '8px' }}>
-                    {quickStats.transactions.value}
-                  </StatValue>
-                  <StatDescription style={{ marginTop: '4px' }}>
-                    {quickStats.transactions.description}
-                  </StatDescription>
-                </div>
-              </SidebarCard>
-            </Sidebar>
-          </TwoColumnGrid>
-        ) : null}
-      </ContentSection>
-    </MainContainer>
-  );
+
+
+    {/* ===== LINE/AREA/BAR LAYOUT ===== */}
+    {/* ===== LINE/AREA/BAR LAYOUT ===== */}
+{(chartType === "line" || chartType === "area" || chartType === "bar") && !isPieFamily ? (
+  <TwoColumnGrid>
+    <MainChartCard>
+      <ChartWrapper>
+        {renderChart()}
+      </ChartWrapper>
+    </MainChartCard>
+
+    <Sidebar>
+      <SidebarCard>
+        <SidebarTitle>Details</SidebarTitle>
+        <SidebarDetailsList>
+          {details.map((item, idx) => {
+            let bgColor = "rgba(229, 231, 235, 0.5)";
+            if (item.label === "Revenue") {
+              bgColor = "rgba(70, 194, 155, 0.15)";
+            } else if (item.label === "Profit") {
+              bgColor = "rgba(239, 68, 68, 0.15)";
+            } else if (item.label === "New Customers") {
+              bgColor = "rgba(23, 97, 163, 0.15)";
+            }
+            
+            return (
+              <SidebarDetailItem key={idx}>
+                <SidebarDetailContent>
+                  <SidebarDetailLabel>{item.label}</SidebarDetailLabel>
+                  <SidebarDetailDescription>{item.description}</SidebarDetailDescription>
+                </SidebarDetailContent>
+                <PercentageBadge $bgColor={bgColor}>
+                  {item.value}
+                </PercentageBadge>
+              </SidebarDetailItem>
+            );
+          })}
+        </SidebarDetailsList>
+      </SidebarCard>
+
+      <SidebarCard>
+        <SidebarTitle>Quick Stats</SidebarTitle>
+        <div style={{ marginBottom: '12px' }}>
+          <StatLabel>Total Volume</StatLabel>
+          <StatValue style={{ fontSize: '20px', marginTop: '8px' }}>
+            {quickStats.totalVolume.value}
+          </StatValue>
+          <StatDescription style={{ marginTop: '4px' }}>
+            {quickStats.totalVolume.description}
+          </StatDescription>
+        </div>
+        <div>
+          <StatLabel>Transactions</StatLabel>
+          <StatValue style={{ fontSize: '20px', marginTop: '8px' }}>
+            {quickStats.transactions.value}
+          </StatValue>
+          <StatDescription style={{ marginTop: '4px' }}>
+            {quickStats.transactions.description}
+          </StatDescription>
+        </div>
+      </SidebarCard>
+    </Sidebar>
+  </TwoColumnGrid>
+) : null}
+  </ContentSection>
+</MainContainer>
+);
 };
-
 MahatiChartAnalyticsWidget.displayName = "MahatiChartAnalyticsWidget";
