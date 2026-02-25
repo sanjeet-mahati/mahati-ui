@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { fadeInUp, fadeInDown, fadeIn, staggerContainer } from '../utils/animation';
+import { fadeInUp, fadeInDown, fadeIn, staggerContainer } from '../../utils/animation';
 
 describe('Animation configurations', () => {
   describe('fadeInUp', () => {
