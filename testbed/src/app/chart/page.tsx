@@ -759,7 +759,8 @@ export default function MahatiChart() {
           Charts UI provides various types of charts like{" "}
           <b>"Pie"</b>, <b>"Doughnut"</b>, <b>"Line"</b>, <b>"Area"</b>, <b>"Bar"</b>, <b>"Bullet"</b>,{" "}
           <b>"Gauge"</b>, <b>"Gantt"</b>, <b>"Calendar Heatmap"</b>, <b>"Horizontal Bar"</b>, <b>"Column Chart"</b>,{" "}
-          <b>"Group Bar Chart"</b>, <b>"Stacked Bar Chart"</b>, <b>"Lollipop Chart"</b>, <b>"KPI Chart"</b>, <b>"KPI Risk Gauge Chart"</b>.
+          <b>"Group Bar Chart"</b>, <b>"Stacked Bar Chart"</b>, <b>"Lollipop Chart"</b>, <b>"KPI Chart"</b>,{" "}
+          <b>"KPI Risk Gauge Chart"</b>, <b>"Stacked Bar Chart Chart"</b>.
         </p>
       </div>
 
