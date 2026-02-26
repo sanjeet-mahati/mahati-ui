@@ -227,6 +227,7 @@ export function SearchableDropdown({
   value,
   onChange,
   placeholder ="search here",
+  testId
 }: any) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -244,10 +245,13 @@ export function SearchableDropdown({
   );
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref}
+      data-testid={testId}>
       {label && <Label>{label}</Label>}
 
-      <Button onClick={() => setOpen(o => !o)}>
+      <Button onClick={() => setOpen(o => !o)}
+      
+        >
         {(options??[]).find((o: any) => o.value === value)?.label || placeholder}
         <ChevronDown size={16} />
       </Button>
@@ -262,6 +266,7 @@ export function SearchableDropdown({
           <Options>
             {filtered.map((o: any) => (
               <Option
+               
                 key={o.value}
                 onClick={() => {
                   onChange(o.value);
@@ -285,7 +290,9 @@ export function MultiSelectDropdown({
   options,
   values,
   onChange,
+  testId
 }: {
+  testId?:string;
   label?: string;
   options: { label: string; value: string }[];
   values: string[];
@@ -322,11 +329,13 @@ export function MultiSelectDropdown({
   );
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref}
+    data-testid={testId}
+    >
   <Label>{label}</Label>
 
   {/* BUTTON — only text + arrow */}
-  <Button onClick={() => setOpen(!open)}>
+  <Button  onClick={() => setOpen(!open)}>
     {values.length === 0 ? "Multi Select" : "Multi Select"}
     <ChevronDown size={16} />
   </Button>
@@ -339,7 +348,7 @@ export function MultiSelectDropdown({
        
        
         return (
-          <Tag key={val}>
+          <Tag >
             {lbl}
             <X size={14} onClick={() => removeValue(val)} />
           </Tag>
@@ -351,7 +360,7 @@ export function MultiSelectDropdown({
   {open && (
     <Dropdown>
       <SearchBox>
-        <input
+        <input 
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search..."
@@ -359,7 +368,7 @@ export function MultiSelectDropdown({
         {search && <ClearBtn onClick={() => setSearch("")}>✕</ClearBtn>}
       </SearchBox>
 
-      <Options>
+      <Option>
         {filteredOptions.map((opt) => (
           <Option
             key={opt.value}
@@ -371,7 +380,7 @@ export function MultiSelectDropdown({
           </Option>
         ))}
         {filteredOptions.length === 0 && <Empty>No results</Empty>}
-      </Options>
+      </Option>
     </Dropdown>
   )}
 </Wrapper>
@@ -382,6 +391,7 @@ type CascadeOption = {
   label: string;
   value: string;
   children?: CascadeOption[];
+  testId?:string;
 };
 const cascadeData: CascadeOption[] = [
   {
@@ -426,6 +436,7 @@ interface CascadingValue {
 interface CascadingDropdownProps {
   label?: string;
   data: CascadeOption[];
+  testId?:string;
   value: CascadingValue;
   onChange: (val: CascadingValue) => void;
 }
@@ -434,6 +445,7 @@ export function CascadingDropdown({
   label = "Cascading Dropdown",
   data,
   value,
+  testId,
   onChange,
 }: CascadingDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -463,7 +475,8 @@ export function CascadingDropdown({
     "Select location";
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref}
+    data-testid={testId}>
       <Label>{label}</Label>
 
       <Button onClick={() => setOpen(o => !o)}>
@@ -556,6 +569,7 @@ type GroupValue = {
 
 type GroupedDropdownProps = {
   label?: string;
+  testId?:string;
   groups: GroupedGroup[];
   values: GroupValue;
   onChange: (val: GroupValue) => void;
@@ -568,6 +582,7 @@ export function GroupedDropdown({
   groups,
   values,
   onChange,
+  testId
 }: GroupedDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -634,7 +649,7 @@ export function GroupedDropdown({
 
   /* ================= RENDER ================= */
  return (
-  <Wrapper ref={ref}>
+  <Wrapper ref={ref} data-testid={testId}>
     {label && <Label>{label}</Label>}
 
     <GDButton onClick={() => setOpen(o => !o)}>
@@ -678,13 +693,16 @@ export interface AvatarOption {
   value: string;
   subtitle?: string;
   image: string;
+  
 }
 
 interface AvatarDropdownProps {
   label?: string;
+  string?:string;
   placeholder?: string;
   options: AvatarOption[];
   value?: string;
+  testId?:string;
   onChange: (value: string) => void;
 }
 /* =====================
@@ -696,6 +714,7 @@ export function AvatarDropdown({
   placeholder = "Choose user",
   options,
   value,
+  testId,
   onChange,
 }: AvatarDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -715,7 +734,7 @@ export function AvatarDropdown({
   const selected = options.find(o => o.value === value);
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref} data-testid={testId}>
       {label && <Label>{label}</Label>}
 
       {/* BUTTON */}
@@ -799,6 +818,7 @@ interface AvatarMultiSelectProps {
   placeholder?: string;
   options: AvatarOption[];
   values: string[];
+  testId?:string;
   onChange: (values: string[]) => void;
 }
 /* =====================
@@ -810,6 +830,7 @@ export function AvatarMultiSelectDropdown({
   placeholder = "Select users",
   options,
   values,
+  testId,
   onChange,
 }: AvatarMultiSelectProps) {
   const [open, setOpen] = useState(false);
@@ -839,7 +860,7 @@ export function AvatarMultiSelectDropdown({
   };
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref} data-testid={testId}>
       {label && <Label>{label}</Label>}
 
       {/* BUTTON */}
@@ -952,6 +973,7 @@ interface AsyncDropdownProps {
   placeholder?: string;
   value?: string;
   disabled?: boolean;
+  testId?:string;
   loadOptions: (search: string) => Promise<
     { label: string; value: string }[]
   >;
@@ -962,6 +984,7 @@ export function AsyncDropdown({
   placeholder = "Search...",
   value,
   disabled,
+  testId,
   loadOptions,
   onChange,
 }: AsyncDropdownProps) {
@@ -996,7 +1019,7 @@ export function AsyncDropdown({
   }, [open, search, loadOptions]);
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref} data-testid={testId}>
       {label && <Label>{label}</Label>}
 
       {/* BUTTON */}

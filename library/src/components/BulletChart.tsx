@@ -180,11 +180,12 @@ export interface BulletChartData {
 export interface BulletChartProps {
   title: string;
   bullets: BulletItem[];
+  testId?:string;
 }
 
-export const BulletChart: React.FC<BulletChartProps> = ({ title, bullets }) => {
+export const BulletChart: React.FC<BulletChartProps> = ({ title, bullets ,testId}) => {
   return (
-    <Container>
+    <Container data-testid={testId}>
       <Title>{title}</Title>
 
       <BulletsContainer>
@@ -194,14 +195,14 @@ export const BulletChart: React.FC<BulletChartProps> = ({ title, bullets }) => {
           const markerPosition = Math.min((b.marker / b.target) * 100, 100);
 
           return (
-            <BulletItem key={b.name}>
+            <BulletItem key={b.name} data-testid={testId ? `${testId}-item-${b.name}`:undefined}>
               <BulletName>{b.name}</BulletName>
 
               <BulletContent>
                 <BarContainer>
                   <BarBackground>
-                    <BarFill $width={achievedWidth} />
-                    <Marker $position={markerPosition} />
+                    <BarFill $width={achievedWidth} data-testid={testId ? `${testId}-bar-${b.name}`:undefined}  />
+                    <Marker $position={markerPosition} data-testid={testId ? `${testId}-marker-${b.name}`:undefined} />
                   </BarBackground>
 
                   <ValueLabel>
@@ -220,7 +221,7 @@ export const BulletChart: React.FC<BulletChartProps> = ({ title, bullets }) => {
                   </AxisLabels>
                 </BarContainer>
 
-                <PercentageText>
+                <PercentageText data-testid={testId ? `${testId}-percentage-${b.name}`:undefined}>
                   {percentageAchieved}% of target achieved
                 </PercentageText>
               </BulletContent>

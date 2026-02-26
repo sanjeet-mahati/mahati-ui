@@ -628,14 +628,14 @@ useEffect(() => {
  /* ================= UI ================= */
 
   return (
- <Container>
+ <Container data-testid="text-to-audio-container">
     {/* LEFT COLUMN */}
-    <Card>
+    <Card data-testid="text-to-audio-card">
       <Header>Text to Speech</Header>
 
  
       <Body>
-<TextArea
+<TextArea data-testid="text-to-audio-textarea"
   ref={textAreaRef}
   placeholder="Enter text here..."
   value={text}
@@ -645,23 +645,23 @@ useEffect(() => {
       <Controls>
         <Player>
          
-<IconBtn onClick={() => skip(-10)}>
+<IconBtn data-testid="10 sec backward" onClick={() => skip(-10)}>
   <ControlIcon src={icons.tenBackward} />
 </IconBtn>
 
-<IconBtn onClick={() => skip(-5)}>
+<IconBtn data-testid="skip-backward-btn" onClick={() => skip(-5)}>
   <ControlIcon src={icons.skipBackward} />
 </IconBtn>
 
-<IconBtn onClick={togglePlay}>
+<IconBtn data-testid="play-pause-btn" onClick={togglePlay}>
   <ControlIcon src={playing ? icons.pause : icons.play} />
 </IconBtn>
 
-<IconBtn onClick={() => skip(10)}>
+<IconBtn data-testid="10-sec-forward-skip" onClick={() => skip(10)}>
   <ControlIcon src={icons.tenForward} />
 </IconBtn>
 
-<IconBtn onClick={() => skip(5)}>
+<IconBtn data-testid="5-sec-forward-skip" onClick={() => skip(5)}>
     <div
     style={{
       width: 16,
@@ -676,12 +676,13 @@ useEffect(() => {
    />
 </IconBtn>
 
-<IconBtn onClick={stop}>
+<IconBtn data-testid="force-stop" onClick={stop}>
   <ControlIcon src={icons.stop} />
 </IconBtn>
 
 
 <IconBtn
+  data-testid="on-loop-btn"
   onClick={() => {
     setLoopMode(prev => (prev === 2 ? 0 : (prev + 1) as 0 | 1 | 2));
     
@@ -736,6 +737,7 @@ useEffect(() => {
 
 <SeekWrapper>
   <Seek
+    data-testid="seek-bar"
     type="range"
     min={0}
     max={duration}
@@ -769,6 +771,7 @@ useEffect(() => {
 
      
 <GenerateBtn
+  data-testid="reads-entire-page-btn"
   onClick={() => {
     const pageText = getPageContent();
      loopCountRef.current=0;
@@ -782,6 +785,7 @@ useEffect(() => {
 </GenerateBtn>
 
 <GenerateBtn
+ data-testid="reads-given-input"
   onClick={() => {
     loopCountRef.current=0;
     setMode("textarea");
@@ -797,7 +801,7 @@ useEffect(() => {
     </Card>
 
     {/* RIGHT COLUMN */}
-    <RightPanel>
+    <RightPanel >
       {/* Volume */}
       <SettingsCard>
         <SettingsHeader>
@@ -807,6 +811,7 @@ useEffect(() => {
 
         <SliderBox>
           <StyledSlider
+           data-testid="text-to-audio-volume"
             type="range"
             min={0}
             max={1}
@@ -822,13 +827,14 @@ useEffect(() => {
       </SettingsCard>
 
       <SideCard>
-        <SideHeader>
+        <SideHeader >
           <span>Playback Speed</span>
           <span>{speed.toFixed(2)}x</span>
         </SideHeader>
 
         <SliderWrap>
           <StyledSlider
+           data-testid="test-to-audio-playbackspeed"
             type="range"
             min={0.5}
             max={2}
@@ -861,7 +867,7 @@ useEffect(() => {
       
       <SideCard>
         <SideHeader>
-          <span>Quick Summary</span>
+          <span data-testid="quick-summary">Quick Summary</span>
         </SideHeader>
 
         <p style={{ fontSize: 13, color: "#4a5c57", lineHeight: 1.5 }}>

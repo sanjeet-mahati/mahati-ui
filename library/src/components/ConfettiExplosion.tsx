@@ -12,6 +12,7 @@ export interface ConfettiExplosionProps {
   force?: number;
   particleSize?: number;
   stageHeight?: number;
+  testId?:string;
 }
 
 interface Particle {
@@ -29,6 +30,7 @@ interface Particle {
   opacity: number;
   life: number;
   delay: number;
+  
 }
 
 interface ParticleStyleProps {
@@ -74,6 +76,7 @@ const ParticleElement = styled.div<ParticleStyleProps>`
 `;
 
 const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
+  testId,
   isActive,
   particleCount = 150,
   duration = 4000,
@@ -179,7 +182,7 @@ const ConfettiExplosion: React.FC<ConfettiExplosionProps> = ({
   if (!isActive || particles.length === 0) return null;
 
   return (
-    <Container stageHeight={stageHeight}>
+    <Container stageHeight={stageHeight} data-testid={testId}>
       {particles.map((particle) => (
         <ParticleElement
           key={particle.id}

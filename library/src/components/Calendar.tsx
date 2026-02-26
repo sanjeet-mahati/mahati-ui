@@ -25,6 +25,7 @@ export interface CalendarDateRange {
 export type CalendarSize = "small" | "medium" | "large" | "extra-large";
 
 export interface CalendarProps {
+  calendartestId?:string;
   value?: CalendarDate | null;
   onChange?: (date: CalendarDate | null, dateString?: string) => void;
   enableRangeSelection?: boolean;
@@ -874,6 +875,7 @@ const getDeviceScale = (): number => {
 };
 
 const Calendar = ({
+  calendartestId,
   value,
   onChange,
   enableRangeSelection = false,
@@ -1586,7 +1588,7 @@ const Calendar = ({
   );
 
   return (
-    <CalendarContainer ref={containerRef} className={className}>
+    <CalendarContainer ref={containerRef} className={className} data-testid={calendartestId}>
       <InputWrapper>
         {showIcon && (
           <IconWrapper style={{ paddingLeft: `${scaled(12)}px` }}>

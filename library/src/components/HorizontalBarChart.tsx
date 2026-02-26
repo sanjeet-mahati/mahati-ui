@@ -221,8 +221,7 @@ export interface HorizontalBarTopPerformer {
   profit: string;
   needsFocus: string;
   change: string;
-  isIncrease?: boolean;
-}
+  isIncrease?: boolean;}
 
 export interface HorizontalBarProductData {
   title: string;
@@ -267,6 +266,7 @@ export interface HorizontalBarChartProps {
     change: string;
     isIncrease?: boolean;
   };
+  testId?:string;
 }
 
 export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
@@ -277,15 +277,16 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
   selectedType,
   xAxisConfig,
   topPerformer,
+  testId
 }) => {
   // Safety check for bars
   const safeBars = bars || [];
   const maxValue = safeBars.length > 0 ? Math.max(...safeBars.map((b) => b.value)) : 0;
 
   return (
-    <Container>
+    <Container data-testid={testId}>
       <HeaderRow>
-        <MenuButton>
+        <MenuButton data-testid={testId?`${testId}-menu-button`:undefined}>
           <MenuDots>
             <Dot />
             <Dot />
@@ -294,12 +295,12 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
         </MenuButton>
       </HeaderRow>
 
-      <Title>{title}</Title>
+      <Title data-testid={testId?`${testId}-title`:undefined}>{title}</Title>
 
       <ChartContent>
         <LabelsColumn>
           {safeBars.map((bar, index) => (
-            <LabelRow
+            <LabelRow data-testid={testId?`${testId}-label-${index}`:undefined}
               key={bar.name}
               $height="45px"
               $marginBottom={index < safeBars.length - 1 ? "10px" : "0"}
@@ -340,13 +341,13 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
               const barLengthPercentage = (bar.value / maxValue) * 100;
 
               return (
-                <BarRow
+                <BarRow data-testid={testId?`${testId}-row-${index}`:undefined}
                   key={bar.name}
                   $height="45px"
                   $marginBottom={index < safeBars.length - 1 ? "10px" : "0"}
                 >
                   <BarWrapper>
-                    <Bar $width={barLengthPercentage} $color={bar.color} />
+                    <Bar data-testid={testId?`${testId}-bar-${index}`:undefined} $width={barLengthPercentage} $color={bar.color} />
                   </BarWrapper>
                 </BarRow>
               );
