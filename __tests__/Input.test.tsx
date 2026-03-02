@@ -64,10 +64,10 @@ describe('Input', () => {
   });
 
   describe('Dimensions', () => {
-    it('should have width of 438px', () => {
+    it('should have width of 100%', () => {
       const { container } = render(<Input />);
       const input = container.querySelector('input');
-      expect(input).toHaveStyle({ width: '438px' });
+      expect(input).toHaveStyle({ width: '100%' });
     });
 
     it('should have height of 44px', () => {
