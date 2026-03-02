@@ -11,7 +11,7 @@ jest.mock('lucide-react', () => ({
 }));
 
 // Import after mocks
-import { CodePreview } from '../app/CodePreview';
+import { CodePreview } from '../../app/CodePreview';
 
 describe('CodePreview Component', () => {
   const mockCode = 'const Button = () => <button>Click</button>;';

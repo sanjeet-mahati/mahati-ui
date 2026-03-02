@@ -32,35 +32,65 @@ interface SideNavItemProps {
   handleMouseLeave: (key: string) => void;
 }
 
-export default function SideNav() {
-  const navItems: NavItem[] = NavItems();
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = window.localStorage.getItem('sidebarExpanded');
-      if (saved === null) {
-        return true;
-      }
-      return JSON.parse(saved);
-    }
-    return true;
-  });
-  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
-  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+// ✅ NEW: prop from server (cookie-based SSR state)
+interface SideNavProps {
+  initialExpanded: boolean;
+}
 
+const STORAGE_KEY = 'sidebarExpanded';
+const COOKIE_KEY = 'sidebarExpanded';
+
+const setCookie = (key: string, value: string) => {
+  // persist for 1 year
+  const maxAge = 60 * 60 * 24 * 365;
+  document.cookie = `${key}=${value}; path=/; max-age=${maxAge}`;
+};
+
+export default function SideNav({ initialExpanded }: SideNavProps) {
+  const navItems: NavItem[] = NavItems();
+
+  // ✅ IMPORTANT:
+  // Use server-provided initialExpanded so the very first render matches SSR HTML (no hydration mismatch).
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(initialExpanded);
+
+  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
+  const [hoverTimeout, setHoverTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  // ✅ Keep localStorage in sync (optional, but keeps your previous storage behavior)
+  // Also ensures it stays consistent when navigating client-side.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(
-        'sidebarExpanded',
-        JSON.stringify(isSidebarExpanded),
-      );
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(isSidebarExpanded));
+    } catch {
+      // ignore
     }
   }, [isSidebarExpanded]);
 
   const toggleSidebar = () => {
-    setIsSidebarExpanded(!isSidebarExpanded);
-    if (!isSidebarExpanded) {
-      setOpenSubmenus({});
-    }
+    setIsSidebarExpanded((prev) => {
+      const next = !prev;
+
+      // ✅ Persist to cookie so refresh keeps state (SERVER can read it)
+      try {
+        setCookie(COOKIE_KEY, next ? '1' : '0');
+      } catch {
+        // ignore
+      }
+
+      // ✅ Keep your old behavior: if collapsing, close submenus
+      if (!next) {
+        setOpenSubmenus({});
+      }
+
+      // ✅ Also write localStorage immediately (same behavior you originally had)
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+
+      return next;
+    });
   };
 
   const toggleSubmenu = (itemKey: string) => {
@@ -141,6 +171,7 @@ export default function SideNav() {
             </div>
           </div>
         </aside>
+
         <div className="toggle-button-container">
           <button
             type="button"
@@ -209,6 +240,7 @@ export const SideNavItem: React.FC<SideNavItemProps> = ({
                 </div>
               </Link>
             </div>
+
             {subItems && isSidebarExpanded && isOpen && (
               <div className="submenu-container" style={{ marginLeft: `${level * 10}px`}}>
                 {subItems.map((subItem, subIdx) => {
@@ -241,7 +273,8 @@ export const SideNavItem: React.FC<SideNavItemProps> = ({
       ) : (
         <TooltipProvider delayDuration={70}>
           <Tooltip>
-            <TooltipTrigger>
+            {/* ✅ FIX: asChild prevents Radix from injecting a <button> wrapper -> avoids hydration mismatch */}
+            <TooltipTrigger asChild>
               <Link
                 href={path}
                 className={cn(
@@ -266,6 +299,7 @@ export const SideNavItem: React.FC<SideNavItemProps> = ({
                 </div>
               </Link>
             </TooltipTrigger>
+
             <TooltipContent
               side="left"
               className="tooltip-content"
