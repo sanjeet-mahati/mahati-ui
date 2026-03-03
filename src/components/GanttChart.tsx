@@ -258,6 +258,7 @@ export interface GanttChartProps {
   data: GanttData;
   selectedYear: string;
   selectedMonth: string;
+  testId?:string;
   selectedProject: string;
   onProjectChange: (project: string) => void;
 }
@@ -268,6 +269,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({
   selectedMonth,
   selectedProject,
   onProjectChange,
+  testId
 }) => {
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = React.useState(false);
 
@@ -417,7 +419,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({
   );
 
   return (
-    <Container>
+    <Container data-testid={testId}>
       <HeaderRow>
         <DropdownWrapper>
           <DropdownButton onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}>

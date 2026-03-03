@@ -73,6 +73,7 @@ interface SpinnerProps {
   primaryColor?: string;
   backgroundColor?: string;
   speed?: number;
+  testId?:string;
 }
 
 const SpinnerContainer = styled.div<SpinnerProps>`
@@ -86,6 +87,7 @@ const SpinnerContainer = styled.div<SpinnerProps>`
 
 export const Spinner = ({ 
   size = 24,
+  testId,
   borderWidth = 4,
   borderRadius = 10,
   primaryColor = '#007bff',
@@ -94,6 +96,7 @@ export const Spinner = ({
 }: SpinnerProps): any => {
   return (
     <SpinnerContainer
+     data-testId={testId}
       role="status"
       aria-live="polite"
       size={size}
@@ -117,6 +120,7 @@ interface CircularSpinnerProps {
   color?: string;
   speed?: number;
   ringCount?: number;
+  testId?:string;
 }
 
 const CircularSpinnerContainer = styled.div<{ size: number }>`
@@ -150,11 +154,12 @@ export const CircularSpinner = ({
   color = 'rgba(37, 99, 235, 1)',
   speed = 1.5,
   ringCount = 1,
+  testId,
 }: CircularSpinnerProps): any => {
   const rings = Array.from({ length: Math.max(1, ringCount) });
   
   return (
-    <CircularSpinnerContainer 
+    <CircularSpinnerContainer data-testid={testId} 
       role="status" 
       aria-live="polite"
       size={size}
@@ -165,7 +170,7 @@ export const CircularSpinner = ({
         const opacity = 1 - (i * 0.3);
         
         return (
-          <CircularSpinnerRing
+          <CircularSpinnerRing data-testid={testId}
             key={i}
             ringSize={ringSize}
             offset={offset}
@@ -193,6 +198,7 @@ interface CardOverlayLoaderProps {
   spinnerTrack?: string;
   backdrop?: string;
   label?: string;
+  testId?:string;
 }
 
 const OverlayContainer = styled.div<{ backdrop: string }>`
@@ -220,6 +226,7 @@ const OverlayLabel = styled.span`
 
 export const CardOverlayLoader = ({
   show = true,
+  testId,
   spinnerSize = 32,
   spinnerBorderWidth = 4,
   spinnerPrimary = 'rgba(37, 99, 235, 1)',
@@ -230,7 +237,7 @@ export const CardOverlayLoader = ({
   if (!show) return null;
   
   return (
-    <OverlayContainer
+    <OverlayContainer data-testId={String}
       backdrop={backdrop}
       role="status"
       aria-live="polite"
@@ -260,6 +267,7 @@ interface LoadingDotsProps {
   gap?: number;
   speed?: number;
   count?: number;
+  testId?:string;
 }
 
 const DotsContainer = styled.div`
@@ -289,11 +297,12 @@ export const LoadingDots = ({
   gap = 6,
   speed = 1.2,
   count = 3,
+  testId,
 }: LoadingDotsProps): any => {
   const dots = Array.from({ length: Math.max(0, count) });
 
   return (
-    <DotsContainer role="status" aria-label="Loading">
+    <DotsContainer  data-testid={testId} role="status" aria-label="Loading">
       {dots.map((_, i) => (
         <Dot
           key={i}
@@ -320,6 +329,7 @@ interface LoadingDotsLinearProps {
   gap?: number;
   speed?: number;
   count?: number;
+  testId?:string;
 }
 
 const DotLinear = styled.span<{
@@ -344,12 +354,13 @@ export const LoadingDotsLinear = ({
   gap = 6,
   speed = 1.2,
   count = 5,
+  testId
 }: LoadingDotsLinearProps): any => {
   const dots = Array.from({ length: Math.max(1, count) });
   const animationDelay = speed / count;
 
   return (
-    <DotsContainer role="status" aria-label="Loading">
+    <DotsContainer data-testid={testId} role="status" aria-label="Loading">
       {dots.map((_, i) => (
         <DotLinear
           key={i}
@@ -375,6 +386,7 @@ interface CardWithLoadingProps {
   imageUrl?: string;
   title?: string;
   content?: string;
+  testId?:string;
 }
 
 const Card = styled.div`
@@ -455,12 +467,13 @@ const SkeletonLine = styled.div<{ width: string }>`
 
 export const CardWithLoading = ({
   loading = true,
+  testId,
   imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Adirondacks_2016_Cascade_mountain_hike.jpg',
   title = 'Amazing Landscape',
   content = 'Discover breathtaking views and natural wonders from around the world. Experience the beauty of nature through stunning photography.',
 }: CardWithLoadingProps): any => {
   return (
-    <Card>
+    <Card data-testid={testId}>
       <ImageContainer>
         {!loading && (
           <Image src={imageUrl} alt={title} />

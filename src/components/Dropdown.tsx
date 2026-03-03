@@ -16,6 +16,7 @@ interface DropdownProps {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
+  testId?:string;
 }
 
 // Styled Components
@@ -213,7 +214,8 @@ const Dropdown = ({
   variant = "basic", 
   className = "", 
   placeholder = "Select an option",
-  disabled = false
+  disabled = false,
+  testId
 }: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const [internalSelected, setInternalSelected] = useState<DropdownOption | null>(null);
@@ -256,7 +258,7 @@ const Dropdown = ({
   };
 
   return (
-    <DropdownContainer ref={dropdownRef} className={className}>
+    <DropdownContainer ref={dropdownRef} className={className} data-testid={testId}>
       <DropdownButton
         onClick={handleButtonClick}
         variant={variant}

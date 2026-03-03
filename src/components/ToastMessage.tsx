@@ -11,7 +11,7 @@ type AssetModule =
 
 const assetSrc = (m: AssetModule): string => {
   if (typeof m === 'string') return m;
-  const anyM = m as any;
+  const anyM = m as any
   if (typeof anyM?.src === 'string') return anyM.src;
   const d = anyM?.default;
   if (typeof d === 'string') return d;
@@ -127,6 +127,7 @@ export interface ToastMessageProps extends React.HTMLAttributes<HTMLDivElement> 
   background?: BackgroundType;
   custom?: CustomToastStyles;
   action?: ActionButton[];
+  testId?:string;
 }
 
 const getStripGradient = (type: ToastType): string => {
@@ -375,6 +376,7 @@ const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
       custom,
       action,
       className,
+      testId,
       ...rest
     },
     ref
@@ -412,6 +414,7 @@ const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
 
     const content = (
       <ToastContainer
+      data-testId={testId}
         ref={ref}
         $type={type}
         $background={background}
@@ -455,7 +458,7 @@ const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
 
         {hasActions && (
           <ActionsContainer>
-            {action.map((btn, index) => (
+            {action?.map((btn, index) => (
               <ActionButtonStyled
                 key={index}
                 onClick={btn.onClick}
