@@ -6,6 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
   errorMessage?: string;
   className?: string;
+  testId?:string;
 }
 
 // Styled Components
@@ -141,23 +142,25 @@ const ErrorMessage = styled.span`
 `;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ hasError = false, errorMessage = '', className = '', onChange, children, ...props }, ref) => {
+  ({ hasError = false, errorMessage = '', className = '', onChange, children, testId,...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (props.disabled) return;
       onChange?.(e);
     };
 
     return (
-      <InputWrapper>
+      <InputWrapper data-testid={testId}>
         <StyledInput
           ref={ref}
           hasError={hasError}
           className={className}
           onChange={handleChange}
+          data-testid={testId?`${testId}-input`:undefined}
+          
           {...props}
         />
         {hasError && errorMessage && (
-          <ErrorMessage>{errorMessage}</ErrorMessage>
+          <ErrorMessage data-testid={testId?`${testId}-error`:undefined}>{errorMessage}</ErrorMessage>
         )}
       </InputWrapper>
     );

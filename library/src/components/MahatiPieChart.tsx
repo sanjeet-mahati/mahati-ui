@@ -23,6 +23,7 @@ interface MahatiPieAnalyticsWidgetProps {
   onDropdownSelect?: (value: string) => void;
   hoverTooltipText?: string;
   className?: string;
+  testId?:string;
 }
 
 const MahatiPieAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
@@ -35,6 +36,7 @@ const MahatiPieAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
   onDropdownSelect,
   hoverTooltipText = "",
   className = "",
+  testId
 }) => {
   const [hover, setHover] = useState(false);
   const donutOptions = useMemo(() => {
@@ -49,7 +51,7 @@ const MahatiPieAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
   }, [options]);
 
   return (
-    <div className={`w-full bg-white border border-gray-200 rounded-lg shadow-sm p-6 ${className}`}>
+    <div className={`w-full bg-white border border-gray-200 rounded-lg shadow-sm p-6 ${className} data-testid={testId}`}>
       {/* Title */}
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>

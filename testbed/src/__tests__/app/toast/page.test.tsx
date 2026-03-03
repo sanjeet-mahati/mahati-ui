@@ -82,7 +82,7 @@ jest.mock(
 
 // Import AFTER the mock so page.tsx uses the mocked "@/lib"
 // import MahatiToastMessagePage from '../app/toast/page';
-import MahatiToastMessagePage from '../../app/toast/page';
+import MahatiToastMessagePage from '../../../app/toast/page';
 
 
 describe('ToastMessageDemo (testbed)', () => {

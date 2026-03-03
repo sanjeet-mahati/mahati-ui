@@ -288,6 +288,7 @@
           "December"
         ]
       }
+<<<<<<< HEAD
     ],
 
     "stackbar": [
@@ -336,6 +337,8 @@
           "Category C"
         ]
       }
+=======
+>>>>>>> 3d8cf0b57a791481422b3d79ddf8d34ca6cc5ce1
     ]
 
   },
@@ -37135,7 +37138,10 @@
     }
   }
   },
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d8cf0b57a791481422b3d79ddf8d34ca6cc5ce1
   "gauge": {
     "title": "Monthly Goal Progress",
     "gauges": [
@@ -41440,6 +41446,7 @@
     }
   },
 
+<<<<<<< HEAD
   
   "stackbar": {
     "title": "Stacked Bar Chart",
@@ -54410,6 +54417,8 @@
   
   ,
 
+=======
+>>>>>>> 3d8cf0b57a791481422b3d79ddf8d34ca6cc5ce1
 
 
   "quickStats": {
@@ -54524,6 +54533,7 @@
       }
     },
     "lollipop": {
+<<<<<<< HEAD
       "totalVolume": {
         "value": "450",
         "change": "+8%",
@@ -54568,10 +54578,47 @@
         "value": "1,456",
         "description": "Total transactions this week"
       }
+=======
+  "totalVolume": {
+    "value": "450",
+    "change": "+8%",
+    "description": "Product performance metrics across categories"
+  },
+  "transactions": {
+    "value": "5 Products",
+    "description": "Comparative analysis"
+  }
+},
+  "kpi": {
+    "totalVolume": {
+      "value": "$1.2M",
+      "change": "+12.4%",
+      "description": "Compared to last period"
+    },
+    "transactions": {
+      "value": "8,543",
+      "description": "Transactions this period"
+>>>>>>> 3d8cf0b57a791481422b3d79ddf8d34ca6cc5ce1
     }
 
   },
 
+<<<<<<< HEAD
+=======
+  "riskgauge": {
+      "totalVolume": {
+        "value": "95.2K",
+        "change": "+12.5%",
+        "description": "Total risk assessments completed"
+      },
+      "transactions": {
+        "value": "2,847",
+        "description": "Risk evaluations performed this month"
+      }
+    }
+
+  },
+>>>>>>> 3d8cf0b57a791481422b3d79ddf8d34ca6cc5ce1
   "actionButtons": [
     {
       "label": "Remove Chart",

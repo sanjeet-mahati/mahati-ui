@@ -210,30 +210,35 @@ describe('Calendar Component', () => {
       });
     });
 
+  
     it('navigates to previous month', async () => {
-      render(<Calendar />);
-      
-      const input = screen.getByPlaceholderText('Select date');
-      fireEvent.click(input);
-      
-      await waitFor(() => {
-        expect(screen.getByText('February 2026')).toBeInTheDocument();
-      });
+  const testDate: CalendarDate = { year: 2026, month: 1, day: 15 }; // February 2026
 
-      const nextButton = screen.getByLabelText('Next month');
-      fireEvent.click(nextButton);
-      
-      await waitFor(() => {
-        expect(screen.getByText('March 2026')).toBeInTheDocument();
-      });
+  render(<Calendar value={testDate} />);
 
-      const prevButton = screen.getByLabelText('Previous month');
-      fireEvent.click(prevButton);
-      
-      await waitFor(() => {
-        expect(screen.getByText('February 2026')).toBeInTheDocument();
-      });
-    });
+  const input = screen.getByPlaceholderText('Select date');
+  fireEvent.click(input);
+
+  await waitFor(() => {
+    expect(screen.getByText(/February\s+2026/)).toBeInTheDocument();
+  });
+
+  const nextButton = screen.getByLabelText('Next month');
+  fireEvent.click(nextButton);
+
+  await waitFor(() => {
+    expect(screen.getByText(/March\s+2026/)).toBeInTheDocument();
+  });
+
+  const prevButton = screen.getByLabelText('Previous month');
+  fireEvent.click(prevButton);
+
+  await waitFor(() => {
+    expect(screen.getByText(/February\s+2026/)).toBeInTheDocument();
+  });
+});
+
+
 
     it('wraps to next year when going from December to January', async () => {
       const decemberDate: CalendarDate = { year: 2025, month: 11, day: 15 };
@@ -589,23 +594,47 @@ describe('Calendar Component', () => {
 
   describe('Blocked Dates', () => {
     // FIX 3: Use the correct year (2026) and month to match what's being rendered
+    // it('blocks dates within specified range', async () => {
+    //   const blockConfig = {
+    //     startDate: { year: 2026, month: 1, day: 10 }, // February 2026
+    //     days: 5 // Blocks Feb 10-14
+    //   };
+      
+    //   render(<Calendar blockDateConfig={blockConfig} />);
+      
+    //   const input = screen.getByPlaceholderText('Select date');
+    //   fireEvent.click(input);
+      
+    //   await waitFor(() => {
+    //     const day12 = screen.getByText('12').closest('button');
+    //     // Check if the button has disabled class or is not clickable
+    //     expect(day12).toBeDisabled();
+    //   });
+    // });
     it('blocks dates within specified range', async () => {
-      const blockConfig = {
-        startDate: { year: 2026, month: 1, day: 10 }, // February 2026
-        days: 5 // Blocks Feb 10-14
-      };
-      
-      render(<Calendar blockDateConfig={blockConfig} />);
-      
-      const input = screen.getByPlaceholderText('Select date');
-      fireEvent.click(input);
-      
-      await waitFor(() => {
-        const day12 = screen.getByText('12').closest('button');
-        // Check if the button has disabled class or is not clickable
-        expect(day12).toBeDisabled();
-      });
-    });
+  const blockConfig = {
+    startDate: { year: 2026, month: 1, day: 10 }, // Feb 2026
+    days: 5
+  };
+
+  const testDate = { year: 2026, month: 1, day: 1 };
+
+  render(
+    <Calendar
+      value={testDate}
+      blockDateConfig={blockConfig}
+    />
+  );
+
+  const input = screen.getByPlaceholderText("Select date");
+  fireEvent.click(input);
+
+ expect(screen.getByText(/February\s+2026/)).toBeInTheDocument();
+
+  const day12 = screen.getByText("12").closest("button");
+
+  expect(day12).toBeDisabled();
+});
 
     it('allows selection of unblocked dates', async () => {
       const onChange = jest.fn();
@@ -614,7 +643,16 @@ describe('Calendar Component', () => {
         days: 5
       };
       
-      render(<Calendar blockDateConfig={blockConfig} onChange={onChange} />);
+      //render(<Calendar blockDateConfig={blockConfig} onChange={onChange} />);
+      const testDate = { year: 2024, month: 0, day: 1 }; // Feb 2026
+
+render(
+  <Calendar
+    value={testDate}
+    blockDateConfig={blockConfig}
+    onChange={onChange}
+  />
+);
       
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.click(input);

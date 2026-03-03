@@ -60,6 +60,7 @@ export interface TableWithTabProps<RowType extends Record<string, any>> {
    */
   title?: string;
   description?: string;
+  testId?:string;
 
   /**
    * Key of the column to use as the tab header label.
@@ -363,6 +364,7 @@ function TableWithTab<RowType extends Record<string, any>>({
   tabLabelKey,
   sectionTitleFont,
   sectionDescriptionFont,
+  testId
 }: TableWithTabProps<RowType>) {
   const { headers, data } = tableProps;
 
@@ -491,7 +493,7 @@ function TableWithTab<RowType extends Record<string, any>>({
     tabProps?.showTabCloseIconInHeader ?? true;
 
   return (
-    <Container>
+    <Container data-testid={testId}>
       {(title || description) && (
         <Header>
           {title && (

@@ -9,6 +9,10 @@ import chartDataJson from "./sample-chart-data.json";
    STYLED COMPONENTS
    ============================================================================ */
 
+/* ============================================================================
+   STYLED COMPONENTS
+   ============================================================================ */
+
 const DemoContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,6 +72,10 @@ const UploadHint = styled.p`
    TYPES
    ============================================================================ */
 
+/* ============================================================================
+   TYPES
+   ============================================================================ */
+
 interface DetailItem {
   label: string;
   value: string;
@@ -89,8 +97,12 @@ const GANTT_COLOR_MAP = {
   emerald: "rgba(16, 185, 129, 1)",
 } as const;
 
-type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "riskgauge" | "gantt" | "calendarheatmap" | "horizontalbar" | "columnchart" | "groupbar" | "stackbar" | "lollipop" | "kpi";
+type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
+
+/* ============================================================================
+   UTILITY FUNCTIONS
+   ============================================================================ */
 
 /* ============================================================================
    UTILITY FUNCTIONS
@@ -179,6 +191,10 @@ const getAreaChartData = (areaData: any, filters: Record<string, string>) => {
    MAIN COMPONENT
    ============================================================================ */
 
+/* ============================================================================
+   MAIN COMPONENT
+   ============================================================================ */
+
 export default function MahatiChart() {
   const [chartData, setChartData] = useState(chartDataJson);
   const [currentChartType, setCurrentChartType] = useState<ChartType>("area");
@@ -194,6 +210,12 @@ export default function MahatiChart() {
     SelectYear: "2026",
     SelectMonth: "January",
     SelectType: "Sales",
+  });
+
+  const [riskGaugeSelectedFilters, setRiskGaugeSelectedFilters] = useState<Record<string, string>>({
+    SelectYear: "2026",
+    SelectMonth: "January",
+    SelectType: "Credit Score",
   });
 
   const [riskGaugeSelectedFilters, setRiskGaugeSelectedFilters] = useState<Record<string, string>>({
@@ -265,6 +287,19 @@ export default function MahatiChart() {
     return initialFilters;
   });
 
+  const [kpiSelectedFilters, setKpiSelectedFilters] = useState<Record<string, string>>(() => {
+    const kpiFilters = chartData.filters?.kpi || [];
+    const initialFilters: Record<string, string> = {};
+    
+    kpiFilters.forEach((filter: any) => {
+      if (filter.options && filter.options.length > 0) {
+        initialFilters[filter.id] = filter.options[0];
+      }
+    });
+    
+    return initialFilters;
+  });
+
   const [currentStats, setCurrentStats] = useState(chartData.quickStats?.pie || {});
 
   const [activeChartDataMap, setActiveChartDataMap] = useState<Record<ChartType, ChartData<any>>>({
@@ -279,11 +314,6 @@ export default function MahatiChart() {
     gantt: { labels: [], datasets: [] },
     calendarheatmap: { labels: [], datasets: [] },
     horizontalbar: { labels: [], datasets: [] },
-    columnchart: { labels: [], datasets: [] },
-    groupbar: { labels: [], datasets: [] },
-    stackbar: { labels: [], datasets: [] },
-    lollipop: { labels: [], datasets: [] },
-    kpi: { labels: [], datasets: [] },
   });
 
   useEffect(() => {
@@ -303,11 +333,6 @@ export default function MahatiChart() {
       gantt: { labels: [], datasets: [] },
       calendarheatmap: { labels: [], datasets: [] },
       horizontalbar: { labels: [], datasets: [] },
-      columnchart: { labels: [], datasets: [] },
-      groupbar: { labels: [], datasets: [] },
-      stackbar: { labels: [], datasets: [] },
-      lollipop: { labels: [], datasets: [] },
-      kpi: { labels: [], datasets: [] },
     };
 
     setActiveChartDataMap(initialMap);
@@ -318,9 +343,6 @@ export default function MahatiChart() {
     switch (currentChartType) {
       case 'gantt': return ganttSelectedFilters;
       case 'horizontalbar': return horizontalBarSelectedFilters;
-      case 'columnchart': return columnChartSelectedFilters;
-      case 'groupbar': return groupBarSelectedFilters;
-      case 'stackbar': return stackBarSelectedFilters;
       case 'calendarheatmap': return calendarHeatmapSelectedFilters;
       case 'lollipop': return lollipopSelectedFilters;
       case 'kpi': return kpiSelectedFilters;
@@ -329,15 +351,12 @@ export default function MahatiChart() {
       case 'gauge': return bulletGaugeSelectedFilters;
       default: return selectedFilters;
     }
-  }, [currentChartType, selectedFilters, bulletGaugeSelectedFilters, riskGaugeSelectedFilters, ganttSelectedFilters, horizontalBarSelectedFilters, columnChartSelectedFilters, groupBarSelectedFilters, stackBarSelectedFilters, calendarHeatmapSelectedFilters, lollipopSelectedFilters, kpiSelectedFilters]);
+  }, [currentChartType, selectedFilters, bulletGaugeSelectedFilters, ganttSelectedFilters, horizontalBarSelectedFilters, calendarHeatmapSelectedFilters]);
 
   const currentFilters = useMemo(() => {
     switch (currentChartType) {
       case 'gantt': return chartData.filters?.gantt || [];
       case 'horizontalbar': return chartData.filters?.horizontalbar || [];
-      case 'columnchart': return chartData.filters?.columnchart || [];
-      case 'groupbar': return chartData.filters?.groupbar || [];
-      case 'stackbar': return chartData.filters?.stackbar || [];
       case 'calendarheatmap': return chartData.filters?.calendarheatmap || [];
       case 'lollipop': return chartData.filters?.lollipop || [];
       case 'kpi': return chartData.filters?.kpi || [];
@@ -364,12 +383,6 @@ export default function MahatiChart() {
       setGanttSelectedFilters(newFilters);
     } else if (currentChartType === 'horizontalbar') {
       setHorizontalBarSelectedFilters(newFilters);
-    } else if (currentChartType === 'columnchart') {
-      setColumnChartSelectedFilters(newFilters);
-    } else if (currentChartType === 'groupbar') {
-      setGroupBarSelectedFilters(newFilters);
-    } else if (currentChartType === 'stackbar') {
-      setStackBarSelectedFilters(newFilters);
     } else if (currentChartType === 'calendarheatmap') {
       setCalendarHeatmapSelectedFilters(newFilters);
     } else if (currentChartType === 'lollipop') {
@@ -551,115 +564,7 @@ export default function MahatiChart() {
       }));
     }
 
-    if (currentChartType === 'columnchart') {
-      const year = columnChartSelectedFilters.SelectYear || '2026';
-      const month = columnChartSelectedFilters.SelectMonth || 'January';
-      const type = columnChartSelectedFilters.SelectType || 'Category A';
-      
-      const columnYearData = (chartData.columnchart as any)?.[year];
-      const columnMonthData = columnYearData?.[month];
-      const columnTypeData = columnMonthData?.[type] || [];
-      
-      return columnTypeData.slice(0, 6).map((item: any) => ({
-        label: item.name,
-        value: `${item.value >= 1000 ? (item.value / 1000).toFixed(1) + 'k' : item.value}`,
-        description: `Value: ${item.value}`,
-        color: item.gradient || 'linear-gradient(180deg, rgba(77, 175, 131, 1) 0%, rgba(23, 97, 163, 1) 100%)',
-      }));
-    }
-
-    if (currentChartType === 'groupbar') {
-      const year = groupBarSelectedFilters.SelectYear || '2026';
-      const month = groupBarSelectedFilters.SelectMonth || 'January';
-      
-      const groupBarYearData = (chartData.groupbar as any)?.[year];
-      const groupBarMonthData = groupBarYearData?.[month] || [];
-      
-      const legends = (chartData.groupbar as any)?.legends || [];
-      const getColor = (key: string, fallback: string): string => {
-        const legend = legends.find((l: any) => l.key === key);
-        return legend?.color || fallback;
-      };
-      
-      const revenueColor = getColor('revenue', 'rgba(23, 97, 163, 1)');
-      const profitColor = getColor('profit', 'rgba(77, 175, 131, 1)');
-      const lossColor = getColor('loss', 'rgba(220, 38, 38, 1)');
-      const costColor = getColor('cost', 'rgba(47, 164, 169, 1)');
-      
-      const allMetrics: any[] = [];
-      
-      const getProfitOrLoss = (group: any): number => {
-        if (group.profitOrLoss !== undefined && group.profitOrLoss !== null) {
-          return group.profitOrLoss;
-        }
-        return group.revenue - group.cost;
-      };
-      
-      groupBarMonthData.forEach((group: any) => {
-        const profitOrLossValue = getProfitOrLoss(group);
-        const isProfitable = profitOrLossValue >= 0;
-        const profitLossLabel = isProfitable ? 'Profit' : 'Loss';
-        const profitLossColor = isProfitable ? profitColor : lossColor;
-        const profitLossAbsValue = Math.abs(profitOrLossValue);
-        
-        allMetrics.push(
-          { label: `${group.name} - Revenue`, value: `${group.revenue}k`, description: 'Revenue', color: revenueColor },
-          { label: `${group.name} - ${profitLossLabel}`, value: `${profitLossAbsValue}k`, description: profitLossLabel, color: profitLossColor },
-          { label: `${group.name} - Cost`, value: `${group.cost}k`, description: 'Cost', color: costColor }
-        );
-      });
-      
-      return allMetrics.slice(0, 6);
-    }
-
-    if (currentChartType === 'stackbar') {
-      const year = stackBarSelectedFilters.SelectYear || '2026';
-      const month = stackBarSelectedFilters.SelectMonth || 'January';
-      const week = stackBarSelectedFilters.SelectWeek || 'Week 1';
-      const type = stackBarSelectedFilters.SelectType || 'Category A';
-      
-      const stackBarYearData = (chartData.stackbar as any)?.[year];
-      const stackBarMonthData = stackBarYearData?.[month];
-      const stackBarWeekData = stackBarMonthData?.[week];
-      const stackBarTypeData = stackBarWeekData?.[type] || [];
-      
-      const legends = (chartData.stackbar as any)?.legends || [];
-      const getColor = (key: string, fallback: string): string => {
-        const legend = legends.find((l: any) => l.key === key);
-        return legend?.color || fallback;
-      };
-      
-      const aggregatingColor = getColor('aggregating', 'rgba(37, 99, 235, 1)');
-      const outstandingColor = getColor('outstanding', 'rgba(34, 197, 94, 1)');
-      const writeOffColor = getColor('writeOff', 'rgba(239, 68, 68, 1)');
-      
-      const allMetrics: any[] = [];
-      
-      stackBarTypeData.forEach((day: any) => {
-        allMetrics.push(
-          { label: `${day.day} - Aggregating`, value: `$${day.aggregating}`, description: 'Aggregating Amount', color: aggregatingColor },
-          { label: `${day.day} - Outstanding`, value: `$${day.outstanding}`, description: 'Outstanding Amount', color: outstandingColor },
-          { label: `${day.day} - Write-Off`, value: `$${day.writeOff}`, description: 'Write-Off Amount', color: writeOffColor }
-        );
-      });
-      
-      return allMetrics.slice(0, 6);
-    }
-
-    if (currentChartType === 'lollipop') {
-      const year = lollipopSelectedFilters.SelectYear || '2026';
-      const month = lollipopSelectedFilters.SelectMonth || 'January';
-      const category = lollipopSelectedFilters.SelectType || 'Category A';
-      const lollipopYearData = (chartData.lollipop as any)?.[year]?.[month]?.[category] || [];
-      
-      return lollipopYearData.slice(0, 5).map((item: any) => ({
-        label: item.label,
-        value: `${item.value}`,
-        description: `Value: ${item.value}`,
-        color: item.color || 'rgba(37, 99, 235, 1)',
-      }));
-    }
-
+    // Fallback for pie/doughnut/bar
     const total = data.datasets[0]?.data?.reduce((sum: number, v: number) => sum + v, 0) || 0;
     return (data.labels || []).map((label: any, idx: number) => {
       const value = data.datasets[0]?.data?.[idx] || 0;
@@ -675,7 +580,7 @@ export default function MahatiChart() {
         color: bgColor,
       };
     });
-  }, [activeChartDataMap, currentChartType, chartData, bulletGaugeSelectedFilters, riskGaugeSelectedFilters, ganttSelectedFilters, horizontalBarSelectedFilters, columnChartSelectedFilters, groupBarSelectedFilters, stackBarSelectedFilters, calendarHeatmapSelectedFilters, lollipopSelectedFilters, kpiSelectedFilters]);
+  }, [activeChartDataMap, currentChartType, chartData, bulletGaugeSelectedFilters, ganttSelectedFilters, calendarHeatmapSelectedFilters]);
 
   const chartFiltersConfig = {
     pie: chartData.filters?.default,
@@ -688,13 +593,6 @@ export default function MahatiChart() {
     gantt: chartData.filters?.gantt,
     heatmap: (chartData.filters as any)?.heatmap,
     calendarheatmap: chartData.filters?.calendarheatmap,
-    horizontalbar: chartData.filters?.horizontalbar,
-    columnchart: chartData.filters?.columnchart,
-    groupbar: chartData.filters?.groupbar,
-    stackbar: chartData.filters?.stackbar,
-    lollipop: chartData.filters?.lollipop,
-    kpi: chartData.filters?.kpi,
-    riskgauge: chartData.filters?.riskgauge,
   };
 
   const actionButtons = (chartData.actionButtons || []).map((btn: any) => ({
@@ -733,11 +631,6 @@ export default function MahatiChart() {
           gantt: { labels: [], datasets: [] },
           calendarheatmap: { labels: [], datasets: [] },
           horizontalbar: { labels: [], datasets: [] },
-          columnchart: { labels: [], datasets: [] },
-          groupbar: { labels: [], datasets: [] },
-          stackbar: { labels: [], datasets: [] },
-          lollipop: { labels: [], datasets: [] },
-          kpi: { labels: [], datasets: [] },
         };
         setActiveChartDataMap(newMap);
       } catch (err) {
@@ -758,9 +651,7 @@ export default function MahatiChart() {
         <p className="text-lg text-gray-600 leading-relaxed mb-8">
           Charts UI provides various types of charts like{" "}
           <b>"Pie"</b>, <b>"Doughnut"</b>, <b>"Line"</b>, <b>"Area"</b>, <b>"Bar"</b>, <b>"Bullet"</b>,{" "}
-          <b>"Gauge"</b>, <b>"Gantt"</b>, <b>"Calendar Heatmap"</b>, <b>"Horizontal Bar"</b>, <b>"Column Chart"</b>,{" "}
-          <b>"Group Bar Chart"</b>, <b>"Stacked Bar Chart"</b>, <b>"Lollipop Chart"</b>, <b>"KPI Chart"</b>,{" "}
-          <b>"KPI Risk Gauge Chart"</b>, <b>"Stacked Bar Chart Chart"</b>.
+          <b>"Gauge"</b>, <b>"Gantt"</b>, <b>"Calendar Heatmap"</b>, <b>"Horizontal Bar"</b>.
         </p>
       </div>
 
@@ -786,12 +677,6 @@ export default function MahatiChart() {
             "gantt",
             "calendarheatmap",
             "horizontalbar",
-            "lollipop",
-            "kpi",
-            "riskgauge",
-            "columnchart",
-            "groupbar",
-            "stackbar",
           ] as const
         }
         initialChartType="area"
@@ -802,12 +687,6 @@ export default function MahatiChart() {
         bulletData={chartData.bullet}
         gaugeData={chartData.gauge}
         horizontalBarData={chartData.horizontalbar}
-        columnChartData={chartData.columnchart}
-        groupBarData={chartData.groupbar}
-        stackBarData={chartData.stackbar}
-        lollipopData={chartData.lollipop}
-        kpiData={chartData.kpi}
-        riskGaugeData={chartData.riskgauge}
         ganttData={chartData.gantt as any}
         calendarheatmapData={chartData.calendarheatmap as any}
         onApplyFilters={handleApplyFilters}
