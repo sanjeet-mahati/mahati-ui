@@ -29,6 +29,10 @@ import type { KPIChartData } from "./KPIChart";
 import { GroupBarChart } from "./GroupBarChart";
 import type { GroupBarChartData, GroupBarItem, GroupBarLegendItem } from "./GroupBarChart";  // ✅ ADD GroupBarLegendItem
 
+// Add to existing chart imports
+import { StackBarChart } from "./StackBarChart";
+import type { StackBarChartData, StackBarDayData, StackBarLegendItem } from "./StackBarChart";
+
 // Import types
 import type { BulletData, BulletItem } from "./BulletChart";
 import type { GaugeData } from "./GaugeChart";
@@ -90,7 +94,7 @@ try {
    TYPES & INTERFACES
    ============================================================================ */
 
-export type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar" | "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge";
+export type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar" | "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge" | "stackbar";
 
 export interface Filter {
   id: string;
@@ -113,6 +117,7 @@ export interface ChartFiltersConfig {
   horizontalbar?: Filter[];
   columnchart?: Filter[];
   groupbar?: Filter[];
+  stackbar?: Filter[];  // ✅ ADD THIS LINE
   lollipop?: Filter[];
   kpi?: Filter[];
   riskgauge?: Filter[];
@@ -140,6 +145,7 @@ export interface MahatiChartAnalyticsWidgetProps {
   horizontalBarData?: HorizontalBarData;
   columnChartData?: ColumnChartData;  // ✅ ADD THIS LINE
   groupBarData?: GroupBarChartData;  // ✅ ADD THIS LINE
+  stackBarData?: StackBarChartData;  // ✅ ADD THIS LINE
   lollipopData?: LollipopData;
   kpiData?: Record<string, KPIChartData>;
   riskGaugeData?: any;
@@ -700,7 +706,7 @@ const SidebarCard = styled.div`
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   @media (min-width: 640px) {
-    padding: 16px;
+    padding: 29px;
   }
 `;
 
@@ -731,6 +737,126 @@ const SidebarDetailItem = styled.div`
   align-items: flex-start;
   gap: 8px;
 `;
+
+
+
+
+
+
+
+
+
+const SidebarCardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+`;
+
+const IconCircle = styled.div<{ $bgColor?: string }>`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: ${props => props.$bgColor || 'rgba(221, 238, 255, 1)'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    width: 36px;
+    height: 36px;
+  }
+`;
+
+const MetricRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+`;
+
+const MetricLabel = styled.div`
+  color: rgba(94, 94, 94, 1);
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+
+  @media (min-width: 640px) {
+    font-size: 16px;
+  }
+`;
+
+const MetricValue = styled.div`
+  color: rgba(23, 97, 163, 1);
+  font-family: Poppins, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+
+  @media (min-width: 640px) {
+    font-size: 20px;
+  }
+`;
+
+const PercentageRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
+const PercentageBox = styled.div<{ $bgColor?: string }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: ${props => props.$bgColor || 'rgba(46, 158, 120, 0.1)'};
+`;
+
+const PercentageArrow = styled.span`
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+
+  @media (min-width: 640px) {
+    font-size: 16px;
+  }
+`;
+
+const PercentageText = styled.span`
+  color: rgba(255, 255, 255, 1);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+
+  @media (min-width: 640px) {
+    font-size: 14px;
+  }
+`;
+
+const PercentageDescription = styled.span`
+  color: rgba(94, 94, 94, 1);
+  font-family: Poppins, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: normal;
+
+  @media (min-width: 640px) {
+    font-size: 12px;
+  }
+`;
+
+
+
+
+
+
+
+
 
 const PercentageBadge = styled.div<{ $bgColor: string }>`
   display: inline-flex;
@@ -2249,6 +2375,7 @@ const tabLabel = (type: ChartType) => {
   if (type === "horizontalbar") return "Horizontal Bar Chart";
   if (type === "columnchart") return "Column Chart";  // ✅ ADD THIS LINE
   if (type === "groupbar") return "Group Bar Chart";  // ✅ ADD THIS LINE
+  if (type === "stackbar") return "Stacked Bar Chart";  // ✅ ADD THIS LINE
   if (type === "lollipop") return "Lollipop Chart";
   if (type === "kpi") return "KPI Chart";
   return `${type.charAt(0).toUpperCase() + type.slice(1)} Chart`;
@@ -2271,6 +2398,7 @@ export const MahatiChartAnalyticsWidget = ({
   horizontalBarData,
   columnChartData,  // ✅ ADD THIS LINE
   groupBarData,  // ✅ ADD THIS LINE
+  stackBarData,  // ✅ ADD THIS LINE
   lollipopData,
   kpiData,
   riskGaugeData,
@@ -2799,6 +2927,37 @@ const currentKPIData = useMemo(() => {
           />
         );
       }
+
+      case "stackbar": {
+  if (!stackBarData) return null;
+  
+  const selectedYear = selectedFilters['SelectYear'] || '2026';
+  const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+  const selectedWeek = selectedFilters['SelectWeek'] || 'Week 1';
+  const selectedType = selectedFilters['SelectType'] || 'Category A';
+  
+  const yearData = (stackBarData as any)?.[selectedYear];
+  const monthData = yearData?.[selectedMonth];
+  const weekData = monthData?.[selectedWeek];
+  const typeData = weekData?.[selectedType] || [];
+  
+  const yAxisConfig = stackBarData.yAxis?.[selectedYear];
+  const legends = stackBarData.legends;
+  
+  return (
+    <StackBarChart 
+      title={stackBarData.title} 
+      data={typeData}
+      legends={legends}
+      selectedYear={selectedYear}
+      selectedMonth={selectedMonth}
+      selectedWeek={selectedWeek}
+      selectedType={selectedType}
+      yAxisConfig={yAxisConfig}
+      allData={stackBarData}  // ✅ ADD THIS LINE
+    />
+  );
+}
 
       default:
         return null;
@@ -4080,6 +4239,198 @@ const currentKPIData = useMemo(() => {
             );
           })()}
         </Sidebar>  {/* ✅ CLOSING TAG IS NOW CORRECT */}
+      </TwoColumnGrid>
+    )}
+
+
+    {/* ===== STACKED BAR CHART LAYOUT ===== */}
+    {/* ===== STACKED BAR CHART LAYOUT ===== */}
+    {chartType === "stackbar" && (
+      <TwoColumnGrid>
+        <MainChartCard style={{ minHeight: '350px' }}>
+          <ChartWrapper>
+            {renderChart()}
+          </ChartWrapper>
+        </MainChartCard>
+
+        <Sidebar>
+          {/* LEGENDS CARD - DYNAMIC FROM JSON */}
+          {(() => {
+            if (!stackBarData) return null;
+            
+            const legends: StackBarLegendItem[] = stackBarData.legends || [];
+            
+            if (legends.length === 0) {
+              return (
+                <SidebarCard>
+                  <SidebarTitle>Legends</SidebarTitle>
+                  <DemoLegendsList>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(37, 99, 235, 1)" />
+                      <DemoLegendLabel>Aggregating Amount</DemoLegendLabel>
+                    </DemoLegendItem>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(34, 197, 94, 1)" />
+                      <DemoLegendLabel>Outstanding Amount</DemoLegendLabel>
+                    </DemoLegendItem>
+                    <DemoLegendItem>
+                      <DemoLegendColor $bgColor="rgba(239, 68, 68, 1)" />
+                      <DemoLegendLabel>Write-Off Amount</DemoLegendLabel>
+                    </DemoLegendItem>
+                  </DemoLegendsList>
+                </SidebarCard>
+              );
+            }
+            
+            return (
+              <SidebarCard>
+                <SidebarTitle>Legends</SidebarTitle>
+                <DemoLegendsList>
+                  {legends.map((legend, index) => (
+                    <DemoLegendItem key={legend.key || index}>
+                      <DemoLegendColor $bgColor={legend.color} />
+                      <DemoLegendLabel>{legend.label}</DemoLegendLabel>
+                    </DemoLegendItem>
+                  ))}
+                </DemoLegendsList>
+              </SidebarCard>
+            );
+          })()}
+
+          {/* TOP PERFORMER CARD - EXACT MATCH TO GROUPBAR */}
+          {(() => {
+            if (!stackBarData) return null;
+
+            const selectedYear = selectedFilters['SelectYear'] || '2026';
+            const selectedMonth = selectedFilters['SelectMonth'] || 'January';
+            const selectedWeek = selectedFilters['SelectWeek'] || 'Week 1';
+            const selectedType = selectedFilters['SelectType'] || 'Category A';
+            
+            const yearData = (stackBarData as any)?.[selectedYear];
+            const monthData = yearData?.[selectedMonth];
+            const weekData = monthData?.[selectedWeek];
+            const typeData: StackBarDayData[] = weekData?.[selectedType] || [];
+
+            if (typeData.length === 0) return null;
+
+            // Find top performer day (highest total)
+            const topPerformer = typeData.reduce((max, day) => {
+              const maxTotal = max.aggregating + max.outstanding + max.writeOff;
+              const currentTotal = day.aggregating + day.outstanding + day.writeOff;
+              return currentTotal > maxTotal ? day : max;
+            }, typeData[0]);
+
+            const topTotal = topPerformer.aggregating + topPerformer.outstanding + topPerformer.writeOff;
+
+            // Calculate week-over-week change
+            const weekNum = parseInt(selectedWeek.replace('Week ', ''));
+            const previousWeek = weekNum > 1 ? `Week ${weekNum - 1}` : null;
+            
+            let percentageChange = 12; // Default
+            let isIncrease = true;
+
+            if (previousWeek) {
+              const prevWeekData = monthData?.[previousWeek];
+              const prevTypeData: StackBarDayData[] = prevWeekData?.[selectedType] || [];
+              const prevDayData = prevTypeData.find(d => d.day === topPerformer.day);
+              
+              if (prevDayData) {
+                const prevTotal = prevDayData.aggregating + prevDayData.outstanding + prevDayData.writeOff;
+                if (prevTotal > 0) {
+                  const change = ((topTotal - prevTotal) / prevTotal) * 100;
+                  percentageChange = Math.abs(Math.round(change));
+                  isIncrease = change >= 0;
+                }
+              }
+            } else if (weekNum === 1) {
+              // Week 1: Compare with previous month's Week 4
+              const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                 'July', 'August', 'September', 'October', 'November', 'December'];
+              const currentMonthIndex = monthNames.indexOf(selectedMonth);
+              const previousMonth = currentMonthIndex > 0 
+                ? monthNames[currentMonthIndex - 1] 
+                : 'December';
+              const previousYear = currentMonthIndex > 0 
+                ? selectedYear 
+                : String(Number(selectedYear) - 1);
+              
+              const prevYearData = (stackBarData as any)?.[previousYear];
+              const prevMonthData = prevYearData?.[previousMonth];
+              const prevWeekData = prevMonthData?.['Week 4'];
+              const prevTypeData: StackBarDayData[] = prevWeekData?.[selectedType] || [];
+              const prevDayData = prevTypeData.find(d => d.day === topPerformer.day);
+              
+              if (prevDayData) {
+                const prevTotal = prevDayData.aggregating + prevDayData.outstanding + prevDayData.writeOff;
+                if (prevTotal > 0) {
+                  const change = ((topTotal - prevTotal) / prevTotal) * 100;
+                  percentageChange = Math.abs(Math.round(change));
+                  isIncrease = change >= 0;
+                }
+              }
+            }
+
+            // Find day needing focus (lowest total)
+            const needsFocus = typeData.reduce((min, day) => {
+              const minTotal = min.aggregating + min.outstanding + min.writeOff;
+              const currentTotal = day.aggregating + day.outstanding + day.writeOff;
+              return currentTotal < minTotal ? day : min;
+            }, typeData[0]);
+
+            const arrowColor = isIncrease 
+              ? 'rgba(46, 158, 120, 1)' 
+              : 'rgba(220, 38, 38, 1)';
+
+            return (
+              <TopPerformerCard>
+                <TopPerformerHeader>
+                  <TopPerformerTitle>Top Performer</TopPerformerTitle>
+                  <TopPerformerIndicator $color={arrowColor}>
+                    <TopPerformerArrow 
+                      $isIncrease={isIncrease}
+                      width="14" 
+                      height="14" 
+                      viewBox="0 0 14 14" 
+                      fill="none"
+                    >
+                      <path d="M7 0L13.9282 13.5H0.0717969L7 0Z" fill="currentColor"/>
+                    </TopPerformerArrow>
+                    <TopPerformerChange>{percentageChange}%</TopPerformerChange>
+                  </TopPerformerIndicator>
+                </TopPerformerHeader>
+                
+                <TopPerformerContent>
+                  <div>
+                    <TopPerformerLabel>Day</TopPerformerLabel>
+                    <TopPerformerValue>{topPerformer.day}</TopPerformerValue>
+                  </div>
+                  
+                  <TopPerformerStatsGrid>
+                    <TopPerformerStat>
+                      <TopPerformerStatLabel>Aggregating</TopPerformerStatLabel>
+                      <TopPerformerStatValue $color="rgba(37, 99, 235, 1)">
+                        ${topPerformer.aggregating}
+                      </TopPerformerStatValue>
+                    </TopPerformerStat>
+                    <TopPerformerStat>
+                      <TopPerformerStatLabel>Outstanding</TopPerformerStatLabel>
+                      <TopPerformerStatValue $color="rgba(34, 197, 94, 1)">
+                        ${topPerformer.outstanding}
+                      </TopPerformerStatValue>
+                    </TopPerformerStat>
+                  </TopPerformerStatsGrid>
+                  
+                  <TopPerformerNeedsFocus>
+                    <TopPerformerNeedsFocusLabel>Needs Focus:</TopPerformerNeedsFocusLabel>
+                    <TopPerformerNeedsFocusValue>
+                      {needsFocus.day}
+                    </TopPerformerNeedsFocusValue>
+                  </TopPerformerNeedsFocus>
+                </TopPerformerContent>
+              </TopPerformerCard>
+            );
+          })()}
+        </Sidebar>
       </TwoColumnGrid>
     )}
 
