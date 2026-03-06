@@ -97,7 +97,7 @@ const GANTT_COLOR_MAP = {
   emerald: "rgba(16, 185, 129, 1)",
 } as const;
 
-type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar";
+type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar"| "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge" | "stackbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
 
 /* ============================================================================
@@ -212,11 +212,7 @@ export default function MahatiChart() {
     SelectType: "Sales",
   });
 
-  const [riskGaugeSelectedFilters, setRiskGaugeSelectedFilters] = useState<Record<string, string>>({
-    SelectYear: "2026",
-    SelectMonth: "January",
-    SelectType: "Credit Score",
-  });
+ 
 
   const [riskGaugeSelectedFilters, setRiskGaugeSelectedFilters] = useState<Record<string, string>>({
     SelectYear: "2026",
@@ -274,18 +270,8 @@ export default function MahatiChart() {
     SelectType: "Development",
   });
 
-  const [kpiSelectedFilters, setKpiSelectedFilters] = useState<Record<string, string>>(() => {
-    const kpiFilters = chartData.filters?.kpi || [];
-    const initialFilters: Record<string, string> = {};
-    
-    kpiFilters.forEach((filter: any) => {
-      if (filter.options && filter.options.length > 0) {
-        initialFilters[filter.id] = filter.options[0];
-      }
-    });
-    
-    return initialFilters;
-  });
+ 
+   
 
   const [kpiSelectedFilters, setKpiSelectedFilters] = useState<Record<string, string>>(() => {
     const kpiFilters = chartData.filters?.kpi || [];
@@ -308,32 +294,48 @@ export default function MahatiChart() {
     line: {} as any,
     area: {} as any,
     bar: {} as any,
+    columnchart:{}as any,
+    groupbar:{}as any,
+    stackbar:{}as any,
+    lollipop:{}as any,
+    kpi:{}as any,
     bullet: { labels: [], datasets: [] },
     gauge: { labels: [], datasets: [] },
     riskgauge: { labels: [], datasets: [] },
     gantt: { labels: [], datasets: [] },
     calendarheatmap: { labels: [], datasets: [] },
     horizontalbar: { labels: [], datasets: [] },
+    
   });
 
   useEffect(() => {
-    const initialMap: Record<ChartType, ChartData<any>> = {
-      pie: chartData.chartData?.pie as ChartData<"doughnut"> || {},
-      doughnut: chartData.chartData?.doughnut as ChartData<"doughnut"> || {},
-      line: chartData.chartData?.line as ChartData<"line"> || {},
-      area: processAreaData(
-        getAreaChartData(chartData.chartData?.area, selectedFilters) ||
-        chartData.chartData?.area?.default ||
-        {}
-      ),
-      bar: chartData.chartData?.bar as ChartData<"bar"> || {},
-      bullet: { labels: [], datasets: [] },
-      gauge: { labels: [], datasets: [] },
-      riskgauge: { labels: [], datasets: [] },
-      gantt: { labels: [], datasets: [] },
-      calendarheatmap: { labels: [], datasets: [] },
-      horizontalbar: { labels: [], datasets: [] },
-    };
+   const initialMap: Record<ChartType, any> = {
+  pie: chartData.chartData?.pie || {},
+  doughnut: chartData.chartData?.doughnut || {},
+  line: chartData.chartData?.line || {},
+
+  area: processAreaData(
+    getAreaChartData(chartData.chartData?.area, selectedFilters) ||
+    chartData.chartData?.area?.default ||
+    {}
+  ),
+
+  bar: chartData.chartData?.bar || {},
+
+  bullet: { labels: [], datasets: [] },
+  gauge: { labels: [], datasets: [] },
+
+  gantt: { labels: [], datasets: [] },
+  calendarheatmap: { labels: [], datasets: [] },
+  horizontalbar: { labels: [], datasets: [] },
+  columnchart: (chartData.chartData as any)?.columnchart || {},
+groupbar: (chartData.chartData as any)?.groupbar || {},
+stackbar: (chartData.chartData as any)?.stackbar || {},
+lollipop: (chartData.chartData as any)?.lollipop || {},
+kpi: (chartData.chartData as any)?.kpi || {},
+  
+  riskgauge: { labels: [], datasets: [] },
+};
 
     setActiveChartDataMap(initialMap);
     setCurrentStats((chartData.quickStats as any)?.[currentChartType] || chartData.quickStats?.pie || {});
@@ -615,23 +617,33 @@ export default function MahatiChart() {
         }
         setChartData(uploaded);
 
-        const newMap: Record<ChartType, ChartData<any>> = {
-          pie: uploaded.chartData.pie || {},
-          doughnut: uploaded.chartData.doughnut || {},
-          line: uploaded.chartData.line || {},
-          area: processAreaData(
-            getAreaChartData(uploaded.chartData.area, selectedFilters) ||
-            uploaded.chartData.area?.default ||
-            {}
-          ),
-          bar: uploaded.chartData.bar || {},
-          bullet: { labels: [], datasets: [] },
-          gauge: { labels: [], datasets: [] },
-          riskgauge: { labels: [], datasets: [] },
-          gantt: { labels: [], datasets: [] },
-          calendarheatmap: { labels: [], datasets: [] },
-          horizontalbar: { labels: [], datasets: [] },
-        };
+       const newMap: Record<ChartType, any> = {
+  pie: uploaded.chartData.pie || {},
+  doughnut: uploaded.chartData.doughnut || {},
+  line: uploaded.chartData.line || {},
+
+  area: processAreaData(
+    getAreaChartData(uploaded.chartData.area, selectedFilters) ||
+    uploaded.chartData.area?.default ||
+    {}
+  ),
+
+  bar: uploaded.chartData.bar || {},
+
+  bullet: { labels: [], datasets: [] },
+  gauge: { labels: [], datasets: [] },
+
+  gantt: { labels: [], datasets: [] },
+  calendarheatmap: { labels: [], datasets: [] },
+  horizontalbar: { labels: [], datasets: [] },
+
+  columnchart: uploaded.chartData.columnchart || {},
+  groupbar: uploaded.chartData.groupbar || {},
+  stackbar: uploaded.chartData.stackbar || {},
+  lollipop: uploaded.chartData.lollipop || {},
+  kpi: uploaded.chartData.kpi || {},
+  riskgauge: { labels: [], datasets: [] },
+};
         setActiveChartDataMap(newMap);
       } catch (err) {
         console.error("JSON parse error:", err);

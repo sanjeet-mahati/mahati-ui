@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+
 import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
