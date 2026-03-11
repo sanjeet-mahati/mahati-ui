@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* Custom utilities */
+@layer utilities {
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes circularSpin {
+  0% { transform: rotate(0deg); }
+  85% { transform: rotate(289deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes dotsBounce {
+  0%,80%,100% { transform: scale(0); opacity:.45 }
+  40% { transform: scale(1); opacity:1 }
+}
+
+@keyframes dotsLinear {
+  0%,20% { opacity:1; transform:scale(1) }
+  21%,100% { opacity:0; transform:scale(.5) }
+}
+
+.shimmer{
+  background: linear-gradient(90deg,#f3f4f6 0%,#e5e7eb 50%,#f3f4f6 100%);
+  background-size:200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}

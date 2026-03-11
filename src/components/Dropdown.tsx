@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+
 
  interface DropdownOption {
   key: string;
@@ -20,192 +19,7 @@ interface DropdownProps {
 }
 
 // Styled Components
-const DropdownContainer = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 14rem; /* desktop cap */
-  min-width: 0;
-  box-sizing:border-box;
-`;
 
-const DropdownButton = styled.button<{ 
-  variant: string;
-  disabled?: boolean;
-}>`
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  opacity: ${props => props.disabled ? 0.5 : 1};
-  font-size: 1rem;
-  line-height: 1.5;
-
-  ${props => {
-    if (props.disabled) {
-      return css`
-        background-color: #e5e7eb;
-        color: #9ca3af;
-        cursor: not-allowed;
-      `;
-    }
-
-    switch (props.variant) {
-      case 'basic':
-        return css`
-          background-color: #2563eb;
-          color: white;
-          &:hover {
-            background-color: #1d4ed8;
-          }
-        `;
-      case 'outline':
-        return css`
-          border: 1px solid #2563eb;
-          background-color: transparent;
-          color: #2563eb;
-          &:hover {
-            background-color: #eff6ff;
-          }
-        `;
-      case 'pill':
-        return css`
-          background-color: #2563eb;
-          color: white;
-          border-radius: 9999px;
-          &:hover {
-            background-color: #1d4ed8;
-          }
-        `;
-      case 'dark':
-        return css`
-          background-color: #1f2937;
-          color: white;
-          &:hover {
-            background-color: #374151;
-          }
-        `;
-      case 'underline':
-        return css`
-          border: none;
-          border-bottom: 2px solid #3b82f6;
-          background-color: transparent;
-          color: #1d4ed8;
-          border-radius: 0;
-          &:hover {
-            background-color: #eff6ff;
-          }
-        `;
-      case 'shadow':
-        return css`
-          background-color: white;
-          color: #374151;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          border: 1px solid #e5e7eb;
-          &:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          }
-        `;
-      case 'glass':
-        return css`
-          background-color: rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-          }
-        `;
-      case 'gradient':
-        return css`
-          background: linear-gradient(to right, #3b82f6, #a855f7);
-          color: white;
-          &:hover {
-            opacity: 0.9;
-          }
-        `;
-      default:
-        return css`
-          background-color: #2563eb;
-          color: white;
-          &:hover {
-            background-color: #1d4ed8;
-          }
-        `;
-    }
-  }}
-`;
-
-const DropdownMenu = styled.div<{ variant: string }>`
-  position: absolute;
-  margin-top: 0.5rem;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  z-index: 20;
-  max-height: 16rem;
-  overflow-y: auto;
-
-  /* Glass variant menu styling */
-  ${props => props.variant === 'glass' && css`
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-  `}
-
-  /* Scrollbar styling */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 0.375rem;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 0.375rem;
-    
-    &:hover {
-      background: #94a3b8;
-    }
-  }
-`;
-
-const DropdownItem = styled.div<{ variant: string }>`
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  color: #374151;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background-color: #f3f4f6;
-  }
-
-  &:first-of-type {
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
-  }
-
-  &:last-of-type {
-    border-bottom-left-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
-  }
-
-  /* Glass variant item hover */
-  ${props => props.variant === 'glass' && css`
-    &:hover {
-      background-color: rgba(59, 130, 246, 0.1);
-    }
-  `}
-`;
 
 const Dropdown = ({ 
   options, 
@@ -257,32 +71,82 @@ const Dropdown = ({
     }
   };
 
-  return (
-    <DropdownContainer ref={dropdownRef} className={className} data-testid={testId}>
-      <DropdownButton
-        onClick={handleButtonClick}
-        variant={variant}
-        disabled={disabled}
-        type="button"
-      >
-        {selectedOption?.key || placeholder}
-      </DropdownButton>
+ return (
+  <div
+    ref={dropdownRef}
+    className={`relative w-full max-w-[14rem] min-w-0 box-border ${className || ""}`}
+    data-testid={testId}
+  >
+    <button
+      onClick={handleButtonClick}
+      disabled={disabled}
+      type="button"
+      className={`
+      w-full text-left px-4 py-2 rounded-[0.375rem] text-[1rem] leading-[1.5]
+      transition-all duration-200 ease-in-out border-none
+      ${disabled ? "bg-[#e5e7eb] text-[#9ca3af] cursor-not-allowed opacity-50" : ""}
 
-      {open && !disabled && (
-        <DropdownMenu variant={variant}>
-          {options.map((opt) => (
-            <DropdownItem
-              key={opt.value}
-              onClick={() => handleSelect(opt)}
-              variant={variant}
-            >
-              {opt.key}
-            </DropdownItem>
-          ))}
-        </DropdownMenu>
-      )}
-    </DropdownContainer>
-  );
+      ${
+        !disabled &&
+        {
+          basic:
+            "bg-[#2563eb] text-white hover:bg-[#1d4ed8]",
+          outline:
+            "border border-[#2563eb] bg-transparent text-[#2563eb] hover:bg-[#eff6ff]",
+          pill:
+            "bg-[#2563eb] text-white rounded-full hover:bg-[#1d4ed8]",
+          dark:
+            "bg-[#1f2937] text-white hover:bg-[#374151]",
+          underline:
+            "border-none border-b-2 border-[#3b82f6] rounded-none bg-transparent text-[#1d4ed8] hover:bg-[#eff6ff]",
+          shadow:
+            "bg-white text-[#374151] border border-[#e5e7eb] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-2px_rgba(0,0,0,0.05)]",
+          glass:
+            "bg-[rgba(255,255,255,0.2)] [backdrop-filter:blur(12px)][-webkit-backdrop-filter:blur(12px)] text-white border border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.3)]",
+          gradient:
+            "bg-gradient-to-r from-[#3b82f6] to-[#a855f7] text-white hover:opacity-90",
+        }[variant]
+      }
+      `}
+    >
+      {selectedOption?.key || placeholder}
+    </button>
+
+    {open && !disabled && (
+      <div
+        className={`
+        absolute mt-2 w-full rounded-[0.375rem] border border-[#e5e7eb]
+        shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-2px_rgba(0,0,0,0.05)]
+        max-h-[16rem] overflow-y-auto  scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-100 z-20
+        ${
+          variant === "glass"
+            ? "bg-[rgba(255,255,255,0.9)] backdrop-blur-[12px] border-[rgba(255,255,255,0.6)]"
+            : "bg-white"
+        }
+        `}
+      >
+        {options.map((opt, index) => (
+          <div
+            key={opt.value}
+            onClick={() => handleSelect(opt)}
+            className={`
+            px-4 py-2 cursor-pointer text-[#374151]
+            transition-colors duration-150
+            ${variant === "glass"
+              ? "hover:bg-[rgba(59,130,246,0.1)]"
+              : "hover:bg-[#f3f4f6]"
+            }
+            ${index === 0 ? "rounded-t-[0.375rem]" : ""}
+            ${index === options.length - 1 ? "rounded-b-[0.375rem]" : ""}
+            `}
+          >
+            {opt.key}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+);
 };
 
 Dropdown.displayName = "Dropdown";

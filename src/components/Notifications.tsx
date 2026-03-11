@@ -2,106 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import styled from "@emotion/styled";
+
 import { X } from "lucide-react";
 
 /* ===================== SHARED STYLES ===================== */
 
-const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
-`;
 
-const Card = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  border-radius: 24px;
-  border: 2px solid #c2e2d5;
-  background: #f0f5f8;
-  padding: 40px 32px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-`;
-
-const CloseBtn = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: white;
-  border: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const Center = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px;
-`;
-
-const Img = styled.img`
-  width: 144px;
-  object-fit: contain;
-`;
-
-const Title = styled.h2`
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  color: #4daf83;
-  margin-bottom: 12px;
-`;
-
-const Desc = styled.p`
-  text-align: center;
-  font-size: 14px;
-  color: #374151;
-  margin-bottom: 32px;
-  white-space: pre-line;
-`;
-
-const PrimaryBtn = styled.button`
-  width: 100%;
-  border-radius: 8px;
-  padding: 12px;
-  font-weight: 500;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 16px;
-  background: linear-gradient(to right, #1b5fa7, #57b884);
-
-  &:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  }
-`;
-
-const SecondaryBtn = styled.button`
-  width: 100%;
-  border-radius: 8px;
-  padding: 12px;
-  border: 2px solid #8cb8e8;
-  background: white;
-  color: #1b5fa7;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    background: #f2f8ff;
-  }
-`;
 
 /* ===================== LOCATION ===================== */
 
@@ -158,31 +64,70 @@ export const MahatiLocationAccessModal = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <Overlay>
-      <Card ref={ref} data-testid={testId}>
-        <CloseBtn onClick={onClose}><X size={16} /></CloseBtn>
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    
+    <div
+      ref={ref}
+      data-testid={testId}
+      className="relative w-full max-w-[420px] rounded-[24px] border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-[0_12px_28px_rgba(0,0,0,0.18)]"
+    >
 
-        {image && <Center><Img src={image} /></Center>}
-        <Title>{title}</Title>
-        <Desc>{description}</Desc>
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
+      >
+        <X size={16} />
+      </button>
 
-        <PrimaryBtn onClick={requestLocation}>
-          {status === "granted" ? "Location Enabled" : allowText}
-        </PrimaryBtn>
+      {/* Image */}
+      {image && (
+        <div className="mb-2 flex justify-center">
+          <img
+            src={image}
+            className="w-[144px] object-contain"
+            alt="location"
+          />
+        </div>
+      )}
 
-        {denyText && (
-          <SecondaryBtn onClick={() => {
+      {/* Title */}
+      <h2 className="mb-3 text-center text-[24px] font-semibold text-[#4daf83]">
+        {title}
+      </h2>
+
+      {/* Description */}
+      <p className="mb-8 whitespace-pre-line text-center text-[14px] text-[#374151]">
+        {description}
+      </p>
+
+      {/* Primary Button */}
+      <button
+        onClick={requestLocation}
+        className="mb-4 w-full rounded-lg bg-gradient-to-r from-[#1b5fa7] to-[#57b884] py-3 font-medium text-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      >
+        {status === "granted" ? "Location Enabled" : allowText}
+      </button>
+
+      {/* Secondary Button */}
+      {denyText && (
+        <button
+          onClick={() => {
             setStatus("denied");
             onDeny?.();
             onClose();
-          }}>
-            {denyText}
-          </SecondaryBtn>
-        )}
-      </Card>
-    </Overlay>,
-    document.body
-  );
+          }}
+          className="w-full rounded-lg border-2 border-[#8cb8e8] bg-white py-3 font-medium text-[#1b5fa7] hover:bg-[#f2f8ff]"
+        >
+          {denyText}
+        </button>
+      )}
+
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
 /* ===================== CAMERA ===================== */
@@ -254,45 +199,72 @@ export const MahatiCameraAccessModal = ({
 
   if (!isOpen) return null;
 
-  return createPortal(
-    <Overlay>
-      <Card
-        ref={cardRef}
-        data-testid={testId}
-        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
+ return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[6px]">
+    
+    <div
+      ref={cardRef}
+      data-testid={testId}
+      onClick={(e) => e.stopPropagation()}
+      className="relative w-full max-w-[420px] rounded-[24px] border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-[0_12px_28px_rgba(0,0,0,0.18)]"
+    >
+
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
       >
-        <CloseBtn onClick={onClose}>
-          <X size={16} />
-        </CloseBtn>
+        <X size={16} />
+      </button>
 
-        {image && (
-          <Center>
-            <Img src={image} alt="Camera Access" />
-          </Center>
-        )}
+      {/* Image */}
+      {image && (
+        <div className="mb-2 flex justify-center">
+          <img
+            src={image}
+            alt="Camera Access"
+            className="w-[144px] object-contain"
+          />
+        </div>
+      )}
 
-        <Title>{title}</Title>
-        <Desc>{description}</Desc>
+      {/* Title */}
+      <h2 className="mb-3 text-center text-[24px] font-semibold text-[#4daf83]">
+        {title}
+      </h2>
 
-        <PrimaryBtn onClick={requestCamera}>
-          {status === "granted" ? "Camera Enabled" : allowText}
-        </PrimaryBtn>
+      {/* Description */}
+      <p className="mb-8 whitespace-pre-line text-center text-[14px] text-[#374151]">
+        {description}
+      </p>
 
-        {denyText && (
-          <SecondaryBtn
-            onClick={() => {
-              setStatus("denied");
-              onDeny?.();
-              onClose();
-            }}
-          >
-            {denyText}
-          </SecondaryBtn>
-        )}
-      </Card>
-    </Overlay>,
-    document.body
-  );
+      {/* Primary Button */}
+      <button
+        onClick={requestCamera}
+        className="mb-4 w-full rounded-lg bg-gradient-to-r from-[#1b5fa7] to-[#57b884] py-3 font-medium text-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      >
+        {status === "granted" ? "Camera Enabled" : allowText}
+      </button>
+
+      {/* Secondary Button */}
+      {denyText && (
+        <button
+          onClick={() => {
+            setStatus("denied");
+            onDeny?.();
+            onClose();
+          }}
+          className="w-full rounded-lg border-2 border-[#8cb8e8] bg-white py-3 font-medium text-[#1b5fa7] hover:bg-[#f2f8ff]"
+        >
+          {denyText}
+        </button>
+      )}
+
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
 /* ===================== MICROPHONE ===================== */
@@ -346,146 +318,75 @@ export const MahatiMicrophoneAccessModal = ({
 
   if (!isOpen) return null;
 
-  return createPortal(
-    <Overlay>
-      <Card
-        ref={cardRef}
-        data-testid={testId}
-        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
+ return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[6px]">
+
+    <div
+      ref={cardRef}
+      data-testid={testId}
+      onClick={(e) => e.stopPropagation()}
+      className="relative w-full max-w-[420px] rounded-[24px] border-2 border-[#c2e2d5] bg-[#f0f5f8] px-8 py-10 shadow-[0_12px_28px_rgba(0,0,0,0.18)]"
+    >
+
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
       >
-        <CloseBtn onClick={onClose}>
-          <X size={16} />
-        </CloseBtn>
+        <X size={16} />
+      </button>
 
-        {image && (
-          <Center>
-            <Img src={image} alt="Microphone Access" />
-          </Center>
-        )}
+      {/* Image */}
+      {image && (
+        <div className="mb-2 flex justify-center">
+          <img
+            src={image}
+            alt="Microphone Access"
+            className="w-[144px] object-contain"
+          />
+        </div>
+      )}
 
-        <Title>{title}</Title>
-        <Desc>{description}</Desc>
+      {/* Title */}
+      <h2 className="mb-3 text-center text-[24px] font-semibold text-[#4daf83]">
+        {title}
+      </h2>
 
-        <PrimaryBtn onClick={requestMic}>
-          {status === "granted" ? "Microphone Enabled" : allowText}
-        </PrimaryBtn>
+      {/* Description */}
+      <p className="mb-8 whitespace-pre-line text-center text-[14px] text-[#374151]">
+        {description}
+      </p>
 
-        {denyText && (
-          <SecondaryBtn
-            onClick={() => {
-              setStatus("denied");
-              onDeny?.();
-              onClose();
-            }}
-          >
-            {denyText}
-          </SecondaryBtn>
-        )}
-      </Card>
-    </Overlay>,
-    document.body
-  );
+      {/* Primary Button */}
+      <button
+        onClick={requestMic}
+        className="mb-4 w-full rounded-lg bg-gradient-to-r from-[#1b5fa7] to-[#57b884] py-3 font-medium text-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      >
+        {status === "granted" ? "Microphone Enabled" : allowText}
+      </button>
+
+      {/* Secondary Button */}
+      {denyText && (
+        <button
+          onClick={() => {
+            setStatus("denied");
+            onDeny?.();
+            onClose();
+          }}
+          className="w-full rounded-lg border-2 border-[#8cb8e8] bg-white py-3 font-medium text-[#1b5fa7] hover:bg-[#f2f8ff]"
+        >
+          {denyText}
+        </button>
+      )}
+
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
-const PromoOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
-`;
 
-const PromoCard = styled.div`
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  border: 2px solid #c5d9e6;
-  background: #f1f7f7;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-`;
-
-const PromoHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  background: linear-gradient(to right, #1761a3, #4daf83);
-`;
-
-const PromoHeaderTitle = styled.h3`
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-`;
-
-const PromoCloseBtn = styled.button`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-`;
-
-const PromoContent = styled.div`
-  padding: 24px 20px;
-`;
-
-const PromoTitle = styled.h4`
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 8px;
-`;
-
-const PromoDesc = styled.p`
-  font-size: 14px;
-  color: #878787;
-  margin-bottom: 24px;
-`;
-
-const PromoInput = styled.input`
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 2px solid #c2dae8;
-  background: #eaf2f6;
-  font-size: 14px;
-  margin-bottom: 16px;
-
-  &:focus {
-    outline: none;
-    border-color: #1b5fa7;
-  }
-`;
-
-const PromoCtaBtn = styled.button`
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  background: #1761a3;
-  cursor: pointer;
-
-  &:hover {
-    background: #174f8a;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-`;
 
 /* ===================== CARD ===================== */
 
@@ -514,34 +415,55 @@ export const MahatiPromotionCard = ({
   onInputChange,
   onClose,
 }: MahatiPromotionCardProps) => {
-  return (
-    <PromoCard data-testid={testId}>
-      <PromoHeader>
-        <PromoHeaderTitle>{headerTitle}</PromoHeaderTitle>
+ return (
+  <div
+    data-testid={testId}
+    className="w-full max-w-[420px] overflow-hidden rounded-[16px] border-2 border-[#c5d9e6] bg-[#f1f7f7] shadow-[0_6px_16px_rgba(0,0,0,0.15)]"
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between bg-gradient-to-r from-[#1761a3] to-[#4daf83] px-5 py-4">
+      <h3 className="text-[16px] font-medium text-white">
+        {headerTitle}
+      </h3>
 
-        {onClose && (
-          <PromoCloseBtn onClick={onClose}>
-            <X size={14} color="white" />
-          </PromoCloseBtn>
-        )}
-      </PromoHeader>
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-white/20 hover:bg-white/30"
+        >
+          <X size={14} color="white" />
+        </button>
+      )}
+    </div>
 
-      <PromoContent>
-        <PromoTitle>{title}</PromoTitle>
-        <PromoDesc>{description}</PromoDesc>
+    {/* Content */}
+    <div className="px-5 py-6">
+      <h4 className="mb-2 text-[18px] font-semibold text-[#111827]">
+        {title}
+      </h4>
 
-        {showInput && (
-          <PromoInput
-            type="email"
-            placeholder={inputPlaceholder}
-            onChange={(e) => onInputChange?.(e.target.value)}
-          />
-        )}
+      <p className="mb-6 text-[14px] text-[#878787]">
+        {description}
+      </p>
 
-        <PromoCtaBtn onClick={onCtaClick}>{ctaText}</PromoCtaBtn>
-      </PromoContent>
-    </PromoCard>
-  );
+      {showInput && (
+        <input
+          type="email"
+          placeholder={inputPlaceholder}
+          onChange={(e) => onInputChange?.(e.target.value)}
+          className="mb-4 w-full rounded-[8px] border-2 border-[#c2dae8] bg-[#eaf2f6] px-[14px] py-[12px] text-[14px] focus:border-[#1b5fa7] focus:outline-none"
+        />
+      )}
+
+      <button
+        onClick={onCtaClick}
+        className="w-full rounded-[8px] bg-[#1761a3] py-[12px] text-[14px] font-medium text-white hover:bg-[#174f8a] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+      >
+        {ctaText}
+      </button>
+    </div>
+  </div>
+);
 };
 
 /* ===================== MODAL ===================== */
@@ -601,118 +523,27 @@ export const MahatiPromotionModal = ({
     onClose();
   };
 
-  return createPortal(
-    <PromoOverlay>
-      <div ref={ref} data-testid={testId} onClick={(e) => e.stopPropagation()}>
-        <MahatiPromotionCard
-          {...cardProps}
-          onClose={onClose}
-          onInputChange={setEmail}
-          onCtaClick={handleCta}
-        />
-      </div>
-    </PromoOverlay>,
-    document.body
-  );
+return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[6px]">
+    
+    <div
+      ref={ref}
+      data-testid={testId}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <MahatiPromotionCard
+        {...cardProps}
+        onClose={onClose}
+        onInputChange={setEmail}
+        onCtaClick={handleCta}
+      />
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
-const PromoV2Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
-  padding: 16px;
-`;
-
-const PromoV2Card = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    #4daf83,
-    #2f8fa0,
-    #1761a3
-  );
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  color: white;
-`;
-
-const PromoV2Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-`;
-
-const PromoV2HeaderTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 500;
-`;
-
-const PromoV2CloseBtn = styled.button`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-`;
-
-const PromoV2Content = styled.div`
-  padding: 40px 24px;
-`;
-
-const PromoV2Title = styled.h4`
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 16px;
-`;
-
-const PromoV2Desc = styled.p`
-  font-size: 14px;
-  opacity: 0.9;
-  margin-bottom: 40px;
-  max-width: 80%;
-`;
-
-const PromoV2CtaBtn = styled.button`
-  padding: 12px 32px;
-  border-radius: 8px;
-  border: none;
-  background: white;
-  color: #1761a3;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:hover {
-    background: #f2f6fa;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-  }
-`;
-
-const PromoV2Badge = styled.img`
-  position: absolute;
-  bottom: 24px;
-  right: -24px;
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-`;
 
 /* ===================== TYPES ===================== */
 
@@ -781,140 +612,65 @@ export const MahatiPromotionModalV2Modal = ({
     onClose();
   };
 
-  return createPortal(
-    <PromoV2Overlay>
-      <PromoV2Card
-       data-testid={testId}
-        ref={ref}
-        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
-      >
-        {/* Header */}
-        <PromoV2Header>
-          <PromoV2HeaderTitle>{headerTitle}</PromoV2HeaderTitle>
+return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[6px] p-4">
 
-          <PromoV2CloseBtn onClick={onClose}>
-            <X size={14} color="white" />
-          </PromoV2CloseBtn>
-        </PromoV2Header>
+    <div
+      data-testid={testId}
+      ref={ref}
+      onClick={(e) => e.stopPropagation()}
+      className="relative w-full max-w-[420px] overflow-hidden rounded-[16px] bg-gradient-to-b from-[#4daf83] via-[#2f8fa0] to-[#1761a3] text-white shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+    >
 
-        {/* Content */}
-        <PromoV2Content>
-          <PromoV2Title>{title}</PromoV2Title>
-          <PromoV2Desc>{description}</PromoV2Desc>
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4">
+        <h3 className="text-[16px] font-medium">
+          {headerTitle}
+        </h3>
 
-          <PromoV2CtaBtn onClick={handleCta}>
-            {ctaText}
-          </PromoV2CtaBtn>
-        </PromoV2Content>
+        <button
+          onClick={onClose}
+          className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-white/20 hover:bg-white/30"
+        >
+          <X size={14} color="white" />
+        </button>
+      </div>
 
-        {/* Badge */}
-        {showBadgeImage && badgeImageSrc && (
-          <PromoV2Badge src={badgeImageSrc} alt="Promotion Badge" />
-        )}
-      </PromoV2Card>
-    </PromoV2Overlay>,
-    document.body
-  );
+      {/* Content */}
+      <div className="px-6 py-10">
+        <h4 className="mb-4 text-[28px] font-semibold">
+          {title}
+        </h4>
+
+        <p className="mb-10 max-w-[80%] text-[14px] opacity-90">
+          {description}
+        </p>
+
+        <button
+          onClick={handleCta}
+          className="rounded-[8px] bg-white px-8 py-3 text-[14px] font-semibold text-[#1761a3] hover:bg-[#f2f6fa] hover:shadow-[0_6px_18px_rgba(0,0,0,0.3)]"
+        >
+          {ctaText}
+        </button>
+      </div>
+
+      {/* Badge */}
+      {showBadgeImage && badgeImageSrc && (
+        <img
+          src={badgeImageSrc}
+          alt="Promotion Badge"
+          className="absolute bottom-6 right-[-24px] h-[120px] w-[120px] object-contain"
+        />
+      )}
+
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
-const PromoV3Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
-  padding: 16px;
-`;
 
-const PromoV3Card = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  border: 2px solid #cfe8dc;
-  background: #f9fbfb;
-  padding: 32px 24px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-`;
-
-const PromoV3CloseBtn = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  &:hover {
-    background: #e5e7eb;
-  }
-`;
-
-const PromoV3ImageWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-`;
-
-const PromoV3Image = styled.img`
-  width: 160px;
-  height: 130px;
-  object-fit: contain;
-`;
-
-const PromoV3Title = styled.h3`
-  font-size: 22px;
-  font-weight: 600;
-  color: #4daf83;
-  margin-bottom: 12px;
-`;
-
-const PromoV3Desc = styled.p`
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 32px;
-`;
-
-const PromoV3CtaBtn = styled.button`
-  width: 100%;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(to right, #1761a3, #4daf83);
-
-  &:hover {
-    background: linear-gradient(to right, #174f8a, #4ca676);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  }
-`;
-
-const PromoV3SecondaryBtn = styled.button`
-  margin-top: 16px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1761a3;
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
 
 /* ===================== TYPES ===================== */
 
@@ -984,239 +740,75 @@ export const MahatiPromotionModalV3Modal = ({
     onClose();
   };
 
-  return createPortal(
-    <PromoV3Overlay>
-      <PromoV3Card data-testid={testId}
-        ref={ref}
-        onClick={(e) => e.stopPropagation()} // 🔑 REQUIRED
+ return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[6px] p-4">
+
+    <div
+      data-testid={testId}
+      ref={ref}
+      onClick={(e) => e.stopPropagation()}
+      className="w-full rounded-[8px] bg-gradient-to-r from-[#1761a3] to-[#4daf83] py-3 text-[14px] font-medium text-white hover:bg-gradient-to-r hover:from-[#174f8a] hover:to-[#4ca676] hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+    >
+
+      {/* Close */}
+      <button
+        onClick={onClose}
+        className="absolute right-[20px] top-[20px] flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#f1f5f9] hover:bg-[#e5e7eb]"
       >
-        {/* Close */}
-        <PromoV3CloseBtn onClick={onClose}>
-          <X size={14} />
-        </PromoV3CloseBtn>
+        <X size={14} />
+      </button>
 
-        {/* Image */}
-        {imageSrc && (
-          <PromoV3ImageWrap>
-            <PromoV3Image src={imageSrc} alt="Promotion" />
-          </PromoV3ImageWrap>
-        )}
+      {/* Image */}
+      {imageSrc && (
+        <div className="mb-6 flex justify-center">
+          <img
+            src={imageSrc}
+            alt="Promotion"
+            className="h-[130px] w-[160px] object-contain"
+          />
+        </div>
+      )}
 
-        {/* Title */}
-        <PromoV3Title>{title}</PromoV3Title>
+      {/* Title */}
+      <h3 className="mb-3 text-[22px] font-semibold text-[#4daf83]">
+        {title}
+      </h3>
 
-        {/* Description */}
-        <PromoV3Desc>{description}</PromoV3Desc>
+      {/* Description */}
+      <p className="mb-8 text-[14px] text-[#6b7280]">
+        {description}
+      </p>
 
-        {/* CTA */}
-        <PromoV3CtaBtn onClick={handleCta}>
-          {ctaText}
-        </PromoV3CtaBtn>
+      {/* CTA */}
+      <button
+        onClick={handleCta}
+        className="w-full rounded-[8px] bg-gradient-to-r from-[#1761a3] to-[#4daf83] py-3 text-[14px] font-medium text-white hover:bg-gradient-to-r hover:from-[#174f8a] hover:to-[#4ca676] hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      >
+        {ctaText}
+      </button>
 
-        {/* Secondary */}
-        {secondaryText && (
-          <PromoV3SecondaryBtn
-            onClick={() => {
-              onSecondaryClick?.();
-              onClose();
-            }}
-          >
-            {secondaryText}
-          </PromoV3SecondaryBtn>
-        )}
-      </PromoV3Card>
-    </PromoV3Overlay>,
-    document.body
-  );
+      {/* Secondary */}
+      {secondaryText && (
+        <button
+          onClick={() => {
+            onSecondaryClick?.();
+            onClose();
+          }}
+          className="mt-4 text-[14px] font-medium text-[#1761a3] hover:underline"
+        >
+          {secondaryText}
+        </button>
+      )}
+
+    </div>
+
+  </div>,
+  document.body
+);
 };
 
 /* ===================== TYPES ===================== */
 
-const NotificationWrapper = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  max-width: 640px;
-  border-radius: 16px;
-  border: 2px solid #c2e2d5;
-  background: #f1f7f7;
-  padding: 12px 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-`;
-
-const LeftVisual = styled.div`
-  position: relative;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-
-  @media (min-width: 768px) {
-    width: 64px;
-    height: 64px;
-  }
-`;
-
-const IconBox = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background: linear-gradient(to bottom right, #1761a3, #4daf83);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const IconImg = styled.img`
-  width: 20px;
-  height: 20px;
-
-  @media (min-width: 768px) {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
-const AvatarImg = styled.img`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  object-fit: cover;
-`;
-
-const Badge = styled.div<{ bg: string }>`
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-
-  width: 24px;
-  height: 24px;
-
-  border-radius: 50%;
-  border: 2px solid white;
-
-  background: ${({ bg }) => bg};
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BadgeText = styled.span`
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  line-height: 1;
-`;
-
-const BadgeImg = styled.img`
-  width: 12px;
-  height: 12px;
-`;
-
-const Content = styled.div`
-  flex: 1;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 4px;
-`;
-
-const NotificationTitle = styled.p`
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-
-  @media (min-width: 768px) {
-    font-size: 16px;
-  }
-`;
-
-const Time = styled.span`
-  font-size: 10px;
-  color: #6b7280;
-  white-space: nowrap;
-
-  @media (min-width: 768px) {
-    font-size: 12px;
-  }
-`;
-
-const Description = styled.p`
-  font-size: 12px;
-  color: #6b7280;
-  margin-bottom: 12px;
-
-  @media (min-width: 768px) {
-    font-size: 14px;
-  }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-  }
-`;
-
-const PrimaryAction = styled.button`
-  flex: 1;
-  border-radius: 8px;
-  padding: 10px 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(to right, #1761a3, #4daf83);
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const SecondaryAction = styled.button`
-  flex: 1;
-  border-radius: 8px;
-  padding: 10px 0;
-  font-size: 14px;
-  font-weight: 500;
-  border: 2px solid #b7d9c9;
-  background: #eaf6f1;
-  color: #2f6f5e;
-  cursor: pointer;
-
-  &:hover {
-    background: #dff1ea;
-  }
-`;
-
-const NotificationCloseBtn = styled.button`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #d7e5ed;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  @media (min-width: 768px) {
-    width: 32px;
-    height: 32px;
-  }
-
-  &:hover {
-    background: #dcefe6;
-  }
-`;
 
 /* ===================== TYPES ===================== */
 
@@ -1269,57 +861,102 @@ export const MahatiNotificationCard = ({
   onSecondaryAction,
   onClose,
 }: MahatiNotificationCardProps) => {
-  return (
-    <NotificationWrapper data-testid={testId}>
-      {/* LEFT VISUAL */}
-      <LeftVisual>
-        {iconSrc ? (
-          <IconBox>
-            <IconImg src={iconSrc} alt="" />
-          </IconBox>
-        ) : (
-          avatarSrc && <AvatarImg src={avatarSrc} alt="User" />
-        )}
+return (
+  <div
+    data-testid={testId}
+    className="flex w-full max-w-[640px] items-start gap-4 rounded-[16px] border-2 border-[#c2e2d5] bg-[#f1f7f7] px-4 py-3 shadow-[0_2px_6px_rgba(0,0,0,0.08)]"
+  >
+    {/* LEFT VISUAL */}
+    <div className="relative h-[56px] w-[56px] flex-shrink-0 md:h-[64px] md:w-[64px]">
 
-        {badgeIconSrc && badgeType && (
-          <Badge bg={BADGE_BG_MAP[badgeType]}>
-            <BadgeImg src={badgeIconSrc} alt="" />
-          </Badge>
-        )}
-      </LeftVisual>
-
-      {/* CONTENT */}
-      <Content>
-        <TitleRow>
-          <NotificationTitle>{title}</NotificationTitle>
-          {time && <Time>{time}</Time>}
-        </TitleRow>
-
-        {description && <Description>{description}</Description>}
-
-        {(primaryActionText || secondaryActionText) && (
-          <Actions>
-            {primaryActionText && (
-              <PrimaryAction onClick={onPrimaryAction}>
-                {primaryActionText}
-              </PrimaryAction>
-            )}
-
-            {secondaryActionText && (
-              <SecondaryAction onClick={onSecondaryAction}>
-                {secondaryActionText}
-              </SecondaryAction>
-            )}
-          </Actions>
-        )}
-      </Content>
-
-      {/* CLOSE */}
-      {onClose && (
-        <NotificationCloseBtn onClick={onClose}>
-          <X size={14} />
-        </NotificationCloseBtn>
+      {iconSrc ? (
+        <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-gradient-to-br from-[#1761a3] to-[#4daf83]">
+          <img
+            src={iconSrc}
+            alt=""
+            className="h-[20px] w-[20px] md:h-[24px] md:w-[24px]"
+          />
+        </div>
+      ) : (
+        avatarSrc && (
+          <img
+            src={avatarSrc}
+            alt="User"
+            className="h-full w-full rounded-[10px] object-cover"
+          />
+        )
       )}
-    </NotificationWrapper>
-  );
+
+      {badgeIconSrc && badgeType && (
+        <div
+          className="absolute bottom-[-4px] right-[-4px] flex h-[24px] w-[24px] items-center justify-center rounded-full border-2 border-white"
+          style={{ background: BADGE_BG_MAP[badgeType] }}
+        >
+          <img
+            src={badgeIconSrc}
+            alt=""
+            className="h-[12px] w-[12px]"
+          />
+        </div>
+      )}
+    </div>
+
+    {/* CONTENT */}
+    <div className="flex-1">
+
+      <div className="mb-1 flex items-center gap-3">
+        <p className="text-[14px] font-semibold text-[#111827] md:text-[16px]">
+          {title}
+        </p>
+
+        {time && (
+          <span className="whitespace-nowrap text-[10px] text-[#6b7280] md:text-[12px]">
+            {time}
+          </span>
+        )}
+      </div>
+
+      {description && (
+        <p className="mb-3 text-[12px] text-[#6b7280] md:text-[14px]">
+          {description}
+        </p>
+      )}
+
+      {(primaryActionText || secondaryActionText) && (
+        <div className="flex flex-col gap-3 sm:flex-row">
+
+          {primaryActionText && (
+            <button
+              onClick={onPrimaryAction}
+              className="flex-1 rounded-[8px] bg-gradient-to-r from-[#1761a3] to-[#4daf83] py-[10px] text-[14px] font-medium text-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+            >
+              {primaryActionText}
+            </button>
+          )}
+
+          {secondaryActionText && (
+            <button
+              onClick={onSecondaryAction}
+              className="flex-1 rounded-[8px] border-2 border-[#b7d9c9] bg-[#eaf6f1] py-[10px] text-[14px] font-medium text-[#2f6f5e] hover:bg-[#dff1ea]"
+            >
+              {secondaryActionText}
+            </button>
+          )}
+
+        </div>
+      )}
+
+    </div>
+
+    {/* CLOSE */}
+    {onClose && (
+      <button
+        onClick={onClose}
+        className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#d7e5ed] hover:bg-[#dcefe6] md:h-[32px] md:w-[32px]"
+      >
+        <X size={14} />
+      </button>
+    )}
+  </div>
+);
 };

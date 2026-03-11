@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import styled from '@emotion/styled';
+
 
 
 type AssetModule =
@@ -182,186 +182,6 @@ const getIcon = (type: ToastType, background: BackgroundType) => {
   }
 };
 
-const ToastContainer = styled.div<{ 
-  $type: ToastType; 
-  $background: BackgroundType;
-  $custom?: CustomToastStyles;
-  $hasActions?: boolean;
-}>`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: ${p => p.$custom?.containerWidth || '325px'};
-  height: ${p => p.$custom?.containerHeight || (p.$hasActions ? 'auto' : '70px')};
-  min-height: ${p => p.$hasActions ? '70px' : 'auto'};
-  border-radius: ${p => p.$custom?.containerBorderRadius || '12px'};
-  background: ${p => 
-    p.$custom?.containerBackground || 
-    (p.$background === "transparent" ? "rgba(255, 255, 255, 1)" : getGradient(p.$type))
-  };
-  box-shadow: ${p => p.$custom?.containerBoxShadow || '0 4px 12px 0 rgba(0, 0, 0, 0.08)'};
-  display: flex;
-  flex-direction: ${p => p.$hasActions ? 'column' : 'row'};
-  align-items: ${p => p.$hasActions ? 'stretch' : 'center'};
-  color: ${p => p.$background === "transparent" ? "rgba(85, 85, 85, 1)" : "rgba(255, 255, 255, 1)"};
-  z-index: 9999;
-  overflow: hidden;
-  padding-left: ${p => 
-    p.$custom?.containerPaddingLeft || 
-    (p.$background === "transparent" ? "33px" : "10px")
-  };
-  padding-top: ${p => p.$hasActions ? '10px' : '0'};
-  padding-bottom: ${p => p.$hasActions ? '10px' : '0'};
-  padding-right: ${p => p.$hasActions ? '10px' : '0'};
-`;
-
-const TopSection = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-height: 50px;
-`;
-
-const LeftStrip = styled.div<{ 
-  $type: ToastType;
-  $custom?: CustomToastStyles;
-}>`
-  position: absolute;
-  left: ${p => p.$custom?.stripLeft || '5px'};
-  top: 0;
-  width: ${p => p.$custom?.stripWidth || '5px'};
-  height: 100%;
-  border-radius: ${p => p.$custom?.stripBorderRadius || '20px 0 0 20px'};
-  background: ${p => p.$custom?.stripBackground || getStripGradient(p.$type)};
-`;
-
-const IconWrapper = styled.div<{ $custom?: CustomToastStyles }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin-right: ${p => p.$custom?.iconMarginRight || '12px'};
-  flex-shrink: 0;
-  z-index: 1;
-`;
-
-const Content = styled.div`
-  flex: 1;
-  min-width: 0;
-  z-index: 1;
-`;
-
-const Title = styled.div<{ 
-  $type: ToastType; 
-  $background: BackgroundType;
-  $custom?: CustomToastStyles;
-}>`
-  font-family: ${p => p.$custom?.titleFontFamily || 'Poppins'};
-  font-size: ${p => p.$custom?.titleFontSize || '16px'};
-  font-style: ${p => p.$custom?.titleFontStyle || 'normal'};
-  font-weight: ${p => 
-    p.$custom?.titleFontWeight || 
-    (p.$background === "transparent" ? "600" : "700")
-  };
-  line-height: ${p => p.$custom?.titleLineHeight || 'normal'};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: ${p => 
-    p.$custom?.titleColor || 
-    (p.$background === "transparent" ? getTitleColor(p.$type) : "rgba(255, 255, 255, 1)")
-  };
-`;
-
-const MessageText = styled.div<{ 
-  $background: BackgroundType;
-  $custom?: CustomToastStyles;
-}>`
-  font-family: ${p => p.$custom?.messageFontFamily || 'Poppins'};
-  font-size: ${p => p.$custom?.messageFontSize || '10px'};
-  font-style: ${p => p.$custom?.messageFontStyle || 'normal'};
-  font-weight: ${p => p.$custom?.messageFontWeight || '400'};
-  line-height: ${p => p.$custom?.messageLineHeight || 'normal'};
-  margin-top: ${p => p.$custom?.messageMarginTop || '2px'};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: ${p => p.$custom?.messageOpacity || undefined};
-  color: ${p => 
-    p.$custom?.messageColor || 
-    (p.$background === "transparent" ? "rgba(85, 85, 85, 1)" : "rgba(255, 255, 255, 1)")
-  };
-`;
-
-const CloseButton = styled.button<{ 
-  $background: BackgroundType;
-  $custom?: CustomToastStyles;
-}>`
-  background: none;
-  border: none;
-  cursor: pointer;
-  opacity: ${p => 
-    p.$custom?.closeButtonOpacity || 
-    (p.$background === "transparent" ? "0.6" : "0.8")
-  };
-  padding: 4px;
-  margin-left: ${p => p.$custom?.closeButtonMarginLeft || '8px'};
-  flex-shrink: 0;
-  z-index: 1;
-
-  &:hover { opacity: 1; }
-`;
-
-const ActionsContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  padding-left: 5px;
-  justify-content: flex-end;
-`;
-
-const ActionButtonStyled = styled.button<{
-  $variant?: 'primary' | 'secondary';
-  $backgroundColor?: string;
-  $textColor?: string;
-  $borderColor?: string;
-  $hoverBackgroundColor?: string;
-  $fontSize?: string;
-  $fontWeight?: string;
-  $padding?: string;
-  $borderRadius?: string;
-}>`
-  font-family: Poppins;
-  font-size: ${p => p.$fontSize || '12px'};
-  font-weight: ${p => p.$fontWeight || '600'};
-  padding: ${p => p.$padding || '6px 16px'};
-  border-radius: ${p => p.$borderRadius || '6px'};
-  border: ${p => p.$borderColor ? `1px solid ${p.$borderColor}` : 'none'};
-  background: ${p => {
-    if (p.$backgroundColor) return p.$backgroundColor;
-    return p.$variant === 'secondary' ? 'transparent' : 'rgba(255, 255, 255, 0.9)';
-  }};
-  color: ${p => {
-    if (p.$textColor) return p.$textColor;
-    return p.$variant === 'secondary' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 0.8)';
-  }};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-
-  &:hover {
-    background: ${p => {
-      if (p.$hoverBackgroundColor) return p.$hoverBackgroundColor;
-      return p.$variant === 'secondary' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 1)';
-    }};
-    opacity: 0.9;
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-`;
 
 const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
   (
@@ -413,36 +233,64 @@ const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
     );
 
     const content = (
-      <ToastContainer
-      data-testId={testId}
-        ref={ref}
-        $type={type}
-        $background={background}
-        $custom={custom}
-        $hasActions={hasActions}
-        className={className}
-        role="alert"
-        aria-live="assertive"
-        {...rest}
-      >
-        <LeftStrip $type={type} $custom={custom} />
+    
+      <div
+  ref={ref}
+  data-testid={testId}
+  className={`fixed top-[20px] right-[20px] w-[325px] rounded-[12px] shadow-md z-[9999] overflow-hidden flex 
+  ${hasActions ? "flex-col p-[10px]" : "flex-row items-center pl-[10px]"} 
+   ${background === "transparent" ? "bg-white text-[#555]" : "text-white"}
+  ${className || ""}`}
+  role="alert"
+  aria-live="assertive"
+  {...rest}
+>
+      
+        <div
+  className="absolute left-[5px] top-0 w-[5px] h-full rounded-[20px_0_0_20px]"
+  style={{ background: getStripGradient(type) }}
+/>
 
-        <TopSection>
-          <IconWrapper $custom={custom}>{iconElement}</IconWrapper>
+        <div className="flex items-center flex-1 min-h-[50px]">
+          <div className="flex items-center justify-center w-[40px] h-[40px] mr-[12px] flex-shrink-0 z-[1]">
+  {iconElement}
+</div>
 
-          <Content>
-            <Title $type={type} $background={background} $custom={custom}>
-              {displayTitle}
-            </Title>
+          <div className="flex-1 min-w-0 z-[1]">
+            <div
+  className="font-semibold text-[16px] truncate"
+  style={{
+    fontFamily: custom?.titleFontFamily || "Poppins",
+    color:
+      custom?.titleColor ||
+      (background === "transparent"
+        ? getTitleColor(type)
+        : "white"),
+  }}
+>
+  {displayTitle}
+</div>
             {message && (
-              <MessageText $background={background} $custom={custom}>
-                {message}
-              </MessageText>
+            <div
+  className="text-[10px] mt-[2px] truncate"
+  style={{
+    fontFamily: custom?.messageFontFamily || "Poppins",
+    color:
+      custom?.messageColor ||
+      (background === "transparent" ? "#555" : "white"),
+  }}
+>
+  {message}
+</div>
             )}
-          </Content>
+          </div>
 
           {showClose && onClose && (
-            <CloseButton onClick={onClose} $background={background} $custom={custom} aria-label="Close toast">
+            <button
+            onClick={onClose}
+             aria-label="Close toast"
+             className="ml-[8px] p-[4px] opacity-80 hover:opacity-100 flex-shrink-0"
+             >
               <img
                 src={closeIconSrc}
                 alt="Close"
@@ -452,32 +300,37 @@ const ToastMessage = React.forwardRef<HTMLDivElement, ToastMessageProps>(
                   objectFit: 'contain' 
                 }}
               />
-            </CloseButton>
+            </button>
           )}
-        </TopSection>
+        </div>
 
         {hasActions && (
-          <ActionsContainer>
+          <div className="flex gap-[8px] mt-[10px] pl-[5px] justify-end">
             {action?.map((btn, index) => (
-              <ActionButtonStyled
-                key={index}
-                onClick={btn.onClick}
-                $variant={btn.variant}
-                $backgroundColor={btn.backgroundColor}
-                $textColor={btn.textColor}
-                $borderColor={btn.borderColor}
-                $hoverBackgroundColor={btn.hoverBackgroundColor}
-                $fontSize={btn.fontSize}
-                $fontWeight={btn.fontWeight}
-                $padding={btn.padding}
-                $borderRadius={btn.borderRadius}
-              >
-                {btn.label}
-              </ActionButtonStyled>
+            <button
+  key={index}
+  onClick={btn.onClick}
+  className="text-[12px] font-semibold px-[16px] py-[6px] rounded-[6px] transition-all active:scale-95"
+  style={{
+    background:
+      btn.backgroundColor ||
+      (btn.variant === "secondary"
+        ? "transparent"
+        : "rgba(255,255,255,0.9)"),
+    color:
+      btn.textColor ||
+      (btn.variant === "secondary" ? "white" : "black"),
+    border: btn.borderColor
+      ? `1px solid ${btn.borderColor}`
+      : "none",
+  }}
+>
+  {btn.label}
+</button>
             ))}
-          </ActionsContainer>
+          </div>
         )}
-      </ToastContainer>
+      </div>
     );
 
     return ReactDOM.createPortal(content, document.body);
