@@ -2,14 +2,12 @@
 
 import * as React from "react";
 import { X } from "lucide-react";
-import styled from '@emotion/styled';
-import { css, keyframes } from '@emotion/react';
 
 export type MahatiModalSize = "default" | "sm" | "md" | "lg" | "xl";
 
 export type MahatiModalProps = {
   isOpen: boolean;
-  testId?:string;
+  testId?: string;
   onOpenChange?: (open: boolean) => void;
   onClose: () => void;
   title?: string;
@@ -20,7 +18,16 @@ export type MahatiModalProps = {
   width?: string | number;
   height?: string | number;
   margin?: string | number;
-  position?: "center" | "top-left" | "top-right" | "top-center" | "bottom-left" | "bottom-right" | "bottom-center" | "center-left" | "center-right";
+  position?:
+    | "center"
+    | "top-left"
+    | "top-right"
+    | "top-center"
+    | "bottom-left"
+    | "bottom-right"
+    | "bottom-center"
+    | "center-left"
+    | "center-right";
   primaryAction?: {
     label?: React.ReactNode;
     onClick?: () => void;
@@ -42,272 +49,28 @@ const MODAL_WIDTH_MAP: Record<MahatiModalSize, string> = {
   xl: "800px",
 };
 
-// Animations
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
+const getPositionClass = (position: string) => {
+  switch (position) {
+    case "top-left":
+      return "items-start justify-start";
+    case "top-right":
+      return "items-start justify-end";
+    case "top-center":
+      return "items-start justify-center";
+    case "bottom-left":
+      return "items-end justify-start";
+    case "bottom-right":
+      return "items-end justify-end";
+    case "bottom-center":
+      return "items-end justify-center";
+    case "center-left":
+      return "items-center justify-start";
+    case "center-right":
+      return "items-center justify-end";
+    default:
+      return "items-center justify-center";
   }
-  to {
-    opacity: 1;
-  }
-`;
-
-const scaleIn = keyframes`
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-`;
-
-// Styled Components
-const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 9998;
-  animation: ${fadeIn} 0.2s ease-out;
-`;
-
-const ModalContainer = styled.div<{ 
-  position: string;
-}>`
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  display: flex;
-  padding: 1rem;
-
-  ${props => {
-    switch (props.position) {
-      case "top-left":
-        return css`
-          align-items: flex-start;
-          justify-content: flex-start;
-        `;
-      case "top-right":
-        return css`
-          align-items: flex-start;
-          justify-content: flex-end;
-        `;
-      case "top-center":
-        return css`
-          align-items: flex-start;
-          justify-content: center;
-        `;
-      case "bottom-left":
-        return css`
-          align-items: flex-end;
-          justify-content: flex-start;
-        `;
-      case "bottom-right":
-        return css`
-          align-items: flex-end;
-          justify-content: flex-end;
-        `;
-      case "bottom-center":
-        return css`
-          align-items: flex-end;
-          justify-content: center;
-        `;
-      case "center-left":
-        return css`
-          align-items: center;
-          justify-content: flex-start;
-        `;
-      case "center-right":
-        return css`
-          align-items: center;
-          justify-content: flex-end;
-        `;
-      default: // center
-        return css`
-          align-items: center;
-          justify-content: center;
-        `;
-    }
-  }}
-`;
-
-const ModalContent = styled.div<{
-  width: string;
-  height?: string | number;
-  margin?: string | number;
-  position: string;
-}>`
-  position: relative;
-  background-color: white;
-  box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.15);
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  pointer-events: auto;
-  animation: ${scaleIn} 0.2s ease-out;
-  
-  width: ${props => props.width};
-  height: ${props => {
-    if (props.height) {
-      return typeof props.height === 'number' ? `${props.height}px` : props.height;
-    }
-    return props.position.includes("left") || props.position.includes("right") ? "90vh" : "auto";
-  }};
-  
-  ${props => !props.position.includes("left") && !props.position.includes("right") && css`
-    max-height: 90vh;
-  `}
-  
-  ${props => props.margin && css`
-    margin: ${typeof props.margin === 'number' ? `${props.margin}px` : props.margin};
-  `}
-`;
-
-const ModalHeader = styled.div`
-  padding: 1rem 1.5rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
-`;
-
-const HeaderContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex: 1;
-`;
-
-const HeaderIconWrapper = styled.div`
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-`;
-
-const HeaderTextWrapper = styled.div`
-  flex: 1;
-`;
-
-const ModalTitle = styled.h3`
-  color: #333333;
-  font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: normal;
-  margin: 0;
-`;
-
-const ModalSubtitle = styled.p`
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 0;
-`;
-
-const CloseButton = styled.button`
-  color: #9ca3af;
-  background: transparent;
-  border: none;
-  padding: 0.25rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: #4b5563;
-  }
-  
-  &:focus {
-    outline: none;
-  }
-`;
-
-const ModalBody = styled.div`
-  flex-grow: 1;
-  overflow-y: auto;
-  
-  /* Custom scrollbar */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f5f9;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-    
-    &:hover {
-      background: #94a3b8;
-    }
-  }
-`;
-
-const ModalFooter = styled.div`
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-  border-top: 1px solid #e5e7eb;
-`;
-
-const SecondaryButton = styled.button`
-  min-width: 140px;
-  height: 36px;
-  padding: 0 1rem;
-  border-radius: 6px;
-  border: 1px solid #1761A3;
-  background-color: white;
-  color: #1761A3;
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  
-  &:hover {
-    background-color: #f9fafb;
-  }
-  
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(23, 97, 163, 0.1);
-  }
-`;
-
-const PrimaryButton = styled.button<{ disabled?: boolean }>`
-  min-width: 140px;
-  height: 36px;
-  padding: 0 1rem;
-  border-radius: 6px;
-  border: none;
-  background-color: ${props => props.disabled ? '#93c5fd' : '#1761A3'};
-  color: white;
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  transition: background-color 0.2s ease;
-  
-  &:hover {
-    background-color: ${props => props.disabled ? '#93c5fd' : '#134a7a'};
-  }
-  
-  &:focus {
-    outline: none;
-    box-shadow: ${props => props.disabled ? 'none' : '0 0 0 3px rgba(23, 97, 163, 0.2)'};
-  }
-`;
+};
 
 export default function Modal({
   testId,
@@ -327,9 +90,8 @@ export default function Modal({
   position = "center",
   size = "default",
 }: MahatiModalProps) {
-  const width = customWidth ?? MODAL_WIDTH_MAP[size] ?? MODAL_WIDTH_MAP.default;
+  const width = customWidth ?? MODAL_WIDTH_MAP[size];
 
-  // ESC key close
   React.useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -337,15 +99,10 @@ export default function Modal({
     return () => document.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  // Prevent body scroll when modal is open
   React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -353,67 +110,126 @@ export default function Modal({
 
   return (
     <>
-      <Overlay onClick={onClose} aria-hidden="true"  data-testid={testId?`${testId}-overlay`:undefined}/>
-      
-      <ModalContainer position={position}>
-        <ModalContent data-testid={testId}
-          width={typeof width === 'number' ? `${width}px` : width}
-          height={height}
-          margin={margin}
-          position={position}
-          className={className}
+      {/* Overlay */}
+      <div
+        data-testid={testId ? `${testId}-overlay` : undefined}
+        onClick={onClose}
+        className="fixed inset-0 bg-black/40 z-[9998] animate-[fadeIn_.2s_ease-out]"
+      />
+
+      {/* Container */}
+      <div
+        className={`fixed inset-0 z-[9999] pointer-events-none flex p-4 ${getPositionClass(
+          position
+        )}`}
+      >
+        {/* Modal */}
+        <div
+          data-testid={testId}
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
+          style={{
+            width: typeof width === "number" ? `${width}px` : width,
+            height:
+              height ??
+              (position.includes("left") || position.includes("right")
+                ? "90vh"
+                : "auto"),
+            margin:
+              typeof margin === "number" ? `${margin}px` : margin,
+          }}
+          className={`pointer-events-auto relative bg-white border border-gray-200 rounded-lg shadow-[0px_4px_24px_rgba(0,0,0,0.15)] flex flex-col animate-[scaleIn_.2s_ease-out] ${
+            !position.includes("left") && !position.includes("right")
+              ? "max-h-[90vh]"
+              : ""
+          } ${className}`}
         >
           {/* Header */}
-          <ModalHeader data-testid={testId?`${testId}-header`:undefined}>
-            <HeaderContent>
-              {headerIcon && (
-                <HeaderIconWrapper>
-                  {headerIcon as any}
-                </HeaderIconWrapper>
-              )}
-              <HeaderTextWrapper>
-                {title && <ModalTitle data-testid={testId?`${testId}-title`:undefined}>{title}</ModalTitle>}
-                {subtitle && <ModalSubtitle data-testid={testId?`${testId}-subtitle`:undefined}>{subtitle}</ModalSubtitle>}
-              </HeaderTextWrapper>
-            </HeaderContent>
-            
-            <CloseButton  onClick={onClose} aria-label="Close dialog" data-testid={testId?`${testId}-close-btn`:undefined}>
+          <div
+            data-testid={testId ? `${testId}-header` : undefined}
+            className="px-6 py-4 flex items-center justify-between border-b border-gray-200"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              {headerIcon && <div>{headerIcon}</div>}
+
+              <div className="flex-1">
+                {title && (
+                  <h3
+                    data-testid={testId ? `${testId}-title` : undefined}
+                    className="text-[#333] font-semibold text-[16px]"
+                  >
+                    {title}
+                  </h3>
+                )}
+
+                {subtitle && (
+                  <p
+                    data-testid={testId ? `${testId}-subtitle` : undefined}
+                    className="text-sm text-gray-500 mt-1"
+                  >
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <button
+              data-testid={testId ? `${testId}-close-btn` : undefined}
+              onClick={onClose}
+              aria-label="Close dialog"
+              className=" p-1 text-gray-400 hover:text-gray-600 flex items-center justify-center  transition-colors"
+            >
               <X size={20} strokeWidth={2} />
-            </CloseButton>
-          </ModalHeader>
+            </button>
+          </div>
 
           {/* Body */}
-          <ModalBody data-testid={testId?`${testId}-body`:undefined}>{children as any}</ModalBody>
+          <div
+            data-testid={testId ? `${testId}-body` : undefined}
+            className="flex-grow overflow-y-auto custom-scrollbar"
+          >
+            {children}
+          </div>
 
           {/* Footer */}
           {(primaryAction || secondaryAction) && (
-            <ModalFooter data-testid={testId?`${testId}-footer`:undefined}>
+            <div
+              data-testid={testId ? `${testId}-footer` : undefined}
+              className="px-6 py-4 flex justify-center gap-3 border-t border-gray-200"
+            >
               {secondaryAction && (
-                <SecondaryButton
-                data-testid={testId?`${testId}-secondary-btn`:undefined}
+                <button
+                  data-testid={
+                    testId ? `${testId}-secondary-btn` : undefined
+                  }
                   onClick={secondaryAction.onClick}
-                  type="button"
+                  className="min-w-[140px] h-[36px] px-4 rounded-md border border-[#1761A3] text-[#1761A3] bg-white text-sm font-medium hover:bg-gray-50 focus:ring-2 focus:ring-[#1761A3]/20"
                 >
-                  {(secondaryAction.label ?? "Cancel") as any}
-                </SecondaryButton>
+                  {secondaryAction.label ?? "Cancel"}
+                </button>
               )}
 
               {primaryAction && (
-                <PrimaryButton data-testid={testId?`${testId}-primary-btn`:undefined}
+                <button
+                  data-testid={
+                    testId ? `${testId}-primary-btn` : undefined
+                  }
                   onClick={primaryAction.onClick}
                   disabled={primaryAction.disabled}
-                  type="button"
+                  className={`min-w-[140px] h-[36px] px-4 rounded-md text-white text-sm font-medium ${
+                    primaryAction.disabled
+                      ? "bg-blue-300 cursor-not-allowed"
+                      : "bg-[#1761A3] hover:bg-[#134a7a]"
+                  } focus:ring-2 focus:ring-[#1761A3]/30`}
                 >
-                  {(primaryAction.label ?? "Save") as any}
-                </PrimaryButton>
+                  {primaryAction.label ?? "Save"}
+                </button>
               )}
-            </ModalFooter>
+            </div>
           )}
-        </ModalContent>
-      </ModalContainer>
+        </div>
+      </div>
     </>
   );
 }

@@ -2,306 +2,48 @@
 
 import React, { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 
-// Import existing components
 import { Table } from "./Table";
 import { TabbedInterface } from "./TabedInterface";
 
-// Base prop types of existing components
 type BaseTableProps = React.ComponentProps<typeof Table>;
 type BaseTabProps = React.ComponentProps<typeof TabbedInterface>;
 
-// Allow *all* visual/layout props of TabbedInterface,
-// but we keep control of: tabs, onTabChange, draggableTabs, onReorderTabs, onCloseTab
 type AllowedTabProps = Omit<
   BaseTabProps,
   "tabs" | "onTabChange" | "draggableTabs" | "onReorderTabs" | "onCloseTab"
 >;
 
 export interface TableWithTabProps<RowType extends Record<string, any>> {
-  /**
-   * Props that describe how the table should look.
-   * We reuse the Table's interface, but here we only require headers + data.
-   */
   tableProps: Pick<BaseTableProps, "headers" | "data">;
-
-  /**
-   * Props that describe how the tab container should look.
-   * We reuse TabbedInterface's props but we control tabs & tab state.
-   */
   tabProps?: AllowedTabProps;
-
-  /**
-   * If true, user can rearrange tabs by dragging.
-   * If false/undefined, tabs cannot be rearranged.
-   */
   rearrange?: boolean;
-
-  /**
-   * Optional custom row id. Defaults to the row index.
-   */
   getRowId?: (row: RowType, index: number) => string | number;
-
-  /**
-   * Optional custom content renderer for the tab body.
-   * If not provided, a simple key/value layout is shown.
-   */
   renderTabContent?: (row: RowType) => React.ReactNode;
-
-  /**
-   * Optional callback when a row is opened as a tab.
-   */
   onRowOpenInTab?: (row: RowType) => void;
-
-  /**
-   * Optional title/description displayed above the table.
-   */
   title?: string;
   description?: string;
-  testId?:string;
-
-  /**
-   * Key of the column to use as the tab header label.
-   * For example: "name", "email", "policyNumber", etc.
-   * If not provided, the first column in headers is used.
-   */
+  testId?: string;
   tabLabelKey?: string;
-
-  /**
-   * Optional font configuration for the section title/description.
-   * Values like "sans", "serif", "mono", "Poppins", or a custom font name.
-   */
   sectionTitleFont?: string;
   sectionDescriptionFont?: string;
 }
 
-// Map font strings to CSS
 const getFontFamily = (font?: string): string => {
-  if (!font) return "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  
-  const lower = font.toLowerCase().trim();
-  
-  if (lower === "sans" || lower === "sans-serif") 
+  if (!font)
     return "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-  if (lower === "serif") 
-    return "Georgia, 'Times New Roman', serif";
-  if (lower === "mono" || lower === "monospace") 
+
+  const lower = font.toLowerCase().trim();
+
+  if (lower === "sans" || lower === "sans-serif")
+    return "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  if (lower === "serif") return "Georgia, 'Times New Roman', serif";
+  if (lower === "mono" || lower === "monospace")
     return "'Courier New', Courier, monospace";
-  if (lower === "poppins") 
-    return "'Poppins', sans-serif";
-  
+  if (lower === "poppins") return "'Poppins', sans-serif";
+
   return `'${font}', sans-serif`;
 };
-
-// Styled Components
-const Container = styled.div`
-  width: 100%;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  background-color: white;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-`;
-
-const Header = styled.header`
-  margin-bottom: 1rem;
-`;
-
-const Title = styled.h2<{ fontFamily: string }>`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #0f172a;
-  font-family: ${props => props.fontFamily};
-`;
-
-const Description = styled.p<{ fontFamily: string }>`
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #64748b;
-  font-family: ${props => props.fontFamily};
-`;
-
-const TableWrapper = styled.div`
-  overflow-x: auto;
-  width:100%;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-
-`;
-const TableInner=styled.div`
-min-width:900px;
-
-`
-
-const StyledTable = styled.table`
-  min-width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-`;
-
-const TableHead = styled.thead`
-  background: linear-gradient(to right, #1761A3, #4DAF83);
-`;
-
-const TableHeadRow = styled.tr``;
-
-const TableHeadCell = styled.th`
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: white;
-`;
-
-const TableBody = styled.tbody`
-  background-color: white;
-`;
-
-const TableRow = styled.tr<{ selected: boolean }>`
-  cursor: pointer;
-  border-bottom: 1px solid #f1f5f9;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #f8fafc;
-  }
-
-  ${props => props.selected && css`
-    background-color: rgba(219, 234, 254, 0.7);
-  `}
-`;
-
-const TableCell = styled.td`
-  padding: 0.5rem 0.75rem;
-  vertical-align: middle;
-  color: #1e293b;
-`;
-
-const EmptyRow = styled.tr``;
-
-const EmptyCell = styled.td`
-  padding: 1.5rem 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #64748b;
-`;
-
-const TabsSection = styled.div`
-  margin-top: 1.5rem;
-`;
-
-const TabsHeader = styled.div`
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const TabsTitle = styled.h3`
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-`;
-
-const TabsHint = styled.p`
-  font-size: 0.75rem;
-  color: #64748b;
-`;
-
-const TabContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const CloseButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const CloseButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: 9999px;
-  background-color: #f1f5f9;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #334155;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #e2e8f0;
-  }
-
-  svg {
-    height: 0.75rem;
-    width: 0.75rem;
-  }
-`;
-
-const DefaultContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-const TabsPanel = styled.div`
-  flex-shrink: 0;
-  width: 360px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-`;
-
-const DetailRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  border-radius: 0.5rem;
-  background-color: white;
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    align-items: center;
-  }
-`;
-
-const DetailLabel = styled.span`
-  width: 100%;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-
-  @media (min-width: 640px) {
-    width: 12rem;
-  }
-`;
-
-const DetailValue = styled.span`
-  flex: 1;
-  word-break: break-words;
-  color: #1e293b;
-`;
-
-const EmptyValue = styled.span`
-  color: #cbd5e1;
-`;
 
 type SelectedTab<RowType> = {
   id: string | number;
@@ -314,13 +56,11 @@ function renderCellValue(value: any): React.ReactNode {
   if (React.isValidElement(value)) return value;
 
   if (value === null || value === undefined) {
-    return <EmptyValue>-</EmptyValue>;
+    return <span className="text-slate-300">-</span>;
   }
 
   if (Array.isArray(value)) {
-    if (value.some((v) => React.isValidElement(v))) {
-      return <>{value}</>;
-    }
+    if (value.some((v) => React.isValidElement(v))) return <>{value}</>;
     return value.join(", ");
   }
 
@@ -340,19 +80,26 @@ function DefaultTabContent<RowType extends Record<string, any>>({
   row: RowType;
 }) {
   return (
-    <DefaultContentContainer>
+    <div className="flex flex-col gap-2">
       {headers.map((h) => (
-        <DetailRow key={h.key}>
-          <DetailLabel>{h.label as any}</DetailLabel>
-          <DetailValue>{renderCellValue((row as any)[h.key]) as any}</DetailValue>
-        </DetailRow>
+        <div
+          key={h.key}
+          className="flex flex-col sm:flex-row sm:items-center gap-1 rounded-lg bg-white p-3 text-sm shadow-sm"
+        >
+          <span className="w-full sm:w-48 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            {h.label as any}
+          </span>
+
+          <span className="flex-1 break-words text-slate-800">
+            {renderCellValue((row as any)[h.key]) as any}
+          </span>
+        </div>
       ))}
-    </DefaultContentContainer>
+    </div>
   );
 }
 
 function TableWithTab<RowType extends Record<string, any>>({
-  
   tableProps,
   tabProps,
   rearrange = false,
@@ -364,34 +111,27 @@ function TableWithTab<RowType extends Record<string, any>>({
   tabLabelKey,
   sectionTitleFont,
   sectionDescriptionFont,
-  testId
+  testId,
 }: TableWithTabProps<RowType>) {
   const { headers, data } = tableProps;
 
-  
-
   const [tabs, setTabs] = useState<SelectedTab<RowType>[]>([]);
 
-  // Which column to use for label when opening a new tab:
-  // 1) tabLabelKey if provided
-  // 2) otherwise first column's key
   const labelColumnKey = tabLabelKey ?? headers[0]?.key;
 
   const sectionTitleFontFamily = getFontFamily(sectionTitleFont);
   const sectionDescriptionFontFamily = getFontFamily(sectionDescriptionFont);
 
-  // Keep existing tabs' labels in sync when tabLabelKey or headers change
   useEffect(() => {
     if (!tabs.length) return;
 
     setTabs((prev) =>
       prev.map((t) => {
         const row = t.row as any;
-        const effectiveKey = tabLabelKey ?? headers[0]?.key;
 
         const rawLabel =
-          effectiveKey && row[effectiveKey] !== undefined
-            ? row[effectiveKey]
+          labelColumnKey && row[labelColumnKey] !== undefined
+            ? row[labelColumnKey]
             : t.id;
 
         const label =
@@ -402,24 +142,20 @@ function TableWithTab<RowType extends Record<string, any>>({
         return { ...t, label };
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabLabelKey, headers]);
 
-  // Row click: toggle its tab (open if closed, close if open)
   const handleRowClick = (row: RowType, index: number) => {
     const id = getRowId ? getRowId(row, index) : index;
 
     setTabs((prev) => {
       const existsIndex = prev.findIndex((t) => t.id === id);
 
-      // If tab already exists → close it
       if (existsIndex !== -1) {
         const next = [...prev];
         next.splice(existsIndex, 1);
         return next;
       }
 
-      // Else, open new tab using current labelColumnKey
       const rawLabel =
         labelColumnKey && (row as any)[labelColumnKey] !== undefined
           ? (row as any)[labelColumnKey]
@@ -447,16 +183,6 @@ function TableWithTab<RowType extends Record<string, any>>({
 
   const handleReorderTabs = (fromIndex: number, toIndex: number) => {
     setTabs((prev) => {
-      if (
-        fromIndex < 0 ||
-        fromIndex >= prev.length ||
-        toIndex < 0 ||
-        toIndex >= prev.length
-      ) {
-        return prev;
-      }
-      if (fromIndex === toIndex) return prev;
-
       const next = [...prev];
       const [moved] = next.splice(fromIndex, 1);
       next.splice(toIndex, 0, moved);
@@ -464,115 +190,137 @@ function TableWithTab<RowType extends Record<string, any>>({
     });
   };
 
-  // Adapt internal selected tabs into TabbedInterface's expected shape
   const tabbedInterfaceTabs = tabs.map((t) => ({
     label: t.label,
     content: (
-      <TabContentWrapper>
-        <CloseButtonWrapper>
-          <CloseButton
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-end">
+          <button
             type="button"
             onClick={() => handleCloseTab(t.id)}
+            className="inline-flex items-center gap-1 rounded-full bg-[#f1f5f9] px-3 py-1 text-xs font-medium text-[#334155] transition-colors hover:bg-[#e2e8f0]"
           >
-            <XMarkIcon />
+            <XMarkIcon className="h-3 w-3" />
             <span>Close tab</span>
-          </CloseButton>
-        </CloseButtonWrapper>
+          </button>
+        </div>
 
         {(renderTabContent ? (
           renderTabContent(t.row)
         ) : (
           <DefaultTabContent<RowType> headers={headers} row={t.row} />
         )) as any}
-      </TabContentWrapper>
+      </div>
     ),
   }));
 
-  // Respect user's setting for header close icon, but default to true
   const effectiveShowHeaderClose =
     tabProps?.showTabCloseIconInHeader ?? true;
 
   return (
-    <Container data-testid={testId}>
+    <div
+      data-testid={testId}
+      className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+    >
       {(title || description) && (
-        <Header>
+        <div className="mb-4">
           {title && (
-            <Title fontFamily={sectionTitleFontFamily}>
+            <h2
+              className="text-xl font-semibold text-slate-900"
+              style={{ fontFamily: sectionTitleFontFamily }}
+            >
               {title}
-            </Title>
+            </h2>
           )}
+
           {description && (
-            <Description fontFamily={sectionDescriptionFontFamily}>
+            <p
+              className="mt-1 text-sm text-slate-500"
+              style={{ fontFamily: sectionDescriptionFontFamily }}
+            >
               {description}
-            </Description>
+            </p>
           )}
-        </Header>
+        </div>
       )}
 
-      {/* Clickable Table */}
-      <TableWrapper>
-        <TableInner>
-        <StyledTable>
-          <TableHead>
-            <TableHeadRow>
-              {headers.map((header) => (
-                <TableHeadCell key={header.key}>
-                  {header.label as any}
-                </TableHeadCell>
-              ))}
-            </TableHeadRow>
-          </TableHead>
-          <TableBody>
-            {data.length === 0 && (
-              <EmptyRow>
-                <EmptyCell colSpan={headers.length}>
-                  No records to display.
-                </EmptyCell>
-              </EmptyRow>
-            )}
+      <div className="overflow-x-auto w-full rounded-xl border border-slate-200">
+        <div className="min-w-[900px]">
+          <table className="min-w-full border-collapse text-sm">
+            <thead className="bg-gradient-to-r from-[#1761A3] to-[#4DAF83]">
+              <tr>
+                {headers.map((header) => (
+                  <th
+                    key={header.key}
+                    className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-white"
+                  >
+                    {header.label as any}
+                  </th>
+                ))}
+              </tr>
+            </thead>
 
-            {data.map((row, index) => {
-              const selected = isRowSelected(row as RowType, index);
-              const rowId = getRowId ? getRowId(row as RowType, index) : index;
+            <tbody className="bg-white">
+              {data.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={headers.length}
+                    className="px-4 py-6 text-center text-sm text-slate-500"
+                  >
+                    No records to display.
+                  </td>
+                </tr>
+              )}
 
-              return (
-                <TableRow
-                  key={String(rowId)}
-                  onClick={() => handleRowClick(row as RowType, index)}
-                  selected={selected}
-                >
-                  {headers.map((header) => (
-                    <TableCell key={header.key}>
-                      {renderCellValue((row as any)[header.key]) as any}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </StyledTable>
-        </TableInner>
-      </TableWrapper>
+              {data.map((row, index) => {
+                const selected = isRowSelected(row as RowType, index);
 
-      {/* Tabs below table */}
+                const rowId = getRowId
+                  ? getRowId(row as RowType, index)
+                  : index;
+
+                return (
+                  <tr
+                    key={String(rowId)}
+                    onClick={() => handleRowClick(row as RowType, index)}
+                    className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 ${
+                      selected ? "bg-blue-100/70" : ""
+                    }`}
+                  >
+                    {headers.map((header) => (
+                      <td
+                        key={header.key}
+                        className="px-3 py-2 text-slate-800"
+                      >
+                        {renderCellValue(
+                          (row as any)[header.key]
+                        ) as any}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {tabs.length > 0 && (
-        <TabsSection>
-          <TabsHeader>
-            <TabsTitle>
+        <div className="mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
               Open Rows ({tabs.length})
-            </TabsTitle>
+            </h3>
+
             {rearrange && (
-              <TabsHint>
-                Drag the tab headers to change their order. Clicking a row
-                again will close its tab.
-              </TabsHint>
+              <p className="text-xs text-slate-500">
+                Drag the tab headers to change their order.
+              </p>
             )}
-          </TabsHeader>
+          </div>
 
           <TabbedInterface
-            // allow all stylistic props from parent
             {...tabProps}
-            // but we always control the logical behavior
             tabs={tabbedInterfaceTabs}
             draggableTabs={rearrange}
             onReorderTabs={rearrange ? handleReorderTabs : undefined}
@@ -583,11 +331,12 @@ function TableWithTab<RowType extends Record<string, any>>({
               handleCloseTab(target.id);
             }}
           />
-        </TabsSection>
+        </div>
       )}
-    </Container>
+    </div>
   );
 }
 
 TableWithTab.displayName = "TableWithTab";
+
 export { TableWithTab };

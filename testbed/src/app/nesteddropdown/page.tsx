@@ -8,8 +8,7 @@ import {
   AvatarMultiSelectDropdown,
   GroupedDropdown,
   AsyncDropdown,
-  PreviewCard,
-  PreviewWrapper,
+  
 } from "@/components/NestedDropdown";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
@@ -156,9 +155,8 @@ export default function SearchableDropdownPage() {
             preview={
               // <div className="preview-wrapper">
               //   <div className="preview-card">
-              <PreviewWrapper>
-                <PreviewCard>
-                  
+              <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
                   <h3
                   >Searchable Dropdown</h3>
                   <SearchableDropdown
@@ -172,8 +170,8 @@ export default function SearchableDropdownPage() {
                     value={value}
                     onChange={setValue}
                   />
-                </PreviewCard>
-              </PreviewWrapper>
+                </div>
+              </div>
               
             }
           />
@@ -195,8 +193,8 @@ export default function SearchableDropdownPage() {
             preview={
               // <div className="preview-wrapper">
               //   <div className="preview-card large">
-              <PreviewWrapper>
-                <PreviewCard>
+              <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
                   <h3>Multi Select Dropdown</h3>
                   <MultiSelectDropdown
                     label="Multi Select"
@@ -209,8 +207,8 @@ export default function SearchableDropdownPage() {
                     values={multiValues}
                     onChange={setMultiValues}
                   />
-                </PreviewCard>
-              </PreviewWrapper>
+                </div>
+              </div>
             }
           />
         </div>
@@ -226,9 +224,8 @@ export default function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-
-      <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Cascading Dropdown</h3>
 
           <SearchableDropdown
@@ -269,8 +266,8 @@ export default function SearchableDropdownPage() {
               setCascadeValue((p) => ({ ...p, city: v }))
             }
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -287,8 +284,8 @@ export default function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Avatar Dropdown</h3>
 
           <AvatarDropdown
@@ -311,8 +308,8 @@ export default function SearchableDropdownPage() {
             value={avatar}
             onChange={setAvatar}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -329,8 +326,8 @@ export default function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Avatar Multi Select</h3>
 
           <AvatarMultiSelectDropdown
@@ -351,8 +348,8 @@ export default function SearchableDropdownPage() {
             values={avatars}
             onChange={setAvatars}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -369,8 +366,8 @@ export default function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+     <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Grouped Dropdown</h3>
 
           <GroupedDropdown
@@ -393,8 +390,8 @@ export default function SearchableDropdownPage() {
             values={groupValue}
             onChange={setGroupValue}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -412,8 +409,8 @@ export default function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+     <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Async Dropdown</h3>
 
           <AsyncDropdown
@@ -441,8 +438,8 @@ export default function SearchableDropdownPage() {
             loadOptions={loadCities}
             onChange={setCity}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>

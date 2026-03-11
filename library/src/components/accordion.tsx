@@ -2,81 +2,6 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import styled from "@emotion/styled";
-
-// ============================================================================
-// STYLED COMPONENTS
-// ============================================================================
-
-const AccordionContainer = styled.div`
-  width: 100%;
-  max-width: 100%;
-  border: 1px solid rgb(226, 232, 240);
-  overflow: hidden;
-  background-color: white;
-  border-radius: 0.75rem;
-
-  @media (min-width: 640px) {
-    max-width: 684px;
-  }
-`;
-
-const AccordionButton = styled.button<{ open: boolean }>`
-  width: 100%;
-  min-height: 52px;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: 500;
-  transition: colors 200ms;
-  border: none;
-  cursor: pointer;
-
-  ${(props) =>
-    props.open
-      ? `
-    color: white;
-    background: linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1));
-  `
-      : `
-    color: rgb(30, 41, 59);
-    background-color: white;
-  `}
-
-  @media (min-width: 640px) {
-    height: 60px;
-    min-height: 60px;
-    padding: 0 1.5rem;
-  }
-
-  &:hover {
-    opacity: 0.95;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const AccordionContent = styled.div`
-  width: 100%;
-  overflow: hidden;
-  padding: 1rem 1.5rem;
-  color: rgb(71, 85, 105);
-  border-top: 1px solid rgb(226, 232, 240);
-`;
-
-const ContentWrapper = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-`;
-
-const IconWrapper = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 // ============================================================================
 // COMPONENT
@@ -86,10 +11,9 @@ interface AccordionProps {
   title: string;
   children?: React.ReactNode;
   defaultOpen?: boolean;
-  accordionTestId?:string;
-  headerTestId?:string;
-  contentTestId?:string;
-
+  accordionTestId?: string;
+  headerTestId?: string;
+  contentTestId?: string;
 }
 
 function Accordion({
@@ -103,30 +27,75 @@ function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <AccordionContainer data-testid={accordionTestId}>
+    <div
+      data-testid={accordionTestId}
+      className="
+        w-full
+        max-w-full
+        border border-slate-200
+        overflow-hidden
+        bg-white
+        rounded-xl
+        sm:max-w-[684px]
+      "
+    >
       {/* HEADER */}
-      <AccordionButton  onClick={() => setOpen(!open)} open={open} data-testid={headerTestId}>
+
+      <button
+        data-testid={headerTestId}
+        onClick={() => setOpen(!open)}
+        className={`
+          w-full
+          flex items-center justify-between
+          font-medium
+          border-none
+          cursor-pointer
+          min-h-[52px]
+          px-4
+          transition
+          hover:opacity-95
+          focus:outline-none
+          sm:min-h-[60px]
+          sm:px-6
+          ${
+            open
+              ? "text-white bg-gradient-to-r from-[#1761A3] to-[#4DAF83]"
+              : "text-slate-800 bg-white"
+          }
+        `}
+      >
         <span>{title}</span>
-        <IconWrapper>
+
+        <span className="inline-flex items-center justify-center">
           {open ? (
             <ChevronUp className="w-5 h-5" />
           ) : (
             <ChevronDown className="w-5 h-5" />
           )}
-        </IconWrapper>
-      </AccordionButton>
+        </span>
+      </button>
 
       {/* CONTENT */}
+
       {open && (
-        <AccordionContent data-testid={contentTestId}>
-          <ContentWrapper>{children as any}</ContentWrapper>
-        </AccordionContent>
+        <div
+          data-testid={contentTestId}
+          className="
+            w-full
+            overflow-hidden
+            px-6 py-4
+            text-slate-600
+            border-t border-slate-200
+          "
+        >
+          <div className="w-full box-border">{children as any}</div>
+        </div>
       )}
-    </AccordionContainer>
+    </div>
   );
 }
 
-Accordion.displayName = 'Accordion';
+Accordion.displayName = "Accordion";
 
 export { Accordion };
 export type { AccordionProps };
