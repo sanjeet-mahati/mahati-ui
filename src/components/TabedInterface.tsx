@@ -21,6 +21,7 @@ interface TabbedInterfaceProps {
     | "shadow"
     | "glass"
     | "dark";
+    testId?:string;
   defaultActiveTab?: number;
   onTabChange?: (index: number) => void;
   draggableTabs?: boolean;
@@ -484,6 +485,7 @@ const TabbedInterface = ({
   tabContentFont,
   sectionTitleFont,
   sectionDescriptionFont,
+  testId
 }: TabbedInterfaceProps): any => {
   const [activeIndex, setActiveIndex] = useState(defaultActiveTab);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
@@ -631,7 +633,7 @@ const TabbedInterface = ({
 
   if (orientation === "horizontal") {
     return (
-      <Container variant={variant}>
+      <Container  data-testid={testId}variant={variant}>
         <HorizontalHeader>{headerButtons}</HorizontalHeader>
         {content}
       </Container>
@@ -639,7 +641,7 @@ const TabbedInterface = ({
   }
 
   return (
-    <Container variant={variant}>
+    <Container  data-testid={testId}variant={variant}>
       {verticalPosition === "left" ? (
         <VerticalGridLeft>
           <VerticalTabList position="left">{headerButtons}</VerticalTabList>

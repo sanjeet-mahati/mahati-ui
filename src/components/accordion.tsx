@@ -86,19 +86,26 @@ interface AccordionProps {
   title: string;
   children?: React.ReactNode;
   defaultOpen?: boolean;
+  accordionTestId?:string;
+  headerTestId?:string;
+  contentTestId?:string;
+
 }
 
 function Accordion({
   title,
   children,
   defaultOpen = false,
+  accordionTestId,
+  headerTestId,
+  contentTestId,
 }: AccordionProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <AccordionContainer>
+    <AccordionContainer data-testid={accordionTestId}>
       {/* HEADER */}
-      <AccordionButton onClick={() => setOpen(!open)} open={open}>
+      <AccordionButton  onClick={() => setOpen(!open)} open={open} data-testid={headerTestId}>
         <span>{title}</span>
         <IconWrapper>
           {open ? (
@@ -111,7 +118,7 @@ function Accordion({
 
       {/* CONTENT */}
       {open && (
-        <AccordionContent>
+        <AccordionContent data-testid={contentTestId}>
           <ContentWrapper>{children as any}</ContentWrapper>
         </AccordionContent>
       )}

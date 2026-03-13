@@ -14,6 +14,7 @@ interface TableProps {
   data: { [key: string]: unknown }[];
 
   // Pagination
+  tableTestId?:string;
   page?: number;
   setPage?: (page: number) => void;
   limit?: number;
@@ -475,6 +476,7 @@ const Table = ({
   textWrapColumns,
   textWrapMaxLength = 120,
   textWrapColumnMaxLengths,
+  tableTestId,
 }: TableProps): any => {
   const [searchMode, setSearchMode] = useState<"startsWith" | "includes">(
     searchModeOptions[0]
@@ -680,7 +682,7 @@ const Table = ({
         data.length > 0 &&
         renderPagination()}
 
-      <TableContainer>
+      <TableContainer data-testid={tableTestId}>
         <StyledTable>
           <TableHead>
             <TableHeaderRow>

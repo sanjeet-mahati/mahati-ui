@@ -13,6 +13,7 @@ export interface RealisticConfettiProps {
   colors?: string[];
   explosionForce?: number;
   wind?: number;
+  testId?:string;
 }
 
 interface ConfettiParticle {
@@ -121,6 +122,7 @@ const createParticles = (count: number, force: number, wind: number, colors: str
 
 const RealisticConfetti: React.FC<RealisticConfettiProps> = ({
   isActive = true,
+  testId,
   particleCount = 200,
   duration = 5000,
   colors = [
@@ -201,7 +203,7 @@ const RealisticConfetti: React.FC<RealisticConfettiProps> = ({
   if (!isActive || particles.length === 0) return null;
 
   return (
-    <Container>
+    <Container data-testid={testId}>
       {particles.map((particle) => (
         <ParticleElement
           key={particle.id}
