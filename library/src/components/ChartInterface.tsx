@@ -83,6 +83,7 @@ export interface MahatiChartProps {
   variant?: "default" | "filled" | "elevated" | "flat" | "card";
   size?: "sm" | "default" | "lg" | "xl";
   className?: string;
+  testId?:string;
 }
 
 // ============================================================================
@@ -92,12 +93,14 @@ export interface MahatiChartProps {
 export const ChartInterface = React.forwardRef<HTMLDivElement, MahatiChartProps>(
   (
     {
+      testId,
       type = "line",
       data,
       options = {},
       variant = "default",
       size = "default",
       className,
+      
       ...props
     },
     ref
@@ -144,6 +147,7 @@ export const ChartInterface = React.forwardRef<HTMLDivElement, MahatiChartProps>
 
     return (
       <ChartContainer
+       data-testid={testId}
         ref={ref}
         $variant={variant}
         $size={size}

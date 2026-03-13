@@ -29,6 +29,7 @@ interface MahatiActivityProps {
   onChange: (v: string | number) => void;
   options?: SelectOption[];
   size?: FieldSize;
+  testId?:string;
 }
 
 interface MahatiStatusProps {
@@ -36,6 +37,7 @@ interface MahatiStatusProps {
   onChange: (v: string | number) => void;
   options?: SelectOption[];
   size?: FieldSize;
+  testId?:string;
 }
 
 interface MahatiSearchProps {
@@ -43,6 +45,7 @@ interface MahatiSearchProps {
   onChange: (v: string) => void;
   placeholder?: string;
   size?: FieldSize;
+  testId?:string;
 }
 
 /* ===================== STYLED COMPONENTS ===================== */
@@ -381,10 +384,11 @@ interface FilterProps {
   activityOptions?: SelectOption[];
   statusOptions?: SelectOption[];
   searchPlaceholder?: string;
+  testId?:string;
   size?: any;
 }
 
-const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, statusOptions = DEFAULT_STATUS_OPTIONS, searchPlaceholder = "Search...", size = "default" }: FilterProps) => {
+const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, statusOptions = DEFAULT_STATUS_OPTIONS, searchPlaceholder = "Search...", size = "default",testId }: FilterProps) => {
   const [open, setOpen] = useState(false);
 
   const [values, setValues] = useState<FilterValues>({
@@ -431,20 +435,20 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
   };
 
   return (
-    <FilterContainer>
+    <FilterContainer data-testId={testId}>
       {/* FILTER BUTTON */}
-      <FilterButton onClick={() => setOpen((p) => !p)}>
+      <FilterButton  data-testid={testId?`${testId}-button`:undefined}onClick={() => setOpen((p) => !p)}>
         Filter
       </FilterButton>
 
       {/* FILTER MODAL */}
       {open && (
-        <FilterModalWrapper>
+        <FilterModalWrapper data-testid={testId?`${testId}-model`:undefined}>
           <FilterCard>
             {/* HEADER */}
             <FilterHeader>
               <FilterTitle>Add Filter</FilterTitle>
-              <CloseButton onClick={() => setOpen(false)}>
+              <CloseButton   data-testid={testId?`${testId}-close`:undefined}onClick={() => setOpen(false)}>
                 <X className="w-4 h-4 text-slate-600" />
               </CloseButton>
             </FilterHeader>
@@ -496,11 +500,11 @@ const Filter = ({ onApply, onReset, activityOptions = DEFAULT_ACTIVITY_OPTIONS, 
 
             {/* FOOTER */}
             <FilterFooter>
-              <ResetAllButton onClick={resetAll} type="button">
+              <ResetAllButton  data-testid={testId?`${testId}-resetall`:undefined} onClick={resetAll} type="button">
                 Reset all
               </ResetAllButton>
 
-              <ApplyButton onClick={applyFilters} type="button">Apply Now</ApplyButton>
+              <ApplyButton  data-testid={testId?`${testId}-apply`:undefined} onClick={applyFilters} type="button">Apply Now</ApplyButton>
             </FilterFooter>
           </FilterCard>
         </FilterModalWrapper>
@@ -537,6 +541,7 @@ const MahatiActivity = ({
   onChange,
   options = DEFAULT_ACTIVITY_OPTIONS,
   size = "medium",
+  testId
 }: MahatiActivityProps) => {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -592,6 +597,7 @@ const MahatiActivity = ({
     <>
       {/* ===== Trigger ===== */}
       <CustomSelectTrigger
+       data-testid={testId?`${testId}-trigger`:undefined}
         ref={triggerRef}
         onClick={() => setOpen((p) => !p)}
         open={open}
@@ -606,6 +612,7 @@ const MahatiActivity = ({
         pos &&
         createPortal(
           <CustomSelectDropdown
+           data-testid={testId?`${testId}-dropdown`:undefined}
             ref={dropdownRef}
             style={{
               top: pos.top,
@@ -615,6 +622,7 @@ const MahatiActivity = ({
           >
             {options.map((opt) => (
               <CustomSelectOption
+               data-testid={testId?`${testId}-option-${String(opt.value)}`:undefined}
                 key={String(opt.value)}
                 onClick={() => {
                   onChange(opt.value);
@@ -637,6 +645,7 @@ const MahatiStatus = ({
   onChange,
   options = DEFAULT_STATUS_OPTIONS,
   size = "medium",
+  testId,
 }: MahatiStatusProps) => {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -689,6 +698,7 @@ const MahatiStatus = ({
     <>
       {/* Trigger */}
       <CustomSelectTrigger
+      data-testid={testId?`${testId}-trigger`:undefined}
         ref={triggerRef}
         onClick={() => setOpen((p) => !p)}
         open={open}
@@ -703,6 +713,7 @@ const MahatiStatus = ({
         pos &&
         createPortal(
           <CustomSelectDropdown
+           data-testid={testId?`${testId}-dropdown`:undefined}
             ref={dropdownRef}
             style={{
               top: pos.top,
@@ -734,8 +745,10 @@ const MahatiSearch = ({
   onChange,
   placeholder = "Search...",
   size = "medium",
+  testId
 }: MahatiSearchProps) => (
   <CustomInput
+  data-testid={testId}
     type="text"
     value={value}
     placeholder={placeholder}

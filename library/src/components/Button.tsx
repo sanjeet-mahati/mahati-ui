@@ -13,6 +13,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   iconButtonBgPaddingClass?: string;
   iconButtonHoverBgClass?: string;
   iconButtonHoverIntensity?: number;
+  testId?:string;
 }
 
 export interface IconButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -432,6 +433,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
     iconButtonHoverBgClass,
     iconButtonHoverIntensity,
     children,
+    testId,
     ...props
   }, ref) => {
     // Render icon button with inner span for background control
@@ -441,6 +443,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
       
       return (
         <StyledButton
+         
           $variant={variant}
           $size={size}
           $iconButton={true}
@@ -452,6 +455,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
         >
           <IconButtonInner
+            
             $bgClass={iconButtonBgClass}
             $radiusClass={iconButtonRadiusClass}
             $paddingClass={iconButtonBgPaddingClass}
@@ -468,6 +472,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Render standard button
     return (
       <StyledButton
+        data-testid={testId}
         $variant={variant}
         $size={size}
         $name={name}

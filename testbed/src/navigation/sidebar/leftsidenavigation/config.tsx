@@ -1,4 +1,5 @@
 'use client';
+
 import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -31,7 +32,7 @@ import React from "react";
 export interface NavItem {
   name: string;
   href: string;
-  icon: React.ReactElement | null;
+  icon: React.ReactNode;
   position?: 'top' | 'bottom';
   active?: boolean;
   subItems?: NavItem [];

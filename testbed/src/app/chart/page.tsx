@@ -5,6 +5,14 @@ import { ChartData } from "chart.js";
 import { MahatiChartAnalyticsWidget } from "@/lib";
 import chartDataJson from "./sample-chart-data.json";
 
+/* ============================================================================
+   STYLED COMPONENTS
+   ============================================================================ */
+
+/* ============================================================================
+   STYLED COMPONENTS
+   ============================================================================ */
+
 const DemoContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,6 +68,14 @@ const UploadHint = styled.p`
   line-height: 1.25rem;
 `;
 
+/* ============================================================================
+   TYPES
+   ============================================================================ */
+
+/* ============================================================================
+   TYPES
+   ============================================================================ */
+
 interface DetailItem {
   label: string;
   value: string;
@@ -81,8 +97,16 @@ const GANTT_COLOR_MAP = {
   emerald: "rgba(16, 185, 129, 1)",
 } as const;
 
-type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar";
+type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar"| "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge" | "stackbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
+
+/* ============================================================================
+   UTILITY FUNCTIONS
+   ============================================================================ */
+
+/* ============================================================================
+   UTILITY FUNCTIONS
+   ============================================================================ */
 
 const createAreaGradient = (color: string, opacityStart: number = 0.3, opacityEnd: number = 0) => {
   return (context: any) => {
@@ -163,6 +187,14 @@ const getAreaChartData = (areaData: any, filters: Record<string, string>) => {
   return areaData.default || areaData;
 };
 
+/* ============================================================================
+   MAIN COMPONENT
+   ============================================================================ */
+
+/* ============================================================================
+   MAIN COMPONENT
+   ============================================================================ */
+
 export default function MahatiChart() {
   const [chartData, setChartData] = useState(chartDataJson);
   const [currentChartType, setCurrentChartType] = useState<ChartType>("area");
@@ -180,6 +212,14 @@ export default function MahatiChart() {
     SelectType: "Sales",
   });
 
+ 
+
+  const [riskGaugeSelectedFilters, setRiskGaugeSelectedFilters] = useState<Record<string, string>>({
+    SelectYear: "2026",
+    SelectMonth: "January",
+    SelectType: "Credit Score",
+  });
+
   const [ganttSelectedFilters, setGanttSelectedFilters] = useState<Record<string, string>>({
     SelectYear: "2026",
     SelectMonth: "Jan - Feb",
@@ -192,9 +232,58 @@ export default function MahatiChart() {
     SelectType: "Product 1",
   });
 
+  const [columnChartSelectedFilters, setColumnChartSelectedFilters] = useState<Record<string, string>>({
+    SelectYear: "2026",
+    SelectMonth: "January",
+    SelectType: "Category A",
+  });
+
+  const [groupBarSelectedFilters, setGroupBarSelectedFilters] = useState<Record<string, string>>({
+    SelectYear: "2026",
+    SelectMonth: "January",
+  });
+
+  const [stackBarSelectedFilters, setStackBarSelectedFilters] = useState<Record<string, string>>({
+    SelectYear: "2026",
+    SelectMonth: "January",
+    SelectWeek: "Week 1",
+    SelectType: "Category A",
+  });
+
+  const [lollipopSelectedFilters, setLollipopSelectedFilters] = useState<Record<string, string>>(() => {
+    const lollipopFilters = chartData.filters?.lollipop || [];
+    const initialFilters: Record<string, string> = {};
+    
+    lollipopFilters.forEach((filter: any) => {
+      if (filter.id !== 'SelectOrientation' && filter.options && filter.options.length > 0) {
+        initialFilters[filter.id] = filter.options[0];
+      }
+    });
+    
+    initialFilters['SelectOrientation'] = 'horizontal';
+    
+    return initialFilters;
+  });
+
   const [calendarHeatmapSelectedFilters, setCalendarHeatmapSelectedFilters] = useState<Record<string, string>>({
     SelectYear: "2026",
     SelectType: "Development",
+  });
+
+ 
+   
+
+  const [kpiSelectedFilters, setKpiSelectedFilters] = useState<Record<string, string>>(() => {
+    const kpiFilters = chartData.filters?.kpi || [];
+    const initialFilters: Record<string, string> = {};
+    
+    kpiFilters.forEach((filter: any) => {
+      if (filter.options && filter.options.length > 0) {
+        initialFilters[filter.id] = filter.options[0];
+      }
+    });
+    
+    return initialFilters;
   });
 
   const [currentStats, setCurrentStats] = useState(chartData.quickStats?.pie || {});
@@ -205,40 +294,61 @@ export default function MahatiChart() {
     line: {} as any,
     area: {} as any,
     bar: {} as any,
+    columnchart:{}as any,
+    groupbar:{}as any,
+    stackbar:{}as any,
+    lollipop:{}as any,
+    kpi:{}as any,
     bullet: { labels: [], datasets: [] },
     gauge: { labels: [], datasets: [] },
+    riskgauge: { labels: [], datasets: [] },
     gantt: { labels: [], datasets: [] },
     calendarheatmap: { labels: [], datasets: [] },
     horizontalbar: { labels: [], datasets: [] },
+    
   });
 
   useEffect(() => {
-    const initialMap: Record<ChartType, ChartData<any>> = {
-      pie: chartData.chartData?.pie as ChartData<"doughnut"> || {},
-      doughnut: chartData.chartData?.doughnut as ChartData<"doughnut"> || {},
-      line: chartData.chartData?.line as ChartData<"line"> || {},
-      area: processAreaData(
-        getAreaChartData(chartData.chartData?.area, selectedFilters) ||
-        chartData.chartData?.area?.default ||
-        {}
-      ),
-      bar: chartData.chartData?.bar as ChartData<"bar"> || {},
-      bullet: { labels: [], datasets: [] },
-      gauge: { labels: [], datasets: [] },
-      gantt: { labels: [], datasets: [] },
-      calendarheatmap: { labels: [], datasets: [] },
-      horizontalbar: { labels: [], datasets: [] },
-    };
+   const initialMap: Record<ChartType, any> = {
+  pie: chartData.chartData?.pie || {},
+  doughnut: chartData.chartData?.doughnut || {},
+  line: chartData.chartData?.line || {},
+
+  area: processAreaData(
+    getAreaChartData(chartData.chartData?.area, selectedFilters) ||
+    chartData.chartData?.area?.default ||
+    {}
+  ),
+
+  bar: chartData.chartData?.bar || {},
+
+  bullet: { labels: [], datasets: [] },
+  gauge: { labels: [], datasets: [] },
+
+  gantt: { labels: [], datasets: [] },
+  calendarheatmap: { labels: [], datasets: [] },
+  horizontalbar: { labels: [], datasets: [] },
+  columnchart: (chartData.chartData as any)?.columnchart || {},
+groupbar: (chartData.chartData as any)?.groupbar || {},
+stackbar: (chartData.chartData as any)?.stackbar || {},
+lollipop: (chartData.chartData as any)?.lollipop || {},
+kpi: (chartData.chartData as any)?.kpi || {},
+  
+  riskgauge: { labels: [], datasets: [] },
+};
 
     setActiveChartDataMap(initialMap);
-    setCurrentStats(chartData.quickStats?.[currentChartType] || chartData.quickStats?.pie || {});
-  }, [chartData]);
+    setCurrentStats((chartData.quickStats as any)?.[currentChartType] || chartData.quickStats?.pie || {});
+  }, [chartData, currentChartType]);
 
   const currentSelectedFilters = useMemo(() => {
     switch (currentChartType) {
       case 'gantt': return ganttSelectedFilters;
       case 'horizontalbar': return horizontalBarSelectedFilters;
       case 'calendarheatmap': return calendarHeatmapSelectedFilters;
+      case 'lollipop': return lollipopSelectedFilters;
+      case 'kpi': return kpiSelectedFilters;
+      case 'riskgauge': return riskGaugeSelectedFilters;
       case 'bullet':
       case 'gauge': return bulletGaugeSelectedFilters;
       default: return selectedFilters;
@@ -250,6 +360,9 @@ export default function MahatiChart() {
       case 'gantt': return chartData.filters?.gantt || [];
       case 'horizontalbar': return chartData.filters?.horizontalbar || [];
       case 'calendarheatmap': return chartData.filters?.calendarheatmap || [];
+      case 'lollipop': return chartData.filters?.lollipop || [];
+      case 'kpi': return chartData.filters?.kpi || [];
+      case 'riskgauge': return chartData.filters?.riskgauge || [];
       case 'bullet':
       case 'gauge': return chartData.filters?.bulletGauge || [];
       default: return chartData.filters?.default || [];
@@ -258,16 +371,26 @@ export default function MahatiChart() {
 
   const handleChartTypeChange = (chartType: ChartType) => {
     setCurrentChartType(chartType);
-    setCurrentStats(chartData.quickStats?.[chartType] || chartData.quickStats?.pie || {});
+    setCurrentStats((chartData.quickStats as any)?.[chartType] || chartData.quickStats?.pie || {});
   };
 
   const handleFiltersChange = (newFilters: Record<string, string>) => {
-    if (currentChartType === 'gantt') {
+    console.log('🔄 Filter Change - Chart Type:', currentChartType);
+    console.log('🔄 Filter Change - New Filters:', newFilters);
+    
+    if (currentChartType === 'kpi') {
+      console.log('✅ Setting KPI Filters:', newFilters);
+      setKpiSelectedFilters(newFilters);
+    } else if (currentChartType === 'gantt') {
       setGanttSelectedFilters(newFilters);
     } else if (currentChartType === 'horizontalbar') {
       setHorizontalBarSelectedFilters(newFilters);
     } else if (currentChartType === 'calendarheatmap') {
       setCalendarHeatmapSelectedFilters(newFilters);
+    } else if (currentChartType === 'lollipop') {
+      setLollipopSelectedFilters(newFilters);
+    } else if (currentChartType === 'riskgauge') {
+      setRiskGaugeSelectedFilters(newFilters);
     } else if (currentChartType === 'bullet' || currentChartType === 'gauge') {
       setBulletGaugeSelectedFilters(newFilters);
     } else {
@@ -295,9 +418,9 @@ export default function MahatiChart() {
 
     if (currentChartType === 'area' || currentChartType === 'line') {
       const boxColors = [
-        "rgba(37, 99, 235, 1)",   // Outstanding / first
-        "rgba(22, 163, 74, 1)",   // Collected / second
-        "rgba(239, 68, 68, 1)",   // Pending / third
+        "rgba(37, 99, 235, 1)",
+        "rgba(22, 163, 74, 1)",
+        "rgba(239, 68, 68, 1)",
       ];
 
       return data.datasets.map((dataset: any, idx: number) => ({
@@ -305,7 +428,6 @@ export default function MahatiChart() {
         value: dataset.data?.[dataset.data.length - 1]?.toString() || '0',
         color: dataset.borderColor || '#6b7280',
         description: `Latest value for ${dataset.label || 'series'}`,
-        // Add box style info (will be used in the widget to render the square)
         boxStyle: {
           width: "12px",
           height: "12px",
@@ -315,7 +437,6 @@ export default function MahatiChart() {
       }));
     }
 
-    // Bullet chart details
     if (currentChartType === 'bullet') {
       const year = bulletGaugeSelectedFilters.SelectYear || '2026';
       const month = bulletGaugeSelectedFilters.SelectMonth || 'January';
@@ -336,7 +457,6 @@ export default function MahatiChart() {
       return [];
     }
 
-    // Gauge details
     if (currentChartType === 'gauge') {
       const year = bulletGaugeSelectedFilters.SelectYear || '2026';
       const month = bulletGaugeSelectedFilters.SelectMonth || 'January';
@@ -357,7 +477,26 @@ export default function MahatiChart() {
       return [];
     }
 
-    // Gantt details
+    if (currentChartType === 'riskgauge') {
+      const year = riskGaugeSelectedFilters.SelectYear || '2026';
+      const month = riskGaugeSelectedFilters.SelectMonth || 'January';
+      const type = riskGaugeSelectedFilters.SelectType || 'Credit Score';
+      const riskGaugeYearData = (chartData.riskgauge as any)?.[year]?.[month]?.[type];
+
+      if (riskGaugeYearData && Array.isArray(riskGaugeYearData)) {
+        return riskGaugeYearData.map((g: any) => {
+          const percentage = Math.round((g.score / (g.max || 100)) * 100);
+          return {
+            label: g.name || 'Risk Score',
+            value: `${percentage}%`,
+            description: `Risk Score: ${g.score} / ${g.max || 100}`,
+            color: "rgba(239, 68, 68, 1)",
+          };
+        });
+      }
+      return [];
+    }
+
     if (currentChartType === 'gantt') {
       const year = ganttSelectedFilters.SelectYear || '2026';
       const type = ganttSelectedFilters.SelectType || 'Development';
@@ -375,7 +514,6 @@ export default function MahatiChart() {
       });
     }
 
-    // Calendar heatmap details
     if (currentChartType === 'calendarheatmap') {
       const year = calendarHeatmapSelectedFilters.SelectYear || '2026';
       const type = calendarHeatmapSelectedFilters.SelectType || 'Development';
@@ -410,7 +548,6 @@ export default function MahatiChart() {
       });
     }
 
-    // Horizontal bar details
     if (currentChartType === 'horizontalbar') {
       const products = (chartData.horizontalbar as any)?.products;
       const firstProduct = products ? Object.keys(products)[0] : null;
@@ -480,22 +617,33 @@ export default function MahatiChart() {
         }
         setChartData(uploaded);
 
-        const newMap: Record<ChartType, ChartData<any>> = {
-          pie: uploaded.chartData.pie || {},
-          doughnut: uploaded.chartData.doughnut || {},
-          line: uploaded.chartData.line || {},
-          area: processAreaData(
-            getAreaChartData(uploaded.chartData.area, selectedFilters) ||
-            uploaded.chartData.area?.default ||
-            {}
-          ),
-          bar: uploaded.chartData.bar || {},
-          bullet: { labels: [], datasets: [] },
-          gauge: { labels: [], datasets: [] },
-          gantt: { labels: [], datasets: [] },
-          calendarheatmap: { labels: [], datasets: [] },
-          horizontalbar: { labels: [], datasets: [] },
-        };
+       const newMap: Record<ChartType, any> = {
+  pie: uploaded.chartData.pie || {},
+  doughnut: uploaded.chartData.doughnut || {},
+  line: uploaded.chartData.line || {},
+
+  area: processAreaData(
+    getAreaChartData(uploaded.chartData.area, selectedFilters) ||
+    uploaded.chartData.area?.default ||
+    {}
+  ),
+
+  bar: uploaded.chartData.bar || {},
+
+  bullet: { labels: [], datasets: [] },
+  gauge: { labels: [], datasets: [] },
+
+  gantt: { labels: [], datasets: [] },
+  calendarheatmap: { labels: [], datasets: [] },
+  horizontalbar: { labels: [], datasets: [] },
+
+  columnchart: uploaded.chartData.columnchart || {},
+  groupbar: uploaded.chartData.groupbar || {},
+  stackbar: uploaded.chartData.stackbar || {},
+  lollipop: uploaded.chartData.lollipop || {},
+  kpi: uploaded.chartData.kpi || {},
+  riskgauge: { labels: [], datasets: [] },
+};
         setActiveChartDataMap(newMap);
       } catch (err) {
         console.error("JSON parse error:", err);

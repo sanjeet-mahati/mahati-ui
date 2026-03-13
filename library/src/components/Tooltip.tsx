@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
  
 export interface TooltipProps {
   text?: string | React.ReactNode;
+  testId?:string;
   position?: "top" | "right" | "bottom" | "left";
   children: React.ReactNode;
   variant?: "default" | "transparent";
@@ -202,6 +203,7 @@ const Tooltip = ({
   textColor,
   backgroundColor,
   image,
+  testId,
   animation
 }: TooltipProps): any => {
   const [visible, setVisible] = useState(false);
@@ -373,6 +375,7 @@ const Tooltip = ({
  
   return (
     <TooltipWrapper
+    data-testid={testId}
       ref={triggerRef}
       className={className}
       onMouseEnter={showTooltip}

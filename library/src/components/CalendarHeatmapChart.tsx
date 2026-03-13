@@ -331,6 +331,7 @@ export interface CalendarHeatmapChartData {
 
 export interface CalendarHeatmapChartProps {
   data: HeatmapData;
+  testId?:string;
   selectedProject: string;
   selectedYear: string;
   selectedType: string;
@@ -345,6 +346,7 @@ export const CalendarHeatmapChart: React.FC<CalendarHeatmapChartProps> = ({
   selectedType,
   onProjectChange,
   calendarheatmapData,
+  testId
 }) => {
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = React.useState(false);
   const [hoveredCell, setHoveredCell] = React.useState<string | null>(null);
@@ -497,7 +499,7 @@ export const CalendarHeatmapChart: React.FC<CalendarHeatmapChartProps> = ({
   };
 
   return (
-    <Container>
+    <Container data-testid={testId}>
       <HeaderRow>
         <LeftSection>
           <DropdownWrapper>
