@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MahatiTable, MahatiTableWithTab } from '@/lib/index';
+import { MahatiTable, MahatiTableWithTab } from '@mahatisystems/mahati-ui-components';
 import { CodePreview } from "../CodePreview";
 
 type BaseTableProps = React.ComponentProps<typeof MahatiTable>;

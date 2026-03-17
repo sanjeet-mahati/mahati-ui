@@ -51,7 +51,7 @@ const MahatiPieAnalyticsWidget: React.FC<MahatiPieAnalyticsWidgetProps> = ({
   }, [options]);
 
   return (
-    <div className={`w-full bg-white border border-gray-200 rounded-lg shadow-sm p-6 ${className} data-testid={testId}`}>
+<div data-testid={testId} className={`w-full bg-white border ... ${className}`}>
       {/* Title */}
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>

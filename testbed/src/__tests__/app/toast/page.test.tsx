@@ -1,150 +1,143 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
-/**
- * Jest in testbed doesn't resolve Next.js alias "@/lib" unless moduleNameMapper is configured.
- * We create a VIRTUAL mock module for "@/lib" so the page can import it without config changes.
- */
-jest.mock(
-  '@/lib',
-  () => {
-    const React = require('react') as typeof import('react');
+const user = userEvent.setup();
 
-    type ToastType = 'success' | 'error' | 'warning' | 'notification';
-    type BackgroundType = 'solid' | 'transparent';
+jest.mock('@/lib', () => {
+  const React = require('react') as typeof import('react');
 
-    interface ActionButton {
-      label: string;
-      onClick: () => void;
-      variant?: 'primary' | 'secondary';
-      backgroundColor?: string;
-      textColor?: string;
-      borderColor?: string;
-      hoverBackgroundColor?: string;
-      fontSize?: string;
-      fontWeight?: string;
-      padding?: string;
-      borderRadius?: string;
-    }
+  type ToastType = 'success' | 'error' | 'warning' | 'notification';
+  type BackgroundType = 'solid' | 'transparent';
 
-    interface Props {
-      type?: ToastType;
-      title?: string;
-      message?: string;
-      onClose?: () => void;
-      showClose?: boolean;
-      duration?: number;
-      background?: BackgroundType;
-      action?: ActionButton[];
-      custom?: any;
-      className?: string;
-    }
+  interface ActionButton {
+    label: string;
+    onClick: () => void;
+    variant?: 'primary' | 'secondary';
+    backgroundColor?: string;
+    textColor?: string;
+    borderColor?: string;
+    hoverBackgroundColor?: string;
+    fontSize?: string;
+    fontWeight?: string;
+    padding?: string;
+    borderRadius?: string;
+  }
 
-    const MahatiToastMessage: React.FC<Props> = ({
-      type = 'notification',
-      title,
-      message,
-      onClose,
-      showClose = true,
-      action,
-    }) => {
-      const displayTitle = title ?? (type.charAt(0).toUpperCase() + type.slice(1));
+  interface Props {
+    type?: ToastType;
+    title?: string;
+    message?: string;
+    onClose?: () => void;
+    showClose?: boolean;
+    duration?: number;
+    background?: BackgroundType;
+    action?: ActionButton[];
+    custom?: any;
+    className?: string;
+  }
 
-      return (
-        <div role="alert" aria-live="assertive">
-          <div>{displayTitle}</div>
-          {message ? <div>{message}</div> : null}
+  const MahatiToastMessage: React.FC<Props> = ({
+    type = 'notification',
+    title,
+    message,
+    onClose,
+    showClose = true,
+    action,
+  }) => {
+    const displayTitle = title ?? (type.charAt(0).toUpperCase() + type.slice(1));
 
-          {showClose && onClose ? (
-            <button aria-label="Close toast" onClick={onClose}>
-              Close
-            </button>
-          ) : null}
+    return (
+      <div role="alert" aria-live="assertive">
+        <div>{displayTitle}</div>
+        {message ? <div>{message}</div> : null}
 
-          {action?.length ? (
-            <div>
-              {action.map((a, idx) => (
-                <button key={idx} onClick={a.onClick}>
-                  {a.label}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      );
-    };
+        {showClose && onClose ? (
+          <button aria-label="Close toast" onClick={onClose}>
+            Close
+          </button>
+        ) : null}
 
-    return { MahatiToastMessage };
-  },
-  { virtual: true }
-);
-
-// Import AFTER the mock so page.tsx uses the mocked "@/lib"
-// import MahatiToastMessagePage from '../app/toast/page';
-import MahatiToastMessagePage from '../../../app/toast/page';
-
-
-describe('ToastMessageDemo (testbed)', () => {
-  const clickFirstButtonByName = (nameRegex: RegExp) => {
-    const buttons = screen.getAllByRole('button', { name: nameRegex });
-    // Because the demo repeats buttons (solid + transparent), click the first match
-    fireEvent.click(buttons[0]);
+        {action?.length ? (
+          <div>
+            {action.map((a, idx) => (
+              <button key={idx} onClick={a.onClick}>
+                {a.label}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
   };
 
-  it('renders the demo page header and primary buttons (duplicates allowed)', () => {
+  return { MahatiToastMessage };
+}, { virtual: true });
+
+import MahatiToastMessagePage from '../../../app/toast/page';
+
+describe('ToastMessageDemo (testbed)', () => {
+  const clickFirstButtonByName = async (nameRegex: RegExp) => {
+    const buttons = screen.getAllByRole('button');
+    const target = buttons.find(btn => 
+      btn.textContent?.match(nameRegex)
+    );
+    if (target) {
+      await user.click(target);
+      return waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+    }
+    throw new Error(`Button "${nameRegex}" not found`);
+  };
+
+  it('renders the demo page header and primary buttons', () => {
     render(<MahatiToastMessagePage />);
 
     expect(screen.getByText('Toast Notification')).toBeInTheDocument();
 
-    // These exist multiple times (solid + transparent), so use getAllByRole
     expect(screen.getAllByRole('button', { name: /show success toast/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('button', { name: /show error toast/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('button', { name: /show warning toast/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('button', { name: /show notification toast/i }).length).toBeGreaterThan(0);
   });
 
-  it('shows a success toast when "Show Success Toast" is clicked', () => {
+  it('shows a success toast when "Show Success Toast" is clicked', async () => {
     render(<MahatiToastMessagePage />);
+    await clickFirstButtonByName(/show success toast/i);
 
-    clickFirstButtonByName(/show success toast/i);
-
-    // type="success" with no title -> default "Success"
     expect(screen.getByText('Success')).toBeInTheDocument();
-
-    // In demo, solid success toast message is commented out
     expect(screen.queryByText(/success message description/i)).not.toBeInTheDocument();
-
-    // Demo provides onClose
     expect(screen.getByLabelText('Close toast')).toBeInTheDocument();
   });
 
-  it('shows an error toast with message when "Show Error Toast" is clicked', () => {
+  it('shows an error toast with message when "Show Error Toast" is clicked', async () => {
     render(<MahatiToastMessagePage />);
-
-    clickFirstButtonByName(/show error toast/i);
+    await clickFirstButtonByName(/show error toast/i);
 
     expect(screen.getByText('Error')).toBeInTheDocument();
     expect(screen.getByText('Error message description')).toBeInTheDocument();
   });
 
-  it('closes the toast when close button is clicked', () => {
+  it('closes the toast when close button is clicked', async () => {
     render(<MahatiToastMessagePage />);
-
-    clickFirstButtonByName(/show error toast/i);
+    await clickFirstButtonByName(/show error toast/i);
+    
     expect(screen.getByText('Error')).toBeInTheDocument();
-
     fireEvent.click(screen.getByLabelText('Close toast'));
 
-    expect(screen.queryByText('Error')).not.toBeInTheDocument();
-    expect(screen.queryByText('Error message description')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Error')).not.toBeInTheDocument();
+      expect(screen.queryByText('Error message description')).not.toBeInTheDocument();
+    });
   });
 
-  it('renders the "Multiple Actions" toast and action buttons are clickable', () => {
+  it('renders the "Multiple Actions" toast and action buttons are clickable', async () => {
     render(<MahatiToastMessagePage />);
 
-    // "Multiple Actions" button exists once in your demo
-    fireEvent.click(screen.getByRole('button', { name: /multiple actions/i }));
+    // Mock alert for action buttons
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    
+    await clickFirstButtonByName(/multiple actions/i);
 
     expect(screen.getByText('New Message')).toBeInTheDocument();
     expect(screen.getByText('You have 3 unread messages')).toBeInTheDocument();
@@ -153,8 +146,7 @@ describe('ToastMessageDemo (testbed)', () => {
     expect(screen.getByRole('button', { name: 'Mark as Read' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Ignore' })).toBeInTheDocument();
 
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-    fireEvent.click(screen.getByRole('button', { name: 'View' }));
+    await user.click(screen.getByRole('button', { name: 'View' }));
     expect(alertSpy).toHaveBeenCalled();
     alertSpy.mockRestore();
   });

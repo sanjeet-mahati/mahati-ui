@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PieLineBarChart — Snapshot matches snapshot for area type 1`] = `
+<div>
+  <div
+    class="w-full h-full relative flex items-center justify-center"
+  >
+    <canvas
+      aria-label="line"
+      data-testid="line-chart"
+    />
+  </div>
+</div>
+`;
+
+exports[`PieLineBarChart — Snapshot matches snapshot for bar type 1`] = `
+<div>
+  <div
+    class="w-full h-full relative flex items-center justify-center"
+  >
+    <canvas
+      aria-label="bar"
+      data-testid="bar-chart"
+    />
+  </div>
+</div>
+`;
+
+exports[`PieLineBarChart — Snapshot matches snapshot for line type 1`] = `
+<div>
+  <div
+    class="w-full h-full relative flex items-center justify-center"
+  >
+    <canvas
+      aria-label="line"
+      data-testid="line-chart"
+    />
+  </div>
+</div>
+`;
+
+exports[`PieLineBarChart — Snapshot matches snapshot for pie type 1`] = `
+<div>
+  <div
+    class="w-full h-full relative flex items-center justify-center"
+  >
+    <canvas
+      aria-label="doughnut"
+      data-testid="doughnut-chart"
+    />
+  </div>
+</div>
+`;

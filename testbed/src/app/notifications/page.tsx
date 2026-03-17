@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
-import { MahatiMicrophoneAccessModal,MahatiCameraAccessModal,MahatiLocationAccessModal,MahatiNotificationCard,MahatiPromotionModal_V3,MahatiPromotionModal_V2,MahatiPromotionModal_V1, } from "@/lib/index";
+import { MahatiMicrophoneAccessModal,MahatiCameraAccessModal,MahatiLocationAccessModal,MahatiNotificationCard,MahatiPromotionModal_V3,MahatiPromotionModal_V2,MahatiPromotionModal_V1, } from "@mahatisystems/mahati-ui-components";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 

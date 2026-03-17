@@ -9,7 +9,7 @@ import {
   LoadingDots, 
   LoadingDotsLinear,
   CardWithLoading 
-} from '@/lib/index';
+} from '@mahatisystems/mahati-ui-components';
 
 function Sized({ label, children }: { label: string; children: React.ReactNode }) {
   return (

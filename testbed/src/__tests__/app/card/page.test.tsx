@@ -66,7 +66,7 @@ jest.mock("../../../app/CodePreview", () => {
 
 // -------------------- Mock MahatiCard (strip unknown props to avoid warnings) --------------------
 jest.mock(
-  "@/lib/index",
+  "@mahatisystems/mahati-ui-components",
   () => {
     const React = require("react");
 

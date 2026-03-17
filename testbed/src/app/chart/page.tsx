@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { ChartData } from "chart.js";
-import { MahatiChartAnalyticsWidget } from "@/lib";
+import { MahatiChartAnalyticsWidget } from "@mahatisystems/mahati-ui-components";
 import chartDataJson from "./sample-chart-data.json";
 
 /* ============================================================================
@@ -637,8 +637,8 @@ kpi: (chartData.chartData as any)?.kpi || {},
   calendarheatmap: { labels: [], datasets: [] },
   horizontalbar: { labels: [], datasets: [] },
 
-  columnchart: uploaded.chartData.columnchart || {},
-  groupbar: uploaded.chartData.groupbar || {},
+  columnchart:  { labels: [], datasets: [] },
+  groupbar:  { labels: [], datasets: [] },
   stackbar: uploaded.chartData.stackbar || {},
   lollipop: uploaded.chartData.lollipop || {},
   kpi: uploaded.chartData.kpi || {},
@@ -688,7 +688,12 @@ kpi: (chartData.chartData as any)?.kpi || {},
             "gauge",
             "gantt",
             "calendarheatmap",
-            "horizontalbar",
+            "horizontalbar",   "columnchart",   // ✅ added
+      "groupbar",      // ✅ added
+      "stackbar",      // ✅ added
+      "lollipop",      // ✅ added
+      "kpi",           // ✅ added
+      "riskgauge",     // ✅ added
           ] as const
         }
         initialChartType="area"
@@ -701,6 +706,13 @@ kpi: (chartData.chartData as any)?.kpi || {},
         horizontalBarData={chartData.horizontalbar}
         ganttData={chartData.gantt as any}
         calendarheatmapData={chartData.calendarheatmap as any}
+ 
+  lollipopData={(chartData as any).lollipop}
+  columnChartData={(chartData as any).columnchart}
+  groupBarData={(chartData as any).groupbar}
+  stackBarData={(chartData as any).stackbar}
+  kpiData={(chartData as any).kpi}
+  riskGaugeData={(chartData as any).riskgauge}
         onApplyFilters={handleApplyFilters}
         onFiltersChange={handleFiltersChange}
         details={currentDetails}

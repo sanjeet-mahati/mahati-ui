@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MahatiInput, MahatiFormContainer } from "@/lib/index";
+import { MahatiInput, MahatiFormContainer } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 

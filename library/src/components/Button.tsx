@@ -96,15 +96,33 @@ IconButtonGroup.displayName = "IconButtonGroup";
 ========================================================= */
 
 const variantClasses: Record<string, string> = {
-  default:"bg-gradient-to-r from-[31761A3] to-[#4DAF83] text-white rounded-md hover:opacity-90 active:opacity-95",
-  destructive: "bg-red-500 text-white rounded-md hover:bg-red-600 active:bg-red-700",
-  outline: "border border-gray-200 bg-white text-gray-700 rounded-md hover:bg-gray-50 active:bg-gray-100",
-  secondary: "bg-gray-200 text-gray-700 rounded-md hover:bg-[#2563eb] active:bg-gray-400",
-  ghost: "bg-transparent text-gray-700 rounded-md hover:bg-gray-100 active:bg-gray-200",
-  link: "bg-transparent text-blue-600 underline underline-offset-4 hover:no-underline",
-  danger: "bg-transparent text-red-500 rounded-md hover:bg-red-100 active:bg-red-200",
-  dotted: "relative text-white rounded-lg",
-  pill: "text-white rounded-full",
+  // ✅ Fixed: was from-[31761A3] — missing #
+  default:
+    "bg-gradient-to-r from-[#1761A3] to-[#4DAF83] text-white rounded-md hover:opacity-90 active:opacity-95",
+
+  destructive:
+    "bg-[#ef4444] text-white rounded-md hover:bg-[#dc2626] active:bg-[#b91c1c]",
+
+  outline:
+    "border border-[#e5e7eb] bg-white text-[#374151] rounded-md hover:bg-[#f9fafb] hover:border-[#d1d5db] active:bg-[#f3f4f6]",
+
+  // ✅ Fixed: was bg-gray-200 text-gray-700 — now matches CSS-in-JS blue
+  secondary:
+    "bg-[#3b82f6] text-white rounded-md hover:bg-[#2563eb] active:bg-[#1d4ed8]",
+
+  ghost:
+    "bg-transparent text-[#374151] rounded-md hover:bg-[#f3f4f6] active:bg-[#e5e7eb]",
+
+  link:
+    "bg-transparent text-[#2563eb] underline underline-offset-4 p-0 h-auto hover:no-underline hover:text-[#1d4ed8]",
+
+  danger:
+    "bg-transparent text-[#ef4444] rounded-md hover:bg-[#ef44441a] active:bg-[#ef444433]",
+
+   dotted:
+    "relative [background:linear-gradient(to_right,#1e73be,#28a97d)] text-white rounded-lg border-2 border-dashed border-white/50 hover:opacity-90",
+  pill:
+    "[background:linear-gradient(to_right,#1761A3,#4DAF83)] text-white rounded-full hover:opacity-90 active:opacity-95",
 };
 
 /* =========================================================
