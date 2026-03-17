@@ -1,0 +1,367 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabbedInterface — Snapshot matches snapshot with default props 1`] = `
+<div>
+  <div
+    class="w-full mx-auto rounded-xl border p-8 box-border transition-all duration-300 overflow-hidden
+  bg-white border-[#b8d1f3] text-slate-900 shadow-sm"
+  >
+    <div
+      class="mb-5 flex justify-around max-[600px]:flex-col max-[600px]:items-center"
+    >
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  text-[#1761A3]"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab One
+            </span>
+          </div>
+        </div>
+        <span
+          class="absolute bottom-[-2px] left-0 h-[3px] w-full
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-100
+      "
+        />
+      </button>
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  text-slate-700 hover:text-[#1761A3]"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab Two
+            </span>
+          </div>
+        </div>
+        <span
+          class="absolute bottom-[-2px] left-0 h-[3px] w-full
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-0
+      "
+        />
+      </button>
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  text-slate-700 hover:text-[#1761A3]"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab Three
+            </span>
+          </div>
+        </div>
+        <span
+          class="absolute bottom-[-2px] left-0 h-[3px] w-full
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-0
+      "
+        />
+      </button>
+    </div>
+    <div
+      class="relative min-h-[180px]"
+      style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;"
+    >
+      <div
+        class="transition-opacity duration-300 relative opacity-100"
+      >
+        <div>
+          Content One
+        </div>
+      </div>
+      <div
+        class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+      >
+        <div>
+          Content Two
+        </div>
+      </div>
+      <div
+        class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+      >
+        <div>
+          Content Three
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TabbedInterface — Snapshot matches snapshot with pill variant 1`] = `
+<div>
+  <div
+    class="w-full mx-auto rounded-xl border p-8 box-border transition-all duration-300 overflow-hidden
+  bg-white border-[#b8d1f3] text-slate-900 shadow-sm"
+  >
+    <div
+      class="mb-5 flex justify-around max-[600px]:flex-col max-[600px]:items-center"
+    >
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  rounded-full bg-[#1761A3] text-white shadow"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab One
+            </span>
+          </div>
+        </div>
+      </button>
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  rounded-full text-[#1761A3] hover:bg-[#1761A3]/10"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab Two
+            </span>
+          </div>
+        </div>
+      </button>
+      <button
+        class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-center
+  
+  rounded-full text-[#1761A3] hover:bg-[#1761A3]/10"
+        draggable="false"
+        type="button"
+      >
+        <div
+          class="flex w-full items-center justify-between gap-2"
+        >
+          <div
+            class="flex min-w-0 items-center gap-2"
+          >
+            <span
+              class="truncate"
+            >
+              Tab Three
+            </span>
+          </div>
+        </div>
+      </button>
+    </div>
+    <div
+      class="relative min-h-[180px]"
+      style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;"
+    >
+      <div
+        class="transition-opacity duration-300 relative opacity-100"
+      >
+        <div>
+          Content One
+        </div>
+      </div>
+      <div
+        class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+      >
+        <div>
+          Content Two
+        </div>
+      </div>
+      <div
+        class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+      >
+        <div>
+          Content Three
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TabbedInterface — Snapshot matches snapshot with vertical orientation 1`] = `
+<div>
+  <div
+    class="w-full mx-auto rounded-xl border p-8 box-border transition-all duration-300 overflow-hidden
+  bg-white border-[#b8d1f3] text-slate-900 shadow-sm"
+  >
+    <div
+      class="grid gap-6 md:grid-cols-[minmax(180px,220px)_1fr]"
+    >
+      <div
+        class="flex flex-col gap-2 border-b pb-3 md:border-b-0 md:border-r md:pr-4"
+      >
+        <button
+          class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-left w-full
+  
+  text-[#1761A3]"
+          draggable="false"
+          type="button"
+        >
+          <div
+            class="flex w-full items-center justify-between gap-2"
+          >
+            <div
+              class="flex min-w-0 items-center gap-2"
+            >
+              <span
+                class="truncate"
+              >
+                Tab One
+              </span>
+            </div>
+          </div>
+          <span
+            class="absolute left-0 top-0 h-full w-[3px]
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-100
+      "
+          />
+        </button>
+        <button
+          class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-left w-full
+  
+  text-slate-700 hover:text-[#1761A3]"
+          draggable="false"
+          type="button"
+        >
+          <div
+            class="flex w-full items-center justify-between gap-2"
+          >
+            <div
+              class="flex min-w-0 items-center gap-2"
+            >
+              <span
+                class="truncate"
+              >
+                Tab Two
+              </span>
+            </div>
+          </div>
+          <span
+            class="absolute left-0 top-0 h-full w-[3px]
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-0
+      "
+          />
+        </button>
+        <button
+          class="relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 select-none
+  text-left w-full
+  
+  text-slate-700 hover:text-[#1761A3]"
+          draggable="false"
+          type="button"
+        >
+          <div
+            class="flex w-full items-center justify-between gap-2"
+          >
+            <div
+              class="flex min-w-0 items-center gap-2"
+            >
+              <span
+                class="truncate"
+              >
+                Tab Three
+              </span>
+            </div>
+          </div>
+          <span
+            class="absolute left-0 top-0 h-full w-[3px]
+      bg-gradient-to-r from-[#1761A3] to-[#4DAF83]
+      transition-transform duration-300
+      scale-x-0
+      "
+          />
+        </button>
+      </div>
+      <div>
+        <div
+          class="relative min-h-[180px]"
+          style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;"
+        >
+          <div
+            class="transition-opacity duration-300 relative opacity-100"
+          >
+            <div>
+              Content One
+            </div>
+          </div>
+          <div
+            class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+          >
+            <div>
+              Content Two
+            </div>
+          </div>
+          <div
+            class="transition-opacity duration-300 absolute inset-0 opacity-0 pointer-events-none"
+          >
+            <div>
+              Content Three
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

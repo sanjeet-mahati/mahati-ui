@@ -1470,7 +1470,8 @@ const Calendar = ({
 
             <div className="flex items-center justify-between">
 
-              <button
+              <button 
+                aria-label="Previous month"
                 onClick={previousMonth}
                 className="flex items-center justify-center rounded-md bg-[#1761A3] text-white"
                 style={{
@@ -1495,6 +1496,7 @@ const Calendar = ({
               </button>
 
               <button
+                aria-label="Next month"
                 onClick={nextMonth}
                 className="flex items-center justify-center rounded-md bg-[#1761A3] text-white"
                 style={{

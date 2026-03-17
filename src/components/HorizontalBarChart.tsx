@@ -1,205 +1,5 @@
 "use client";
 import React from "react";
-import styled from "@emotion/styled";
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 2px;
-`;
-
-const MenuButton = styled.button`
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: rgba(243, 244, 246, 1);
-  }
-
-  @media (min-width: 640px) {
-    width: 32px;
-    height: 32px;
-  }
-`;
-
-const MenuDots = styled.div`
-  display: flex;
-  gap: 2px;
-
-  @media (min-width: 640px) {
-    gap: 4px;
-  }
-`;
-
-const Dot = styled.span`
-  width: 2px;
-  height: 2px;
-  background-color: rgba(107, 114, 128, 1);
-  border-radius: 50%;
-
-  @media (min-width: 640px) {
-    width: 4px;
-    height: 4px;
-  }
-`;
-
-const Title = styled.div`
-  color: rgba(23, 97, 163, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: normal;
-  margin-bottom: 24px;
-
-  @media (min-width: 640px) {
-    font-size: 16px;
-  }
-`;
-
-const ChartContent = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-`;
-
-const LabelsColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 4px;
-  min-height: 180px;
-`;
-
-const LabelRow = styled.div<{ $height: string; $marginBottom: string }>`
-  display: flex;
-  align-items: center;
-  height: ${(props) => props.$height};
-  margin-bottom: ${(props) => props.$marginBottom};
-`;
-
-const Label = styled.span`
-  color: rgba(94, 94, 94, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  white-space: nowrap;
-
-  @media (min-width: 640px) {
-    font-size: 14px;
-  }
-`;
-
-const ChartArea = styled.div`
-  flex: 1;
-  position: relative;
-`;
-
-const GridContainer = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  height: 180px;
-`;
-
-const GridLine = styled.div<{ $left: string; $centerOffset: number }>`
-  position: absolute;
-  left: calc(${(props) => props.$left}% - ${(props) => props.$centerOffset}px);
-  top: 0;
-  width: 1px;
-  height: 165px;
-  background-color: rgba(229, 231, 235, 1);
-  z-index: 1;
-`;
-
-const YAxisLine = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  height: 165px;
-  background-color: rgba(125, 125, 125, 1);
-  z-index: 2;
-`;
-
-const XAxisLine = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 15px;
-  width: 100%;
-  height: 2px;
-  background-color: rgba(125, 125, 125, 1);
-  z-index: 2;
-`;
-
-const BarsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-top: 4px;
-  position: relative;
-  z-index: 10;
-  min-height: 180px;
-`;
-
-const BarRow = styled.div<{ $height: string; $marginBottom: string }>`
-  display: flex;
-  align-items: center;
-  height: ${(props) => props.$height};
-  margin-bottom: ${(props) => props.$marginBottom};
-`;
-
-const BarWrapper = styled.div`
-  position: relative;
-  height: 30px;
-  width: 100%;
-`;
-
-const Bar = styled.div<{ $width: number; $color: string }>`
-  width: ${(props) => props.$width}%;
-  height: 30px;
-  transform: rotate(0deg);
-  transform-origin: top left;
-  border-radius: 4px;
-  background: ${(props) => props.$color};
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const XAxisLabels = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-top: -8px;
-  width: 100%;
-  position: relative;
-  z-index: 10;
-`;
-
-const XAxisLabel = styled.span`
-  color: rgba(94, 94, 94, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 10px;
-  font-weight: 400;
-
-  @media (min-width: 640px) {
-    font-size: 12px;
-  }
-`;
-
 
 export interface HorizontalBarItem {
   name: string;
@@ -221,7 +21,8 @@ export interface HorizontalBarTopPerformer {
   profit: string;
   needsFocus: string;
   change: string;
-  isIncrease?: boolean;}
+  isIncrease?: boolean;
+}
 
 export interface HorizontalBarProductData {
   title: string;
@@ -231,12 +32,7 @@ export interface HorizontalBarProductData {
 
 export interface HorizontalBarData {
   title: string;
-  xAxis?: Record<string, {
-    min: number;
-    max: number;
-    step: number;
-    labels: number[];
-  }>;
+  xAxis?: Record<string, { min: number; max: number; step: number; labels: number[] }>;
   [year: string]: string | Record<string, any> | undefined;
 }
 
@@ -266,103 +62,139 @@ export interface HorizontalBarChartProps {
     change: string;
     isIncrease?: boolean;
   };
-  testId?:string;
+  testId?: string;
 }
 
 export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
   title,
   bars,
-  selectedYear,
-  selectedMonth,
-  selectedType,
   xAxisConfig,
   topPerformer,
-  testId
+  testId,
 }) => {
-  // Safety check for bars
   const safeBars = bars || [];
-  const maxValue = safeBars.length > 0 ? Math.max(...safeBars.map((b) => b.value)) : 0;
 
   return (
-    <Container data-testid={testId}>
-      <HeaderRow>
-        <MenuButton data-testid={testId?`${testId}-menu-button`:undefined}>
-          <MenuDots>
-            <Dot />
-            <Dot />
-            <Dot />
-          </MenuDots>
-        </MenuButton>
-      </HeaderRow>
+    <div className="w-full h-full flex flex-col" data-testid={testId}>
+      {/* Header - menu button aligned right */}
+      <div className="flex items-center justify-end mb-[2px]">
+        <button
+          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded transition-colors hover:bg-[rgba(243,244,246,1)] bg-transparent border-none cursor-pointer"
+          data-testid={testId ? `${testId}-menu-button` : undefined}
+        >
+          <div className="flex gap-[2px] sm:gap-1">
+            {[0, 1, 2].map((i) => (
+              <span key={i} className="w-[2px] h-[2px] sm:w-1 sm:h-1 rounded-full" style={{ backgroundColor: "rgba(107,114,128,1)" }} />
+            ))}
+          </div>
+        </button>
+      </div>
 
-      <Title data-testid={testId?`${testId}-title`:undefined}>{title}</Title>
+      {/* Title */}
+      <div
+        className="mb-6"
+        style={{ color: "rgba(23,97,163,1)", fontFamily: "Poppins, sans-serif", fontSize: "14px", fontWeight: 600 }}
+        data-testid={testId ? `${testId}-title` : undefined}
+      >
+        {title}
+      </div>
 
-      <ChartContent>
-        <LabelsColumn>
+      {/* Chart Content */}
+      <div className="flex items-start gap-4">
+        {/* Labels Column */}
+        <div className="flex flex-col justify-start pt-1" style={{ minHeight: "180px" }}>
           {safeBars.map((bar, index) => (
-            <LabelRow data-testid={testId?`${testId}-label-${index}`:undefined}
+            <div
               key={bar.name}
-              $height="45px"
-              $marginBottom={index < safeBars.length - 1 ? "10px" : "0"}
+              className="flex items-center"
+              style={{ height: "45px", marginBottom: index < safeBars.length - 1 ? "10px" : 0 }}
+              data-testid={testId ? `${testId}-label-${index}` : undefined}
             >
-              <Label>{bar.name}</Label>
-            </LabelRow>
+              <span
+                style={{
+                  color: "rgba(94,94,94,1)",
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "12px",
+                  fontWeight: 400,
+                  whiteSpace: "nowrap",
+                }}
+                className="sm:text-sm"
+              >
+                {bar.name}
+              </span>
+            </div>
           ))}
-        </LabelsColumn>
+        </div>
 
-        <ChartArea>
-          <GridContainer>
+        {/* Chart Area */}
+        <div className="flex-1 relative">
+          {/* Grid */}
+          <div className="absolute inset-0 pointer-events-none" style={{ height: "180px" }}>
             {xAxisConfig &&
               xAxisConfig.labels.map((label, idx) => {
                 const totalLabels = xAxisConfig.labels.length;
                 const position = (idx / (totalLabels - 1)) * 100;
-
-                const labelText = String(label);
                 const approxCharWidth = 7;
-                const labelWidth = labelText.length * approxCharWidth;
-                const centerOffset = labelWidth / 2;
-
+                const centerOffset = (String(label).length * approxCharWidth) / 2;
                 return (
-                  <GridLine
-                    key={`grid-${idx}`}
-                    $left={position.toString()}
-                    $centerOffset={centerOffset}
+                  <div
+                    key={idx}
+                    className="absolute top-0 w-px z-[1]"
+                    style={{
+                      left: `calc(${position}% - ${centerOffset}px)`,
+                      height: "165px",
+                      backgroundColor: "rgba(229,231,235,1)",
+                    }}
                   />
                 );
               })}
+            {/* Y axis */}
+            <div className="absolute left-0 top-0 w-[2px] z-[2]" style={{ height: "165px", backgroundColor: "rgba(125,125,125,1)" }} />
+            {/* X axis */}
+            <div className="absolute left-0 right-0 h-[2px] z-[2]" style={{ bottom: "15px", backgroundColor: "rgba(125,125,125,1)" }} />
+          </div>
 
-            <YAxisLine />
-            <XAxisLine />
-          </GridContainer>
-
-          <BarsContainer>
+          {/* Bars */}
+          <div className="flex flex-col pt-1 relative z-10" style={{ minHeight: "180px" }}>
             {safeBars.map((bar, index) => {
-              const maxValue = xAxisConfig?.max || 250;
-              const barLengthPercentage = (bar.value / maxValue) * 100;
+              const maxVal = xAxisConfig?.max || 250;
+              const barLengthPercentage = (bar.value / maxVal) * 100;
 
               return (
-                <BarRow data-testid={testId?`${testId}-row-${index}`:undefined}
+                <div
                   key={bar.name}
-                  $height="45px"
-                  $marginBottom={index < safeBars.length - 1 ? "10px" : "0"}
+                  className="flex items-center"
+                  style={{ height: "45px", marginBottom: index < safeBars.length - 1 ? "10px" : 0 }}
+                  data-testid={testId ? `${testId}-row-${index}` : undefined}
                 >
-                  <BarWrapper>
-                    <Bar data-testid={testId?`${testId}-bar-${index}`:undefined} $width={barLengthPercentage} $color={bar.color} />
-                  </BarWrapper>
-                </BarRow>
+                  <div className="relative h-[30px] w-full">
+                    <div
+                      className="absolute top-0 left-0 h-[30px] rounded"
+                      style={{ width: `${barLengthPercentage}%`, background: bar.color }}
+                      data-testid={testId ? `${testId}-bar-${index}` : undefined}
+                    />
+                  </div>
+                </div>
               );
             })}
-          </BarsContainer>
+          </div>
 
-          <XAxisLabels>
+          {/* X Axis Labels */}
+          <div className="flex justify-between items-start w-full relative z-10" style={{ marginTop: "-8px" }}>
             {xAxisConfig &&
               xAxisConfig.labels.map((label, idx) => (
-                <XAxisLabel key={idx}>{label}</XAxisLabel>
+                <span
+                  key={idx}
+                  style={{ color: "rgba(94,94,94,1)", fontFamily: "Poppins, sans-serif", fontSize: "10px", fontWeight: 400 }}
+                  className="sm:text-xs"
+                >
+                  {label}
+                </span>
               ))}
-          </XAxisLabels>
-        </ChartArea>
-      </ChartContent>
-    </Container>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

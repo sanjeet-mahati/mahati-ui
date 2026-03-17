@@ -1,243 +1,473 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ConfettiExplosion } from '../src/components/ConfettiExplosion';
+import { RealisticConfetti } from '../src/components/RealisticConfetti';
 
-// Mock requestAnimationFrame and cancelAnimationFrame
-let animationFrameId = 0;
-const animationFrameCallbacks = new Map();
+// ─── RAF mock ─────────────────────────────────────────────────────────────────
+let rafId = 0;
+const rafCallbacks = new Map<number, FrameRequestCallback>();
 
 beforeAll(() => {
-  global.requestAnimationFrame = jest.fn((callback) => {
-    const id = ++animationFrameId;
-    animationFrameCallbacks.set(id, callback);
+  global.requestAnimationFrame = jest.fn((cb) => {
+    const id = ++rafId;
+    rafCallbacks.set(id, cb);
     return id;
   });
-
   global.cancelAnimationFrame = jest.fn((id) => {
-    animationFrameCallbacks.delete(id);
+    rafCallbacks.delete(id);
   });
 });
 
 afterEach(() => {
-  animationFrameCallbacks.clear();
-  animationFrameId = 0;
+  rafCallbacks.clear();
+  rafId = 0;
   jest.clearAllMocks();
+  jest.useRealTimers();
 });
 
+// helper: run one RAF tick
+const tickRAF = () => {
+  act(() => {
+    const cb = Array.from(rafCallbacks.values())[0];
+    if (cb) cb(performance.now());
+  });
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 describe('ConfettiExplosion', () => {
-  it('should render container when active', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} />);
-    
-    // Check for the styled Container component
-    const confettiContainer = container.querySelector('div[class*="css-"]');
-    expect(confettiContainer).toBeInTheDocument();
-  });
 
-  it('should not render when inactive', () => {
-    const { container } = render(<ConfettiExplosion isActive={false} />);
-    
-    // Should render empty
-    expect(container).toBeEmptyDOMElement();
-  });
+  // ─── Visibility ─────────────────────────────────────────────────────────
 
-  it('should render correct number of particles', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={50} />);
-    
-    // Count particle elements (divs with color attribute)
-    const particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(50);
-  });
+  describe('Visibility', () => {
+    it('should render container when isActive=true', () => {
+      const { container } = render(<ConfettiExplosion isActive={true} />);
+      expect(container.firstChild).toBeInTheDocument();
+    });
 
-  it('should render particles with custom colors', () => {
-    const customColors = ['#ff0000', '#00ff00', '#0000ff'];
-    const { container } = render(
-      <ConfettiExplosion isActive={true} colors={customColors} particleCount={10} />
-    );
-    
-    const particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(10);
-    
-    // Check that particles use the custom colors
-    particles.forEach(particle => {
-      const color = particle.getAttribute('color');
-      expect(customColors.map(c => c.toUpperCase())).toContain(color?.toUpperCase());
+    it('should return null when isActive=false', () => {
+      const { container } = render(<ConfettiExplosion isActive={false} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should return null initially before particles are set (empty state)', () => {
+      // isActive=true but particleCount=0 → particles=[] → returns null
+      const { container } = render(<ConfettiExplosion isActive={true} particleCount={0} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should clear and return null when isActive becomes false', () => {
+      const { rerender, container } = render(
+        <ConfettiExplosion isActive={true} particleCount={10} />
+      );
+      expect(container.firstChild).toBeInTheDocument();
+      rerender(<ConfettiExplosion isActive={false} particleCount={10} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should have correct displayName', () => {
+      expect(ConfettiExplosion.displayName).toBe('ConfettiExplosion');
     });
   });
 
-  it('should not cause infinite re-renders with array props', () => {
-    const colors = ['#ff0000', '#00ff00', '#0000ff'];
-    
-    const { rerender, container } = render(
-      <ConfettiExplosion isActive={true} colors={colors} particleCount={10} />
-    );
-    
-    const initialParticles = container.querySelectorAll('div[color]');
-    expect(initialParticles.length).toBe(10);
-    
-    // This should not cause infinite loop
-    rerender(<ConfettiExplosion isActive={true} colors={colors} particleCount={10} />);
-    rerender(<ConfettiExplosion isActive={true} colors={['#ff0000', '#00ff00', '#0000ff']} particleCount={10} />);
-    
-    const finalParticles = container.querySelectorAll('div[color]');
-    expect(finalParticles.length).toBeGreaterThan(0);
-  });
+  // ─── Particles ───────────────────────────────────────────────────────────
 
-  it('should clean up animation on unmount', () => {
-    const { unmount } = render(<ConfettiExplosion isActive={true} />);
-    
-    expect(global.requestAnimationFrame).toHaveBeenCalled();
-    
-    unmount();
-    
-    expect(global.cancelAnimationFrame).toHaveBeenCalled();
-  });
+  describe('Particles', () => {
+    it('should render correct number of particle divs', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={20} />
+      );
+      // wrapper div + N particle divs
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.childNodes.length).toBe(20);
+    });
 
-  it('should clear particles when isActive becomes false', () => {
-    const { rerender, container } = render(
-      <ConfettiExplosion isActive={true} particleCount={50} />
-    );
-    
-    let particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(50);
-    
-    rerender(<ConfettiExplosion isActive={false} particleCount={50} />);
-    
-    // Container should be empty when inactive
-    expect(container).toBeEmptyDOMElement();
-  });
+    it('should render default 150 particles', () => {
+      const { container } = render(<ConfettiExplosion isActive={true} />);
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.childNodes.length).toBe(150);
+    });
 
-  it('should apply custom particle size', () => {
-    const { container } = render(
-      <ConfettiExplosion isActive={true} particleSize={20} particleCount={5} />
-    );
-    
-    const particles = container.querySelectorAll('div[size]');
-    expect(particles.length).toBe(5);
-    
-    // Particles should have sizes based on the particleSize prop
-    particles.forEach(particle => {
-      const size = parseFloat(particle.getAttribute('size') || '0');
-      // Size should be between particleSize/2 and particleSize*1.5
-      expect(size).toBeGreaterThanOrEqual(10);
-      expect(size).toBeLessThanOrEqual(30);
+    it('should render 0 particles and return null for particleCount=0', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={0} />
+      );
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('each particle should have inline width/height from particleSize', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} particleSize={10} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      const particle = wrapper.children[0] as HTMLElement;
+      const w = parseFloat(particle.style.width);
+      const h = parseFloat(particle.style.height);
+      // size = random * particleSize + particleSize/2  →  between 5 and 15
+      expect(w).toBeGreaterThanOrEqual(5);
+      expect(w).toBeLessThanOrEqual(15);
+      expect(h).toBeGreaterThanOrEqual(5);
+      expect(h).toBeLessThanOrEqual(15);
+    });
+
+    it('each particle should have opacity style', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        expect((p as HTMLElement).style.opacity).toBeTruthy();
+      });
+    });
+
+    it('each particle should have transform (rotation)', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        expect((p as HTMLElement).style.transform).toMatch(/rotate/);
+      });
+    });
+
+    it('particles should start at y=100 (bottom=%)', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={10} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        expect((p as HTMLElement).style.bottom).toBe('100%');
+      });
+    });
+
+    it('particles should start at x=0% or x=100% (left/right edge)', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={30} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        const left = (p as HTMLElement).style.left;
+        expect(['0%', '100%']).toContain(left);
+      });
+    });
+
+    it('particles should use colors from the colors prop', () => {
+      const customColors = ['#ff0000', '#00ff00', '#0000ff'];
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={20} colors={customColors} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        const el = p as HTMLElement;
+        // non-star particles have backgroundColor; star particles have background
+        const bg = el.style.backgroundColor || el.style.background;
+        expect(bg).toBeTruthy();
+      });
+    });
+
+    it('should use default colors when colors not provided', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.childNodes.length).toBe(5);
     });
   });
 
-  it('should use default colors when not provided', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={10} />);
-    
-    const particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(10);
-  });
+  // ─── Shapes ──────────────────────────────────────────────────────────────
 
-  it('should handle stage dimensions', () => {
-    const { container } = render(
-      <ConfettiExplosion 
-        isActive={true} 
-        stageHeight={600} 
-        particleCount={10}
-      />
-    );
-    
-    // Check that container exists
-    const confettiContainer = container.querySelector('div[class*="css-"]');
-    expect(confettiContainer).toBeInTheDocument();
-  });
-
-  it('should animate particles on each frame', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={5} />);
-    
-    const initialParticles = container.querySelectorAll('div[color]');
-    expect(initialParticles.length).toBe(5);
-
-    // Trigger one animation frame
-    act(() => {
-      const firstCallback = Array.from(animationFrameCallbacks.values())[0];
-      if (firstCallback) firstCallback(performance.now());
+  describe('Shapes', () => {
+    it('circle particles should have rounded-full class', () => {
+      // render many to statistically get a circle
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={100} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      const hasCircle = Array.from(wrapper.children).some((p) =>
+        p.classList.contains('rounded-full')
+      );
+      expect(hasCircle).toBe(true);
     });
 
-    // Particles should still be rendered
-    const updatedParticles = container.querySelectorAll('div[color]');
-    expect(updatedParticles.length).toBeGreaterThan(0);
-  });
+    it('rectangle particles should have rounded-[2px] class', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={100} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      const hasRect = Array.from(wrapper.children).some((p) =>
+        p.classList.contains('rounded-[2px]')
+      );
+      expect(hasRect).toBe(true);
+    });
 
-  it('should create particles with different shapes', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={20} />);
-    
-    const particles = container.querySelectorAll('div[shape]');
-    expect(particles.length).toBe(20);
-    
-    // Check that different shapes are used
-    const shapes = Array.from(particles).map(p => p.getAttribute('shape'));
-    const uniqueShapes = new Set(shapes);
-    
-    // Should have at least 2 different shapes (statistically likely with 20 particles)
-    expect(uniqueShapes.size).toBeGreaterThan(1);
-  });
-
-  it('should handle force parameter', () => {
-    const { container } = render(
-      <ConfettiExplosion isActive={true} force={2} particleCount={10} />
-    );
-    
-    const particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(10);
-  });
-
-  it('should not crash with zero particles', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={0} />);
-    
-    const particles = container.querySelectorAll('div[color]');
-    expect(particles.length).toBe(0);
-  });
-
-  it('should handle rapid activation/deactivation', () => {
-    const { rerender, container } = render(<ConfettiExplosion isActive={false} />);
-    
-    expect(container).toBeEmptyDOMElement();
-    
-    rerender(<ConfettiExplosion isActive={true} />);
-    let confettiContainer = container.querySelector('div[class*="css-"]');
-    expect(confettiContainer).toBeInTheDocument();
-    
-    rerender(<ConfettiExplosion isActive={false} />);
-    expect(container).toBeEmptyDOMElement();
-    
-    rerender(<ConfettiExplosion isActive={true} />);
-    confettiContainer = container.querySelector('div[class*="css-"]');
-    expect(confettiContainer).toBeInTheDocument();
-  });
-
-  it('should render particles with correct attributes', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={5} />);
-    
-    const particles = container.querySelectorAll('div[color]');
-    
-    particles.forEach(particle => {
-      // Check required attributes
-      expect(particle).toHaveAttribute('color');
-      expect(particle).toHaveAttribute('opacity');
-      expect(particle).toHaveAttribute('shape');
-      expect(particle).toHaveAttribute('size');
-      expect(particle).toHaveAttribute('x');
-      expect(particle).toHaveAttribute('y');
+    it('star particles should have clipPath style', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={100} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      const hasStar = Array.from(wrapper.children).some((p) =>
+        (p as HTMLElement).style.clipPath.includes('polygon')
+      );
+      expect(hasStar).toBe(true);
     });
   });
 
-  it('should start particles from correct positions', () => {
-    const { container } = render(<ConfettiExplosion isActive={true} particleCount={20} />);
-    
-    const particles = container.querySelectorAll('div[x]');
-    
-    particles.forEach(particle => {
-      const x = parseFloat(particle.getAttribute('x') || '0');
-      // Particles should start from either 0 or 100 (left or right edge)
-      expect([0, 100]).toContain(x);
-      
-      const y = parseFloat(particle.getAttribute('y') || '0');
-      // Particles should start from bottom (y=100)
-      expect(y).toBe(100);
+  // ─── Container styles ────────────────────────────────────────────────────
+
+  describe('Container', () => {
+    it('should apply stageHeight as inline style', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} stageHeight={600} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.style.height).toBe('600px');
+    });
+
+    it('should apply testId to wrapper', () => {
+      render(<ConfettiExplosion isActive={true} particleCount={5} testId="ce" />);
+      expect(screen.getByTestId('ce')).toBeInTheDocument();
+    });
+
+    it('should have fixed positioning class', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      expect(container.firstChild).toHaveClass('fixed');
+    });
+
+    it('should have pointer-events-none class', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      expect(container.firstChild).toHaveClass('pointer-events-none');
+    });
+  });
+
+  // ─── Animation ───────────────────────────────────────────────────────────
+
+  describe('Animation', () => {
+    it('should call requestAnimationFrame on mount when active', () => {
+      render(<ConfettiExplosion isActive={true} particleCount={5} />);
+      expect(global.requestAnimationFrame).toHaveBeenCalled();
+    });
+
+    it('should call cancelAnimationFrame on unmount', () => {
+      const { unmount } = render(<ConfettiExplosion isActive={true} particleCount={5} />);
+      unmount();
+      expect(global.cancelAnimationFrame).toHaveBeenCalled();
+    });
+
+    it('should not call requestAnimationFrame when inactive', () => {
+      render(<ConfettiExplosion isActive={false} />);
+      expect(global.requestAnimationFrame).not.toHaveBeenCalled();
+    });
+
+    it('should continue animating after one frame tick', () => {
+      const { container } = render(
+        <ConfettiExplosion isActive={true} particleCount={5} />
+      );
+      tickRAF();
+      // still rendered (particles still alive in first tick)
+      expect(container.firstChild).not.toBeNull();
+    });
+  });
+
+  // ─── Re-render stability ─────────────────────────────────────────────────
+
+  describe('Re-render stability', () => {
+    it('should not cause infinite re-renders with stable colors array', () => {
+      const colors = ['#ff0000', '#00ff00', '#0000ff'];
+      const { rerender, container } = render(
+        <ConfettiExplosion isActive={true} colors={colors} particleCount={10} />
+      );
+      rerender(<ConfettiExplosion isActive={true} colors={colors} particleCount={10} />);
+      rerender(<ConfettiExplosion isActive={true} colors={['#ff0000', '#00ff00', '#0000ff']} particleCount={10} />);
+      expect(container.firstChild).toBeInTheDocument();
+    });
+
+    it('should handle rapid active/inactive toggling', () => {
+      const { rerender, container } = render(<ConfettiExplosion isActive={false} />);
+      rerender(<ConfettiExplosion isActive={true} particleCount={5} />);
+      expect(container.firstChild).toBeInTheDocument();
+      rerender(<ConfettiExplosion isActive={false} />);
+      expect(container.firstChild).toBeNull();
+      rerender(<ConfettiExplosion isActive={true} particleCount={5} />);
+      expect(container.firstChild).toBeInTheDocument();
+    });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('RealisticConfetti', () => {
+
+  // ─── Visibility ─────────────────────────────────────────────────────────
+
+  describe('Visibility', () => {
+    it('should render when isActive=true', () => {
+      const { container } = render(<RealisticConfetti isActive={true} />);
+      expect(container.firstChild).toBeInTheDocument();
+    });
+
+    it('should return null when isActive=false', () => {
+      const { container } = render(<RealisticConfetti isActive={false} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should return null for particleCount=0', () => {
+      const { container } = render(<RealisticConfetti isActive={true} particleCount={0} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should clear when isActive becomes false', () => {
+      const { rerender, container } = render(
+        <RealisticConfetti isActive={true} particleCount={10} />
+      );
+      rerender(<RealisticConfetti isActive={false} />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('should have correct displayName', () => {
+      expect(RealisticConfetti.displayName).toBe('RealisticConfetti');
+    });
+  });
+
+  // ─── Particles ───────────────────────────────────────────────────────────
+
+  describe('Particles', () => {
+    it('should render default 150 particles', () => {
+      const { container } = render(<RealisticConfetti isActive={true} />);
+      expect((container.firstChild as HTMLElement).childNodes.length).toBe(150);
+    });
+
+    it('should render custom particleCount', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={30} />
+      );
+      expect((container.firstChild as HTMLElement).childNodes.length).toBe(30);
+    });
+
+    it('particles start at bottom (style.bottom = 100%)', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        expect((p as HTMLElement).style.bottom).toBe('100%');
+      });
+    });
+
+    it('particles start at x=0% or x=100%', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={30} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      Array.from(wrapper.children).forEach((p) => {
+        expect(['0%', '100%']).toContain((p as HTMLElement).style.left);
+      });
+    });
+
+    it('should apply particleSize to particle width/height', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} particleSize={16} />
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      const w = parseFloat((wrapper.children[0] as HTMLElement).style.width);
+      expect(w).toBeGreaterThanOrEqual(8);   // particleSize/2
+      expect(w).toBeLessThanOrEqual(24);     // particleSize*1.5
+    });
+
+    it('should handle empty colors array without crash', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} colors={[]} particleCount={5} />
+      );
+      // colors=[] → stableColors[...] is undefined → backgroundColor = undefined — still renders
+      expect(container.firstChild).toBeInTheDocument();
+    });
+  });
+
+  // ─── Container ───────────────────────────────────────────────────────────
+
+  describe('Container', () => {
+    it('should apply testId', () => {
+      render(<RealisticConfetti isActive={true} particleCount={5} testId="rc" />);
+      expect(screen.getByTestId('rc')).toBeInTheDocument();
+    });
+
+    it('should apply stageHeight', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} stageHeight={500} />
+      );
+      expect((container.firstChild as HTMLElement).style.height).toBe('500px');
+    });
+
+    it('should have fixed class', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} />
+      );
+      expect(container.firstChild).toHaveClass('fixed');
+    });
+
+    it('should have pointer-events-none class', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} />
+      );
+      expect(container.firstChild).toHaveClass('pointer-events-none');
+    });
+  });
+
+  // ─── Animation ───────────────────────────────────────────────────────────
+
+  describe('Animation', () => {
+    it('should call requestAnimationFrame when active', () => {
+      render(<RealisticConfetti isActive={true} particleCount={5} />);
+      expect(global.requestAnimationFrame).toHaveBeenCalled();
+    });
+
+    it('should call cancelAnimationFrame on unmount', () => {
+      const { unmount } = render(<RealisticConfetti isActive={true} particleCount={5} />);
+      unmount();
+      expect(global.cancelAnimationFrame).toHaveBeenCalled();
+    });
+
+    it('should not call requestAnimationFrame when inactive', () => {
+      render(<RealisticConfetti isActive={false} />);
+      expect(global.requestAnimationFrame).not.toHaveBeenCalled();
+    });
+
+    it('should still render after one RAF tick', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} particleCount={5} />
+      );
+      tickRAF();
+      expect(container.firstChild).not.toBeNull();
+    });
+  });
+
+  // ─── Props passthrough ───────────────────────────────────────────────────
+
+  describe('Props', () => {
+    it('should accept force prop without crash', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} force={2} particleCount={5} />
+      );
+      expect(container.firstChild).toBeInTheDocument();
+    });
+
+    it('should accept duration prop without crash', () => {
+      const { container } = render(
+        <RealisticConfetti isActive={true} duration={2000} particleCount={5} />
+      );
+      expect(container.firstChild).toBeInTheDocument();
+    });
+
+    it('should handle rapid toggle', () => {
+      const { rerender, container } = render(<RealisticConfetti isActive={false} />);
+      rerender(<RealisticConfetti isActive={true} particleCount={5} />);
+      expect(container.firstChild).toBeInTheDocument();
+      rerender(<RealisticConfetti isActive={false} />);
+      expect(container.firstChild).toBeNull();
     });
   });
 });

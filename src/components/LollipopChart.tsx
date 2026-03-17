@@ -1,398 +1,5 @@
 "use client";
 import React from "react";
-import styled from "@emotion/styled";
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-`;
-
-const Title = styled.div`
-  color: rgba(23, 97, 163, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: normal;
-
-  @media (min-width: 640px) {
-    font-size: 18px;
-  }
-`;
-
-const MenuButton = styled.button`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background: rgba(243, 244, 246, 1);
-  }
-`;
-
-const MenuDots = styled.div`
-  display: flex;
-  gap: 4px;
-`;
-
-const MenuDot = styled.span`
-  width: 4px;
-  height: 4px;
-  background: rgba(107, 114, 128, 1);
-  border-radius: 50%;
-`;
-
-const ChartArea = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 0;
-  min-height: 300px;
-  position: relative;
-  overflow: visible;
-`;
-
-// Horizontal orientation styles
-const HorizontalChartWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  padding-left: 140px;
-  width: 100%;
-
-  @media (max-width: 1024px) {
-    min-width: 800px;
-  }
-`;
-
-const HorizontalGridContainer = styled.div`
-  position: absolute;
-  left: 140px;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  pointer-events: none;
-`;
-
-const HorizontalGridLine = styled.div<{ $position: number }>`
-  position: absolute;
-  left: ${props => props.$position}%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(229, 231, 235, 0.8);
-`;
-
-const HorizontalAxis = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(209, 213, 219, 1);
-`;
-
-const HorizontalBottomAxis = styled.div`
-  position: absolute;
-  left: 140px;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: rgba(209, 213, 219, 1);
-`;
-
-const HorizontalAxisLabels = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  padding-left: 140px;
-  font-size: 10px;
-  color: rgba(107, 114, 128, 1);
-  font-family: Poppins, sans-serif;
-`;
-
-const LollipopRowHorizontal = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-`;
-
-const LabelWrapperHorizontal = styled.div`
-  width: 120px;
-  flex-shrink: 0;
-  text-align: right;
-  padding-right: 16px;
-  position: absolute;
-  left: -140px;
-`;
-
-const Label = styled.span`
-  color: rgba(55, 65, 81, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  @media (min-width: 640px) {
-    font-size: 14px;
-  }
-`;
-
-const BarContainerHorizontal = styled.div`
-  flex: 1;
-  position: relative;
-  height: 40px;
-  display: flex;
-  align-items: center;
-`;
-
-const LineHorizontal = styled.div<{ $width: number; $color: string }>`
-  width: ${props => props.$width}%;
-  height: 4px;
-  background: ${props => props.$color};
-  border-radius: 2px;
-  position: relative;
-  transition: width 0.3s ease;
-`;
-
-const CircleHorizontal = styled.div<{ $color: string }>`
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: ${props => props.$color};
-  border: 3px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-50%) scale(1.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const ValueLabelHorizontal = styled.span`
-  margin-left: 16px;
-  color: rgba(17, 24, 39, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  min-width: 50px;
-
-  @media (min-width: 640px) {
-    font-size: 16px;
-  }
-`;
-
-// Vertical orientation styles
-const VerticalChartWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  padding-bottom: 60px;
-  padding-left: 50px;
-  min-height: 350px;
-
-  @media (max-width: 1024px) {
-    min-width: 800px;
-  }
-`;
-
-const VerticalGridContainer = styled.div`
-  position: absolute;
-  left: 50px;
-  right: 0;
-  top: 0;
-  bottom: 60px;
-  pointer-events: none;
-`;
-
-const VerticalGridLine = styled.div<{ $position: number }>`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: ${props => 100 - props.$position}%;
-  height: 1px;
-  background: rgba(229, 231, 235, 0.8);
-`;
-
-const VerticalAxis = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: rgba(209, 213, 219, 1);
-`;
-
-const VerticalLeftAxis = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(209, 213, 219, 1);
-`;
-
-const VerticalAxisLabels = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  font-size: 10px;
-  color: rgba(107, 114, 128, 1);
-  font-family: Poppins, sans-serif;
-  width: 45px;
-  text-align: right;
-  padding-right: 5px;
-`;
-
-const VerticalBarsContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  width: 100%;
-  flex: 1;
-  gap: 16px;
-  padding: 0 16px;
-  position: relative;
-`;
-
-const LollipopColumnVertical = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 60px;
-  max-width: 100px;
-  height: 100%;
-  position: relative;
-`;
-
-const BarContainerVertical = styled.div`
-  flex: 1;
-  position: relative;
-  width: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  height: 100%;
-`;
-
-const LineVertical = styled.div<{ $height: number; $color: string }>`
-  height: ${props => props.$height}%;
-  width: 4px;
-  background: ${props => props.$color};
-  border-radius: 2px;
-  position: relative;
-  transition: height 0.3s ease;
-  min-height: ${props => props.$height > 0 ? '8px' : '0px'};
-`;
-
-const CircleVertical = styled.div<{ $color: string }>`
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: ${props => props.$color};
-  border: 3px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateX(-50%) scale(1.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const ValueLabelVertical = styled.span`
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(17, 24, 39, 1);
-  font-family: Poppins, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-
-  @media (min-width: 640px) {
-    font-size: 16px;
-  }
-`;
-
-const LabelWrapperVertical = styled.div`
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  max-width: 100px;
-  width: max-content;
-`;
-
-const ScrollableWrapper = styled.div`
-  width: 100%;
-  overflow-x: visible;
-  overflow-y: visible;
-  
-  @media (max-width: 1024px) {
-    overflow-x: auto;
-    overflow-y: visible;
-    
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      background: rgba(243, 244, 246, 1);
-      border-radius: 4px;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      background: rgba(209, 213, 219, 1);
-      border-radius: 4px;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(156, 163, 175, 1);
-    }
-  }
-`;
 
 export interface LollipopItem {
   label: string;
@@ -415,158 +22,205 @@ export interface LollipopChartProps {
 }
 
 const DEFAULT_COLORS = [
-  'rgba(37, 99, 235, 1)',
-  'rgba(16, 185, 129, 1)',
-  'rgba(245, 158, 11, 1)',
-  'rgba(239, 68, 68, 1)',
-  'rgba(147, 51, 234, 1)',
-  'rgba(236, 72, 153, 1)',
+  "rgba(37,99,235,1)",
+  "rgba(16,185,129,1)",
+  "rgba(245,158,11,1)",
+  "rgba(239,68,68,1)",
+  "rgba(147,51,234,1)",
+  "rgba(236,72,153,1)",
 ];
 
 export const LollipopChart: React.FC<LollipopChartProps> = ({
   title,
   items,
-  selectedYear,
-  selectedMonth,
-  selectedCategory,
   orientation = "horizontal",
 }) => {
   if (!items || items.length === 0) {
     return (
-      <Container>
-        <HeaderRow>
-          <Title>{title}</Title>
-          <MenuButton>
-            <MenuDots>
-              <MenuDot />
-              <MenuDot />
-              <MenuDot />
-            </MenuDots>
-          </MenuButton>
-        </HeaderRow>
-        <ChartArea>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            height: '100%',
-            color: 'rgba(107, 114, 128, 1)',
-            fontSize: '14px'
-          }}>
-            No data available
-          </div>
-        </ChartArea>
-      </Container>
+      <div className="w-full h-full flex flex-col">
+        <div className="flex items-center justify-between mb-6">
+          <div style={{ color: "rgba(23,97,163,1)", fontFamily: "Poppins, sans-serif", fontSize: "14px", fontWeight: 600 }} className="sm:text-base">{title}</div>
+          <MenuButtonDots />
+        </div>
+        <div className="flex-1 flex items-center justify-center" style={{ color: "rgba(107,114,128,1)", fontSize: "14px" }}>
+          No data available
+        </div>
+      </div>
     );
   }
 
-  const maxValue = Math.max(...items.map(item => item.value), 1);
-  
-  // Generate grid lines (0%, 25%, 50%, 75%, 100%)
+  const maxValue = Math.max(...items.map((item) => item.value), 1);
   const gridPositions = [0, 25, 50, 75, 100];
-  
-  // Generate axis labels
-  const axisLabels = gridPositions.map(pos => {
-    const value = Math.round((pos / 100) * maxValue);
-    return value;
-  });
+  const axisLabels = gridPositions.map((pos) => Math.round((pos / 100) * maxValue));
 
   return (
-    <Container>
-      <HeaderRow>
-        <Title>{title}</Title>
-        <MenuButton>
-          <MenuDots>
-            <MenuDot />
-            <MenuDot />
-            <MenuDot />
-          </MenuDots>
-        </MenuButton>
-      </HeaderRow>
+    <div className="w-full h-full flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div style={{ color: "rgba(23,97,163,1)", fontFamily: "Poppins, sans-serif", fontSize: "14px", fontWeight: 600 }} className="sm:text-base">{title}</div>
+        <MenuButtonDots />
+      </div>
 
-      <ChartArea>
-        <ScrollableWrapper>
+      {/* Chart Area */}
+      <div className="flex-1 flex flex-col gap-4 py-4 min-h-[300px] relative overflow-visible">
+        {/* Scrollable Wrapper */}
+        <div className="w-full overflow-x-visible lg:overflow-x-auto">
           {orientation === "horizontal" ? (
-            // Horizontal orientation
             <>
-              <HorizontalChartWrapper>
-                <HorizontalGridContainer>
-                  <HorizontalAxis />
+              {/* Horizontal Chart */}
+              <div className="flex flex-col gap-4 relative pl-[140px] w-full min-w-[800px] lg:min-w-0">
+                {/* Grid Lines */}
+                <div className="absolute left-[140px] right-0 top-0 bottom-0 pointer-events-none">
+                  {/* Y axis */}
+                  <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: "rgba(209,213,219,1)" }} />
                   {gridPositions.slice(1).map((pos, idx) => (
-                    <HorizontalGridLine key={idx} $position={pos} />
+                    <div key={idx} className="absolute top-0 bottom-0 w-px" style={{ left: `${pos}%`, background: "rgba(229,231,235,0.8)" }} />
                   ))}
-                </HorizontalGridContainer>
-                <HorizontalBottomAxis />
-                
+                </div>
+                {/* Bottom axis */}
+                <div className="absolute left-[140px] right-0 bottom-0 h-px" style={{ background: "rgba(209,213,219,1)" }} />
+
                 {items.map((item, index) => {
                   const percentage = (item.value / maxValue) * 100;
                   const color = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
-
                   return (
-                    <LollipopRowHorizontal key={`${item.label}-${index}`}>
-                      <LabelWrapperHorizontal>
-                        <Label>{item.label}</Label>
-                      </LabelWrapperHorizontal>
-                      <BarContainerHorizontal>
-                        <LineHorizontal $width={percentage} $color={color}>
-                          <CircleHorizontal $color={color} />
-                        </LineHorizontal>
-                        <ValueLabelHorizontal>{item.value}</ValueLabelHorizontal>
-                      </BarContainerHorizontal>
-                    </LollipopRowHorizontal>
+                    <div key={`${item.label}-${index}`} className="flex items-center gap-4 relative">
+                      {/* Label */}
+                      <div className="absolute text-right pr-4" style={{ width: "120px", left: "-140px" }}>
+                        <span style={{ color: "rgba(55,65,81,1)", fontFamily: "Poppins, sans-serif", fontSize: "12px", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }} className="sm:text-sm">
+                          {item.label}
+                        </span>
+                      </div>
+                      {/* Bar */}
+                      <div className="flex-1 relative h-10 flex items-center">
+                        <div
+                          className="relative rounded-[2px] transition-all"
+                          style={{ width: `${percentage}%`, height: "4px", background: color }}
+                        >
+                          {/* Circle */}
+                          <div
+                            className="absolute right-[-10px] top-1/2 w-5 h-5 rounded-full border-[3px] border-white transition-all hover:scale-110"
+                            style={{
+                              transform: "translateY(-50%)",
+                              background: color,
+                              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                            }}
+                          />
+                        </div>
+                        {/* Value */}
+                        <span
+                          className="ml-4 min-w-[50px] text-sm sm:text-base font-semibold"
+                          style={{ color: "rgba(17,24,39,1)", fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {item.value}
+                        </span>
+                      </div>
+                    </div>
                   );
                 })}
-              </HorizontalChartWrapper>
-              
-              <HorizontalAxisLabels>
-                {axisLabels.map((label, idx) => (
-                  <span key={idx}>{label}</span>
-                ))}
-              </HorizontalAxisLabels>
+              </div>
+
+              {/* X Axis Labels */}
+              <div className="flex justify-between mt-2 pl-[140px]" style={{ fontFamily: "Poppins, sans-serif", fontSize: "10px", color: "rgba(107,114,128,1)" }}>
+                {axisLabels.map((label, idx) => <span key={idx}>{label}</span>)}
+              </div>
             </>
           ) : (
-            // Vertical orientation
-            <VerticalChartWrapper>
-              <VerticalGridContainer>
-                <VerticalAxis />
-                <VerticalLeftAxis />
+            /* Vertical Chart */
+            <div
+              className="flex flex-col h-full w-full relative pb-[60px] pl-[50px] min-w-[800px] lg:min-w-0"
+              style={{ minHeight: "350px" }}
+            >
+              {/* Grid */}
+              <div className="absolute left-[50px] right-0 top-0 bottom-[60px] pointer-events-none">
+                {/* Bottom axis */}
+                <div className="absolute left-0 right-0 bottom-0 h-px" style={{ background: "rgba(209,213,219,1)" }} />
+                {/* Left axis */}
+                <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: "rgba(209,213,219,1)" }} />
                 {gridPositions.slice(1).map((pos, idx) => (
-                  <VerticalGridLine key={idx} $position={pos} />
+                  <div key={idx} className="absolute left-0 right-0 h-px" style={{ top: `${100 - pos}%`, background: "rgba(229,231,235,0.8)" }} />
                 ))}
-              </VerticalGridContainer>
-              
-              <VerticalAxisLabels>
-                {[...axisLabels].reverse().map((label, idx) => (
-                  <span key={idx}>{label}</span>
-                ))}
-              </VerticalAxisLabels>
-              
-              <VerticalBarsContainer>
+              </div>
+
+              {/* Y Axis Labels */}
+              <div
+                className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-right pr-[5px] w-[45px]"
+                style={{ fontFamily: "Poppins, sans-serif", fontSize: "10px", color: "rgba(107,114,128,1)" }}
+              >
+                {[...axisLabels].reverse().map((label, idx) => <span key={idx}>{label}</span>)}
+              </div>
+
+              {/* Bars */}
+              <div className="flex justify-around items-end w-full flex-1 gap-4 px-4 relative">
                 {items.map((item, index) => {
                   const percentage = (item.value / maxValue) * 100;
                   const color = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
-
                   return (
-                    <LollipopColumnVertical key={`${item.label}-${index}`}>
-                      <BarContainerVertical>
-                        <LineVertical $height={percentage} $color={color}>
-                          <CircleVertical $color={color} />
-                          <ValueLabelVertical>{item.value}</ValueLabelVertical>
-                        </LineVertical>
-                      </BarContainerVertical>
-                      <LabelWrapperVertical>
-                        <Label>{item.label}</Label>
-                      </LabelWrapperVertical>
-                    </LollipopColumnVertical>
+                    <div key={`${item.label}-${index}`} className="flex flex-col items-center gap-2 flex-1 min-w-[60px] max-w-[100px] h-full relative">
+                      {/* Bar container */}
+                      <div className="flex-1 relative w-10 flex flex-col justify-end items-center h-full">
+                        <div
+                          className="relative w-1 rounded-[2px] transition-all"
+                          style={{
+                            height: `${percentage}%`,
+                            background: color,
+                            minHeight: percentage > 0 ? "8px" : "0px",
+                          }}
+                        >
+                          {/* Circle */}
+                          <div
+                            className="absolute left-1/2 w-5 h-5 rounded-full border-[3px] border-white transition-all hover:scale-110"
+                            style={{
+                              top: "-10px",
+                              transform: "translateX(-50%)",
+                              background: color,
+                              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                            }}
+                          />
+                          {/* Value */}
+                          <span
+                            className="absolute left-1/2 whitespace-nowrap text-sm sm:text-base font-semibold text-center"
+                            style={{
+                              top: "-30px",
+                              transform: "translateX(-50%)",
+                              color: "rgba(17,24,39,1)",
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            {item.value}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Label */}
+                      <div
+                        className="absolute text-center"
+                        style={{ bottom: "-50px", left: "50%", transform: "translateX(-50%)", maxWidth: "100px" }}
+                      >
+                        <span style={{ color: "rgba(55,65,81,1)", fontFamily: "Poppins, sans-serif", fontSize: "12px", fontWeight: 500 }} className="sm:text-sm">
+                          {item.label}
+                        </span>
+                      </div>
+                    </div>
                   );
                 })}
-              </VerticalBarsContainer>
-            </VerticalChartWrapper>
+              </div>
+            </div>
           )}
-        </ScrollableWrapper>
-      </ChartArea>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 };
+
+// Shared menu button dots helper
+const MenuButtonDots: React.FC = () => (
+  <button className="w-8 h-8 flex items-center justify-center rounded bg-transparent border-none cursor-pointer transition-colors hover:bg-[rgba(243,244,246,1)]">
+    <div className="flex gap-1">
+      {[0, 1, 2].map((i) => (
+        <span key={i} className="w-1 h-1 rounded-full" style={{ background: "rgba(107,114,128,1)" }} />
+      ))}
+    </div>
+  </button>
+);
 
 LollipopChart.displayName = "LollipopChart";

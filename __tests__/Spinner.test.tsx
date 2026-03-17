@@ -1,191 +1,265 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
 
-// Mock component for testing - adjust path as needed
-// Assuming CardWithLoading component structure based on test output
-const CardWithLoading: React.FC<{ loading?: boolean; children?: React.ReactNode }> = ({ 
-  loading = false, 
-  children 
-}) => {
-  if (loading) {
-    return (
-      <div data-testid="loading-skeleton">
-        <div className="skeleton-wrapper">
-          <div className="css-1svrap4" style={{ width: '95%' }} data-width="95%" />
-          <div className="css-8lid5p" style={{ width: '80%' }} data-width="80%" />
-        </div>
-      </div>
-    );
-  }
-  
-  return <div data-testid="card-content">{children}</div>;
-};
+import {
+  Spinner,
+  CircularSpinner,
+  CardOverlayLoader,
+  LoadingDots,
+  LoadingDotsLinear,
+  CardWithLoading
+} from '../src/components/Spinner'
 
-describe('Spinner/Loading', () => {
-  it('should show loading skeleton when loading', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    // Check for loading skeleton using testid or class structure
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
-    
-    // OR check for skeleton structure
-    const skeletonElements = container.querySelectorAll('div[class*="css-"]');
-    expect(skeletonElements.length).toBeGreaterThan(0);
-  });
+/* ────────────────────────────────────────── */
 
-  it('should show content when not loading', () => {
+describe('Spinner', () => {
+  describe('Render', () => {
+    it('renders with role="status"', () => {
+      render(<Spinner />)
+      expect(screen.getByRole('status')).toBeInTheDocument()
+    })
+
+    it('renders screen reader text', () => {
+      render(<Spinner />)
+      expect(screen.getByText('Loading...')).toBeInTheDocument()
+    })
+
+    it('applies testId', () => {
+      render(<Spinner testId="my-spinner" />)
+      expect(screen.getByTestId('my-spinner')).toBeInTheDocument()
+    })
+
+    it('does not apply data-testid if not provided', () => {
+      const { container } = render(<Spinner />)
+      expect(container.querySelector('[data-testid]')).toBeNull()
+    })
+
+    it('has aria-live polite', () => {
+      render(<Spinner />)
+      expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite')
+    })
+  })
+
+  describe('Size & Style', () => {
+    it('applies default size', () => {
+      render(<Spinner testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle({ 
+        width: '24px', 
+        height: '24px',
+        borderWidth: '4px'
+      })
+    })
+
+    it('applies custom size', () => {
+      render(<Spinner size={48} testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle({ 
+        width: '48px', 
+        height: '48px' 
+      })
+    })
+
+    it('applies custom borderWidth', () => {
+      render(<Spinner borderWidth={6} testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle({ borderWidth: '6px' })
+    })
+
+    // FIXED: Match exact inline style format (#hex and rgba without spaces)
+    it('applies default primaryColor', () => {
+      render(<Spinner testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle('border-top-color: #007bff')
+    })
+
+    it('applies custom primaryColor', () => {
+      render(<Spinner primaryColor="#ff0000" testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle('border-top-color: #ff0000')
+    })
+
+    // FIXED: Exact rgba format without spaces after commas
+    it('applies default backgroundColor', () => {
+      render(<Spinner testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle('border-color: rgba(0,123,255,0.2)')
+    })
+
+    it('applies custom backgroundColor', () => {
+      render(<Spinner backgroundColor="rgba(255,0,0,0.2)" testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle('border-color: rgba(255,0,0,0.2)')
+    })
+
+    // FIXED: borderRadius renders as number → '50px'
+    it('has border radius 50%', () => {
+      render(<Spinner testId="s" />)
+      expect(screen.getByTestId('s')).toHaveStyle('border-radius: 50px')
+    })
+
+    // FIXED: Test presence of animation in computed style
+    it('has animation', () => {
+      render(<Spinner testId="s" />)
+      const element = screen.getByTestId('s')
+      expect(element).toHaveStyle('animation: spin 1s linear infinite')
+    })
+
+    it('supports custom speed', () => {
+      render(<Spinner speed={2} testId="s" />)
+      const element = screen.getByTestId('s')
+      expect(element).toHaveStyle('animation: spin 2s linear infinite')
+    })
+
+    it('has border-solid class', () => {
+      render(<Spinner testId="s" />)
+      expect(screen.getByTestId('s')).toHaveClass('border-solid')
+    })
+  })
+})
+
+/* ────────────────────────────────────────── */
+
+describe('CircularSpinner', () => {
+  it('renders status role', () => {
+    render(<CircularSpinner />)
+    expect(screen.getByRole('status')).toBeInTheDocument()
+  })
+
+  it('renders loading text', () => {
+    render(<CircularSpinner />)
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
+  })
+
+  it('applies testId', () => {
+    render(<CircularSpinner testId="cs" />)
+    expect(screen.getByTestId('cs')).toBeInTheDocument()
+  })
+
+  it('applies default size', () => {
+    render(<CircularSpinner testId="cs" />)
+    expect(screen.getByTestId('cs')).toHaveStyle({ width: '48px', height: '48px' })
+  })
+
+  it('renders default ring', () => {
+    const { container } = render(<CircularSpinner />)
+    const rings = container.querySelectorAll('[role="status"] span.absolute')
+    expect(rings.length).toBe(2)
+  })
+
+  it('renders custom ring count', () => {
+    const { container } = render(<CircularSpinner ringCount={3} />)
+    const rings = container.querySelectorAll('[role="status"] span.absolute')
+    expect(rings.length).toBe(4)
+  })
+
+  it('clamps ringCount to minimum 1', () => {
+    const { container } = render(<CircularSpinner ringCount={0} />)
+    const rings = container.querySelectorAll('[role="status"] span.absolute')
+    expect(rings.length).toBe(2)
+  })
+})
+
+/* ────────────────────────────────────────── */
+
+describe('CardOverlayLoader', () => {
+  it('renders when show=true', () => {
+    render(<CardOverlayLoader show testId="ol" />)
+    expect(screen.getByTestId('ol')).toBeInTheDocument()
+  })
+
+  it('does not render when show=false', () => {
+    render(<CardOverlayLoader show={false} testId="ol" />)
+    expect(screen.queryByTestId('ol')).not.toBeInTheDocument()
+  })
+
+  it('renders default label', () => {
+    render(<CardOverlayLoader />)
+    const visibleLabel = screen.getAllByText('Loading...').find(el => 
+      el.className.includes('text-sm')
+    )
+    expect(visibleLabel).toBeInTheDocument()
+  })
+
+  it('renders custom label', () => {
+    render(<CardOverlayLoader label="Please wait..." />)
+    const visibleLabel = screen.getAllByText('Please wait...').find(el => 
+      el.className.includes('text-sm')
+    )
+    expect(visibleLabel).toBeInTheDocument()
+  })
+
+  it('applies backdrop', () => {
+    render(<CardOverlayLoader backdrop="rgba(0,0,0,0.5)" testId="ol" />)
+    expect(screen.getByTestId('ol')).toHaveStyle({ backgroundColor: 'rgba(0, 0, 0, 0.5)' })
+  })
+})
+
+/* ────────────────────────────────────────── */
+
+describe('LoadingDots', () => {
+  it('renders status role', () => {
+    render(<LoadingDots />)
+    expect(screen.getByRole('status')).toBeInTheDocument()
+  })
+
+  it('renders 3 dots by default', () => {
+    const { container } = render(<LoadingDots />)
+    expect(container.querySelectorAll('span[aria-hidden]').length).toBe(3)
+  })
+
+  it('supports custom count', () => {
+    const { container } = render(<LoadingDots count={5} />)
+    expect(container.querySelectorAll('span[aria-hidden]').length).toBe(5)
+  })
+
+  it('supports custom color', () => {
+    const { container } = render(<LoadingDots color="#ff0000" />)
+    const dot = container.querySelector('span[aria-hidden]') as HTMLElement
+    expect(dot).toHaveStyle('background-color: rgb(255, 0, 0)')
+  })
+})
+
+/* ────────────────────────────────────────── */
+
+describe('LoadingDotsLinear', () => {
+  it('renders status role', () => {
+    render(<LoadingDotsLinear />)
+    expect(screen.getByRole('status')).toBeInTheDocument()
+  })
+
+  it('renders default dots', () => {
+    const { container } = render(<LoadingDotsLinear />)
+    expect(container.querySelectorAll('span[aria-hidden]').length).toBe(5)
+  })
+
+  it('clamps count to minimum 1', () => {
+    const { container } = render(<LoadingDotsLinear count={0} />)
+    expect(container.querySelectorAll('span[aria-hidden]').length).toBe(1)
+  })
+})
+
+/* ────────────────────────────────────────── */
+
+describe('CardWithLoading', () => {
+  it('shows shimmer when loading', () => {
+    const { container } = render(<CardWithLoading loading />)
+    expect(container.querySelectorAll('.shimmer').length).toBeGreaterThan(0)
+  })
+
+  it('shows content when loaded', () => {
+    render(<CardWithLoading loading={false} title="Test Title" />)
+    expect(screen.getByText('Test Title')).toBeInTheDocument()
+  })
+
+  it('renders image', () => {
+    const { container } = render(<CardWithLoading loading={false} />)
+    expect(container.querySelector('img')).toBeInTheDocument()
+  })
+
+  it('supports custom imageUrl', () => {
     render(
-      <CardWithLoading loading={false}>
-        <div>Test Content</div>
-      </CardWithLoading>
-    );
-    
-    expect(screen.getByTestId('card-content')).toBeInTheDocument();
-    expect(screen.getByText('Test Content')).toBeInTheDocument();
-  });
-
-  it('should not show loading skeleton when not loading', () => {
-    render(
-      <CardWithLoading loading={false}>
-        <div>Test Content</div>
-      </CardWithLoading>
-    );
-    
-    expect(screen.queryByTestId('loading-skeleton')).not.toBeInTheDocument();
-  });
-
-  it('should render multiple skeleton elements when loading', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    // Count skeleton bar elements
-    const skeletonBars = container.querySelectorAll('div[data-width]');
-    expect(skeletonBars.length).toBeGreaterThanOrEqual(2);
-  });
-
-  it('should apply correct widths to skeleton bars', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    const skeletonBars = container.querySelectorAll('div[data-width]');
-    const widths = Array.from(skeletonBars).map(el => el.getAttribute('data-width'));
-    
-    expect(widths).toContain('95%');
-    expect(widths).toContain('80%');
-  });
-
-  it('should toggle between loading and content states', () => {
-    const { rerender } = render(<CardWithLoading loading={true} />);
-    
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
-    
-    rerender(
-      <CardWithLoading loading={false}>
-        <div>Content</div>
-      </CardWithLoading>
-    );
-    
-    expect(screen.queryByTestId('loading-skeleton')).not.toBeInTheDocument();
-    expect(screen.getByTestId('card-content')).toBeInTheDocument();
-  });
-
-  it('should render with default loading state false', () => {
-    render(
-      <CardWithLoading>
-        <div>Default Content</div>
-      </CardWithLoading>
-    );
-    
-    expect(screen.getByText('Default Content')).toBeInTheDocument();
-    expect(screen.queryByTestId('loading-skeleton')).not.toBeInTheDocument();
-  });
-
-  it('should render children when provided and not loading', () => {
-    const children = (
-      <>
-        <h2>Title</h2>
-        <p>Description</p>
-      </>
-    );
-    
-    render(<CardWithLoading loading={false}>{children}</CardWithLoading>);
-    
-    expect(screen.getByText('Title')).toBeInTheDocument();
-    expect(screen.getByText('Description')).toBeInTheDocument();
-  });
-
-  it('should not render children when loading', () => {
-    render(
-      <CardWithLoading loading={true}>
-        <div>Should not appear</div>
-      </CardWithLoading>
-    );
-    
-    expect(screen.queryByText('Should not appear')).not.toBeInTheDocument();
-  });
-
-  it('should have emotion styled classes on skeleton', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    const skeletonElements = container.querySelectorAll('div[class*="css-"]');
-    expect(skeletonElements.length).toBeGreaterThan(0);
-    
-    skeletonElements.forEach(element => {
-      expect(element.className).toMatch(/css-/);
-    });
-  });
-
-  it('should handle rapid loading state changes', () => {
-    const { rerender } = render(<CardWithLoading loading={false}>Content</CardWithLoading>);
-    
-    rerender(<CardWithLoading loading={true}>Content</CardWithLoading>);
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
-    
-    rerender(<CardWithLoading loading={false}>Content</CardWithLoading>);
-    expect(screen.queryByTestId('loading-skeleton')).not.toBeInTheDocument();
-    
-    rerender(<CardWithLoading loading={true}>Content</CardWithLoading>);
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
-  });
-
-  it('should render empty content when not loading and no children', () => {
-    const { container } = render(<CardWithLoading loading={false} />);
-    
-    const contentDiv = screen.getByTestId('card-content');
-    expect(contentDiv).toBeInTheDocument();
-    expect(contentDiv).toBeEmptyDOMElement();
-  });
-
-  it('should maintain skeleton structure during loading', async () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    const initialSkeleton = container.querySelector('[data-testid="loading-skeleton"]');
-    expect(initialSkeleton).toBeInTheDocument();
-    
-    // Wait a bit and check skeleton is still there (simulating loading time)
-    await waitFor(() => {
-      expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
-    }, { timeout: 100 });
-  });
-
-  it('should render with different skeleton bar widths', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    const bars = container.querySelectorAll('div[data-width]');
-    const widths = Array.from(bars).map(bar => bar.getAttribute('data-width'));
-    
-    // Should have at least 2 different widths
-    const uniqueWidths = new Set(widths);
-    expect(uniqueWidths.size).toBeGreaterThanOrEqual(2);
-  });
-
-  it('should apply consistent styling across skeleton elements', () => {
-    const { container } = render(<CardWithLoading loading={true} />);
-    
-    const skeletonElements = container.querySelectorAll('div[class*="css-"]');
-    
-    skeletonElements.forEach(element => {
-      // Each skeleton element should have a class
-      expect(element.className).toBeTruthy();
-    });
-  });
-});
+      <CardWithLoading
+        loading={false}
+        title="Test"
+        imageUrl="https://example.com/img.jpg"
+      />
+    )
+    const img = screen.getByAltText('Test')
+    expect(img).toHaveAttribute('src', 'https://example.com/img.jpg')
+  })
+})

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { Table } from "./Table";
-import { TabbedInterface } from "./TabedInterface";
+import { TabbedInterface } from "./TabbedInterface";
 
 type BaseTableProps = React.ComponentProps<typeof Table>;
 type BaseTabProps = React.ComponentProps<typeof TabbedInterface>;
