@@ -17,7 +17,7 @@ module.exports = {
   },
   moduleNameMapper: {
     // ── Assets ────────────────────────────────────────────────────────────────
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+ "^.+\\.(css|sass|scss)$": "<rootDir>/__mocks__/styleMock.js",
     '\\.(gif|ttf|eot|svg|png|jpg|jpeg|webp)$': '<rootDir>/__mocks__/fileMock.js',
 
     // ── Package import → library src (for Jest, bypasses dist) ───────────────

@@ -34,7 +34,7 @@ jest.mock('@mahatisystems/mahati-ui-components', () => ({
 
 // ─── Mock CodePreview ─────────────────────────────────────────────────────────
 // Source imports: import { CodePreview } from "../CodePreview"
-jest.mock('@/app/CodePreview', () => ({
+jest.mock('../../../app/CodePreview', () => ({
   CodePreview: ({ title, preview, code }: any) => (
     <div data-testid="code-preview">
       <h3>{title}</h3>
@@ -46,7 +46,7 @@ jest.mock('@/app/CodePreview', () => ({
 
 // ─── Mock PropsTable ──────────────────────────────────────────────────────────
 // Source imports: import { PropsTable } from "../PropsTable"
-jest.mock('@/app/PropsTable', () => ({
+jest.mock('../../../app/PropsTable', () => ({
   PropsTable: ({ title, props: propsList }: any) => (
     <div data-testid="props-table">
       <h2>{title}</h2>

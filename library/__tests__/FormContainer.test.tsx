@@ -143,10 +143,11 @@ describe('FormContainer', () => {
     });
 
     it('should pass form event to onSubmit handler', () => {
-      let capturedEvent: React.FormEvent | null = null;
+let capturedEvent: string | null = null;
+
       const mockOnSubmit = jest.fn((e: React.FormEvent) => {
         e.preventDefault();
-        capturedEvent = e;
+        capturedEvent = e.type; 
       });
       const { container } = render(
         <FormContainer onSubmit={mockOnSubmit}>
@@ -154,7 +155,7 @@ describe('FormContainer', () => {
         </FormContainer>
       );
       fireEvent.submit(container.querySelector('form')!);
-      expect(capturedEvent?.type).toBe('submit');
+      expect(capturedEvent).toBe('submit');
     });
 
     it('should not throw when submitted without onSubmit prop', () => {

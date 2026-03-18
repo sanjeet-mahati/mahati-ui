@@ -1,25 +1,23 @@
+// Replace your entire test file with this:
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-// ─── Mock @mahatisystems/mahati-ui-components ─────────────────────────────────────────────────────────
+// Fixed mock paths
 jest.mock('@mahatisystems/mahati-ui-components', () => ({
-  MahatiDropdown: ({ variant, options, placeholder, disabled, onSelect, className }: any) => (
-    <div
-      data-testid={`mahati-dropdown-${variant || 'basic'}`}
-      data-variant={variant}
-      data-disabled={disabled ? 'true' : 'false'}
-      className={className}
-    >
-      <span>{placeholder || 'Select an option'}</span>
-      {options?.map((o: any) => (
-        <div key={o.key} onClick={() => onSelect?.(o.value)}>{o.key}</div>
-      ))}
-    </div>
-  ),
+MahatiDropdown: ({ variant, options, placeholder, disabled, onSelect, children }: any) => (
+  <div data-testid={`mahati-dropdown-${variant || 'basic'}`} aria-disabled={disabled}>
+    <span>{placeholder || 'Select an option'}</span>
+    {options?.map((o: any) => (
+      <div key={o.key} onClick={() => onSelect?.(o.value)}>{o.key}</div>
+    ))}
+    {children}
+  </div>
+),
+
 }));
 
-// ─── Mock CodePreview ─────────────────────────────────────────────────────────
+// FIXED: Correct relative paths from src/__tests__/app/dropdown/
 jest.mock('../../../app/CodePreview', () => ({
   CodePreview: ({ title, preview, code }: any) => (
     <div data-testid={`code-preview-${title?.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -30,7 +28,6 @@ jest.mock('../../../app/CodePreview', () => ({
   ),
 }));
 
-// ─── Mock PropsTable ──────────────────────────────────────────────────────────
 jest.mock('../../../app/PropsTable', () => ({
   PropsTable: ({ title, props: propsList }: any) => (
     <div data-testid="props-table">
@@ -42,18 +39,22 @@ jest.mock('../../../app/PropsTable', () => ({
   ),
 }));
 
-// ─── Mock NestedDropdownDemo ──────────────────────────────────────────────────
 jest.mock('../../../app/dropdown/nesteddropdown/nestedropdowndemo', () => ({
-  SearchableDropdownPage: () => (
+  __esModule: true,   // ✅ tells Jest this is an ES module
+  default: () => (    // ✅ matches the default import in the page
     <div data-testid="searchable-dropdown-page">Advanced Dropdowns Content</div>
+  
   ),
 }));
 
 import DropdownDemoPage from '../../../app/dropdown/page';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Render
-// ═══════════════════════════════════════════════════════════════════════════════
+// Debug
+beforeAll(() => {
+  console.log('DropdownDemoPage type:', typeof DropdownDemoPage);
+});
+
+// ... rest of your tests unchanged
 
 describe('DropdownDemoPage — Render', () => {
   it('renders without crashing', () => {

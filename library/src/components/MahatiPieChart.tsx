@@ -20,7 +20,7 @@ interface MahatiPieAnalyticsWidgetProps {
   options?: any;      // Chart.js options
   details: DetailItem[];
   dropdownOptions?: string[];
-  onDropdownSelect?: (value: string) => void;
+onDropdownSelect?: (value: string | number) => void;
   hoverTooltipText?: string;
   className?: string;
   testId?:string;
