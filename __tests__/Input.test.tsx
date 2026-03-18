@@ -194,7 +194,7 @@ describe('Input', () => {
     it('should update displayed value on change', () => {
       const TestComponent = () => {
         const [val, setVal] = React.useState('');
-        return <Input value={val} onChange={(e) => setVal(e.target.value)} />;
+        return <Input value={val} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVal(e.target.value)} />;
       };
       render(<TestComponent />);
       const input = screen.getByRole('textbox');
