@@ -1,24 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/lib/*": [
-        "../library/src/*"
-      ], // Library components
-      "@/lib": [
-        "../library/src"
-      ], // Library root
-      "@/components": [
-        "../library/src/components"
-      ], // Direct to library components
-      "@/components/*": [
-        "../library/src/components/*"
-      ], // Individual library components
-      "@/*": [
-        "./src/*"
-      ] // Testbed's own files
-    },
-    "target": "ES2020",
+    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -35,11 +17,17 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "noImplicitAny": false,
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

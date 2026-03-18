@@ -1,0 +1,215 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
+<div>
+  <div
+    class="grid grid-cols-[4fr_1fr] gap-[10px] max-[900px]:grid-cols-1"
+    data-testid="text-to-audio-container"
+  >
+    <div
+      class="border border-[#8ed1b2] bg-[#f1f7f7] rounded-[16px] overflow-hidden flex flex-col h-full"
+      data-testid="text-to-audio-card"
+    >
+      <div
+        class="px-[16px] py-[12px] bg-[#e2ecf1] border-b border-[#8ed1b2] font-semibold"
+      >
+        Text to Speech
+      </div>
+      <div
+        class="flex flex-1 overflow-hidden"
+      >
+        <textarea
+          class="w-full flex-1 h-[240px] min-h-[240px] max-h-[240px] border-none bg-transparent p-[16px] resize-none outline-none overflow-y-auto leading-[1.6]"
+          placeholder="Enter text here..."
+        />
+      </div>
+      <div
+        class="flex flex-wrap items-center gap-[10px] p-[12px] bg-[#eaf6f1] border-t border-[#8ed1b2] flex-shrink-0"
+      >
+        <div
+          class="flex items-center gap-[8px] bg-[#d1e4e7] px-[12px] py-[8px] rounded-full overflow-x-auto"
+        >
+          <button
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="10 sec backward"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/ten-skip-backward.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+            />
+          </button>
+          <button
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="skip-backward-btn"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/Backward-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+            />
+          </button>
+          <button
+            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="play-pause-btn"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/play-btn.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+            />
+          </button>
+          <button
+            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="10-sec-forward-skip"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/ten-skip-forward.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+            />
+          </button>
+          <button
+            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="5-sec-forward-skip"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/Backward-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain; transform: scaleX(-1);"
+            />
+          </button>
+          <button
+            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="force-stop"
+          >
+            <div
+              style="width: 16px; height: 16px; background-image: url(/icons/hard-stop.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+            />
+          </button>
+          <button
+            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            data-testid="on-loop-btn"
+            title="Loop off"
+          >
+            <div
+              style="position: relative;"
+            >
+              <div
+                style="width: 16px; height: 16px; background-image: url(/icons/repeat-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              />
+            </div>
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-[6px] w-[180px]"
+        >
+          <input
+            class="flex-1 appearance-none h-[6px] rounded-full cursor-pointer"
+            data-testid="seek-bar"
+            max="0"
+            min="0"
+            step="0.01"
+            style="--progress: NaN%;"
+            type="range"
+            value="0"
+          />
+          <span
+            style="font-size: 10px; color: rgb(74, 92, 87); min-width: 5px; text-align: right;"
+          >
+            0:00
+            .
+            0:00
+          </span>
+        </div>
+        <button
+          class="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none px-[12px] py-[6px] rounded-[6px] cursor-pointer"
+          data-testid="reads-entire-page-btn"
+        >
+          Reads Entire page
+        </button>
+        <button
+          class="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text white border-none px-[12px] py-[6px] ronded-[6px] cursor-pointer"
+          data-testid="reads-given-input"
+        >
+          Reads input text
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex flex-col gap-[16px]"
+    >
+      <div
+        class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px] mb-[16px]"
+      >
+        <div
+          class="flex justify-between items-center text-[13px] font-semibold text-[#243a36] mb-[10px]"
+        >
+          <span>
+            Volume
+          </span>
+          <span>
+            100
+            %
+          </span>
+        </div>
+        <input
+          data-testid="text-to-audio-volume"
+          max="1"
+          min="0"
+          step="0.01"
+          style="--value: 100%;"
+          type="range"
+          value="1"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
+    >
+      <div
+        class="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"
+      >
+        <span>
+          Playback Speed
+        </span>
+        <span>
+          1.00
+          x
+        </span>
+      </div>
+      <div
+        class="bg-[#eef5f2] rounded-[12px] p-[12px]"
+      >
+        <input
+          class="w-full appearance-none h-[6px] rounded-full"
+          data-testid="test-to-audio-playbackspeed"
+          max="2"
+          min="0.5"
+          step="0.25"
+          style="--value: 33.33333333333333%;"
+          type="range"
+          value="1"
+        />
+      </div>
+      <div
+        style="font-size: 12px; color: rgb(122, 139, 134); margin-top: 6px; display: flex; justify-content: space-between;"
+      >
+        <span>
+          Slower
+        </span>
+        <span>
+          Faster
+        </span>
+      </div>
+    </div>
+    <div
+      class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
+    >
+      <div
+        class="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"
+      />
+      <span
+        data-testid="quick-summary"
+      >
+        Quick Summary
+      </span>
+    </div>
+    <p
+      style="font-size: 13px; color: rgb(74, 92, 87); line-height: 1.5;"
+    >
+      This content covers general topics.
+    </p>
+  </div>
+</div>
+`;

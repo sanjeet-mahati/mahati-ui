@@ -1,234 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import styled from "@emotion/styled";
+
 
 /* ================= STYLES ================= */
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  gap: 10px;
 
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const Card = styled.div`
-  border: 1px solid #8ed1b2;
-  background: #f1f7f7;
-  border-radius: 16px;
-  overflow: hidden;
-  display:flex;
-  flex-direction:column;
-  height:100%;
-`;
-
-const Header = styled.div`
-  padding: 12px 16px;
-  background: #e2ecf1;
-  border-bottom: 1px solid #8ed1b2;
-  font-weight: 600;
-`;
-const TextArea = styled.textarea`
-  width: 100%;
- flex:1;
-  height: 240px;
-  min-height: 240px;
-  max-height: 240px;
-
-  border: none;
-  background: transparent;
-  padding: 16px;
-  resize: none;
-  outline: none;
-
-  overflow-y: auto;          
-  line-height: 1.6;
-
-  @media (max-width: 600px) {
-    height: 180px;
-    min-height: 180px;
-    max-height: 180px;
-  }
-`;
-
-
-const Controls = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: #eaf6f1;
-  border-top: 1px solid #8ed1b2;
-  flex-shrink:0;
-`;
-const Body = styled.div`
-  flex: 1;
-  overflow: hidden;     
-  display: flex;
-`;
-
-// const Player = styled.div`
-//   display: flex;
-//   align-items: center;
-//   gap: 8px;
-//   background: #d1e4e7;
-//   padding: 8px 12px;
-//   border-radius: 999px;
-// `;
-const Player = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #d1e4e7;
-  padding: 8px 12px;
-  border-radius: 999px;
-
-  /* ✅ KEY FIX */
-  overflow-x: auto;
-  scrollbar-width: none;      
-  -ms-overflow-style: none;   
-  
-  &::-webkit-scrollbar {
-    display: none;            
-  }
-`;
-const IconBtn = styled.button`
-  border: 1px solid #4daf83;
-  background: #d4e4eb;
-  border-radius: 6px;
-  padding: 6px;
-  cursor: pointer;
-`;
-
-const Icon = styled.img`
-  width: 16px;
-`;
-
-const SeekWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 180px;
-`;
-const GenerateBtn = styled.button`
-  background: linear-gradient(to right, #1761a3, #4daf83);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-`;
-const SettingsCard = styled.div`
-  background: #f7fbfb;
-  border: 1px solid #cfe5da;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 16px;
-`;
-
-const SettingsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: #243a36;
-  margin-bottom: 10px;
-`;
-
-const SliderBox = styled.div`
-  background: #eef5f2;
-  border-radius: 12px;
-  padding: 12px;
-`;
-
-const StyledSlider = styled.input`
-  width: 100%;
-  appearance: none;
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    #1761a3 0%,
-    #4daf83 var(--value),
-    #d6e4de var(--value),
-    #d6e4de 100%
-  );
-
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #4daf83;
-    border: 2px solid #fff;
-    cursor: pointer;
-  }
-`;
-const RightPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const SideCard = styled.div`
-  background: #f7fbfb;
-  border: 1px solid #cfe5da;
-  border-radius: 14px;
-  padding: 16px;
-`;
-
-const SideHeader = styled.div`
-  font-size: 13px;
-  font-weight: 600;
-  color: #243a36;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-`;
-
-const SliderWrap = styled.div`
-  background: #eef5f2;
-  border-radius: 12px;
-  padding: 12px;
-`;
-const Seek = styled.input`
-  flex: 1;
-  appearance: none;
-  height: 6px;
-  border-radius: 999px;
-  cursor: pointer;
-
-  background: linear-gradient(
-    to right,
-    #1761a3 0%,
-    #4daf83 var(--progress),
-    #d6e4de var(--progress),
-    #d6e4de 100%
-  );
-
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #4daf83;
-    border: 2px solid white;
-    box-shadow: 0 0 0 2px rgba(77, 175, 131, 0.35);
-  }
-
-  &::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #4daf83;
-    border: 2px solid white;
-  }
-`;
 
 const ControlIcon = ({ src}: { src: string }) => (
   <div
@@ -628,40 +405,45 @@ useEffect(() => {
  /* ================= UI ================= */
 
   return (
- <Container data-testid="text-to-audio-container">
+ <div data-testid="text-to-audio-container"
+ className="grid grid-cols-[4fr_1fr] gap-[10px] max-[900px]:grid-cols-1"
+ >
     {/* LEFT COLUMN */}
-    <Card data-testid="text-to-audio-card">
-      <Header>Text to Speech</Header>
+    < div data-testid="text-to-audio-card"
+    className="border border-[#8ed1b2] bg-[#f1f7f7] rounded-[16px] overflow-hidden flex flex-col h-full"
+    >
+      <div className="px-[16px] py-[12px] bg-[#e2ecf1] border-b border-[#8ed1b2] font-semibold">Text to Speech</div>
 
  
-      <Body>
-<TextArea data-testid="text-to-audio-textarea"
+      <div className="flex flex-1 overflow-hidden">
+<textarea
   ref={textAreaRef}
   placeholder="Enter text here..."
   value={text}
-  onChange={(e) => setText(e.target.value)}
+  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value)}
+  className="w-full flex-1 h-[240px] min-h-[240px] max-h-[240px] border-none bg-transparent p-[16px] resize-none outline-none overflow-y-auto leading-[1.6]"
 />
-</Body>
-      <Controls>
-        <Player>
+</div>
+      <div className="flex flex-wrap items-center gap-[10px] p-[12px] bg-[#eaf6f1] border-t border-[#8ed1b2] flex-shrink-0">
+        <div className="flex items-center gap-[8px] bg-[#d1e4e7] px-[12px] py-[8px] rounded-full overflow-x-auto">
          
-<IconBtn data-testid="10 sec backward" onClick={() => skip(-10)}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="10 sec backward" onClick={() => skip(-10)}>
   <ControlIcon src={icons.tenBackward} />
-</IconBtn>
+</button>
 
-<IconBtn data-testid="skip-backward-btn" onClick={() => skip(-5)}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="skip-backward-btn" onClick={() => skip(-5)}>
   <ControlIcon src={icons.skipBackward} />
-</IconBtn>
+</button>
 
-<IconBtn data-testid="play-pause-btn" onClick={togglePlay}>
+<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="play-pause-btn" onClick={togglePlay}>
   <ControlIcon src={playing ? icons.pause : icons.play} />
-</IconBtn>
+</button>
 
-<IconBtn data-testid="10-sec-forward-skip" onClick={() => skip(10)}>
+<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="10-sec-forward-skip" onClick={() => skip(10)}>
   <ControlIcon src={icons.tenForward} />
-</IconBtn>
+</button>
 
-<IconBtn data-testid="5-sec-forward-skip" onClick={() => skip(5)}>
+<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="5-sec-forward-skip" onClick={() => skip(5)}>
     <div
     style={{
       width: 16,
@@ -674,14 +456,14 @@ useEffect(() => {
     }}
   
    />
-</IconBtn>
+</button>
 
-<IconBtn data-testid="force-stop" onClick={stop}>
+<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="force-stop" onClick={stop}>
   <ControlIcon src={icons.stop} />
-</IconBtn>
+</button>
 
 
-<IconBtn
+<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
   data-testid="on-loop-btn"
   onClick={() => {
     setLoopMode(prev => (prev === 2 ? 0 : (prev + 1) as 0 | 1 | 2));
@@ -732,11 +514,12 @@ useEffect(() => {
       </span>
     )}
   </div>
-</IconBtn>
-        </Player>
+</button>
+        </div>
 
-<SeekWrapper>
-  <Seek
+<div className="flex items-center gap-[6px] w-[180px]">
+  <input
+  className="flex-1 appearance-none h-[6px] rounded-full cursor-pointer"
     data-testid="seek-bar"
     type="range"
     min={0}
@@ -767,10 +550,11 @@ useEffect(() => {
      {formatTime(currentTime)}.{formatTime(duration)} 
   </span>
 
-        </SeekWrapper>
+        </div>
 
      
-<GenerateBtn
+<button
+className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none px-[12px] py-[6px] rounded-[6px] cursor-pointer"
   data-testid="reads-entire-page-btn"
   onClick={() => {
     const pageText = getPageContent();
@@ -782,9 +566,9 @@ useEffect(() => {
   }}
 >
   Reads Entire page
-</GenerateBtn>
+</button>
 
-<GenerateBtn
+<button className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text white border-none px-[12px] py-[6px] ronded-[6px] cursor-pointer"
  data-testid="reads-given-input"
   onClick={() => {
     loopCountRef.current=0;
@@ -795,45 +579,44 @@ useEffect(() => {
   }}
 >
   Reads input text
-</GenerateBtn>
+</button>
 
-    </Controls>
-    </Card>
+    </div>
+    </div>
 
     {/* RIGHT COLUMN */}
-    <RightPanel >
+    <div className="flex flex-col gap-[16px]" >
       {/* Volume */}
-      <SettingsCard>
-        <SettingsHeader>
+      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px] mb-[16px]">
+        <div className="flex justify-between items-center text-[13px] font-semibold text-[#243a36] mb-[10px]">
           <span>Volume</span>
           <span>{Math.round(volume * 100)}%</span>
-        </SettingsHeader>
+        </div>
+      
+       <input
+data-testid="text-to-audio-volume"
+type="range"
+min={0}
+max={1}
+step={0.01}
+value={volume}
+style={{ "--value": `${volume * 100}%` } as React.CSSProperties}
+onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+setVolume(Number(e.target.value))
+}
+/>
+        </div>
+      </div>
 
-        <SliderBox>
-          <StyledSlider
-           data-testid="text-to-audio-volume"
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={volume}
-            style={{ "--value": `${volume * 100}%` } as React.CSSProperties}
-            
-            onChange={(e) => 
-  setVolume(Number(e.target.value))}
-
-          />
-        </SliderBox>
-      </SettingsCard>
-
-      <SideCard>
-        <SideHeader >
+      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
+        <div className="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]">
           <span>Playback Speed</span>
           <span>{speed.toFixed(2)}x</span>
-        </SideHeader>
+        </div>
 
-        <SliderWrap>
-          <StyledSlider
+        <div className="bg-[#eef5f2] rounded-[12px] p-[12px]">
+          <input
+          className="w-full appearance-none h-[6px] rounded-full"
            data-testid="test-to-audio-playbackspeed"
             type="range"
             min={0.5}
@@ -848,7 +631,7 @@ useEffect(() => {
               setSpeed(Number(e.target.value))}
 
           />
-        </SliderWrap>
+        </div>
 
         <div
           style={{
@@ -862,21 +645,24 @@ useEffect(() => {
           <span>Slower</span>
           <span>Faster</span>
         </div>
-      </SideCard>
+      </div>
 
       
-      <SideCard>
-        <SideHeader>
+      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
+        <div className="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"></div>
+        
           <span data-testid="quick-summary">Quick Summary</span>
-        </SideHeader>
+        </div>
 
         <p style={{ fontSize: 13, color: "#4a5c57", lineHeight: 1.5 }}>
           {mode==="textarea"?categorizeText(text):
           getQuickSummary()}
         </p>
-      </SideCard>
-    </RightPanel>
-  </Container>
+      </div>
+  
+  
+
+  
 );
    
 };

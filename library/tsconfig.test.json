@@ -1,0 +1,23 @@
+// tsconfig.test.json  (at library/ root, alongside tsconfig.json)
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",          // ← expanded to cover __tests__ too
+    "outDir": "./dist-test", // ← won't conflict with build output
+    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx",
+    "__mocks__/**/*.ts",
+    "__mocks__/**/*.js"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

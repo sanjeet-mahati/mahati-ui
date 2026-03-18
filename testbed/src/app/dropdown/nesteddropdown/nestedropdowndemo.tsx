@@ -1,22 +1,17 @@
 "use client";
 import { useState, useCallback } from "react";
 import {
-  SearchableDropdown,
-  MultiSelectDropdown,
-  CascadingDropdown,
-  AvatarDropdown,
-  AvatarMultiSelectDropdown,
-  GroupedDropdown,
-  AsyncDropdown,
-  PreviewCard,
-  PreviewWrapper,
-} from "@/components/NestedDropdown";
+  MahatiSearchableDropdown as SearchableDropdown,
+  MahatiMultiSelectDropdown as MultiSelectDropdown,
+  MahatiAvatarDropdown as AvatarDropdown,
+  MahatiAvatarMultiSelectDropdown as AvatarMultiSelectDropdown,
+  MahatiGroupedDropdown as GroupedDropdown,
+  MahatiAsyncDropdown as AsyncDropdown,
+} from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../../CodePreview";
 import { PropsTable } from "../../PropsTable";
 
-
-
-export  function SearchableDropdownPage() {
+export default function SearchableDropdownPage() {
   const [value, setValue] = useState("");
   const [multiValues, setMultiValues] = useState<string[]>([]);
   const [avatar, setAvatar] = useState("");
@@ -134,8 +129,8 @@ export  function SearchableDropdownPage() {
       <div className="page">
         {/* HEADER */}
         <div className="header section">
-          {/* <h1>Searchable / Filterable Dropdown</h1>
-          <p>Dropdown with search input and clear action.</p> */}
+          <h1>Searchable / Filterable Dropdown</h1>
+          <p>Dropdown with search input and clear action.</p>
         </div>
 
         <PropsTable props={props} title="Props" />
@@ -156,9 +151,8 @@ export  function SearchableDropdownPage() {
             preview={
               // <div className="preview-wrapper">
               //   <div className="preview-card">
-              <PreviewWrapper>
-                <PreviewCard>
-                  
+              <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
                   <h3
                   >Searchable Dropdown</h3>
                   <SearchableDropdown
@@ -172,8 +166,8 @@ export  function SearchableDropdownPage() {
                     value={value}
                     onChange={setValue}
                   />
-                </PreviewCard>
-              </PreviewWrapper>
+                </div>
+              </div>
               
             }
           />
@@ -195,8 +189,8 @@ export  function SearchableDropdownPage() {
             preview={
               // <div className="preview-wrapper">
               //   <div className="preview-card large">
-              <PreviewWrapper>
-                <PreviewCard>
+              <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
                   <h3>Multi Select Dropdown</h3>
                   <MultiSelectDropdown
                     label="Multi Select"
@@ -209,8 +203,8 @@ export  function SearchableDropdownPage() {
                     values={multiValues}
                     onChange={setMultiValues}
                   />
-                </PreviewCard>
-              </PreviewWrapper>
+                </div>
+              </div>
             }
           />
         </div>
@@ -226,9 +220,8 @@ export  function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-
-      <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Cascading Dropdown</h3>
 
           <SearchableDropdown
@@ -265,12 +258,12 @@ export  function SearchableDropdownPage() {
               { label: "Los Angeles", value: "Los Angeles" },
             ]}
             value={cascadeValue.city}
-       onChange={(v:string) =>
+            onChange={(v:string) =>
               setCascadeValue((p) => ({ ...p, city: v }))
             }
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -287,8 +280,8 @@ export  function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Avatar Dropdown</h3>
 
           <AvatarDropdown
@@ -311,14 +304,14 @@ export  function SearchableDropdownPage() {
             value={avatar}
             onChange={setAvatar}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
 {/* 5️⃣ AVATAR MULTI SELECT */}
 <div className="section">
-  <div id="avatarmultiselect"></div>
+  <div id="Avatarmultiselect"></div>
   <CodePreview
     title="Avatar Multi Select Dropdown"
     code={`
@@ -329,8 +322,8 @@ export  function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+      <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Avatar Multi Select</h3>
 
           <AvatarMultiSelectDropdown
@@ -351,8 +344,8 @@ export  function SearchableDropdownPage() {
             values={avatars}
             onChange={setAvatars}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -369,8 +362,8 @@ export  function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+     <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Grouped Dropdown</h3>
 
           <GroupedDropdown
@@ -393,8 +386,8 @@ export  function SearchableDropdownPage() {
             values={groupValue}
             onChange={setGroupValue}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>
@@ -412,8 +405,8 @@ export  function SearchableDropdownPage() {
 />
 `}
     preview={
-      <PreviewWrapper>
-        <PreviewCard>
+     <div className="w-full flex justify-center">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
           <h3>Async Dropdown</h3>
 
           <AsyncDropdown
@@ -441,8 +434,8 @@ export  function SearchableDropdownPage() {
             loadOptions={loadCities}
             onChange={setCity}
           />
-        </PreviewCard>
-      </PreviewWrapper>
+        </div>
+      </div>
     }
   />
 </div>

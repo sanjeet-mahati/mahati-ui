@@ -1,6 +1,6 @@
 "use client";
 
-import { MahatiTexttoAudio } from "@/lib/index";
+import { MahatiTexttoAudio } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 

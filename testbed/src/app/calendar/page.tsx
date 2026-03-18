@@ -5,7 +5,7 @@ import {
   CalendarDate,
   CalendarTime,
   CalendarDateRange,
-} from "@/lib/index";
+} from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 

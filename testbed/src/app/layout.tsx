@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 
 import ContextProvider from '@/navigation/context-provider';
 
+import '@mahatisystems/mahati-ui-components/styles';
+
 import '../styles/globals.css';
 import SideNav from '@/navigation/sidebar/leftsidenavigation/sidenav';
 import Header from '../navigation/header/header';

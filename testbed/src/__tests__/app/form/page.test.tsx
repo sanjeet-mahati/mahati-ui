@@ -56,7 +56,7 @@ jest.mock("../../../app/CodePreview", () => {
 
 // -------------------- Mock MahatiInput + MahatiFormContainer --------------------
 jest.mock(
-  "@/lib/index",
+  "@mahatisystems/mahati-ui-components",
   () => {
     const React = require("react");
 

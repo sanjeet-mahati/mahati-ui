@@ -21,7 +21,7 @@ jest.mock("next/image", () => {
 });
 
 jest.mock(
-  "@/lib/index",
+  "@mahatisystems/mahati-ui-components",
   () => {
     const React = require("react");
 

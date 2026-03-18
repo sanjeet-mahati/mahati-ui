@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MahatiToastMessage } from "@/lib";
+import { MahatiToastMessage } from "@mahatisystems/mahati-ui-components";
 
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";

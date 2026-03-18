@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { MahatiCard } from "@/lib/index";
+import { MahatiCard } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';
 

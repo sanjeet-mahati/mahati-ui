@@ -37,7 +37,7 @@ const calendarPropsCalls: CalendarPropsCapture[] = [];
 
 /**
  * ✅ IMPORTANT FIX:
- * In testbed, "@/lib/index" may not exist as a real file, even though Next's tsconfig path
+ * In testbed, "@mahatisystems/mahati-ui-components" may not exist as a real file, even though Next's tsconfig path
  * resolves it at runtime/build time.
  *
  * Jest needs either:
@@ -47,7 +47,7 @@ const calendarPropsCalls: CalendarPropsCapture[] = [];
  * Since you said "no modification of other files", we use a VIRTUAL mock here.
  */
 jest.mock(
-  "@/lib/index",
+  "@mahatisystems/mahati-ui-components",
   () => {
     const React = require("react");
 

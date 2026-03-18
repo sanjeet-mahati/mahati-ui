@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { MahatiModal, MahatiButton,MahatiCard, MahatiInput } from "@/lib/index";
+import { MahatiModal, MahatiButton,MahatiCard, MahatiInput } from "@mahatisystems/mahati-ui-components";
 import { MinusIcon, PaperclipIcon, SendIcon, XIcon } from "lucide-react";
 import { MessageCircle, Users, Bot, Frown, Meh, Smile, Laugh, Angry, Star } from "lucide-react";
 import { CodePreview } from "../CodePreview";
