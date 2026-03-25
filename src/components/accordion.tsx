@@ -11,10 +11,13 @@ export interface AccordionItem {
 }
 
 export interface AccordionProps {
-  items: AccordionItem[];
+  
+  title?:string;
+  children?:React.ReactNode;
+  items?: AccordionItem[];
   defaultOpenIndex?: number | null;
-
-  // ✅ Reusability props
+  defaultOpen?: boolean;
+  
   className?: string;
   headerClassName?: string;
   contentClassName?: string;
@@ -22,16 +25,20 @@ export interface AccordionProps {
   iconPosition?: "left" | "right";
   onToggle?: (index: number | null) => void;
 
-  // ✅ Testing
   accordionTestId?: string;
   activeClassName?:string;
   multipleOpen?:boolean;
+  headerTestId?:string;
+  contentTestId?:string;
 }
 
 // COMPONENT
 function Accordion({
-  items,
+  title,
+  children,
+  items=[],
   defaultOpenIndex = null,
+  defaultOpen,
   className = "",
   headerClassName = "",
   contentClassName = "",
@@ -40,8 +47,19 @@ function Accordion({
   multipleOpen= false,
   onToggle,
   accordionTestId,
+  headerTestId,
+  contentTestId,
 }: AccordionProps) {
-  const [openIndexes, setOpenIndexes] = useState<number[]>([]);
+  const [openIndexes, setOpenIndexes] = useState<number[]>(
+    defaultOpen ? [0] :
+  defaultOpenIndex !==null&& defaultOpenIndex !== undefined ? [defaultOpenIndex] :[]);
+
+  const normalizedItems: AccordionItem[] =
+  items && items.length > 0
+    ? items
+    : title !== undefined
+    ? [{ title, content: children }]
+    : [];
 
  const handleToggle = (index: number) => {
   let newIndexes: number[];
@@ -64,13 +82,14 @@ function Accordion({
       data-testid={accordionTestId}
       className={`w-full max-w-[684px] border border-slate-200 rounded-xl overflow-hidden bg-white ${className}`}
     >
-      {items.map((item, index) => {
+      {normalizedItems.map((item, index) => {
         const isOpen = openIndexes.includes(index);
 
         return (
           <div key={index}>
             {/* HEADER */}
             <button
+              data-testid={headerTestId}
               disabled={item.disabled}
               onClick={() => handleToggle(index)}
               className={`
@@ -110,6 +129,7 @@ function Accordion({
             {/* CONTENT */}
             {isOpen && !item.disabled && (
               <div
+                data-testid={contentTestId}
                 className={`px-6 py-4 text-slate-600 border-t border-slate-200 ${contentClassName}`}
               >
                 {item.content}
@@ -117,7 +137,7 @@ function Accordion({
             )}
 
             {/* DIVIDER */}
-            {index !== items.length - 1 && (
+            {index !== normalizedItems.length - 1 && (
               <div className="border-t border-slate-200" />
             )}
           </div>
