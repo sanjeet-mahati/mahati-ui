@@ -200,6 +200,7 @@ const formatTime = (sec: number) => {
 
 
   const speakFromTime = (time: number): void => {
+    window.speechSynthesis.cancel();
   const source = text;
   if (!source.trim()) return;
 
@@ -273,6 +274,7 @@ const startTimer = (fromTime: number): void => {
 };
 const togglePlay = () => {
   if (!utteranceRef.current) {
+    window.speechSynthesis.cancel();
     loopCountRef.current=0;
     speakFromTime(currentTime);
     return;
@@ -342,9 +344,21 @@ const downloadAudio = () => {
  
   
   textAreaRef.current?.setSelectionRange(0, 0);
+  utteranceRef.current = null;
 };
 
   /* ================= EFFECTS ================= */
+
+  
+
+  useEffect(() => {
+  return () => {
+    // ✅ Stop audio when component unmounts / refresh
+    window.speechSynthesis.cancel();
+    stopTimer();
+  };
+}, []);
+
   useEffect(() => {
   volumeRef.current= volume;
 }, [volume]);
@@ -402,12 +416,21 @@ useEffect(() => {
   speakFromTime(0);
 }, [text]);
 
+const getVolumeIcon = () => {
+  return volume === 0
+    ? "/icons/mute-icon.png"
+    : "/icons/sound-icon.png";
+};
+
  /* ================= UI ================= */
 
   return (
  <div data-testid="text-to-audio-container"
  className="grid grid-cols-[4fr_1fr] gap-[10px] max-[900px]:grid-cols-1"
+
  >
+  
+  
     {/* LEFT COLUMN */}
     < div data-testid="text-to-audio-card"
     className="border border-[#8ed1b2] bg-[#f1f7f7] rounded-[16px] overflow-hidden flex flex-col h-full"
@@ -435,15 +458,15 @@ useEffect(() => {
   <ControlIcon src={icons.skipBackward} />
 </button>
 
-<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="play-pause-btn" onClick={togglePlay}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="play-pause-btn" onClick={togglePlay}>
   <ControlIcon src={playing ? icons.pause : icons.play} />
 </button>
 
-<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="10-sec-forward-skip" onClick={() => skip(10)}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="10-sec-forward-skip" onClick={() => skip(10)}>
   <ControlIcon src={icons.tenForward} />
 </button>
 
-<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="5-sec-forward-skip" onClick={() => skip(5)}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="5-sec-forward-skip" onClick={() => skip(5)}>
     <div
     style={{
       width: 16,
@@ -458,12 +481,12 @@ useEffect(() => {
    />
 </button>
 
-<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="force-stop" onClick={stop}>
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer" data-testid="force-stop" onClick={stop}>
   <ControlIcon src={icons.stop} />
 </button>
 
 
-<button className="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+<button className="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
   data-testid="on-loop-btn"
   onClick={() => {
     setLoopMode(prev => (prev === 2 ? 0 : (prev + 1) as 0 | 1 | 2));
@@ -519,25 +542,30 @@ useEffect(() => {
 
 <div className="flex items-center gap-[6px] w-[180px]">
   <input
-  className="flex-1 appearance-none h-[6px] rounded-full cursor-pointer"
-    data-testid="seek-bar"
-    type="range"
-    min={0}
-    max={duration}
-    step={0.01}
-    value={currentTime}
-    
-    style={{
-      "--progress": `${(currentTime / duration) * 100}%`,
-    } as React.CSSProperties}
-    onChange={(e) => {
-      const t = Number(e.target.value);
-      setCurrentTime(t);
-      window.speechSynthesis.cancel();
-      stopTimer();
-      speakFromTime(t);
-    }}
-  />
+  className="flex-1 appearance-none h-[6px] rounded-[5px] cursor-pointer"
+  data-testid="seek-bar"
+  type="range"
+  min={0}
+  max={duration}
+  step={0.01}
+  value={currentTime}
+  onChange={(e) => {
+    const t = Number(e.target.value);
+    setCurrentTime(t);
+    window.speechSynthesis.cancel();
+    stopTimer();
+    speakFromTime(t);
+  }}
+  style={{
+    accentColor: "#4daf83",
+    background: `linear-gradient(90deg,
+      rgba(23,97,163,1) 0%,
+      rgba(77,175,131,1) ${(currentTime / duration) * 100}%,
+      #e5e7eb ${(currentTime / duration) * 100}%,
+      #e5e7eb 100%)`
+  }}
+/>
+  
 
   <span
     style={{
@@ -568,7 +596,7 @@ className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none p
   Reads Entire page
 </button>
 
-<button className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text white border-none px-[12px] py-[6px] ronded-[6px] cursor-pointer"
+<button className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none px-[12px] py-[6px] rounded-[6px] cursor-pointer"
  data-testid="reads-given-input"
   onClick={() => {
     loopCountRef.current=0;
@@ -584,85 +612,99 @@ className="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none p
     </div>
     </div>
 
-    {/* RIGHT COLUMN */}
-    <div className="flex flex-col gap-[16px]" >
-      {/* Volume */}
-      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px] mb-[16px]">
-        <div className="flex justify-between items-center text-[13px] font-semibold text-[#243a36] mb-[10px]">
-          <span>Volume</span>
-          <span>{Math.round(volume * 100)}%</span>
-        </div>
-      
-       <input
-data-testid="text-to-audio-volume"
-type="range"
-min={0}
-max={1}
-step={0.01}
-value={volume}
-style={{ "--value": `${volume * 100}%` } as React.CSSProperties}
-onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-setVolume(Number(e.target.value))
-}
+   {/* RIGHT COLUMN */}
+<div className="flex flex-col gap-[16px]">
+
+  {/* Volume */}
+  <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
+    <div className="flex justify-between items-center text-[13px] font-semibold text-[#243a36] mb-[10px]">
+      <span>Volume</span>
+      <span>{Math.round(volume * 100)}%</span>
+    </div>
+    <div className="flex items-center gap-[10px]">
+
+  {/* 🔊 ICON */}
+  <div
+    onClick={() => setVolume(volume === 0 ? 1 : 0)}
+    style={{
+      width: 18,
+      height: 18,
+      backgroundImage: `url(${getVolumeIcon()})`,
+      backgroundSize: "contain",
+      backgroundRepeat: "no-repeat",
+      cursor: "pointer"
+    }}
+  />
+
+   <input
+  data-testid="text-to-audio-volume"
+  type="range"
+  min={0}
+  max={1}
+  step={0.01}
+  value={volume}
+  onChange={(e) => setVolume(Number(e.target.value))}
+  className="w-full appearance-none h-[6px] rounded-[5px]"
+  style={{
+    accentColor:"#4daf83",
+    background: `linear-gradient(90deg, 
+      rgba(23,97,163,1) 0%, 
+      rgba(77,175,131,1) ${volume * 100}%, 
+      #e5e7eb ${volume * 100}%, 
+      #e5e7eb 100%)`
+  }}
 />
-        </div>
-      </div>
+  </div> 
+  </div>
 
-      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
-        <div className="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]">
-          <span>Playback Speed</span>
-          <span>{speed.toFixed(2)}x</span>
-        </div>
 
-        <div className="bg-[#eef5f2] rounded-[12px] p-[12px]">
-          <input
-          className="w-full appearance-none h-[6px] rounded-full"
-           data-testid="test-to-audio-playbackspeed"
-            type="range"
-            min={0.5}
-            max={2}
-            step={0.25}
-            value={speed}
-            style={{
-              "--value": `${((speed - 0.5) / 1.5) * 100}%`,
-            } as React.CSSProperties}
-            
-            onChange={(e) => 
-              setSpeed(Number(e.target.value))}
+  {/* Playback Speed */}
+  <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
+  <div className="flex justify-between text-[13px] font-semibold mb-[10px]">
+    <span>Playback Speed</span>
+    <span>{speed.toFixed(2)}x</span>
+  </div>
 
-          />
-        </div>
+  <input
+    data-testid="test-to-audio-playbackspeed"
+    type="range"
+    min={0.5}
+    max={2}
+    step={0.25}
+    value={speed}
+    className="w-full appearance-none h-[6px] rounded-[5px]"
+    onChange={(e) => setSpeed(Number(e.target.value))}
+    style={{
+      accentColor:"#4daf83",
+      background: `linear-gradient(90deg,
+        rgba(23,97,163,1) 0%,
+        rgba(77,175,131,1) ${((speed - 0.5) / 1.5) * 100}%,
+        #e5e7eb ${((speed - 0.5) / 1.5) * 100}%,
+        #e5e7eb 100%)`
+    }}
+  />
 
-        <div
-          style={{
-            fontSize: 12,
-            color: "#7a8b86",
-            marginTop: 6,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <span>Slower</span>
-          <span>Faster</span>
-        </div>
-      </div>
+  <div className="flex justify-between text-xs text-gray-500 mt-1">
+    <span>Slower</span>
+    <span>Faster</span>
+  </div>
+</div>
 
-      
-      <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
-        <div className="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"></div>
-        
-          <span data-testid="quick-summary">Quick Summary</span>
-        </div>
+  {/* Quick Summary */}
+  <div className="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]">
+    <div data-testid="quick-summary" className="font-semibold mb-[8px]">Quick Summary</div>
 
-        <p style={{ fontSize: 13, color: "#4a5c57", lineHeight: 1.5 }}>
-          {mode==="textarea"?categorizeText(text):
-          getQuickSummary()}
-        </p>
-      </div>
-  
-  
+    <p className="text-sm text-[#4a5c57] leading-[1.5]">
+      {mode === "textarea"
+        ? categorizeText(text)
+        : getQuickSummary()}
+    </p>
+    
+  </div>
 
-  
+</div>
+
+  </div>
 );
    
 };

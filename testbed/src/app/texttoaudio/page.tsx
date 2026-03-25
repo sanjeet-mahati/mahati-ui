@@ -57,7 +57,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+    <div className="w-full px-4 py-6">
       <h1 className="text-3xl font-bold">Text To Audio</h1>
 
       <PropsTable title="Props" props={props} />
@@ -65,7 +65,12 @@ export default function Page() {
       <CodePreview
         title="Text To Audio"
         code={`<MahatiTexttoAudio />`}
-        preview={<MahatiTexttoAudio />}
+        preview={
+          <div className="w-full min-w-[900px]">
+        <MahatiTexttoAudio />
+        </div>
+        
+        }
       />
     </div>
   );
