@@ -4,8 +4,27 @@ import { Accordion } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 
-export default function AccordionPage() {
+const AccordionPage=()=> {
   const accordionProps = [
+
+    {
+    name: "title",
+    type: "string",
+    default: "-",
+    description: "Accordion title",
+  },
+  {
+    name: "children",
+    type: "ReactNode",
+    default: "-",
+    description: "Accordion content",
+  },
+  {
+    name: "defaultOpen",
+    type: "boolean",
+    default: "false",
+    description: "Open by default",
+  },
     {
       name: "items",
       type: "AccordionItem[]",
@@ -181,31 +200,44 @@ export default function AccordionPage() {
 
       {/* 4️⃣ DISABLED ACCORDION */}
       <CodePreview
+
         title="Disabled Accordion"
-        code={`<Accordion
+        code={`<div className="opacity-60 grayscale pointer-events-none">
+          <Accordion
   items={[
     { title: "Enabled", content: "Works normally" },
     { title: "Disabled", content: "Won't open", disabled: true }
   ]}
 />`}
         preview={
-          <div className="flex justify-center">
+          <div className="flex flex-col gap-4 items-center">
+            <div className="w-full max-w-2xl opacity-60 grayscale pointer-events-none">
             <Accordion
               items={[
                 {
-                  title: "Enabled Accordion",
-                  content: "This accordion is enabled.",
-                },
-                {
                   title: "Disabled Accordion",
                   content: "This accordion is disabled.",
-                  disabled: true,
+                  disabled:true,
+                },
+                
+              ]}
+              />
+              </div>
+              <Accordion
+              items={[
+                {
+                  title: "Enabled Accordion",
+                  content: "This accordion is Enabled.",
+                
                 },
               ]}
             />
           </div>
         }
-      />
+        />
+        
+        
+      
 
       {/* 5️⃣ ACCORDION GROUP */}
       <CodePreview
@@ -272,4 +304,5 @@ export default function AccordionPage() {
 
     </div>
   );
-}
+};
+export default AccordionPage
