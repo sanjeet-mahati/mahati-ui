@@ -1,129 +1,133 @@
 "use client";
 
+import { Accordion } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
-import { MahatiButton as Accordion} from "@mahatisystems/mahati-ui-components";;
+
 export default function AccordionPage() {
   const accordionProps = [
-
-  {
-    name: "title",
-    type: "string",
-    default: "-",
-    description: "Accordion header title",
-  },
-  {
-    name: "defaultOpen",
-    type: "boolean",
-    default: "false",
-    description: "Opens the accordion by default",
-  },
-  {
-    name: "children",
-    type: "ReactNode",
-    default: "-",
-    description: "Content displayed inside the accordion",
-  },
-  {
-    name: "className",
-    type: "string",
-    default: "-",
-    description: "Custom class name for styling the accordion",
-  },
-  {
-    name: "headerClassName",
-    type: "string",
-    default: "-",
-    description: "Custom class name for the accordion header",
-  },
-  {
-    name: "contentClassName",
-    type: "string",
-    default: "-",
-    description: "Custom class name for the accordion content",
-  },
-  {
-    name: "icon",
-    type: "ReactNode",
-    default: "-",
-    description: "Custom icon displayed in the accordion header",
-  },
-  {
-    name: "iconPosition",
-    type: `"left" | "right"`,
-    default: `"right"`,
-    description: "Position of the accordion icon",
-  },
-  {
-    name: "onToggle",
-    type: "(open: boolean) => void",
-    default: "-",
-    description: "Callback triggered when accordion is opened or closed",
-  },
-];
-    
-
-  
+    {
+      name: "items",
+      type: "AccordionItem[]",
+      default: "-",
+      description: "Array of accordion items with title and content.",
+    },
+    {
+      name: "defaultOpenIndex",
+      type: "number | null",
+      default: "null",
+      description: "Index of the item that should be open by default.",
+    },
+    {
+      name: "className",
+      type: "string",
+      default: "-",
+      description: "Custom class for the accordion container.",
+    },
+    {
+      name: "headerClassName",
+      type: "string",
+      default: "-",
+      description: "Custom class for accordion header.",
+    },
+    {
+      name: "contentClassName",
+      type: "string",
+      default: "-",
+      description: "Custom class for accordion content.",
+    },
+    {
+      name: "icon",
+      type: "ReactNode",
+      default: "-",
+      description: "Custom icon for accordion toggle.",
+    },
+    {
+      name: "iconPosition",
+      type: `"left" | "right"`,
+      default: `"right"`,
+      description: "Position of the accordion icon.",
+    },
+    {
+      name: "onToggle",
+      type: "(index: number | null) => void",
+      default: "-",
+      description: "Callback when accordion item toggles.",
+    },
+  ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-6 py-10 space-y-10">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
+
       {/* PAGE HEADER */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">
-          Accordion
-        </h1>
-        <p className="text-slate-600 mt-2">
-          Accordions allow users to expand and collapse sections of related content.
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Accordion</h1>
+        <p className="text-lg text-gray-600">
+          Accordions allow users to expand and collapse sections of content.
         </p>
       </div>
 
       {/* PROPS TABLE */}
       <PropsTable props={accordionProps} title="Props" />
+      <br />
 
       {/* 1️⃣ BASIC ACCORDION */}
       <CodePreview
         title="Basic Accordion"
-        code={`
-<Accordion title="Accordion Item 1" defaultOpen>
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-</Accordion>
-        `}
+        code={`<Accordion
+  defaultOpenIndex={0}
+  items={[
+    {
+      title: "Accordion Item 1",
+      content: "Lorem ipsum dolor sit amet..."
+    }
+  ]}
+/>`}
         preview={
           <div className="flex justify-center">
-            <Accordion title="Accordion Item 1" defaultOpen>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Accordion>
+            <Accordion
+              defaultOpenIndex={0}
+              items={[
+                {
+                  title: "Accordion Item 1",
+                  content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                },
+              ]}
+            />
           </div>
         }
       />
 
-      {/* 2️⃣ ACCORDION WITH MULTIPLE ITEMS (FIGMA STYLE) */}
+      {/* 2️⃣ MULTIPLE ITEMS */}
       <CodePreview
         title="Accordion with Multiple Items"
-        code={`
-<Accordion title="Accordion Item 1" defaultOpen />
-<Accordion title="Accordion Item 2" />
-<Accordion title="Accordion Item 3" />
-<Accordion title="Accordion Item 4" />
-        `}
+        code={`<Accordion
+  defaultOpenIndex={0}
+  items={[
+    { title: "Item 1", content: "Content 1" },
+    { title: "Item 2", content: "Content 2" },
+    { title: "Item 3", content: "Content 3" }
+  ]}
+/>`}
         preview={
           <div className="flex justify-center">
-            <div className="space-y-0">
-              <Accordion title="Accordion Item 1" defaultOpen>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed commodo justo vel ultricies imperdiet.
-              </Accordion>
-
-              <Accordion title="Accordion Item 2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit
-              </Accordion>
-
-              <Accordion title="Accordion Item 3">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
-              </Accordion>
-
-              
-            </div>
+            <Accordion
+              multipleOpen
+              items={[
+                {
+                  title: "Accordion Item 1",
+                  content: "Lorem ipsum dolor sit amet...",
+                },
+                {
+                  title: "Accordion Item 2",
+                  content: "Content for item 2",
+                },
+                {
+                  title: "Accordion Item 3",
+                  content: "Content for item 3",
+                },
+              ]}
+            />
           </div>
         }
       />
@@ -131,110 +135,141 @@ export default function AccordionPage() {
       {/* 3️⃣ NESTED ACCORDION */}
       <CodePreview
         title="Nested Accordion"
-        code={`
-<Accordion title="Parent Accordion" defaultOpen>
-  <Accordion title="Child 1" />
-  <Accordion title="Child 2" />
-</Accordion>
-        `}
+        code={`<Accordion
+  defaultOpenIndex={0}
+  items={[
+    {
+      title: "Parent",
+      content: (
+        <Accordion
+          items={[
+            { title: "Child 1", content: "Child Content 1" },
+            { title: "Child 2", content: "Child Content 2" }
+          ]}
+        />
+      )
+    }
+  ]}
+/>`}
         preview={
           <div className="flex justify-center">
-            <Accordion title="Parent Accordion" defaultOpen>
-              <div className="space-y-0">
-                <Accordion title="Child Accordion 1">
-                  Lorem ipsum dolor sit amet consectetur adipisicing
-                </Accordion>
-
-                <Accordion title="Child Accordion 2">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit
-
-                </Accordion>
-              </div>
-            </Accordion>
+            <Accordion
+              defaultOpenIndex={0}
+              items={[
+                {
+                  title: "Parent Accordion",
+                  content: (
+                    <Accordion
+                      items={[
+                        {
+                          title: "Child Accordion 1",
+                          content: "Child content 1",
+                        },
+                        {
+                          title: "Child Accordion 2",
+                          content: "Child content 2",
+                        },
+                      ]}
+                    />
+                  ),
+                },
+              ]}
+            />
           </div>
         }
       />
-    
-    {/* 4️⃣ DISABLED ACCORDION */}
-<CodePreview
-  title="Disabled Accordion"
-  code={`
-<Accordion title="Enabled Accordion">
-  This accordion is enabled.
-</Accordion>
- 
-<div className="opacity-60 grayscale cursor-not-allowed">
-<Accordion title="Disabled Accordion">
-  This accordion is disabled.
-</Accordion>
-</div>
-`}
-  preview={
-    <div className="flex justify-center">
-      <div className="space-y-0 w-full max-w-xl">
-        <Accordion title="Enabled Accordion">
-          This accordion is enabled.
-        </Accordion>
 
-        <div className="opacity-60 grayscale cursor-not-allowed pointer-events-none">
-        <Accordion title="Disabled Accordion">
-          This accordion is disabled.
-        </Accordion>
-        </div>
-      </div>
+      {/* 4️⃣ DISABLED ACCORDION */}
+      <CodePreview
+        title="Disabled Accordion"
+        code={`<Accordion
+  items={[
+    { title: "Enabled", content: "Works normally" },
+    { title: "Disabled", content: "Won't open", disabled: true }
+  ]}
+/>`}
+        preview={
+          <div className="flex justify-center">
+            <Accordion
+              items={[
+                {
+                  title: "Enabled Accordion",
+                  content: "This accordion is enabled.",
+                },
+                {
+                  title: "Disabled Accordion",
+                  content: "This accordion is disabled.",
+                  disabled: true,
+                },
+              ]}
+            />
+          </div>
+        }
+      />
+
+      {/* 5️⃣ ACCORDION GROUP */}
+      <CodePreview
+        title="Accordion Group"
+        code={`<Accordion
+  items={[
+    { title: "Question 1", content: "Answer 1" },
+    { title: "Question 2", content: "Answer 2" },
+    { title: "Question 3", content: "Answer 3" }
+  ]}
+/>`}
+        preview={
+          <div className="flex justify-center">
+            <Accordion
+              items={[
+                {
+                  title: "Question 1",
+                  content: "Answer for question one.",
+                },
+                {
+                  title: "Question 2",
+                  content: "Answer for question two.",
+                },
+                {
+                  title: "Question 3",
+                  content: "Answer for question three.",
+                },
+              ]}
+            />
+          </div>
+        }
+      />
+
+      {/* 6️⃣ LONG CONTENT */}
+      <CodePreview
+        title="Accordion with Long Content"
+        code={`<Accordion
+  items={[
+    {
+      title: "Long Content",
+      content: "Long content goes here..."
+    }
+  ]}
+/>`}
+        preview={
+          <div className="flex justify-center">
+            <Accordion
+              items={[
+                {
+                  title: "Accordion with Long Content",
+                  content: (
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                      Ut enim ad minim veniam.
+                    </p>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        }
+      />
+
     </div>
-  }
-/>
-   
-   {/* 🔹 ACCORDION GROUP */}
-<CodePreview
-  title="Accordion Group"
-  code={`
-<Accordion title="Question 1">Answer 1</Accordion>
-<Accordion title="Question 2">Answer 2</Accordion>
-<Accordion title="Question 3">Answer 3</Accordion>
-`}
-  preview={
-    <div className="flex justify-center">
-      <div className="space-y-2 w-full max-w-xl">
-        <Accordion title="Question 1">
-          Answer for question one.
-        </Accordion>
-
-        <Accordion title="Question 2">
-          Answer for question two.
-        </Accordion>
-
-        <Accordion title="Question 3">
-          Answer for question three.
-        </Accordion>
-      </div>
-    </div>
-  }
-  
-/>
-{/* 🔹 LONG CONTENT ACCORDION */}
-<CodePreview
-  title="Accordion with Long Content"
-  code={`
-<Accordion title="accordion">
-  Long content goes here...
-</Accordion>
-`}
-  preview={
-    <div className="flex justify-center">
-      <div className="w-full max-w-xl">
-        <Accordion title="Accordion">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          commodo consequat.
-        </Accordion>
-      </div>
-    </div>
-  }
-/>
-</div>
-
   );
 }
