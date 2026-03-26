@@ -3,22 +3,23 @@ FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat python3 make g++ curl
 WORKDIR /app
 
 # Copy library package files
 COPY library/package*.json ./library/
 
-# Update npm to latest version and clear cache  
-RUN npm install -g npm@latest && npm cache clean --force
-
-# Try npm ci first, fallback to npm install if lockfile issues
-RUN cd library && (npm ci --verbose || (echo "npm ci failed, falling back to npm install" && rm -f package-lock.json && npm install))
+# Install dependencies with optimizations
+RUN cd library && npm ci --production && npm cache clean --force
 
 # Build stage
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/library/node_modules ./library/node_modules
+
+# Install build dependencies
+RUN apk add --no-cache libc6-compat python3 make g++
+COPY library/package*.json ./library/
+RUN cd library && npm ci
 COPY . .
 
 # Build the library
