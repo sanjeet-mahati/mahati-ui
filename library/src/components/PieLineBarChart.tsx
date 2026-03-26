@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import styled from "@emotion/styled";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -28,19 +27,6 @@ ChartJS.register(
   BarElement,
   Filler
 );
-
-/* ============================================================================
-   STYLED COMPONENTS
-   ============================================================================ */
-
-const ChartContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 /* ============================================================================
    TYPES
@@ -78,10 +64,10 @@ export interface PieLineBarChartProps {
    COMPONENT
    ============================================================================ */
 
-export const PieLineBarChart: React.FC<PieLineBarChartProps> = ({ 
-  chartType, 
-  data, 
-  options 
+export const PieLineBarChart: React.FC<PieLineBarChartProps> = ({
+  chartType,
+  data,
+  options,
 }) => {
   const defaultOptions: ChartOptions<any> = React.useMemo(() => {
     const isLineFamily = chartType === "line" || chartType === "area";
@@ -146,7 +132,11 @@ export const PieLineBarChart: React.FC<PieLineBarChartProps> = ({
     }
   };
 
-  return <ChartContainer>{renderChart()}</ChartContainer>;
+  return (
+    <div className="w-full h-full relative flex items-center justify-center">
+      {renderChart()}
+    </div>
+  );
 };
 
 PieLineBarChart.displayName = "PieLineBarChart";

@@ -1,0 +1,50 @@
+{
+  "name": "@mahatisystems/mahati-ui-components",
+  "version": "5.0.3",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:css": "postcss src/styles/index.css -o dist/styles.css",
+    "build": "npm run build:css && tsup",
+    "build:watch": "tsup src/index.ts --config tsup.config.ts --watch",
+    "start": "npm run build:watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "clean": "rimraf dist",
+    "yalc:pub": "npm run build && yalc publish",
+    "dev:yalc": "npm run yalc:pub && tsup src/index.ts --config tsup.config.ts --watch --onSuccess \"yalc publish --push\""
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "chart.js": "^4.5.1",
+    "lucide-react": "^0.563.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-icons": "^5.5.0"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "yalcSig": "c8708a895eb68f6994b94040bae354e6"
+}

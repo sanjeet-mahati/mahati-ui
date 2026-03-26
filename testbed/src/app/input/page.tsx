@@ -2,7 +2,7 @@
 
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import {MahatiFormContainer,MahatiInput} from "@/lib/index";
+import {MahatiFormContainer,MahatiInput} from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';
 

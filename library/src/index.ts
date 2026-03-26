@@ -1,5 +1,5 @@
 // Components
-// import './styles/index.css';
+ import './styles/index.css';
 
 // Accordion
 export { Accordion } from './components/accordion';
@@ -29,23 +29,44 @@ export type {
   MahatiSearchProps,
 } from './components/Filter';
 
-export { TabbedInterface as MahatiTabbedInterface } from './components/TabedInterface';
+export { TabbedInterface as MahatiTabbedInterface } from './components/TabbedInterface';
 export { Dropdown as MahatiDropdown } from './components/Dropdown';
 export { TableWithTab as MahatiTableWithTab } from './components/TableWithTab';
 export { Table as MahatiTable } from './components/Table';
 export { MahatiChartAnalyticsWidget } from './components/MahatiChartAnalyticsWidget';
+
 export { Tooltip as MahatiTooltip } from './components/Tooltip';
 export { ToastMessage as MahatiToastMessage } from './components/ToastMessage';
-export {  ConfettiExplosion as MahatiConfettiExplosion} from './components/ConfettiExplosion';
+export { ConfettiExplosion as MahatiConfettiExplosion } from './components/ConfettiExplosion';
 export { RealisticConfetti as MahatiRealisticConfetti } from './components/RealisticConfetti';
 
 // Spinner
 export * from './components/Spinner';
 
-// Type Exports
+// Calendar
 export { Calendar as MahatiCalendar } from './components/Calendar';
 export type { CalendarDate, CalendarTime, CalendarDateRange, CalendarProps } from './components/Calendar';
-export{SearchableDropdown as MahatiSearchableDropdown} from "./components/NestedDropdown";
-export{TexttoAudio as MahatiTexttoAudio} from "./components/TextToAudio";
 
-export { MahatiCameraAccessModal,MahatiLocationAccessModal,MahatiMicrophoneAccessModal,MahatiNotificationCard,MahatiPromotionModal as MahatiPromotionModal_V1,MahatiPromotionModalV2Modal as MahatiPromotionModal_V2, MahatiPromotionModalV3Modal as MahatiPromotionModal_V3   } from './components/Notifications';
+// NestedDropdown — all components
+export { SearchableDropdown as MahatiSearchableDropdown } from './components/NestedDropdown';
+export { MultiSelectDropdown as MahatiMultiSelectDropdown } from './components/NestedDropdown';
+export { CascadingDropdown as MahatiCascadingDropdown } from './components/NestedDropdown';
+export { GroupedDropdown as MahatiGroupedDropdown } from './components/NestedDropdown';
+export { AvatarDropdown as MahatiAvatarDropdown } from './components/NestedDropdown';
+export { AvatarMultiSelectDropdown as MahatiAvatarMultiSelectDropdown } from './components/NestedDropdown';
+export { AsyncDropdown as MahatiAsyncDropdown } from './components/NestedDropdown';
+export type { AvatarOption } from './components/NestedDropdown';
+
+// TextToAudio
+export { TexttoAudio as MahatiTexttoAudio } from './components/TextToAudio';
+
+// Notifications
+export {
+  MahatiCameraAccessModal,
+  MahatiLocationAccessModal,
+  MahatiMicrophoneAccessModal,
+  MahatiNotificationCard,
+  MahatiPromotionModal as MahatiPromotionModal_V1,
+  MahatiPromotionModalV2Modal as MahatiPromotionModal_V2,
+  MahatiPromotionModalV3Modal as MahatiPromotionModal_V3,
+} from './components/Notifications';

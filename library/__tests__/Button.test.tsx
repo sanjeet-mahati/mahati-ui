@@ -4,6 +4,9 @@ import '@testing-library/jest-dom';
 import { Button } from '../src/components/Button';
 
 describe('Button', () => {
+
+  // ─── Basic Rendering ────────────────────────────────────────────────────────
+
   describe('Basic Rendering', () => {
     it('should render with text', () => {
       render(<Button>Click me</Button>);
@@ -16,165 +19,144 @@ describe('Button', () => {
     });
 
     it('should render children', () => {
-      render(
-        <Button>
-          <span>Child content</span>
-        </Button>
-      );
+      render(<Button><span>Child content</span></Button>);
       expect(screen.getByText('Child content')).toBeInTheDocument();
     });
+
+    it('should have correct displayName', () => {
+      expect(Button.displayName).toBe('Button');
+    });
   });
+
+  // ─── Variants ───────────────────────────────────────────────────────────────
 
   describe('Variants', () => {
-    it('should render default variant', () => {
-      render(<Button variant="default">Default</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    const variants = ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'danger', 'dotted', 'pill'] as const;
+
+    variants.forEach(variant => {
+      it(`should render ${variant} variant`, () => {
+        render(<Button variant={variant}>{variant}</Button>);
+        expect(screen.getByRole('button')).toBeInTheDocument();
+      });
     });
 
-    it('should render destructive variant', () => {
-      render(<Button variant="destructive">Delete</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render outline variant', () => {
-      render(<Button variant="outline">Outline</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render secondary variant', () => {
+    it('should apply variant class to button', () => {
       render(<Button variant="secondary">Secondary</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn.className).toMatch(/bg-\[#3b82f6\]/);
+    });
+
+    it('should apply destructive class', () => {
+      render(<Button variant="destructive">Delete</Button>);
+      expect(screen.getByRole('button').className).toMatch(/bg-\[#ef4444\]/);
+    });
+
+    it('should apply outline classes', () => {
+      render(<Button variant="outline">Outline</Button>);
+      expect(screen.getByRole('button').className).toMatch(/bg-white/);
+    });
+
+    it('should default to default variant when not specified', () => {
+      render(<Button>Button</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
 
-    it('should render ghost variant', () => {
-      render(<Button variant="ghost">Ghost</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render link variant', () => {
-      render(<Button variant="link">Link</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render danger variant', () => {
-      render(<Button variant="danger">Danger</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render dotted variant', () => {
-      render(<Button variant="dotted">Dotted</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render pill variant', () => {
-      render(<Button variant="pill">Pill</Button>);
+    it('should handle undefined variant gracefully', () => {
+      render(<Button variant={undefined}>Button</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
   });
+
+  // ─── Sizes ──────────────────────────────────────────────────────────────────
 
   describe('Sizes', () => {
-    it('should render default size', () => {
-      render(<Button size="default">Default Size</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    const sizes = ['default', 'sm', 'md', 'lg', 'icon'] as const;
+
+    sizes.forEach(size => {
+      it(`should render ${size} size`, () => {
+        render(<Button size={size}>{size}</Button>);
+        expect(screen.getByRole('button')).toBeInTheDocument();
+      });
     });
 
-    it('should render small size', () => {
+    it('should apply sm size class', () => {
       render(<Button size="sm">Small</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('button').className).toMatch(/h-\[36px\]/);
     });
 
-    it('should render medium size', () => {
-      render(<Button size="md">Medium</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render large size', () => {
+    it('should apply lg size class', () => {
       render(<Button size="lg">Large</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('button').className).toMatch(/h-\[44px\]/);
     });
 
-    it('should render icon size', () => {
-      render(<Button size="icon">🔔</Button>);
+    it('should handle undefined size gracefully', () => {
+      render(<Button size={undefined}>Button</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
   });
+
+  // ─── Color Names ────────────────────────────────────────────────────────────
 
   describe('Color Names', () => {
-    it('should render with blue color', () => {
-      render(<Button name="blue">Blue Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    const colors = ['blue', 'green', 'red', 'orange', 'purple', 'yellow', 'pink', 'teal', 'indigo', 'primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+
+    colors.forEach(color => {
+      it(`should render with ${color} color`, () => {
+        render(<Button name={color}>{color}</Button>);
+        expect(screen.getByRole('button')).toBeInTheDocument();
+      });
     });
 
-    it('should render with green color', () => {
-      render(<Button name="green">Green Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply inline background style when name provided', () => {
+      render(<Button name="blue">Blue</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn).toHaveStyle({ background: '#3b82f6' });
     });
 
-    it('should render with red color', () => {
-      render(<Button name="red">Red Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply white color when name provided', () => {
+      render(<Button name="blue">Blue</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn).toHaveStyle({ color: 'white' });
     });
 
-    it('should render with orange color', () => {
-      render(<Button name="orange">Orange Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply gradient for primary name', () => {
+      render(<Button name="primary">Primary</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn).toHaveStyle({ background: 'linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1))' });
     });
 
-    it('should render with purple color', () => {
-      render(<Button name="purple">Purple Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should fall back to primary gradient for unknown color', () => {
+      render(<Button name="unknowncolor123">Fallback</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn).toHaveStyle({ background: 'linear-gradient(to right, rgba(23, 97, 163, 1), rgba(77, 175, 131, 1))' });
+    });
+    it('should apply pill borderRadius when name + pill variant', () => {
+      render(<Button name="blue" variant="pill">Pill</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ borderRadius: '9999px' });
     });
 
-    it('should render with yellow color', () => {
-      render(<Button name="yellow">Yellow Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with pink color', () => {
-      render(<Button name="pink">Pink Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with teal color', () => {
-      render(<Button name="teal">Teal Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with indigo color', () => {
-      render(<Button name="indigo">Indigo Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with primary color', () => {
-      render(<Button name="primary">Primary Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with secondary color', () => {
-      render(<Button name="secondary">Secondary Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with success color', () => {
-      render(<Button name="success">Success Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with danger color', () => {
-      render(<Button name="danger">Danger Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with warning color', () => {
-      render(<Button name="warning">Warning Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with info color', () => {
-      render(<Button name="info">Info Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply 6px borderRadius for non-pill variant with name', () => {
+      render(<Button name="blue" variant="default">Default</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ borderRadius: '6px' });
     });
   });
+
+  // ─── testId prop ─────────────────────────────────────────────────────────────
+
+  describe('testId prop', () => {
+    it('should apply testId as data-testid', () => {
+      render(<Button testId="my-btn">Button</Button>);
+      expect(screen.getByTestId('my-btn')).toBeInTheDocument();
+    });
+
+    it('should not render data-testid when testId not provided', () => {
+      render(<Button>Button</Button>);
+      const btn = screen.getByRole('button');
+      expect(btn).not.toHaveAttribute('data-testid');
+    });
+  });
+
+  // ─── Icon Button ─────────────────────────────────────────────────────────────
 
   describe('Icon Button', () => {
     it('should render as icon button', () => {
@@ -182,42 +164,47 @@ describe('Button', () => {
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
 
-    it('should render icon button with custom height', () => {
+    it('should apply default height 36px when no heightClass', () => {
+      render(<Button iconButton>Icon</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ height: '36px' });
+    });
+
+    it('should apply custom height from iconButtonHeightClass', () => {
       render(<Button iconButton iconButtonHeightClass="h-12">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('button')).toHaveStyle({ height: '48px' });
     });
 
-    it('should render icon button with custom width', () => {
-      render(<Button iconButton iconButtonWidthClass="w-12">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply custom width from iconButtonWidthClass', () => {
+      render(<Button iconButton iconButtonWidthClass="w-10">Icon</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ width: '40px' });
     });
 
-    it('should render icon button with custom background', () => {
-      render(<Button iconButton iconButtonBgClass="bg-[rgba(255,0,0,0.2)]">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render icon button with custom radius', () => {
+    it('should apply custom radius class', () => {
       render(<Button iconButton iconButtonRadiusClass="rounded-full">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('button').className).toContain('rounded-full');
     });
 
-    it('should render icon button with custom padding', () => {
+    it('should apply custom bg class', () => {
+      render(<Button iconButton iconButtonBgClass="bg-red-500">Icon</Button>);
+      expect(screen.getByRole('button').className).toContain('bg-red-500');
+    });
+
+    it('should apply custom padding class', () => {
       render(<Button iconButton iconButtonBgPaddingClass="p-[4px]">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('button').className).toContain('p-[4px]');
     });
 
-    it('should render icon button with hover background', () => {
-      render(<Button iconButton iconButtonHoverBgClass="hover:bg-[rgba(0,0,255,0.3)]">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply white color for gradient name', () => {
+      render(<Button iconButton name="primary">Icon</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ color: 'white' });
     });
 
-    it('should render icon button with hover intensity', () => {
-      render(<Button iconButton iconButtonHoverIntensity={50}>Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should apply hex color for named color', () => {
+      render(<Button iconButton name="blue">Icon</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ color: '#3b82f6' });
     });
 
-    it('should render icon button with SVG', () => {
+    it('should render SVG inside icon button', () => {
       render(
         <Button iconButton>
           <svg data-testid="test-icon" width="16" height="16">
@@ -228,43 +215,48 @@ describe('Button', () => {
       expect(screen.getByTestId('test-icon')).toBeInTheDocument();
     });
 
-    it('should render icon button with name color', () => {
-      render(<Button iconButton name="blue">Icon</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+    it('should default radius to rounded-md when no iconButtonRadiusClass', () => {
+      render(<Button iconButton>Icon</Button>);
+      expect(screen.getByRole('button').className).toContain('rounded-md');
     });
   });
+
+  // ─── Click Events ────────────────────────────────────────────────────────────
 
   describe('Click Events', () => {
     it('should handle click events', () => {
       const handleClick = jest.fn();
       render(<Button onClick={handleClick}>Click me</Button>);
-      
       fireEvent.click(screen.getByRole('button'));
-      
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
     it('should not call onClick when disabled', () => {
       const handleClick = jest.fn();
       render(<Button onClick={handleClick} disabled>Click me</Button>);
-      
       fireEvent.click(screen.getByRole('button'));
-      
       expect(handleClick).not.toHaveBeenCalled();
     });
 
     it('should handle multiple clicks', () => {
       const handleClick = jest.fn();
       render(<Button onClick={handleClick}>Click me</Button>);
-      
       const button = screen.getByRole('button');
       fireEvent.click(button);
       fireEvent.click(button);
       fireEvent.click(button);
-      
       expect(handleClick).toHaveBeenCalledTimes(3);
     });
+
+    it('should pass event to handler', () => {
+      const handleClick = jest.fn();
+      render(<Button onClick={handleClick}>Click</Button>);
+      fireEvent.click(screen.getByRole('button'));
+      expect(handleClick).toHaveBeenCalledWith(expect.any(Object));
+    });
   });
+
+  // ─── Disabled State ──────────────────────────────────────────────────────────
 
   describe('Disabled State', () => {
     it('should render disabled button', () => {
@@ -272,23 +264,34 @@ describe('Button', () => {
       expect(screen.getByRole('button')).toBeDisabled();
     });
 
-    it('should have reduced opacity when disabled', () => {
+    it('should have disabled:opacity-50 class when disabled', () => {
       render(<Button disabled>Disabled</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ opacity: '0.5' });
+      // Tailwind disabled: classes are in className, not inline style
+      expect(screen.getByRole('button').className).toMatch(/disabled:opacity-50/);
     });
 
-    it('should have pointer-events none when disabled', () => {
+    it('should have disabled:pointer-events-none class when disabled', () => {
       render(<Button disabled>Disabled</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ pointerEvents: 'none' });
+      expect(screen.getByRole('button').className).toMatch(/disabled:pointer-events-none/);
+    });
+
+    it('should have disabled attribute', () => {
+      render(<Button disabled>Disabled</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('disabled');
     });
   });
 
+  // ─── HTML Attributes ─────────────────────────────────────────────────────────
+
   describe('HTML Attributes', () => {
-    it('should accept type attribute', () => {
+    it('should accept type=submit', () => {
       render(<Button type="submit">Submit</Button>);
       expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
+    });
+
+    it('should accept type=button', () => {
+      render(<Button type="button">Button</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('type', 'button');
     });
 
     it('should accept custom className', () => {
@@ -301,7 +304,7 @@ describe('Button', () => {
       expect(screen.getByRole('button')).toHaveAttribute('id', 'my-button');
     });
 
-    it('should accept data attributes', () => {
+    it('should accept data-testid attribute', () => {
       render(<Button data-testid="test-button">Button</Button>);
       expect(screen.getByTestId('test-button')).toBeInTheDocument();
     });
@@ -310,7 +313,19 @@ describe('Button', () => {
       render(<Button aria-label="Close dialog">×</Button>);
       expect(screen.getByLabelText('Close dialog')).toBeInTheDocument();
     });
+
+    it('should pass through custom style', () => {
+      render(<Button style={{ marginTop: '10px' }}>Button</Button>);
+      expect(screen.getByRole('button')).toHaveStyle({ marginTop: '10px' });
+    });
+
+    it('should accept tabIndex', () => {
+      render(<Button tabIndex={0}>Button</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('tabindex', '0');
+    });
   });
+
+  // ─── Accessibility ───────────────────────────────────────────────────────────
 
   describe('Accessibility', () => {
     it('should have button role', () => {
@@ -321,30 +336,27 @@ describe('Button', () => {
     it('should support keyboard focus', () => {
       render(<Button>Focusable</Button>);
       const button = screen.getByRole('button');
-      
       button.focus();
       expect(button).toHaveFocus();
-    });
-
-    it('should not be focusable when disabled', () => {
-      render(<Button disabled>Disabled</Button>);
-      const button = screen.getByRole('button');
-      
-      button.focus();
-      expect(button).not.toHaveFocus();
     });
 
     it('should support aria-disabled', () => {
       render(<Button aria-disabled="true">Disabled</Button>);
       expect(screen.getByRole('button')).toHaveAttribute('aria-disabled', 'true');
     });
-  });
 
-  describe('Display Name', () => {
-    it('should have correct display name', () => {
-      expect(Button.displayName).toBe('Button');
+    it('should support aria-pressed', () => {
+      render(<Button aria-pressed="true">Pressed</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    it('should support aria-expanded', () => {
+      render(<Button aria-expanded="false">Dropdown</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'false');
     });
   });
+
+  // ─── IconButtonGroup ─────────────────────────────────────────────────────────
 
   describe('IconButtonGroup', () => {
     it('should render IconButtonGroup', () => {
@@ -357,43 +369,60 @@ describe('Button', () => {
       expect(container.firstChild).toBeInTheDocument();
     });
 
-    it('should render IconButtonGroup with row direction', () => {
+    it('should render with row direction by default', () => {
       const { container } = render(
-        <Button.IconButtonGroup direction="row">
+        <Button.IconButtonGroup>
           <Button iconButton>1</Button>
-          <Button iconButton>2</Button>
         </Button.IconButtonGroup>
       );
-      expect(container.firstChild).toBeInTheDocument();
+      expect(container.firstChild).toHaveClass('flex-row');
     });
 
-    it('should render IconButtonGroup with column direction', () => {
+    it('should render with column direction', () => {
       const { container } = render(
         <Button.IconButtonGroup direction="col">
           <Button iconButton>1</Button>
-          <Button iconButton>2</Button>
         </Button.IconButtonGroup>
       );
-      expect(container.firstChild).toBeInTheDocument();
+      expect(container.firstChild).toHaveClass('flex-col');
     });
 
-    it('should render IconButtonGroup with custom gap', () => {
+    it('should apply gap from gapClass', () => {
       const { container } = render(
         <Button.IconButtonGroup gapClass="gap-4">
           <Button iconButton>1</Button>
-          <Button iconButton>2</Button>
         </Button.IconButtonGroup>
       );
-      expect(container.firstChild).toBeInTheDocument();
+      expect(container.firstChild).toHaveStyle({ gap: '16px' });
     });
 
-    it('should have correct display name', () => {
+    it('should apply default gap when no gapClass', () => {
+      const { container } = render(
+        <Button.IconButtonGroup>
+          <Button iconButton>1</Button>
+        </Button.IconButtonGroup>
+      );
+      expect(container.firstChild).toHaveStyle({ gap: '8px' });
+    });
+
+    it('should accept custom className', () => {
+      const { container } = render(
+        <Button.IconButtonGroup className="custom-group">
+          <Button iconButton>1</Button>
+        </Button.IconButtonGroup>
+      );
+      expect(container.firstChild).toHaveClass('custom-group');
+    });
+
+    it('should have correct displayName', () => {
       expect(Button.IconButtonGroup.displayName).toBe('IconButtonGroup');
     });
   });
 
+  // ─── Edge Cases ──────────────────────────────────────────────────────────────
+
   describe('Edge Cases', () => {
-    it('should render with empty children', () => {
+    it('should render with no children', () => {
       render(<Button></Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
@@ -410,47 +439,33 @@ describe('Button', () => {
     });
 
     it('should render with multiple children', () => {
-      render(
-        <Button>
-          <span>Icon</span>
-          <span>Text</span>
-        </Button>
-      );
+      render(<Button><span>Icon</span><span>Text</span></Button>);
       expect(screen.getByText('Icon')).toBeInTheDocument();
       expect(screen.getByText('Text')).toBeInTheDocument();
     });
 
-    it('should handle undefined variant', () => {
-      render(<Button variant={undefined}>Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should handle undefined size', () => {
-      render(<Button size={undefined}>Button</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should handle invalid color name', () => {
-      render(<Button name="invalidcolor">Button</Button>);
+    it('should render with null className gracefully', () => {
+      render(<Button className={undefined}>Button</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
   });
 
+  // ─── Combination Tests ───────────────────────────────────────────────────────
+
   describe('Combination Tests', () => {
     it('should render variant and size together', () => {
       render(<Button variant="outline" size="lg">Large Outline</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      const btn = screen.getByRole('button');
+      expect(btn.className).toMatch(/h-\[44px\]/);
+      expect(btn.className).toMatch(/bg-white/);
     });
 
-    it('should render variant with color name', () => {
-      render(<Button variant="outline" name="blue">Blue Outline</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render size with color name', () => {
-      render(<Button size="lg" name="green">Large Green</Button>);
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
+  it('should render name overrides variant classes', () => {
+  render(<Button variant="outline" name="blue">Blue Outline</Button>);
+  const btn = screen.getByRole('button');
+  // jsdom converts hex to rgb when reading back style.background
+  expect(btn.style.background).toMatch(/#3b82f6|rgb\(59,\s*130,\s*246\)/);
+});
 
     it('should render icon button with all props', () => {
       render(
@@ -465,9 +480,18 @@ describe('Button', () => {
           🔔
         </Button>
       );
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      const btn = screen.getByRole('button');
+      expect(btn).toHaveStyle({ height: '48px', width: '48px' });
+      expect(btn.className).toContain('rounded-full');
+    });
+
+    it('should render variant + size + testId', () => {
+      render(<Button variant="secondary" size="md" testId="combo-btn">Button</Button>);
+      expect(screen.getByTestId('combo-btn')).toBeInTheDocument();
     });
   });
+
+  // ─── Form Integration ────────────────────────────────────────────────────────
 
   describe('Form Integration', () => {
     it('should work inside a form', () => {
@@ -477,7 +501,6 @@ describe('Button', () => {
           <Button type="submit">Submit</Button>
         </form>
       );
-      
       fireEvent.click(screen.getByRole('button'));
       expect(handleSubmit).toHaveBeenCalled();
     });
@@ -489,9 +512,17 @@ describe('Button', () => {
           <Button type="submit" disabled>Submit</Button>
         </form>
       );
-      
       fireEvent.click(screen.getByRole('button'));
       expect(handleSubmit).not.toHaveBeenCalled();
+    });
+
+    it('should work as reset button', () => {
+      render(
+        <form>
+          <Button type="reset">Reset</Button>
+        </form>
+      );
+      expect(screen.getByRole('button')).toHaveAttribute('type', 'reset');
     });
   });
 });

@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@mahatisystems/mahati-ui-components": {
+      "signature": "c8708a895eb68f6994b94040bae354e6",
+      "file": true,
+      "replaced": "^5.0.3"
+    }
+  }
+}

@@ -4,10 +4,13 @@ import { cookies } from 'next/headers';
 
 import ContextProvider from '@/navigation/context-provider';
 
+import '@mahatisystems/mahati-ui-components/styles';
+
 import '../styles/globals.css';
 import SideNav from '@/navigation/sidebar/leftsidenavigation/sidenav';
 import Header from '../navigation/header/header';
 import Footer from '../navigation/footer/footer';
+import FloatingBetaBadge from '@/components/FloatingBetaBadge';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,6 +51,8 @@ export default async function RootLayout({
               </div>
             </div>
           </div>
+
+          <FloatingBetaBadge />
         </ContextProvider>
       </body>
     </html>

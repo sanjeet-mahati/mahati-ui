@@ -12,7 +12,7 @@ import {
   FiChevronUp,
   FiChevronDown,
 } from "react-icons/fi";
-import { MahatiButton } from "@/lib/index";;
+import { MahatiButton } from "@mahatisystems/mahati-ui-components";;
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 

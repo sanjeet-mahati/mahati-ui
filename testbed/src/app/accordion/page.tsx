@@ -1,9 +1,8 @@
 "use client";
 
-import { Accordion } from "@/components/accordion";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
-
+import { MahatiButton as Accordion} from "@mahatisystems/mahati-ui-components";;
 export default function AccordionPage() {
   const accordionProps = [
 

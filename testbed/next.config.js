@@ -8,6 +8,7 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       '@/components': path.join(__dirname, '../library/src/components'),
+          '@/styles': path.join(__dirname, '../library/src/styles'),
     },
   },
 };

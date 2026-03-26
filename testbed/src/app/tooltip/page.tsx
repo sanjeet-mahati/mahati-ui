@@ -7,7 +7,7 @@ import {
   ExclamationTriangleIcon,
   SparklesIcon
 } from "@heroicons/react/24/solid";
-import {MahatiTooltip,MahatiConfettiExplosion,MahatiRealisticConfetti} from '@/lib/index';
+import {MahatiTooltip,MahatiConfettiExplosion,MahatiRealisticConfetti} from '@mahatisystems/mahati-ui-components';
 
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';

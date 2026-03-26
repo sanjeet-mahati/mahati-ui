@@ -3,8 +3,8 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {MahatiTable} from '@/lib/index';
-import {MahatiButton} from '@/lib/index';
+import {MahatiTable} from '@mahatisystems/mahati-ui-components';
+import {MahatiButton} from '@mahatisystems/mahati-ui-components';
 import { CodePreview } from '../CodePreview';
 
 

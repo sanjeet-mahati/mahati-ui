@@ -2,7 +2,7 @@
 
 import React from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
-import {MahatiTabbedInterface} from '@/lib/index';
+import {MahatiTabbedInterface} from '@mahatisystems/mahati-ui-components';
 import { CodePreview } from '../CodePreview';
 
 interface Tab {

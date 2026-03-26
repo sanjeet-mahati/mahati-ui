@@ -10,7 +10,7 @@ import {
   MahatiSearch,
   MahatiCalendar,
   CalendarDate,
-} from "@/lib/index";
+} from "@mahatisystems/mahati-ui-components";
 
 export default function FilterPage() {
   const [open, setOpen] = useState(false);

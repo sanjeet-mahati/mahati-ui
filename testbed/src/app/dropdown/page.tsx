@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { MahatiDropdown } from "@/lib/index";
+import { MahatiDropdown } from "@mahatisystems/mahati-ui-components";
 import { CodePreview } from '../CodePreview';
 import { PropsTable } from '../PropsTable';
-import { SearchableDropdownPage } from "./nesteddropdown/nestedropdowndemo";
+import SearchableDropdownPage from "./nesteddropdown/nestedropdowndemo";
 
 const dropdownProps = [
   {
