@@ -1,224 +1,179 @@
- // components/RealisticConfetti.tsx
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-
-export interface RealisticConfettiProps {
-  isActive?: boolean;
+export interface ConfettiExplosionProps {
+  isActive: boolean;
   particleCount?: number;
   duration?: number;
   colors?: string[];
-  explosionForce?: number;
-  wind?: number;
-  testId?:string;
+  force?: number;
+  particleSize?: number;
+  stageHeight?: number;
+  testId?: string;
 }
 
-interface ConfettiParticle {
+interface Particle {
   id: number;
+  color: string;
+  size: number;
+  shape: "circle" | "rectangle" | "star";
+  rotation: number;
+  rotationSpeed: number;
   x: number;
   y: number;
   vx: number;
   vy: number;
-  rotation: number;
-  rotationSpeed: number;
-  color: string;
-  size: number;
-  shape: number;
   gravity: number;
-  drag: number;
+  opacity: number;
   life: number;
-  opacity: number;
+  delay: number;
 }
 
-interface ParticleStyleProps {
-  x: number;
-  y: number;
-  size: number;
-  color: string;
-  rotation: number;
-  opacity: number;
-  shape: number;
-}
-
-const Container = styled.div`
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 50;
-  overflow: hidden;
-  height: 100vh;
-`;
-
-const getShapeStyles = (shape: number, color: string) => {
-  switch (shape) {
-    case 0: // Rectangle
-      return css`
-        background-color: ${color};
-        border-radius: 2px;
-      `;
-    case 1: // Circle
-      return css`
-        background-color: ${color};
-        border-radius: 50%;
-      `;
-    case 2: // Star
-      return css`
-        background-color: transparent;
-        background: conic-gradient(from 0deg at 50% 50%, 
-          ${color} 0deg 72deg, 
-          transparent 72deg 144deg,
-          ${color} 144deg 216deg,
-          transparent 216deg 288deg,
-          ${color} 288deg 360deg);
-        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      `;
-    default:
-      return css``;
-  }
-};
-
-const ParticleElement = styled.div<ParticleStyleProps>`
-  position: absolute;
-  left: ${props => props.x}%;
-  top: ${props => props.y}%;
-  width: ${props => props.size}px;
-  height: ${props => props.size}px;
-  opacity: ${props => props.opacity};
-  transform: rotate(${props => props.rotation}deg);
-  transform-origin: center;
-  will-change: transform, opacity;
-  
-  ${props => getShapeStyles(props.shape, props.color)}
-`;
-
-const createParticles = (count: number, force: number, wind: number, colors: string[]): ConfettiParticle[] => {
-  return Array.from({ length: count }, (_, i) => {
-    const angle = (Math.random() * Math.PI / 2) + (Math.PI / 4); // 45-135 degrees
-    const speed = Math.random() * force + force * 0.5;
-    const fromLeft = Math.random() > 0.5;
-    const startX = fromLeft ? -10 : 110; // Start from outside screen
-    
-    return {
-      id: i,
-      x: startX,
-      y: 100,
-      vx: Math.cos(angle) * speed * (fromLeft ? 1 : -1) + (Math.random() - 0.5) * wind,
-      vy: -Math.sin(angle) * speed - 2,
-      rotation: Math.random() * 360,
-      rotationSpeed: (Math.random() - 0.5) * 20,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      size: Math.random() * 10 + 5,
-      shape: Math.floor(Math.random() * 3),
-      gravity: 0.3 + Math.random() * 0.2,
-      drag: 0.98 + Math.random() * 0.02,
-      life: 1,
-      opacity: 1
-    };
-  });
-};
-
-const RealisticConfetti: React.FC<RealisticConfettiProps> = ({
-  isActive = true,
+const RealisticConfetti: React.FC<ConfettiExplosionProps> = ({
   testId,
-  particleCount = 200,
-  duration = 5000,
+  isActive,
+  particleCount = 150,
+  duration = 4000,
   colors = [
-    "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD",
-    "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E9", "#F8C471", "#82E0AA"
+    "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
+    "#FF8000", "#8000FF", "#FF0080", "#80FF00", "#0080FF", "#FF8080",
   ],
-  explosionForce = 8,
-  wind = 0.2
+  force = 0.5,
+  particleSize = 8,
+  stageHeight = 800,
 }) => {
-  const [particles, setParticles] = useState<ConfettiParticle[]>(() => 
-    isActive ? createParticles(particleCount, explosionForce, wind, colors) : []
-  );
-  const animationRef = useRef<number | undefined>(undefined);
-  const startTimeRef = useRef<number | undefined>(undefined);
-  
-  // ✅ CRITICAL FIX: Memoize colors to prevent infinite loop
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const animationFrameRef = useRef<number | undefined>(undefined);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // Memoize colors to prevent infinite re-render loop
   const stableColors = useMemo(() => colors, [JSON.stringify(colors)]);
 
   useEffect(() => {
     if (isActive) {
-      const newParticles = createParticles(particleCount, explosionForce, wind, stableColors);
+      const newParticles: Particle[] = Array.from({ length: particleCount }, (_, i) => {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 5 + 5) * force;
+        const fromLeft = Math.random() > 0.5;
+        const startX = fromLeft ? 0 : 100;
+
+        return {
+          id: i,
+          color: stableColors[Math.floor(Math.random() * stableColors.length)],
+          size: Math.random() * particleSize + particleSize / 2,
+          shape: (["circle", "rectangle", "star"] as const)[Math.floor(Math.random() * 3)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 10,
+          x: startX,
+          y: 100,
+          vx: Math.cos(angle) * speed * (fromLeft ? 1 : -1),
+          vy: -Math.sin(angle) * speed - 2,
+          gravity: 0.1 + Math.random() * 0.1,
+          opacity: 1,
+          life: 1,
+          delay: Math.random() * 300,
+        };
+      });
+
       setParticles(newParticles);
-      startTimeRef.current = Date.now();
 
-      const animate = () => {
-        const currentTime = Date.now();
-        const elapsed = currentTime - (startTimeRef.current || currentTime);
+      let startTime: number;
 
-        setParticles(prevParticles => {
-          return prevParticles.map(particle => {
-            const life = Math.max(0, 1 - elapsed / duration);
-            
-            if (life <= 0) return particle;
+      const animate = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
 
-            // Physics update
-            let vx = particle.vx * particle.drag;
-            let vy = particle.vy + particle.gravity;
-            const x = particle.x + vx;
-            const y = particle.y + vy;
-
-            // Bounce on bottom
-            if (y >= 100 && vy > 0) {
-              vy = -vy * 0.6; // Bounce with energy loss
-              vx = vx * 0.8; // Slow down on bounce
-            }
-
-            return {
-              ...particle,
-              x,
-              y,
-              vx,
-              vy,
-              rotation: particle.rotation + particle.rotationSpeed,
-              life,
-              opacity: life
-            };
-          }).filter(particle => particle.life > 0);
-        });
+        setParticles((prevParticles) =>
+          prevParticles
+            .map((particle) => {
+              if (elapsed < particle.delay) return particle;
+              const life = Math.max(0, 1 - (elapsed - particle.delay) / duration);
+              if (life <= 0) return particle;
+              return {
+                ...particle,
+                x: particle.x + particle.vx * 0.5,
+                y: particle.y + particle.vy * 0.5,
+                vy: particle.vy + particle.gravity,
+                rotation: particle.rotation + particle.rotationSpeed,
+                opacity: life,
+                life,
+              };
+            })
+            .filter((p) => p.life > 0)
+        );
 
         if (elapsed < duration) {
-          animationRef.current = requestAnimationFrame(animate);
+          animationFrameRef.current = requestAnimationFrame(animate);
         }
       };
 
-      animationRef.current = requestAnimationFrame(animate);
+      animationFrameRef.current = requestAnimationFrame(animate);
+
+      timerRef.current = setTimeout(() => {
+        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        setParticles([]);
+      }, duration + 500);
 
       return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
+        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
       };
     } else {
       setParticles([]);
     }
-  }, [isActive, particleCount, duration, stableColors, explosionForce, wind]);
-
+  }, [isActive, particleCount, duration, stableColors, force, particleSize]);
 
   if (!isActive || particles.length === 0) return null;
 
   return (
-    <Container data-testid={testId}>
-      {particles.map((particle) => (
-        <ParticleElement
-          key={particle.id}
-          x={particle.x}
-          y={particle.y}
-          size={particle.size}
-          color={particle.color}
-          rotation={particle.rotation}
-          opacity={particle.opacity}
-          shape={particle.shape}
-        />
-      ))}
-    </Container>
+    // Container: was styled.div with stageHeight prop
+    <div
+      data-testid={testId}
+      className="fixed inset-0 pointer-events-none z-50 overflow-hidden"
+      style={{ height: `${stageHeight}px` }}
+    >
+      {particles.map((particle) => {
+        // All dynamic per-frame values go in as CSS custom properties.
+        // Tailwind v4 arbitrary classes [var(--x)] then reference them.
+        const starGradient =
+          particle.shape === "star"
+            ? `conic-gradient(from 0deg, ${particle.color} 0% 20%, transparent 20% 40%, ${particle.color} 40% 60%, transparent 60% 80%, ${particle.color} 80% 100%)`
+            : undefined;
+
+        return (
+          <div
+            key={particle.id}
+            className={[
+              "absolute",
+              "origin-center",
+              // Shape-specific static classes
+              particle.shape === "circle" ? "rounded-full" : "",
+              particle.shape === "rectangle" ? "rounded-[2px]" : "",
+              // Star uses clip-path via inline style (cannot be a static Tailwind class)
+            ].join(" ")}
+            style={{
+              // Dynamic values as CSS custom properties — picked up by arbitrary Tailwind classes
+              left: `${particle.x}%`,
+              bottom: `${particle.y}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              opacity: particle.opacity,
+              transform: `rotate(${particle.rotation}deg)`,
+              backgroundColor:
+                particle.shape === "star" ? "transparent" : particle.color,
+              ...(particle.shape === "star" && {
+                background: starGradient,
+                clipPath:
+                  "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
+              }),
+            }}
+          />
+        );
+      })}
+    </div>
   );
 };
 
-RealisticConfetti.displayName = 'RealisticConfetti';
+RealisticConfetti.displayName = "RealisticConfetti";
 export { RealisticConfetti };

@@ -1,225 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+
 import { ChevronDown, X, Loader2 } from "lucide-react";
 
 /* ===================== SHARED STYLES ===================== */
-export const PreviewWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-const GDContainer = styled.div`
-  position: relative;
-  width: 100%;
-`;
 
-const GDLabel = styled.label`
-  font-size: 12px;
-  font-weight: 600;
-  color: #1761a3;
-  margin-bottom: 8px;
-  display: block;
-`;
-
-const GDButton = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: none;
-
-  background: linear-gradient(
-    to right,
-    rgba(23, 97, 163, 1),
-    rgba(77, 175, 131, 1)
-  );
-
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const GDDropdown = styled.div`
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid rgba(23, 97, 163, 0.3);
-  z-index: 100;
-`;
-
-const GDGroup = styled.div`
-  padding: 12px;
-  
-`;
-
-const GDParent = styled.div`
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const GDChild = styled.label`
-  margin-left: 22px;
-  display: flex;
-  gap: 8px;
-  font-size: 14px;
-  margin-top: 6px;
-`;
-export const PreviewCard = styled.div`
-  width: 100%;
-  max-width: 320px;
-  padding: 16px;
-
-  background: linear-gradient(
-    to bottom,
-    #e8f0f6,
-    #ecf6f3
-  );
-
-  border: 1px solid rgba(23, 97, 163, 0.35);
-  border-radius: 8px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-const Wrapper = styled.div`
-  position: relative;
-  max-width: 100%;
-  width:320px;
-  margin:0 auto;
-`;
-
-const Label = styled.label`
-  font-size: 12px;
-  font-weight: 600;
-  color: #1761a3;
-  margin-bottom: 8px;
-  display: block;
-  
-`;
-
-const Button = styled.button<{ disabled?: boolean }>`
-  width: 100%;
-  - max width:320px;
-  +max width:320px;
-
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(to right, #1761a3, #4daf83);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-const Card = styled.div`
-  width: 360px;
-  margin: 40px auto;
-  padding: 24px;
-  border: 1px solid #cde3f1;
-  border-radius: 14px;
-  background: #fff;
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid rgba(77, 175, 131, 0.4);
-`;
-
-const SearchBox = styled.div`
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  position: relative;
-
-  input {
-    width: 100%;
-    height: 36px;
-    padding: 8px 36px 8px 12px;
-    border-radius: 6px;
-    border: 1px solid rgba(23, 97, 163, 0.3);
-    outline: none;
-  }
-`;
-
-const ClearBtn = styled.button`
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: none;
-  background: #9ca3af;
-  color: white;
-  cursor: pointer;
-  padding:0;
-  line-height:1;
-`;
-
-const Options = styled.div`
-  max-height: 220px;
-  overflow-y: auto;
-`;
-
-const Option = styled.div<{ active?: boolean }>`
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  background: ${({ active }) => (active ? "#e6f3ef" : "transparent")};
-
-  &:hover {
-    background: #f1f5f9;
-  }
-`;
-
-const Empty = styled.div`
-  padding: 12px;
-  color: #9ca3af;
-
-`
-const Tags = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-`;
-
-const Tag = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  background: white;
-  border: 1px solid #cde3f1;
-  border-radius: 10px;
-  font-size: 13px;
-
-  svg {
-    cursor: pointer;
-  }
-`;
-;
 
 export function SearchableDropdown({
   label,
@@ -244,46 +30,75 @@ export function SearchableDropdown({
     o.label.toLowerCase().includes(search.toLowerCase())
   );
 
-  return (
-    <Wrapper ref={ref}
-      data-testid={testId}>
-      {label && <Label>{label}</Label>}
+ return (
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    {label && (
+      <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+        {label}
+      </label>
+    )}
 
-      <Button onClick={() => setOpen(o => !o)}
-      
-        >
-        {(options??[]).find((o: any) => o.value === value)?.label || placeholder}
-        <ChevronDown size={16} />
-      </Button>
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="w-full flex justify-between items-center px-4 py-3 rounded-[8px] 
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white font-semibold"
+    >
+      {(options ?? []).find((o: any) => o.value === value)?.label || placeholder}
+      <ChevronDown size={16} />
+    </button>
 
-      {open && (
-        <Dropdown>
-          <SearchBox>
-            <input placeholder="search.." value={search} onChange={e => setSearch(e.target.value)} />
-            {search && <ClearBtn onClick={() => setSearch("")}>✕</ClearBtn>}
-          </SearchBox>
+    {open && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white rounded-[12px]
+        border border-[rgba(23,97,163,0.3)] z-[100]"
+      >
+        <div className="p-3 border-b border-[#e5e7eb] relative">
+          <input
+            placeholder="search.."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full h-[36px] px-3 pr-9 border rounded-[6px]
+            border-[rgba(23,97,163,0.3)] outline-none"
+          />
 
-          <Options>
-            {filtered.map((o: any) => (
-              <Option
-               
-                key={o.value}
-                onClick={() => {
-                  onChange(o.value);
-                  setOpen(false);
-                  setSearch("");
-                }}
-              >
-                {o.label}
-              </Option>
-            ))}
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-[15px] top-1/2 -translate-y-1/2
+              w-[22px] h-[22px] rounded-full bg-[#9ca3af] text-white"
+            >
+              ✕
+            </button>
+          )}
+        </div>
 
-            {filtered.length === 0 && <Empty>No results</Empty>}
-          </Options>
-        </Dropdown>
-      )}
-    </Wrapper>
-  );
+        <div className="max-h-[220px] overflow-y-auto">
+          {filtered.map((o: any) => (
+            <div
+              key={o.value}
+              onClick={() => {
+                onChange(o.value);
+                setOpen(false);
+                setSearch("");
+              }}
+              className="px-4 py-[10px] text-[14px] cursor-pointer hover:bg-[#f1f5f9]"
+            >
+              {o.label}
+            </div>
+          ))}
+
+          {filtered.length === 0 && (
+            <div className="p-3 text-[#9ca3af]">No results</div>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
 export function MultiSelectDropdown({
   label = "Multi Select",
@@ -328,63 +143,104 @@ export function MultiSelectDropdown({
     o.label.toLowerCase().includes(search.toLowerCase())
   );
 
-  return (
-    <Wrapper ref={ref}
+ return (
+  <div
+    ref={ref}
     data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+      {label}
+    </label>
+
+    {/* BUTTON */}
+    <button
+      onClick={() => setOpen(!open)}
+      className="w-full flex justify-between items-center px-4 py-3 rounded-[8px]
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white font-semibold"
     >
-  <Label>{label}</Label>
+      {values.length === 0 ? "Multi Select" : "Multi Select"}
+      <ChevronDown size={16} />
+    </button>
 
-  {/* BUTTON — only text + arrow */}
-  <Button  onClick={() => setOpen(!open)}>
-    {values.length === 0 ? "Multi Select" : "Multi Select"}
-    <ChevronDown size={16} />
-  </Button>
+    {/* TAGS */}
+    {values.length > 0 && (
+      <div className="flex flex-wrap gap-2 mt-3">
+        {values.map((val) => {
+          const lbl = options.find(o => o.value === val)?.label;
 
-  {/* TAGS — OUTSIDE BUTTON */}
-  {values.length > 0 && (
-    <Tags>
-      {values.map((val) => {
-        const lbl = options.find(o => o.value === val)?.label;
-       
-       
-        return (
-          <Tag >
-            {lbl}
-            <X size={14} onClick={() => removeValue(val)} />
-          </Tag>
-        );
-      })}
-    </Tags>
-  )}
+          return (
+            <div
+              key={val}
+              className="flex items-center gap-[6px] px-[10px] py-[6px]
+              bg-white border border-[#cde3f1] rounded-[10px] text-[13px]"
+            >
+              {lbl}
+              <X
+                size={14}
+                className="cursor-pointer"
+                onClick={() => removeValue(val)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    )}
 
-  {open && (
-    <Dropdown>
-      <SearchBox>
-        <input 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search..."
-        />
-        {search && <ClearBtn onClick={() => setSearch("")}>✕</ClearBtn>}
-      </SearchBox>
+    {open && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(77,175,131,0.4)] z-[100]"
+      >
+        {/* SEARCH */}
+        <div className="p-3 border-b border-[#e5e7eb] relative">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search..."
+            className="w-full h-[36px] px-3 pr-9 border rounded-[6px]
+            border-[rgba(23,97,163,0.3)] outline-none"
+          />
 
-      <Option>
-        {filteredOptions.map((opt) => (
-          <Option
-            key={opt.value}
-            active={values.includes(opt.value)}
-            onClick={() => toggleValue(opt.value)}
-          >
-            <input type="checkbox" checked={values.includes(opt.value)} readOnly />
-            {opt.label}
-          </Option>
-        ))}
-        {filteredOptions.length === 0 && <Empty>No results</Empty>}
-      </Option>
-    </Dropdown>
-  )}
-</Wrapper>
-  );
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-[15px] top-1/2 -translate-y-1/2
+              w-[22px] h-[22px] rounded-full bg-[#9ca3af] text-white"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* OPTIONS */}
+        <div className="max-h-[220px] overflow-y-auto">
+          {filteredOptions.map((opt) => (
+            <div
+              key={opt.value}
+              onClick={() => toggleValue(opt.value)}
+              className={`px-4 py-[10px] text-[14px] flex items-center gap-2 cursor-pointer
+              hover:bg-[#f1f5f9] ${
+                values.includes(opt.value) ? "bg-[#e6f3ef]" : ""
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={values.includes(opt.value)}
+                readOnly
+              />
+              {opt.label}
+            </div>
+          ))}
+
+          {filteredOptions.length === 0 && (
+            <div className="p-3 text-[#9ca3af]">No results</div>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
 
 type CascadeOption = {
@@ -474,77 +330,96 @@ export function CascadingDropdown({
     value.level1 ||
     "Select location";
 
-  return (
-    <Wrapper ref={ref}
-    data-testid={testId}>
-      <Label>{label}</Label>
+return (
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+      {label}
+    </label>
 
-      <Button onClick={() => setOpen(o => !o)}>
-        {displayText}
-        <ChevronDown size={16} />
-      </Button>
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="w-full flex justify-between items-center px-4 py-3 rounded-[8px]
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white font-semibold"
+    >
+      {displayText}
+      <ChevronDown size={16} />
+    </button>
 
-      {open && (
-        <Dropdown>
-          {/* LEVEL 1 */}
-          <Options>
-            {level1.map(opt => (
-              <Option
+    {open && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(77,175,131,0.4)] z-[100]"
+      >
+        {/* LEVEL 1 */}
+        <div className="max-h-[220px] overflow-y-auto">
+          {level1.map(opt => (
+            <div
+              key={opt.value}
+              onClick={() => onChange({ level1: opt.value })}
+              className={`px-4 py-[10px] text-[14px] cursor-pointer
+              hover:bg-[#f1f5f9] ${
+                value.level1 === opt.value ? "bg-[#e6f3ef]" : ""
+              }`}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+
+        {/* LEVEL 2 */}
+        {level2.length > 0 && (
+          <div className="max-h-[220px] overflow-y-auto border-t border-[#e5e7eb]">
+            {level2.map(opt => (
+              <div
                 key={opt.value}
-                active={value.level1 === opt.value}
                 onClick={() =>
-                  onChange({ level1: opt.value })
+                  onChange({
+                    level1: value.level1,
+                    level2: opt.value,
+                  })
                 }
+                className={`px-4 py-[10px] text-[14px] cursor-pointer
+                hover:bg-[#f1f5f9] ${
+                  value.level2 === opt.value ? "bg-[#e6f3ef]" : ""
+                }`}
               >
-                {opt.label}
-              </Option>
+                └ {opt.label}
+              </div>
             ))}
-          </Options>
+          </div>
+        )}
 
-          {/* LEVEL 2 */}
-          {level2.length > 0 && (
-            <Options>
-              {level2.map(opt => (
-                <Option
-                  key={opt.value}
-                  active={value.level2 === opt.value}
-                  onClick={() =>
-                    onChange({
-                      level1: value.level1,
-                      level2: opt.value,
-                    })
-                  }
-                >
-                  └ {opt.label}
-                </Option>
-              ))}
-            </Options>
-          )}
-
-          {/* LEVEL 3 */}
-          {level3.length > 0 && (
-            <Options>
-              {level3.map(opt => (
-                <Option
-                  key={opt.value}
-                  active={value.level3 === opt.value}
-                  onClick={() =>
-                    onChange({
-                      level1: value.level1,
-                      level2: value.level2,
-                      level3: opt.value,
-                    })
-                  }
-                >
-                  └─ {opt.label}
-                </Option>
-              ))}
-            </Options>
-          )}
-        </Dropdown>
-      )}
-    </Wrapper>
-  );
+        {/* LEVEL 3 */}
+        {level3.length > 0 && (
+          <div className="max-h-[220px] overflow-y-auto border-t border-[#e5e7eb]">
+            {level3.map(opt => (
+              <div
+                key={opt.value}
+                onClick={() =>
+                  onChange({
+                    level1: value.level1,
+                    level2: value.level2,
+                    level3: opt.value,
+                  })
+                }
+                className={`px-4 py-[10px] text-[14px] cursor-pointer
+                hover:bg-[#f1f5f9] ${
+                  value.level3 === opt.value ? "bg-[#e6f3ef]" : ""
+                }`}
+              >
+                └─ {opt.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+);
 }
 
 
@@ -648,43 +523,64 @@ export function GroupedDropdown({
         .join(", ")})`;
 
   /* ================= RENDER ================= */
- return (
-  <Wrapper ref={ref} data-testid={testId}>
-    {label && <Label>{label}</Label>}
+return (
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    {label && (
+      <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+        {label}
+      </label>
+    )}
 
-    <GDButton onClick={() => setOpen(o => !o)}>
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="w-full px-4 py-3 rounded-[8px] text-white font-semibold
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83]
+      flex justify-between items-center"
+    >
       {displayValue}
       <ChevronDown size={16} />
-    </GDButton>
+    </button>
 
     {open && (
-      <GDDropdown>
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(23,97,163,0.3)] z-[100]"
+      >
         {groups.map(group => (
-          <GDGroup key={group.label}>
-            <GDParent>
+          <div key={group.label} className="p-3">
+            {/* Parent */}
+            <div className="flex items-center gap-2 font-semibold">
               <input
                 type="checkbox"
                 checked={isSectionSelected(group)}
                 onChange={() => toggleSection(group)}
               />
               {group.label}
-            </GDParent>
+            </div>
 
+            {/* Children */}
             {group.options.map(opt => (
-              <GDChild key={opt.value}>
+              <label
+                key={opt.value}
+                className="flex items-center gap-2 text-[14px] mt-[6px] ml-[22px]"
+              >
                 <input
                   type="checkbox"
                   checked={isChildChecked(opt.value)}
                   onChange={() => toggleChild(group, opt.value)}
                 />
                 {opt.label}
-              </GDChild>
+              </label>
             ))}
-          </GDGroup>
+          </div>
         ))}
-      </GDDropdown>
+      </div>
     )}
-  </Wrapper>
+  </div>
 );
 }
     
@@ -733,78 +629,84 @@ export function AvatarDropdown({
 
   const selected = options.find(o => o.value === value);
 
-  return (
-    <Wrapper ref={ref} data-testid={testId}>
-      {label && <Label>{label}</Label>}
+ return (
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    {label && (
+      <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+        {label}
+      </label>
+    )}
 
-      {/* BUTTON */}
-      <Button onClick={() => setOpen(o => !o)}>
-        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {selected ? (
-            <>
+    {/* BUTTON */}
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="w-full px-4 py-3 rounded-[8px] text-white font-semibold
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83]
+      flex justify-between items-center"
+    >
+      <span className="flex items-center gap-[10px]">
+        {selected ? (
+          <>
+            <img
+              src={selected.image}
+              alt={selected.label}
+              className="w-[28px] h-[28px] rounded-[6px] object-cover"
+            />
+            {selected.label}
+          </>
+        ) : (
+          placeholder
+        )}
+      </span>
+
+      <ChevronDown size={16} />
+    </button>
+
+    {/* DROPDOWN */}
+    {open && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(77,175,131,0.4)] z-[100]"
+      >
+        <div className="max-h-[220px] overflow-y-auto">
+          {options.map(opt => (
+            <div
+              key={opt.value}
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              className={`px-4 py-[10px] text-[14px] cursor-pointer
+              flex items-center gap-[12px]
+              hover:bg-[#f1f5f9]
+              ${opt.value === value ? "bg-[#e6f3ef]" : ""}`}
+            >
               <img
-                src={selected.image}
-                alt={selected.label}
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  objectFit: "cover",
-                }}
+                src={opt.image}
+                alt={opt.label}
+                className="w-[36px] h-[28px] rounded-[6px] object-cover"
               />
-              {selected.label}
-            </>
-          ) : (
-            placeholder
-          )}
-        </span>
-        <ChevronDown size={16} />
-      </Button>
 
-      {/* DROPDOWN */}
-      {open && (
-        <Dropdown>
-          <Options>
-            {options.map(opt => (
-              <Option
-                key={opt.value}
-                active={opt.value === value}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                }}
-              >
-                <img
-                  src={opt.image}
-                  alt={opt.label}
-                  style={{
-                    width: 36,
-                    height: 28,
-                    borderRadius: 6,
-                    objectFit: "cover",
-                  }}
-                />
+              <div>
+                <div className="font-medium">{opt.label}</div>
 
-                <div>
-                  <div style={{ fontWeight: 500 }}>{opt.label}</div>
-                  {opt.subtitle && (
-                    <div style={{ fontSize: 12, color: "#64748b" }}>
-                      {opt.subtitle}
-                    </div>
-                  )}
-                </div>
-              </Option>
-            ))}
-          </Options>
-        </Dropdown>
-      )}
-    </Wrapper>
-  );
+                {opt.subtitle && (
+                  <div className="text-[12px] text-[#64748b]">
+                    {opt.subtitle}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
 export interface AvatarOption {
   label: string;
@@ -860,110 +762,109 @@ export function AvatarMultiSelectDropdown({
   };
 
   return (
-    <Wrapper ref={ref} data-testid={testId}>
-      {label && <Label>{label}</Label>}
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    {label && (
+      <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+        {label}
+      </label>
+    )}
 
-      {/* BUTTON */}
-      <Button onClick={() => setOpen(o => !o)}>
-        {placeholder}
-        <ChevronDown size={16} />
-      </Button>
+    {/* BUTTON */}
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="w-full px-4 py-3 rounded-[8px] text-white font-semibold
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83]
+      flex justify-between items-center"
+    >
+      {placeholder}
+      <ChevronDown size={16} />
+    </button>
 
-      {/* TAGS */}
-      {values.length > 0 && (
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-          {values.map(val => {
-            const opt = options.find(o => o.value === val);
-            if (!opt) return null;
+    {/* TAGS */}
+    {values.length > 0 && (
+      <div className="flex flex-wrap gap-2 mt-3">
+        {values.map(val => {
+          const opt = options.find(o => o.value === val);
+          if (!opt) return null;
+
+          return (
+            <div
+              key={val}
+              className="flex items-center gap-2 px-[10px] py-[6px]
+              bg-white border border-[#cde3f1] rounded-[10px] text-[13px]"
+            >
+              <img
+                src={opt.image}
+                alt={opt.label}
+                className="w-[24px] h-[24px] rounded-[6px] object-cover"
+              />
+
+              {opt.label}
+
+              <X
+                size={14}
+                className="cursor-pointer"
+                onClick={() => removeValue(val)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    )}
+
+    {/* DROPDOWN */}
+    {open && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(77,175,131,0.4)] z-[100]"
+      >
+        <div className="max-h-[220px] overflow-y-auto">
+          {options.map(opt => {
+            const active = values.includes(opt.value);
 
             return (
               <div
-                key={val}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "6px 10px",
-                  background: "#fff",
-                  border: "1px solid #cde3f1",
-                  borderRadius: 10,
-                  fontSize: 13,
-                }}
+                key={opt.value}
+                onClick={() => toggleValue(opt.value)}
+                className={`px-4 py-[10px] text-[14px] cursor-pointer
+                flex items-center gap-[12px]
+                hover:bg-[#f1f5f9]
+                ${active ? "bg-[#e6f3ef]" : ""}`}
               >
+                <input
+                  type="checkbox"
+                  checked={active}
+                  readOnly
+                  className="accent-[#1761a3]"
+                />
+
                 <img
                   src={opt.image}
                   alt={opt.label}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 6,
-                    objectFit: "cover",
-                  }}
+                  className="w-[36px] h-[28px] rounded-[6px] object-cover"
                 />
-                {opt.label}
-                <X
-                  size={14}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => removeValue(val)}
-                />
+
+                <div>
+                  <div className="font-medium">{opt.label}</div>
+
+                  {opt.subtitle && (
+                    <div className="text-[12px] text-[#64748b]">
+                      {opt.subtitle}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
         </div>
-      )}
-
-      {/* DROPDOWN */}
-      {open && (
-        <Dropdown>
-          <Options>
-            {options.map(opt => {
-              const active = values.includes(opt.value);
-
-              return (
-                <Option
-                  key={opt.value}
-                  active={active}
-                  onClick={() => toggleValue(opt.value)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={active}
-                    readOnly
-                    style={{ accentColor: "#1761a3" }}
-                  />
-
-                  <img
-                    src={opt.image}
-                    alt={opt.label}
-                    style={{
-                      width: 36,
-                      height: 28,
-                      borderRadius: 6,
-                      objectFit: "cover",
-                    }}
-                  />
-
-                  <div>
-                    <div style={{ fontWeight: 500 }}>{opt.label}</div>
-                    {opt.subtitle && (
-                      <div style={{ fontSize: 12, color: "#64748b" }}>
-                        {opt.subtitle}
-                      </div>
-                    )}
-                  </div>
-                </Option>
-              );
-            })}
-          </Options>
-        </Dropdown>
-      )}
-    </Wrapper>
-  );
+      </div>
+    )}
+  </div>
+);
 }
 /* =====================
    ASYNC DROPDOWN
@@ -1017,66 +918,92 @@ export function AsyncDropdown({
       .then(setOptions)
       .finally(() => setLoading(false));
   }, [open, search, loadOptions]);
+return (
+  <div
+    ref={ref}
+    data-testid={testId}
+    className="relative w-[320px] max-w-full mx-auto"
+  >
+    {label && (
+      <label className="block mb-2 text-[12px] font-semibold text-[#1761a3]">
+        {label}
+      </label>
+    )}
 
-  return (
-    <Wrapper ref={ref} data-testid={testId}>
-      {label && <Label>{label}</Label>}
+    {/* BUTTON */}
+    <button
+      disabled={disabled}
+      onClick={() => !disabled && setOpen(o => !o)}
+      className={`w-full px-4 py-3 rounded-[8px] text-white font-semibold
+      bg-gradient-to-r from-[#1761a3] to-[#4daf83]
+      flex justify-between items-center
+      ${disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+    >
+      {value || placeholder}
+      <ChevronDown size={16} />
+    </button>
 
-      {/* BUTTON */}
-      <Button
-        disabled={disabled}
-        onClick={() => !disabled && setOpen(o => !o)}
+    {/* DROPDOWN */}
+    {open && !disabled && (
+      <div
+        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white
+        rounded-[12px] border border-[rgba(77,175,131,0.4)] z-[100]"
       >
-        {value || placeholder}
-        <ChevronDown size={16} />
-      </Button>
+        {/* SEARCH */}
+        <div className="p-3 border-b border-[#e5e7eb] relative">
+          <input
+            value={search}
+            placeholder="Search..."
+            onChange={e => setSearch(e.target.value)}
+            className="w-full h-[36px] px-3 pr-9 border rounded-[6px]
+            border-[rgba(23,97,163,0.3)] outline-none"
+          />
 
-      {/* DROPDOWN */}
-      {open && !disabled && (
-        <Dropdown>
-          {/* SEARCH */}
-          <SearchBox>
-            <input
-              value={search}
-              placeholder="Search..."
-              onChange={e => setSearch(e.target.value)}
-            />
-            {search && (
-              <ClearBtn onClick={() => setSearch("")}>✕</ClearBtn>
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-[15px] top-1/2 -translate-y-1/2
+              w-[22px] h-[22px] rounded-full bg-[#9ca3af] text-white"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* LOADING */}
+        {loading && (
+          <div className="px-4 py-[10px] text-[14px] flex items-center gap-2">
+            <Loader2 size={14} className="mr-2 animate-spin" />
+            Loading...
+          </div>
+        )}
+
+        {/* OPTIONS */}
+        {!loading && (
+          <div className="max-h-[220px] overflow-y-auto">
+            {options.map(opt => (
+              <div
+                key={opt.value}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                  setSearch("");
+                }}
+                className="px-4 py-[10px] text-[14px] cursor-pointer hover:bg-[#f1f5f9]"
+              >
+                {opt.label}
+              </div>
+            ))}
+
+            {options.length === 0 && (
+              <div className="p-3 text-[#9ca3af]">
+                No results
+              </div>
             )}
-          </SearchBox>
-
-          {/* LOADING */}
-          {loading && (
-            <Option>
-              <Loader2 size={14} style={{ marginRight: 8 }} />
-              Loading...
-            </Option>
-          )}
-
-          {/* OPTIONS */}
-          {!loading && (
-            <Options>
-              {options.map(opt => (
-                <Option
-                  key={opt.value}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                >
-                  {opt.label}
-                </Option>
-              ))}
-
-              {options.length === 0 && (
-                <Empty>No results</Empty>
-              )}
-            </Options>
-          )}
-        </Dropdown>
-      )}
-    </Wrapper>
-  );
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+);
 }
