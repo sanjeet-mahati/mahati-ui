@@ -11,8 +11,8 @@ COPY library/package*.json ./library/
 COPY testbed/package*.json ./testbed/
 
 # Install dependencies required to build the app and transpile sibling library sources
-RUN cd library && if [ -f package-lock.json ]; then npm ci; else npm install; fi
-RUN cd testbed && if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN cd library && (npm ci || npm install)
+RUN cd testbed && (npm ci || npm install)
 
 # Rebuild the source code only when needed
 FROM base AS builder
