@@ -6,40 +6,54 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat python3 make g++ curl
 WORKDIR /app
 
-# Copy library package files
+# Copy package manifests for both the library and the deployable Next.js app
 COPY library/package*.json ./library/
+COPY testbed/package*.json ./testbed/
 
-# Install dependencies with optimizations
-RUN cd library && npm ci --production && npm cache clean --force
+# Install dependencies required to build the app and transpile sibling library sources
+RUN cd library && if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN cd testbed && if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
-# Build stage
+# Rebuild the source code only when needed
 FROM base AS builder
-WORKDIR /app
-
-# Install build dependencies
 RUN apk add --no-cache libc6-compat python3 make g++
-COPY library/package*.json ./library/
-RUN cd library && npm ci
-COPY . .
-
-# Build the library
-RUN cd library && npm run build
-
-# Production stage for serving built library
-FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+COPY --from=deps /app/library/node_modules ./library/node_modules
+COPY --from=deps /app/testbed/node_modules ./testbed/node_modules
+COPY library ./library
+COPY testbed ./testbed
+
+WORKDIR /app/testbed
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build the standalone Next.js output for the testbed application
+RUN npm run build
+
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app/testbed
+
+RUN apk add --no-cache curl
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
 
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 library
+RUN adduser --system --uid 1001 nextjs
 
-# Copy built library and designs
-COPY --from=builder --chown=library:nodejs /app/library/dist ./library/dist
-COPY --from=builder --chown=library:nodejs /app/library/package.json ./library/package.json
-COPY --from=builder --chown=library:nodejs /app/mahati-designs ./mahati-designs
+COPY --from=builder --chown=nextjs:nodejs /app/testbed/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/testbed/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/testbed/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/testbed/package.json ./package.json
 
-USER library
+USER nextjs
 
-# Default command - you can override this when running the container
-CMD ["node", "-e", "console.log('UI Components library and designs built successfully'); process.exit(0)"]
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+	CMD curl -f http://localhost:3000/api/ui-components-info || curl -f http://localhost:3000/ || exit 1
+
+CMD ["node", "server.js"]

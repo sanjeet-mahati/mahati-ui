@@ -14,4 +14,7 @@ dist
 library/node_modules
 library/dist
 testbed/node_modules
+testbed/.next
+testbed/coverage
+testbed/.yalc
 mahati-designs/.git
