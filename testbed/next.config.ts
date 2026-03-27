@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
 
+const repoRoot = path.resolve(__dirname, '..');
+
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
+  outputFileTracingRoot: repoRoot,
   
   // Emotion configuration for React 19
   compiler: {

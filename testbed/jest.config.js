@@ -2,7 +2,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
-  moduleDirectories: ['node_modules', '<rootDir>/'],
+  moduleDirectories: ['node_modules', '<rootDir>/', '<rootDir>/node_modules'],
+  modulePathIgnorePatterns: ['<rootDir>/.next/'],
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
     '<rootDir>/src/**/*.{test,spec}.{ts,tsx}',
@@ -51,8 +52,11 @@ module.exports = {
     // ── @/ catch-all → src/ ──────────────────────────────────────────────────
     '^@/(.*)$': '<rootDir>/src/$1',
 
-      "^react$": "<rootDir>/node_modules/react",
+    // ── Force all react imports to resolve from testbed/node_modules ─────────
+    "^react$": "<rootDir>/node_modules/react",
+    "^react/(.*)$": "<rootDir>/node_modules/react/$1",
     "^react-dom$": "<rootDir>/node_modules/react-dom",
+    "^react-dom/(.*)$": "<rootDir>/node_modules/react-dom/$1",
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

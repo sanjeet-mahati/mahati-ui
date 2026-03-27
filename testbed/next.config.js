@@ -1,8 +1,12 @@
 const path = require('path');
 
+const repoRoot = path.join(__dirname, '..');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
+  outputFileTracingRoot: repoRoot,
 
   // Turbopack config for Next.js 16
   turbopack: {
