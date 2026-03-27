@@ -46,7 +46,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             />
           </button>
           <button
-            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
             data-testid="play-pause-btn"
           >
             <div
@@ -54,7 +54,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             />
           </button>
           <button
-            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
             data-testid="10-sec-forward-skip"
           >
             <div
@@ -62,7 +62,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             />
           </button>
           <button
-            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
             data-testid="5-sec-forward-skip"
           >
             <div
@@ -70,7 +70,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             />
           </button>
           <button
-            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
             data-testid="force-stop"
           >
             <div
@@ -78,7 +78,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             />
           </button>
           <button
-            class="border border-[4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
+            class="border border-[#4daf83] bg-[#d4e4eb] rounded-[6px] p-[6px] cursor-pointer"
             data-testid="on-loop-btn"
             title="Loop off"
           >
@@ -95,12 +95,11 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
           class="flex items-center gap-[6px] w-[180px]"
         >
           <input
-            class="flex-1 appearance-none h-[6px] rounded-full cursor-pointer"
+            class="flex-1 appearance-none h-[6px] rounded-[5px] cursor-pointer"
             data-testid="seek-bar"
             max="0"
             min="0"
             step="0.01"
-            style="--progress: NaN%;"
             type="range"
             value="0"
           />
@@ -119,7 +118,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
           Reads Entire page
         </button>
         <button
-          class="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text white border-none px-[12px] py-[6px] ronded-[6px] cursor-pointer"
+          class="bg-gradient-to-r from-[#1761a3] to-[#4daf83] text-white border-none px-[12px] py-[6px] rounded-[6px] cursor-pointer"
           data-testid="reads-given-input"
         >
           Reads input text
@@ -130,7 +129,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
       class="flex flex-col gap-[16px]"
     >
       <div
-        class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px] mb-[16px]"
+        class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
       >
         <div
           class="flex justify-between items-center text-[13px] font-semibold text-[#243a36] mb-[10px]"
@@ -143,73 +142,73 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             %
           </span>
         </div>
-        <input
-          data-testid="text-to-audio-volume"
-          max="1"
-          min="0"
-          step="0.01"
-          style="--value: 100%;"
-          type="range"
-          value="1"
-        />
-      </div>
-    </div>
-    <div
-      class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
-    >
-      <div
-        class="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"
-      >
-        <span>
-          Playback Speed
-        </span>
-        <span>
-          1.00
-          x
-        </span>
+        <div
+          class="flex items-center gap-[10px]"
+        >
+          <div
+            style="width: 18px; height: 18px; background-image: url(/icons/sound-icon.png); background-size: contain; background-repeat: no-repeat; cursor: pointer;"
+          />
+          <input
+            class="w-full appearance-none h-[6px] rounded-[5px]"
+            data-testid="text-to-audio-volume"
+            max="1"
+            min="0"
+            step="0.01"
+            type="range"
+            value="1"
+          />
+        </div>
       </div>
       <div
-        class="bg-[#eef5f2] rounded-[12px] p-[12px]"
+        class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
       >
+        <div
+          class="flex justify-between text-[13px] font-semibold mb-[10px]"
+        >
+          <span>
+            Playback Speed
+          </span>
+          <span>
+            1.00
+            x
+          </span>
+        </div>
         <input
-          class="w-full appearance-none h-[6px] rounded-full"
+          class="w-full appearance-none h-[6px] rounded-[5px]"
           data-testid="test-to-audio-playbackspeed"
           max="2"
           min="0.5"
           step="0.25"
-          style="--value: 33.33333333333333%;"
           type="range"
           value="1"
         />
+        <div
+          class="flex justify-between text-xs text-gray-500 mt-1"
+        >
+          <span>
+            Slower
+          </span>
+          <span>
+            Faster
+          </span>
+        </div>
       </div>
       <div
-        style="font-size: 12px; color: rgb(122, 139, 134); margin-top: 6px; display: flex; justify-content: space-between;"
+        class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
       >
-        <span>
-          Slower
-        </span>
-        <span>
-          Faster
-        </span>
+        <div
+          class="font-semibold mb-[8px]"
+          data-testid="quick-summary"
+        >
+          Quick Summary
+        </div>
+        <p
+          class="text-sm text-[#4a5c57] leading-[1.5]"
+        >
+          This content covers general topics.
+        </p>
       </div>
     </div>
-    <div
-      class="bg-[#f7fbfb] border border-[#cfe5da] rounded-[14px] p-[16px]"
-    >
-      <div
-        class="text-[13px] font-semibold text-[#243a36] flex justify-between mb-[12px]"
-      />
-      <span
-        data-testid="quick-summary"
-      >
-        Quick Summary
-      </span>
-    </div>
-    <p
-      style="font-size: 13px; color: rgb(74, 92, 87); line-height: 1.5;"
-    >
-      This content covers general topics.
-    </p>
   </div>
 </div>
 `;
