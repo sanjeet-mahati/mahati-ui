@@ -3,94 +3,146 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-interface AccordionProps {
+// TYPES
+export interface AccordionItem {
   title: string;
-  children?: React.ReactNode;
-  defaultOpen?: boolean;
-  accordionTestId?: string;
-  headerTestId?: string;
-  contentTestId?: string;
+  content: React.ReactNode;
+  disabled?: boolean;
 }
 
+export interface AccordionProps {
+  
+  title?:string;
+  children?:React.ReactNode;
+  items?: AccordionItem[];
+  defaultOpenIndex?: number | null;
+  defaultOpen?: boolean;
+  
+  className?: string;
+  headerClassName?: string;
+  contentClassName?: string;
+  icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
+  onToggle?: (index: number | null) => void;
+
+  accordionTestId?: string;
+  activeClassName?:string;
+  multipleOpen?:boolean;
+  headerTestId?:string;
+  contentTestId?:string;
+}
+
+// COMPONENT
 function Accordion({
   title,
   children,
-  defaultOpen = false,
+  items=[],
+  defaultOpenIndex = null,
+  defaultOpen,
+  className = "",
+  headerClassName = "",
+  contentClassName = "",
+  icon,
+  iconPosition = "right",
+  multipleOpen= false,
+  onToggle,
   accordionTestId,
   headerTestId,
   contentTestId,
 }: AccordionProps) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [openIndexes, setOpenIndexes] = useState<number[]>(
+    defaultOpen ? [0] :
+  defaultOpenIndex !==null&& defaultOpenIndex !== undefined ? [defaultOpenIndex] :[]);
+
+  const normalizedItems: AccordionItem[] =
+  items && items.length > 0
+    ? items
+    : title !== undefined
+    ? [{ title, content: children }]
+    : [];
+
+ const handleToggle = (index: number) => {
+  let newIndexes: number[];
+
+  if (multipleOpen) {
+    if (openIndexes.includes(index)) {
+      newIndexes = openIndexes.filter(i => i !== index);
+    } else {
+      newIndexes = [...openIndexes, index];
+    }
+  } else {
+    newIndexes = openIndexes.includes(index) ? [] : [index];
+  }
+
+  setOpenIndexes(newIndexes);
+};
 
   return (
     <div
       data-testid={accordionTestId}
-      className="
-        w-full
-        max-w-full
-        border border-slate-200
-        overflow-hidden
-        bg-white
-        rounded-xl
-        sm:max-w-[684px]
-      "
+      className={`w-full max-w-[684px] border border-slate-200 rounded-xl overflow-hidden bg-white ${className}`}
     >
-      {/* HEADER */}
+      {normalizedItems.map((item, index) => {
+        const isOpen = openIndexes.includes(index);
 
-      <button
-        data-testid={headerTestId}
-        onClick={() => setOpen(!open)}
-        className={`
-          w-full
-          flex items-center justify-between
-          font-medium
-          border-none
-          cursor-pointer
-          min-h-[52px]
-          px-4
-          transition
-          hover:opacity-95
-          focus:outline-none
-          sm:min-h-[60px]
-          sm:px-6
-          ${
-            open
-              ? "text-white bg-gradient-to-r from-[#1761A3] to-[#4DAF83]"
-              : "text-slate-800 bg-white"
-          }
-        `}
-      >
-        <span>{title}</span>
+        return (
+          <div key={index}>
+            {/* HEADER */}
+            <button
+              data-testid={headerTestId}
+              disabled={item.disabled}
+              onClick={() => handleToggle(index)}
+              className={`
+                w-full flex items-center justify-between
+                px-6 min-h-[60px]
+                font-medium transition
+                ${
+                  item.disabled
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
+                }
+                ${
+                  isOpen
+                    ? "text-white bg-gradient-to-r from-[#1761A3] to-[#4DAF83]"
+                    : "text-slate-800 bg-white"
+                }
+                ${headerClassName}
+              `}
+            >
+              {/* LEFT ICON */}
+              {iconPosition === "left" && (
+                <span className="mr-2">
+                  {icon || (isOpen ? <ChevronUp /> : <ChevronDown />)}
+                </span>
+              )}
 
-        <span className="inline-flex items-center justify-center">
-          {open ? (
-            <ChevronUp className="w-5 h-5" />
-          ) : (
-            <ChevronDown className="w-5 h-5" />
-          )}
-        </span>
-      </button>
+              <span className="flex-1 text-left">{item.title}</span>
 
-      {/* CONTENT */}
+              {/* RIGHT ICON */}
+              {iconPosition === "right" && (
+                <span>
+                  {icon || (isOpen ? <ChevronUp /> : <ChevronDown />)}
+                </span>
+              )}
+            </button>
 
-      {open && (
-        <div
-          data-testid={contentTestId}
-          className="
-            w-full
-            overflow-hidden
-            px-6 py-4
-            text-slate-600
-            border-t border-slate-200
-          "
-        >
-          <div className="w-full box-border">{children as any}</div>
-        </div>
-      )}
+            {/* CONTENT */}
+            {isOpen && !item.disabled && (
+              <div
+                data-testid={contentTestId}
+                className={`px-6 py-4 text-slate-600 border-t border-slate-200 ${contentClassName}`}
+              >
+                {item.content}
+              </div>
+            )}
+
+            {/* DIVIDER */}
+            {index !== normalizedItems.length - 1 && (
+              <div className="border-t border-slate-200" />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -98,4 +150,3 @@ function Accordion({
 Accordion.displayName = "Accordion";
 
 export { Accordion };
-export type { AccordionProps };
