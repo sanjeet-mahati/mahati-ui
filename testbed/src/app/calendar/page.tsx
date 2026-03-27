@@ -440,8 +440,8 @@ export default function CalendarDemo() {
               value={custom}
               onChange={setCustom}
               blockDateConfig={{
-                startDate: { year: 2025, month: 12, day: 15 },
-                days: 6,
+                startDate: { year: 2026, month: 2, day:20 },
+                days: 5,
               }}
               placeholder="Select date (with blocked range)"
               showTodayButton
