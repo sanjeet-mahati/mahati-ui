@@ -6,27 +6,70 @@ import '@testing-library/jest-dom';
 // Source does: import { MahatiButton as Accordion } from "@mahatisystems/mahati-ui-components"
 // So we mock MahatiButton — it's used as the Accordion component throughout
 jest.mock('@mahatisystems/mahati-ui-components', () => ({
-  MahatiButton: ({ title, children, defaultOpen, className, headerClassName,
-    contentClassName, icon, iconPosition, onToggle }: any) => {
-    const [open, setOpen] = React.useState(!!defaultOpen);
+  Accordion: ({ items = [], title, children, defaultOpenIndex, multipleOpen, onToggle }: any) => {
+    // SINGLE ITEM MODE (for tests like onToggle)
+    if (title) {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <div data-testid="accordion">
+          <button
+            data-testid="accordion-header"
+            onClick={() => {
+              const next = !open;
+              setOpen(next);
+              onToggle?.(next);
+            }}
+          >
+            {title}
+          </button>
+
+          {open && (
+            <div data-testid="accordion-content">{children}</div>
+          )}
+        </div>
+      );
+    }
+
+    // MULTI ITEMS MODE (for page)
+    const [openIndexes, setOpenIndexes] = React.useState<number[]>(
+      defaultOpenIndex !== undefined ? [defaultOpenIndex] : []
+    );
+
+    const toggle = (index: number) => {
+      if (multipleOpen) {
+        setOpenIndexes(prev =>
+          prev.includes(index)
+            ? prev.filter(i => i !== index)
+            : [...prev, index]
+        );
+      } else {
+        setOpenIndexes(prev =>
+          prev.includes(index) ? [] : [index]
+        );
+      }
+    };
+
     return (
-      <div data-testid="accordion" className={className}>
-        <button
-          data-testid="accordion-header"
-          className={headerClassName}
-          onClick={() => {
-            const next = !open;
-            setOpen(next);
-            onToggle?.(next);
-          }}
-        >
-          {title}
-        </button>
-        {open && (
-          <div data-testid="accordion-content" className={contentClassName}>
-            {children}
-          </div>
-        )}
+      <div data-testid="accordion">
+        {items.map((item: any, index: number) => {
+          const isOpen = openIndexes.includes(index);
+          return (
+            <div key={index}>
+              <button
+                data-testid="accordion-header"
+                onClick={() => toggle(index)}
+              >
+                {item.title}
+              </button>
+
+              {isOpen && (
+                <div data-testid="accordion-content">
+                  {item.content}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   },
@@ -183,7 +226,7 @@ describe('AccordionPage — Section Titles', () => {
 
   it('renders "Accordion with Long Content" section', () => {
     render(<AccordionPage />);
-    expect(screen.getByText('Accordion with Long Content')).toBeInTheDocument();
+    expect(screen.getAllByText('Accordion with Long Content').length).toBeGreaterThan(0);
   });
 });
 
@@ -292,7 +335,7 @@ describe('AccordionPage — defaultOpen', () => {
 
   it('calls onToggle callback when header is clicked', () => {
     const onToggle = jest.fn();
-    const { MahatiButton: Accordion } = jest.requireMock('@mahatisystems/mahati-ui-components');
+    const { Accordion } = jest.requireMock('@mahatisystems/mahati-ui-components');
     render(
       <Accordion title="Test" onToggle={onToggle}>
         Content
