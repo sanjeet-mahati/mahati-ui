@@ -63,7 +63,7 @@ pipelines:
           after-script:
             - 'docker system prune -f'
 
-  # PR validation — Bitbucket matches PR source branch patterns here,
+  # PR validation — Bitbucket matches PR source branch patterns here, SANJEET
   # so guard on BITBUCKET_PR_DESTINATION_BRANCH inside the step.
   pull-requests:
     "**":
