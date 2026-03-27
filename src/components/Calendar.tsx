@@ -34,7 +34,7 @@ export interface CalendarProps {
   onRangeChange?: (range: CalendarDateRange) => void;
   enableTimeSelection?: boolean;
   timeValue?: CalendarTime | null;
-  onTimeChange?: (time: CalendarTime) => void;
+  onTimeChange?: (time: CalendarTime | null) => void;
   showTimeFormatToggle?: boolean;
   timeFormat?: "12h" | "24h";
   onTimeFormatChange?: (format: "12h" | "24h") => void;
@@ -636,7 +636,7 @@ const Calendar = ({
       onChange?.(null, '');
     }
     if (enableTimeSelection) {
-      onTimeChange?.({ hour: 12, minute: 0, period: "AM" });
+      onTimeChange?.(null);
       setSelectedHour(12);
       setSelectedMinute(0);
       setSelectedPeriod("AM");
@@ -774,6 +774,9 @@ const Calendar = ({
   onClick={() => {
     if (!isBlocked) selectDate(day);
   }}
+
+
+
   disabled={isBlocked}
   className={`
     flex items-center justify-center rounded
@@ -1313,10 +1316,11 @@ const Calendar = ({
           {/* RANGE / DATE BUTTONS */}
 
           <div
-            className="flex"
+            className={`flex items-center ${!enableTimeSelection ? "justify-center":"justify-center"}`}
             style={{
-              gap: scale * 12,
-              marginBottom: scale * 24
+              gap: enableTimeSelection ? scale * 20 : 0,
+              marginBottom: scale * 24,
+              width: "100%"
             }}
           >
 
@@ -1347,7 +1351,9 @@ const Calendar = ({
 
                     <span
                       className="text-gray-500"
-                      style={{ fontSize: scale * 12 }}
+                      style={{ fontSize: scale * 12,
+                        gap : scale * 24,
+                       }}
                     >
                       From Date
                     </span>
@@ -1366,7 +1372,7 @@ const Calendar = ({
                 <button
                   type="button"
                   onClick={handleEndFieldClick}
-                  className="flex items-center rounded-md shadow-sm"
+                  className="flex  items-center rounded-md shadow-sm"
                   style={{
                     height: scale * 40,
                     padding: `0 ${scale * 16}px`,
@@ -1382,9 +1388,13 @@ const Calendar = ({
                 >
                   {defaultIcon}
 
-                  <div className="flex flex-col items-start">
+                  <div className="flex flex-col items-start"
+                  style={{gap: scale * 4}}
+                  >
 
-                    <span style={{ fontSize: scale * 12 }}>
+                    <span style={{ fontSize: scale * 12
+
+                     }}>
                       To Date
                     </span>
 
@@ -1404,10 +1414,11 @@ const Calendar = ({
                 <button
                   type="button"
                   onClick={handleChooseDateClick}
-                  className="flex items-center rounded-md shadow-sm"
+                  className="flex items-center justify-center rounded-md shadow-sm"
                   style={{
                     height: scale * 40,
                     padding: `0 ${scale * 16}px`,
+                    minWidth:enableTimeSelection ? scale *140  : scale * 220,
                     background:
                       !showTimeSelector && enableTimeSelection
                         ? "linear-gradient(to bottom,#1761A3,#4DAF83)"
@@ -1435,6 +1446,7 @@ const Calendar = ({
                     style={{
                       height: scale * 40,
                       padding: `0 ${scale * 16}px`,
+                      marginLeft:scale *16,
                       background: showTimeSelector
                         ? "linear-gradient(to bottom,#1761A3,#4DAF83)"
                         : "white",
@@ -1468,7 +1480,7 @@ const Calendar = ({
 
           <div style={{ marginBottom: scale * 22 }}>
 
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
 
               <button 
                 aria-label="Previous month"
@@ -1512,83 +1524,151 @@ const Calendar = ({
                 />
               </button>
 
-            </div>
+            </div> */}
+            <div className="relative flex items-center justify-between">
+
+  <button 
+    aria-label="Previous month"
+    onClick={previousMonth}
+    className="flex items-center justify-center rounded-md bg-[#1761A3] text-white"
+    style={{
+      width: scale * 32,
+      height: scale * 30
+    }}
+  >
+    <HiChevronLeft style={{ width: scaled(10), height: scaled(10) }} />
+  </button>
+
+  {/* 🔽 MONTH YEAR BUTTON */}
+  <div className="relative">
+    <button
+      onClick={handleMonthYearClick}
+      className="font-bold text-[#1761A3]"
+      style={{ fontSize: scale * 18 }}
+    >
+      {monthName} {currentYear}
+    </button>
+
+    {/* 🔥 ADD DROPDOWN HERE */}
+    {showYearDropdown && (
+      <div
+        className="absolute bg-white border rounded-md shadow-md z-[9999] max-h-40 overflow-y-auto"
+        style={{
+          marginTop: scale * 8,
+          width: scale * 120
+        }}
+      >
+        {Array.from({ length: 100 }, (_, i) => currentYear - 50 + i).map((year) => (
+          <div
+            key={year}
+            onClick={() => handleYearSelect(year)}
+            className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+            style={{ fontSize: scale * 12 }}
+          >
+            {year}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <button
+    aria-label="Next month"
+    onClick={nextMonth}
+    className="flex items-center justify-center rounded-md bg-[#1761A3] text-white"
+    style={{
+      width: scale * 32,
+      height: scale * 30
+    }}
+  >
+    <HiChevronRight style={{ width: scaled(10), height: scaled(10) }} />
+  </button>
+
+</div>
 
           </div>
 
           {/* DAYS GRID */}
 
-          <div
-            className="grid grid-cols-7"
-            style={{ gap: scale * 8 }}
-          >
-            {renderDays()}
-          </div>
+         {!showTimeSelector ? (
+  <>
+    {/* DAYS GRID */}
+    <div
+      className="grid grid-cols-7"
+      style={{ gap: scale * 24}}
+    >
+      {renderDays()}
+    </div>
 
-          {/* FOOTER */}
+    {/* FOOTER */}
+    <div
+      className="flex justify-between"
+      style={{
+        gap: scale * 12,
+        marginTop: scale * 8
+      }}
+    >
+      {showTodayButton && (
+        <button
+          onClick={selectToday}
+          className="flex items-center justify-center font-semibold"
+          style={{
+            width: scale * 165,
+            height: scale * 38,
+            borderRadius: scale * 6,
+            background: "rgba(23, 97, 163, 0.15)",
+            color: "#1761A3",
+            fontSize: scale * 12,
+            gap: scale * 8
+          }}
+        >
+          <HiCalendarDays
+            style={{
+              width: scaled(14),
+              height: scaled(14)
+            }}
+          />
+          Today
+        </button>
+      )}
 
-          <div
-            className="border-t border-gray-200"
-            style={{ padding: scale * 8 }}
-          >
+      {showClearButton && (
+        <button
+          onClick={clearDate}
+          className="flex items-center justify-center font-semibold"
+          style={{
+            width: scale * 165,
+            height: scale * 38,
+            borderRadius: scale * 6,
+            background: "rgba(239, 68, 68, 0.15)",
+            color: "#EF4444",
+            fontSize: scale * 12
+          }}
+        >
+          🗑 Clear
+        </button>
+      )}
+    </div>
 
-            <div
-              className="flex"
-              style={{ gap: scale * 12 }}
-            >
-
-              {showTodayButton && (
-                <button
-                  onClick={selectToday}
-                  className="flex items-center justify-center rounded-md font-semibold"
-                  style={{
-                    height: scale * 38,
-                    background: "rgba(23,97,163,0.15)",
-                    color: "#1761A3"
-                  }}
-                >
-                  <HiCalendarDays
-                    style={{
-                      width: scaled(14),
-                      height: scaled(14)
-                    }}
-                  />
-                  Today
-                </button>
-              )}
-
-              {showClearButton && (
-                <button
-                  onClick={clearDate}
-                  className="rounded-md font-semibold"
-                  style={{
-                    height: scale * 38,
-                    background: "rgba(239,68,68,0.15)",
-                    color: "#EF4444"
-                  }}
-                >
-                  Clear
-                </button>
-              )}
-
-            </div>
-
-            <button
-              onClick={handleDateConfirm}
-              className="w-full rounded-md font-semibold text-white"
-              style={{
-                height: scale * 38,
-                background:
-                  "linear-gradient(to right,#1761A3,#4DAF83)"
-              }}
-            >
-              Confirm Date
-            </button>
-
+    <button
+      onClick={handleDateConfirm}
+      className="w-full rounded-md font-semibold text-white"
+      style={{
+        height: scale * 38,
+        marginTop:scale*12,
+        background: "linear-gradient(to right,#1761A3,#4DAF83)"
+      }}
+    >
+      Confirm Date
+    </button>
+  </>
+) : (
+  renderTimeSelector()   // 🔥 THIS LINE FIXES EVERYTHING
+)}
           </div>
 
         </div>
-      </div>
+      
     )}
   </div>
 );
