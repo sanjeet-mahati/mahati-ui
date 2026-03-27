@@ -63,8 +63,10 @@ pipelines:
           after-script:
             - 'docker system prune -f'
 
+  # PR validation — Bitbucket matches PR source branch patterns here, SANJEET
+  # so guard on BITBUCKET_PR_DESTINATION_BRANCH inside the step.
   pull-requests:
-    develop:
+    "**":
       - step:
           name: Validate PR -> Develop
           image: node:20-alpine
@@ -74,6 +76,11 @@ pipelines:
             - node
             - nextcache
           script:
+            - |
+              if [ "$BITBUCKET_PR_DESTINATION_BRANCH" != "develop" ]; then
+                echo "Skipping PR validation because destination branch is '$BITBUCKET_PR_DESTINATION_BRANCH', not 'develop'."
+                exit 0
+              fi
             - apk add --no-cache python3 make g++
             - cd testbed
             - npm ci || npm install
