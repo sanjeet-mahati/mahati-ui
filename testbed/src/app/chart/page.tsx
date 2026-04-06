@@ -69,9 +69,6 @@ const UploadHint = styled.p`
   line-height: 1.25rem;
 `;
 
-/* ============================================================================
-   TYPES
-   ============================================================================ */
 
 /* ============================================================================
    TYPES
@@ -101,7 +98,7 @@ const GANTT_COLOR_MAP = {
 type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar"| "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge" | "stackbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
 
-/
+
 /* ============================================================================
    UTILITY FUNCTIONS
    ============================================================================ */
@@ -185,7 +182,6 @@ const getAreaChartData = (areaData: any, filters: Record<string, string>) => {
   return areaData.default || areaData;
 };
 
-/
 /* ============================================================================
    MAIN COMPONENT
    ============================================================================ */
