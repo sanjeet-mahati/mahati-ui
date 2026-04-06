@@ -182,7 +182,14 @@ jest.mock('@/lib', () => ({
       </button>
       <button
         data-testid="trigger-apply-filters"
-        onClick={() => onApplyFilters?.()}
+        onClick={() => onApplyFilters?.({
+          Relationship: 'Direct',
+          periodicity: '6 months',
+
+        })
+      }
+
+          
       >
         Apply Filters
       </button>

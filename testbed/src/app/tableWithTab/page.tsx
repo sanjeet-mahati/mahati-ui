@@ -123,7 +123,20 @@ export default function TableWithTabDemo() {
               <code>tabCloseIconContent</code>.
             </>
           }
-          code={`<MahatiTableWithTab<Employee> ... />`}
+          code={`<MahatiTableWithTab<Employee>
+  tableProps={{ headers: columns, data: EMPLOYEES }}
+  tabProps={{
+    variant: "outline",
+    orientation: "horizontal",
+    showTabCloseIconInHeader: true,
+    tabCloseIconPosition: "right",
+  }}
+  rearrange
+  renderTabContent={(row) => (
+    <EmployeeTabContent employee={row} />
+  )}
+  getRowId={(row) => row.id}
+/>`}
           preview={
             <DemoGrid>
               <MahatiTableWithTab<Employee>
@@ -154,7 +167,20 @@ export default function TableWithTabDemo() {
               Drag tabs vertically to reorder them.
             </>
           }
-          code={`<MahatiTableWithTab<Employee> ... />`}
+          code={`<MahatiTableWithTab<Employee>
+  tableProps={{ headers: columns, data: EMPLOYEES }}
+  tabProps={{
+    variant: "gradient",
+    orientation: "vertical",
+    verticalPosition: "right",
+    showTabCloseIconInHeader: true,
+  }}
+  rearrange
+  renderTabContent={(row) => (
+    <EmployeeTabContent employee={row} />
+  )}
+  getRowId={(row) => row.id}
+/>`}
           preview={
             <DemoGrid>
               <MahatiTableWithTab<Employee>
@@ -186,7 +212,20 @@ export default function TableWithTabDemo() {
               tab label.
             </>
           }
-          code={`<MahatiTableWithTab<Employee> ... />`}
+          code={`<MahatiTableWithTab<Employee>
+  tableProps={{ headers: columns, data: EMPLOYEES }}
+  tabProps={{
+    variant: "gradient",
+    orientation: "vertical",
+    verticalPosition: "right",
+  }}
+  tabLabelKey="id"
+  rearrange
+  renderTabContent={(row) => (
+    <EmployeeTabContent employee={row} />
+  )}
+  getRowId={(row) => row.id}
+/>`}
           preview={
             <DemoGrid>
               <MahatiTableWithTab<Employee>

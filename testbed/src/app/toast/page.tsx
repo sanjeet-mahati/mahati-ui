@@ -296,6 +296,10 @@ export default function MahatiToastMessagePage() {
   <MahatiToastMessage 
     type="success" 
     // message="Success message description"
+    custom={{
+    iconSrc:"/icons/check-mark_2.png"
+    CloseIconSrc:"/icons/close.png"
+    }}
     background="solid"
     onClose={() => setActiveToast(null)}
   />
@@ -308,6 +312,10 @@ export default function MahatiToastMessagePage() {
     type="error" 
     message="Error message description" 
     duration={0}
+    custom={{
+    iconSrc: "/icons/danger_2.png"
+     CloseIconSrc:"/icons/close.png"
+    }}
     background="solid"
     onClose={() => setActiveToast(null)}
   />
@@ -319,6 +327,10 @@ export default function MahatiToastMessagePage() {
   <MahatiToastMessage 
     type="warning" 
     message="Warning message description"
+    custom={{
+    iconSrc:"/icons/danger_1.png"
+     CloseIconSrc:"/icons/close.png"
+    }}
     background="solid"
     onClose={() => setActiveToast(null)}
   />
@@ -330,6 +342,10 @@ export default function MahatiToastMessagePage() {
   <MahatiToastMessage 
     type="notification" 
     // message="Notification message description"
+    custom={{
+    iconSrc:"/icons/notification_2.png"
+     CloseIconSrc:"/icons/close.png"
+    }}
     background="solid"
     onClose={() => setActiveToast(null)}
   />
@@ -429,6 +445,10 @@ export default function MahatiToastMessagePage() {
   <MahatiToastMessage 
     type="success" 
     // message="Success message description"
+    custom={{
+    iconSrc:"/icons/check-mark_1.png"
+     CloseIconSrc:"close_copy_1.png"
+    }}
     background="transparent"
     onClose={() => setActiveToast(null)}
   />
@@ -440,6 +460,10 @@ export default function MahatiToastMessagePage() {
 <button onClick={() => setActiveToast(
   <MahatiToastMessage 
     type="error" 
+    custom={{
+    iconSrc="/icons/danger_1.png"
+    CloseIconSrc:"close_copy_1.png"
+    }}
     message="Error message description"
     background="transparent"
     duration={0}
@@ -453,6 +477,10 @@ export default function MahatiToastMessagePage() {
 <button onClick={() => setActiveToast(
   <MahatiToastMessage 
     type="warning" 
+    custom={{
+    iconSrc:"/icons/danger_1.png"
+    CloseIconSrc:"close_copy_1.png"
+    }}
     message="Warning message description"
     background="transparent"
     onClose={() => setActiveToast(null)}
@@ -465,6 +493,10 @@ export default function MahatiToastMessagePage() {
 <button onClick={() => setActiveToast(
   <MahatiToastMessage 
     type="notification" 
+    custom={{
+    iconSrc:"/icons/notification_1.png"
+    CloseIconSrc:"close_copy_1.png"
+    }}
     // message="Notification message descriptions"
     background="transparent"
     onClose={() => setActiveToast(null)}
@@ -565,6 +597,9 @@ export default function MahatiToastMessagePage() {
 <button onClick={() => setActiveToast(
   <MahatiToastMessage 
     type="notification"
+    custom={{
+    iconSrc:"/icons/notification_1.png"
+    }}
     title="Custom Toast"
     message="This is a fully customized toast notification"
     background="solid"
@@ -627,6 +662,9 @@ const handleAccept = () => {
   setActiveToast(
     <MahatiToastMessage
       type="success"
+      custom={{
+    iconSrc:"/icons/check-mark_2.png"
+    }}
       title="Accepted"
       message="You have accepted the request"
       onClose={() => setActiveToast(null)}

@@ -439,11 +439,11 @@ export default function FeedbackModalExample() {
           <div className="space-y-4 py-4">
             {/* Id */}
             <div>
-              <label className="block text-sm font-medium mb-1 px-4">Id</label>
+              <label className="block text-sm font-medium mb-1 px-4 text-black">Id</label>
               <input
                 type="text"
                 value={formData.id}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black bg-white"
                 onChange={(e) => onChange("id", e.target.value)}
                 style={{width:"95%", marginLeft:"10px"}}
               />
@@ -451,11 +451,11 @@ export default function FeedbackModalExample() {
 
             {/* Code */}
             <div>
-              <label className="block text-sm font-medium mb-1 px-4">Code</label>
+              <label className="block text-sm font-medium mb-1 px-4 text-black">Code</label>
               <input
                 type="text"
                 value={formData.code}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black bg-white"
                 onChange={(e) => onChange("code", e.target.value)}
                 style={{width:"95%", marginLeft:"10px"}}
               />
@@ -463,11 +463,11 @@ export default function FeedbackModalExample() {
 
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium mb-1 px-4">Name</label>
+              <label className="block text-sm font-medium mb-1 px-4 text-black">Name</label>
               <input
                 type="text"
                 value={formData.name}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black bg-white"
                 onChange={(e) => onChange("name", e.target.value)}
                 style={{width:"95%", marginLeft:"10px"}}
               />
@@ -524,11 +524,11 @@ export default function FeedbackModalExample() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Name</label>
-              <input type="text" className="w-full px-3 py-2 border rounded-lg" />
+              <input type="text" className="w-full px-3 py-2 border rounded-lg text-black bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
-              <input type="email" className="w-full px-3 py-2 border rounded-lg" />
+              <input type="email" className="w-full px-3 py-2 border rounded-lg text-black bg-white" />
             </div>
           </div>
         </div>
@@ -839,7 +839,7 @@ export default function FeedbackModalExample() {
                 <textarea
                   value={feedbackText}
                   onChange={(e) =>
-                   alert(e.target.value)
+                   setFeedbackText(e.target.value)
                   }
                     
                   placeholder="Please Enter your Feedback"

@@ -23,9 +23,8 @@ describe('Input', () => {
       expect(screen.getByRole('textbox')).toHaveValue('Test value');
     });
 
-    it('should render inside a div wrapper', () => {
+    it('should render input element inside container', () => {
       const { container } = render(<Input />);
-      expect(container.querySelector('div')).toBeInTheDocument();
       expect(container.querySelector('input')).toBeInTheDocument();
     });
 
@@ -36,11 +35,7 @@ describe('Input', () => {
 
   // ─── testId ───────────────────────────────────────────────────────────────
 
-  describe('testId', () => {
-    it('should apply testId to wrapper div', () => {
-      render(<Input testId="my-input" />);
-      expect(screen.getByTestId('my-input')).toBeInTheDocument();
-    });
+ 
 
     it('should apply testId-input to input element', () => {
       render(<Input testId="my-input" />);
@@ -325,4 +320,3 @@ describe('Input', () => {
       expect(screen.getByRole('textbox')).toHaveFocus();
     });
   });
-});

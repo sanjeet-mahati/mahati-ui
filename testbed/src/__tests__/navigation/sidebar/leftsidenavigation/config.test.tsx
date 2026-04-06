@@ -103,7 +103,7 @@ describe('leftsidenavigation/config.tsx (NavItems)', () => {
 
       { name: 'Spinner', href: '/spinner', position: 'top', active: false, subItemsCount: 5 },
       { name: 'Toast Message', href: '/toast', position: 'top', active: false, subItemsCount: 4 },
-      { name: 'Table', href: '/table', position: 'top', active: false, subItemsCount: 9 },
+      { name: 'Table', href: '/table', position: 'top', active: false, subItemsCount: 13},
       { name: 'Tab', href: '/tab', position: 'top', active: false, subItemsCount: 8 },
       { name: 'Chart', href: '/chart', position: 'top', active: false, subItemsCount: 0 },
       { name: 'Table With Tab', href: '/tableWithTab', position: 'top', active: false, subItemsCount: 5 },

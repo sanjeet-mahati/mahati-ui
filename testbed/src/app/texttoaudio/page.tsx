@@ -7,69 +7,44 @@ import { PropsTable } from "../PropsTable";
 export default function Page() {
   const props = [
     {
-      name: "mode",
-      type: `"component" | "page"`,
-      default: `"component"`,
-      description: "Reads text entered in the textarea or the entire webpage content",
-    },
-    {
       name: "icons",
       type: "IconSet",
       default: "defaultIcons",
-      description: "Custom icons for play, pause, stop, forward, backward and loop buttons",
-    },
-    {
-      name: "defaultVolume",
-      type: "number",
-      default: "1",
-      description: "Initial volume level (range: 0 to 1)",
-    },
-    {
-      name: "defaultSpeed",
-      type: "number",
-      default: "1",
-      description: "Initial playback speed (range: 0.5x to 2x)",
-    },
-    {
-      name: "autoPlay",
-      type: "boolean",
-      default: "false",
-      description: "Automatically starts reading when text or page content is loaded",
-    },
-    {
-      name: "loopMode",
-      type: `"off" | "once" | "continuous"`,
-      default: `"off"`,
-      description: "Controls looping behavior of the audio playback",
-    },
-    {
-      name: "showSummary",
-      type: "boolean",
-      default: "true",
-      description: "Shows or hides the Quick Summary panel",
-    },
-    {
-      name: "showControls",
-      type: "boolean",
-      default: "true",
-      description: "Shows or hides playback controls (play, pause, seek, volume, speed)",
+      description:
+        "Custom icons for controls like play, pause, skip, stop and loop",
     },
   ];
 
   return (
-    <div className="w-full px-4 py-6">
-      <h1 className="text-3xl font-bold">Text To Audio</h1>
+    <div className="w-full max-w-6xl mx-auto p-6">
+      
+      {/* Heading */}
+      <h1 className="text-3xl font-bold mb-4">Text To Audio</h1>
 
+      {/* Props Table */}
       <PropsTable title="Props" props={props} />
 
+      <br />
+
+      {/* Code Preview */}
       <CodePreview
-        title="Text To Audio"
-        code={`<MahatiTexttoAudio />`}
+        title="Basic Usage"
+        code={`<MahatiTexttoAudio 
+              icons={{
+               play: "/icons/play-btn.png",
+               pause: "/icons/pause-btn.png",
+               stop: "/icons/hard-stop.png",
+               repeat: "/icons/repeat-icon.png",
+               skipForward: "/icons/skip-forward.png",
+               skipBackward: "/icons/Backward-icon.png",
+               tenForward: "/icons/ten-skip-forward.png",
+               tenBackward: "/icons/ten-skip-backward.png",
+              }}
+          />`}
         preview={
-          <div className="w-full min-w-[900px]">
+          <div className="bg-white text-black p-4">
         <MahatiTexttoAudio />
         </div>
-        
         }
       />
     </div>

@@ -62,13 +62,13 @@ export default function DropdownDemoPage() {
 
       <CodePreview
         title="Dropdown Variants"
-        code={`<MahatiDropdown variant="basic" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }]} />
-<MahatiDropdown variant="outline" options={[{ key: "Option A", value: "A" }, { key: "Option B", value: "B" }]} />
-<MahatiDropdown variant="pill" options={[{ key: "Small", value: "s" }, { key: "Medium", value: "m" }]} />
-<MahatiDropdown variant="dark" options={[{ key: "Dark 1", value: "d1" }, { key: "Dark 2", value: "d2" }]} />
-<MahatiDropdown variant="underline" options={[{ key: "Style 1", value: "s1" }, { key: "Style 2", value: "s2" }]} />
-<MahatiDropdown variant="shadow" options={[{ key: "View", value: "view" }, { key: "Edit", value: "edit" }]} />
-<MahatiDropdown variant="gradient" options={[{ key: "Profile", value: "profile" }, { key: "Logout", value: "logout" }]} />`}
+        code={`<MahatiDropdown variant="basic" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }]}  onSelect={() => {}}/>
+<MahatiDropdown variant="outline" options={[{ key: "Option A", value: "A" }, { key: "Option B", value: "B" }]}  onSelect={() => {}}/>
+<MahatiDropdown variant="pill" options={[{ key: "Small", value: "s" }, { key: "Medium", value: "m" }]}  onSelect={() => {}}/>
+<MahatiDropdown variant="dark" options={[{ key: "Dark 1", value: "d1" }, { key: "Dark 2", value: "d2" }]}  onSelect={() => {}} />
+<MahatiDropdown variant="underline" options={[{ key: "Style 1", value: "s1" }, { key: "Style 2", value: "s2" }]}  onSelect={() => {}} />
+<MahatiDropdown variant="shadow" options={[{ key: "View", value: "view" }, { key: "Edit", value: "edit" }]}  onSelect={() => {}}/>
+<MahatiDropdown variant="gradient" options={[{ key: "Profile", value: "profile" }, { key: "Logout", value: "logout" }]}  onSelect={() => {}}/>`}
         preview={
           <div className="flex flex-wrap items-center justify-center gap-6">
             <MahatiDropdown variant="basic" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }, { key: "Option 3", value: "3" }]} onSelect={handleSelect} />
@@ -85,7 +85,7 @@ export default function DropdownDemoPage() {
       <CodePreview
         title="Glass Dropdown"
         code={`<div className="p-8 rounded-lg bg-cover" style={{ backgroundImage: "url(...)" }}>
-  <MahatiDropdown variant="glass" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }]} />
+  <MahatiDropdown variant="glass" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }]}  onSelect={() => {}} />
 </div>`}
         preview={
           <div className="p-8 rounded-lg bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1554147090-e1221a04a025?w=800')" }}>

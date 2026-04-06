@@ -116,7 +116,7 @@ describe('Button', () => {
     it('should apply white color when name provided', () => {
       render(<Button name="blue">Blue</Button>);
       const btn = screen.getByRole('button');
-      expect(btn).toHaveStyle({ color: 'white' });
+      expect(btn).toHaveStyle({ color: 'rgb(255,255,255)' });
     });
 
     it('should apply gradient for primary name', () => {
@@ -196,7 +196,7 @@ describe('Button', () => {
 
     it('should apply white color for gradient name', () => {
       render(<Button iconButton name="primary">Icon</Button>);
-      expect(screen.getByRole('button')).toHaveStyle({ color: 'white' });
+      expect(screen.getByRole('button')).toHaveStyle({ color: 'rgb(255,255,255)' });
     });
 
     it('should apply hex color for named color', () => {

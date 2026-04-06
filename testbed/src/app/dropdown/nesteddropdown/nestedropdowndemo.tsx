@@ -141,9 +141,10 @@ export default function SearchableDropdownPage() {
           <CodePreview
             title="Searchable Dropdown"
             code={`
-<SearchableDropdown
+const [value,setValue]
+<MahatiSearchableDropdown
   label="Select here"
-  options={...}
+  options={[{label:"country,value:country"},{label:"Name",value:"name"}]}
   value={value}
   onChange={setValue}
 />
@@ -152,7 +153,7 @@ export default function SearchableDropdownPage() {
               // <div className="preview-wrapper">
               //   <div className="preview-card">
               <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
                   <h3
                   >Searchable Dropdown</h3>
                   <SearchableDropdown
@@ -179,7 +180,8 @@ export default function SearchableDropdownPage() {
           <CodePreview
             title="Multi Select Dropdown"
             code={`
-<MultiSelectDropdown
+const [values ,setValues]=useState<string[]>([])
+<MahatiMultiSelectDropdown
   label="Multi Select"
   options={...}
   values={values}
@@ -190,7 +192,7 @@ export default function SearchableDropdownPage() {
               // <div className="preview-wrapper">
               //   <div className="preview-card large">
               <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
                   <h3>Multi Select Dropdown</h3>
                   <MultiSelectDropdown
                     label="Multi Select"
@@ -214,14 +216,29 @@ export default function SearchableDropdownPage() {
   <CodePreview
     title="Cascading / Nested Dropdown"
     code={`
-<CascadingDropdown
+const [cascadevalue,setCascadeValue]= usestate({})
+<MahatiCascadingDropdown
   value={cascadeValue}
   onChange={setCascadeValue}
+  data={[
+    {
+      label: "India",
+      value: "india",
+      children: [
+        {
+          label: "Telangana",
+          value: "ts",
+          children: [{ label: "Hyderabad", value: "hyd" }]
+        }
+      ]
+    }
+  ]}
 />
+
 `}
     preview={
       <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
           <h3>Cascading Dropdown</h3>
 
           <SearchableDropdown
@@ -273,7 +290,8 @@ export default function SearchableDropdownPage() {
   <CodePreview
     title="Avatar Dropdown"
     code={`
-<AvatarDropdown
+const [avatar,setAvatar] =useState("")
+<MahatiAvatarDropdown
   options={...}
   value={avatar}
   onChange={setAvatar}
@@ -281,7 +299,7 @@ export default function SearchableDropdownPage() {
 `}
     preview={
       <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
           <h3>Avatar Dropdown</h3>
 
           <AvatarDropdown
@@ -315,7 +333,8 @@ export default function SearchableDropdownPage() {
   <CodePreview
     title="Avatar Multi Select Dropdown"
     code={`
-<AvatarMultiSelectDropdown
+const [values,setValues] = useState<string[]>([])
+<MahatiAvatarMultiSelectDropdown
   options={...}
   values={values}
   onChange={setValues}
@@ -323,7 +342,7 @@ export default function SearchableDropdownPage() {
 `}
     preview={
       <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
           <h3>Avatar Multi Select</h3>
 
           <AvatarMultiSelectDropdown
@@ -355,15 +374,22 @@ export default function SearchableDropdownPage() {
   <CodePreview
     title="Grouped Dropdown"
     code={`
-<GroupedDropdown
-  groups={...}
+const [value, setValue] = useState(null);
+
+<MahatiGroupedDropdown
+  groups={[
+    {
+      label: "Frontend",
+      options: [{ label: "React", value: "react" }]
+    }
+  ]}
   values={value}
   onChange={setValue}
 />
 `}
     preview={
      <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
           <h3>Grouped Dropdown</h3>
 
           <GroupedDropdown
@@ -397,16 +423,44 @@ export default function SearchableDropdownPage() {
   <CodePreview
     title="Async Dropdown"
     code={`
-<AsyncDropdown
+  
+const [country, setCountry] = useState("");
+const [state, setState] = useState("");
+const [city, setCity] = useState("");
+
+<MahatiAsyncDropdown
   label="Country"
-  loadOptions={loadCountries}
   value={country}
-  onChange={setCountry}
+  loadOptions={loadCountries}
+  onChange={(val) => {
+    setCountry(val);
+    setState(""); // reset dependent
+    setCity("");
+  }}
+/>
+
+<AsyncDropdown
+  label="State"
+  value={state}
+  disabled={!country}
+  loadOptions={loadStates}
+  onChange={(val) => {
+    setState(val);
+    setCity(""); // reset city
+  }}
+/>
+
+<AsyncDropdown
+  label="City"
+  value={city}
+  disabled={!state}
+  loadOptions={loadCities}
+  onChange={setCity}
 />
 `}
     preview={
      <div className="w-full flex justify-center">
-  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4">
+  <div className="w-full max-w-[320px] p-4 bg-gradient-to-b from-[#e8f0f6] to-[#ecf6f3] border border-[rgba(23,97,163,0.35)] rounded-[8px] flex flex-col gap-4 !text-black [&_*]:!text-black [&_input]:!text-black [&_input]:!bg-white [&_button]:!text-black">
           <h3>Async Dropdown</h3>
 
           <AsyncDropdown

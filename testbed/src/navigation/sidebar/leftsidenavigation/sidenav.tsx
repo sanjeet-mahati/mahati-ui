@@ -224,9 +224,9 @@ export const SideNavItem: React.FC<SideNavItemProps> = ({
                 )}
                 onClick={() => subItems && toggleSubmenu(itemKey)}
               >
-                <div className="nav-link-content">
+                <div className="nav-link-content w-full min-w-0">
                   {icon && icon}
-                  <span className="nav-link-content-text">{label}</span>
+                  <span className="nav-link-content-text break-words whitespace-normal">{label}</span>
                   {subItems && subItems.length > 0 && (
                     <FontAwesomeIcon
                       icon={faChevronDown}

@@ -517,7 +517,7 @@ export const MahatiPromotionModal = ({
     if (ctaLink) {
       openInNewTab
         ? window.open(ctaLink, "_blank")
-        : (window.location.href = ctaLink);
+        : window.location.assign(ctaLink);
     }
 
     onClose();

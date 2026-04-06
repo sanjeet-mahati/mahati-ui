@@ -28,14 +28,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div
-        data-testid={testId}
-        className="flex flex-col w-full mb-4"
-      >
+     <>
         <input
           ref={ref}
-          onChange={handleChange}
+          
           data-testid={testId ? `${testId}-input` : undefined}
+          onChange={handleChange}
           className={`
             w-full max-w-full min-w-0
             h-[44px]
@@ -74,7 +72,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {errorMessage}
           </span>
         )}
-      </div>
+    </>
     );
   }
 ) as any;

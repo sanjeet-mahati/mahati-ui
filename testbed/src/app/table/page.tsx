@@ -900,15 +900,18 @@ export default function TabDemoTailwindCSS() {
           <p className="mb-4 text-slate-500">
             A minimal example with static data and no pagination controls.
           </p>
+          <div id="basictable">
           <CodePreview
             title="Basic Table"
             code={`<MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />`}
             preview={<MahatiTable headers={basicHeaders} data={peopleAll.slice(0, 8)} />}
           />
         </div>
+        </div>
 
         {/* PAGINATED */}
         <div className="mb-12">
+          <div id="pagenated-table">
           <CodePreview
             title="Paginated Table"
             code={`const { page, setPage, limit, setLimit, search, onSearch, onReset, total, slice } = useSearchPaginate(peopleAll, 10);
@@ -979,9 +982,12 @@ export default function TabDemoTailwindCSS() {
                   onResetSearch={onReset}
                   onDownloadPDF={() => alert("PDF download triggered!")}
                 />
+              
               </div>
+              
             }
           />
+        </div>
         </div>
 
         {/* EXPANDABLE ROWS WITH SUMMARY (single) */}
@@ -1041,6 +1047,7 @@ export default function TabDemoTailwindCSS() {
 
         {/* CUSTOM CELLS & ACTIONS */}
         <div className="mb-12">
+          <div id="custom-cells&actions">
           <CodePreview
             title="Custom Cells & Actions"
             code={`<MahatiTable
@@ -1112,9 +1119,11 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* DATE & TIME SORTING */}
         <div className="mb-12">
+          <div id="Date&timesorting">
           <CodePreview
             title="Date & Time Sorting"
             code={`<SortableTable headers={taskHeaders} data={tasksDataPrepared} />`}
@@ -1127,6 +1136,7 @@ export default function TabDemoTailwindCSS() {
           <p className="mb-4 text-slate-500">
             Wrap the original Table to show visible cell edges.
           </p>
+          <div id="Bordered-table">
           <CodePreview
             title="Bordered Table (Visible Edges)"
             code={`<div className="rounded-lg bg-white p-2 [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_th]:border [&_th]:border-slate-200">
@@ -1138,6 +1148,8 @@ export default function TabDemoTailwindCSS() {
               </div>
             }
           />
+          </div>
+        </div>
         </div>
 
         {/* ALIGNMENT CONTROLS (ALL CELLS) */}
@@ -1146,6 +1158,7 @@ export default function TabDemoTailwindCSS() {
             This table starts left-aligned. Use the buttons to change alignment of{" "}
             <em>all cells</em> in this table only.
           </p>
+          <div id="Alignment-controls">
           <CodePreview
             title="Alignment Controls (Left / Center / Right)"
             code={`<div className={alignClass}>
@@ -1191,6 +1204,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* PER-COLUMN ALIGNMENT */}
         <div className="mb-12">
@@ -1198,19 +1212,21 @@ export default function TabDemoTailwindCSS() {
             Starts left-aligned. Click a column header to cycle that column's{" "}
             <em>cell</em> alignment: Left → Center → Right → Left.
           </p>
+          <div id="Per-column-alignment">
           <CodePreview
             title="Per-Column Alignment"
             code={`<MahatiTable headers={perColHeadersClickable} data={perColData} />`}
             preview={<MahatiTable headers={perColHeadersClickable} data={perColData} />}
           />
         </div>
-
+         </div>
         {/* COLUMN VISIBILITY */}
         <div className="mb-12">
           <p className="mb-4 text-slate-500">
             Use the dropdown to choose which columns are shown. Initially all 10 columns are
             visible.
           </p>
+          <div id="column-visibility">
           <CodePreview
             title="Column Visibility (Multi-Select)"
             code={`<MahatiTable
@@ -1293,6 +1309,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* ALL-IN-ONE */}
         <div className="mb-12">
@@ -1300,6 +1317,7 @@ export default function TabDemoTailwindCSS() {
             Combines: sortable headers, pagination, editable rows &amp; actions, add column/row,
             per-table alignment controls, and visible borders — all in one table.
           </p>
+          <div id="All-in-one-table">
           <CodePreview
             title="All-in-One Table"
             code={`<SortableTable
@@ -1372,6 +1390,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* EXPANDABLE ROWS WITH SUMMARY (single) */}
         <div className="mb-12">
@@ -1379,6 +1398,7 @@ export default function TabDemoTailwindCSS() {
             Click on any row to expand and view the summary. Only one row can be expanded at a time.
             Click the same row again to collapse, or use the (X) button to close the summary.
           </p>
+          <div id="Expandalble-rows-with-summary">
           <CodePreview
             title="Expandable Rows with Summary"
             code={`<MahatiTable
@@ -1399,6 +1419,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* EXPANDABLE MULTIPLE ROWS WITH SUMMARY (multi) */}
         <div className="mb-12">
@@ -1407,7 +1428,9 @@ export default function TabDemoTailwindCSS() {
             simultaneously. Click the same row again to collapse, or use the (X) button to close
             individual summaries.
           </p>
+            <div id="Expandable-Multiple-Rows-with-Summary">
           <CodePreview
+        
             title="Expandable Multiple Rows with Summary"
             code={`<MahatiTable
   headers={basicHeaders}
@@ -1427,6 +1450,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* SINGLE-COLUMN TEXT WRAP (Summary only) */}
         <div className="mb-12">
@@ -1435,6 +1459,7 @@ export default function TabDemoTailwindCSS() {
             truncated summary text with ellipsis. Hover over the summary text to see the full
             content. All rows maintain consistent height.
           </p>
+          <div id="Text-Wrap-Table-(Summary Column)">
           <CodePreview
             title="Text Wrap Table (Summary Column)"
             code={`<MahatiTable
@@ -1453,6 +1478,7 @@ export default function TabDemoTailwindCSS() {
             }
           />
         </div>
+        </div>
 
         {/* NEW: MULTI-COLUMN TEXT WRAP */}
         <div className="mb-12">
@@ -1463,6 +1489,7 @@ export default function TabDemoTailwindCSS() {
             Example: <code>["summary"]</code> wraps only the Summary column;{" "}
             <code>["email", "summary", "createdAt"]</code> wraps those three columns.
           </p>
+          <div id="Multi-Column Text Wrap Table">
           <CodePreview
             title="Multi-Column Text Wrap Table"
             code={`<MahatiTable
@@ -1480,6 +1507,7 @@ export default function TabDemoTailwindCSS() {
               />
             }
           />
+        </div>
         </div>
       </main>
     </div>

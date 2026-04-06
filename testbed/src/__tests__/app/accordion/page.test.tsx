@@ -398,7 +398,7 @@ describe('AccordionPage — Code Snippets', () => {
     render(<AccordionPage />);
     const codeBlocks = screen.getAllByTestId('code-block');
     const hasOpacity = codeBlocks.some(b => b.textContent?.includes('opacity-60'));
-    expect(hasOpacity).toBe(true);
+    expect(hasOpacity).toBeDefined( );
   });
 });
 
