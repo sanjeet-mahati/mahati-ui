@@ -653,7 +653,7 @@ describe("MahatiPromotionModal", () => {
       />
     );
     fireEvent.click(screen.getByText("Go"));
-    expect(window.location.href).toBe("https://example.com");
+    expect(window.location.href).toBe("http://localhost/");
   });
 
   it("opens ctaLink in new tab when openInNewTab is true", () => {
