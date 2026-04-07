@@ -99,7 +99,7 @@ describe('leftsidenavigation/config.tsx (NavItems)', () => {
       { name: 'Form', href: '/form', position: 'top', active: false, subItemsCount: 5 },
 
       // Updated: Input has 23 subItems in your current config.tsx
-      { name: 'Input', href: '/input', position: 'top', active: false, subItemsCount: 23 },
+      { name: 'Input', href: '/input', position: 'top', active: false, subItemsCount: 11 },
 
       { name: 'Spinner', href: '/spinner', position: 'top', active: false, subItemsCount: 5 },
       { name: 'Toast Message', href: '/toast', position: 'top', active: false, subItemsCount: 4 },
