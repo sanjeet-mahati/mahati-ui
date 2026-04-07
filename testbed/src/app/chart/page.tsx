@@ -450,7 +450,7 @@ if (chartType === "doughnut") {
     }
   }
 
-  return data?.labels ? data : null;
+  return data?.labels ?  JSON.parse(JSON.stringify(data)) : null;
 };
 
   // const handleApplyFilters = () => {
