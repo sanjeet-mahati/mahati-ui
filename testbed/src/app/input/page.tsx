@@ -93,7 +93,7 @@ const FloatingStyles = styled.div`
     transition: transform .15s ease, top .15s ease, font-size .15s ease, color .15s ease, background-color .15s ease;
   }
   .input:focus + .input-label,
-  .input:not(:placeholder-shown) + .input-label {
+  input-float.has-value .input-label {
     top: 0;
     transform: translateY(-50%) scale(0.92);
     color: #1e73be;
@@ -164,7 +164,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({
     else setInner(e.target.value);
   };
 
-  const inputValue = isControlled ? (value as string) : inner;
+  const inputValue = isControlled ? (value ?? "") : inner;
 
   return (
     <FloatingStyles>
@@ -219,7 +219,7 @@ const IconFloatingStyles = styled.div`
     transition: transform .15s ease, top .15s ease, font-size .15s ease, color .15s ease, background-color .15s ease;
   }
   .input:focus + .input-label,
-  .input:not(:placeholder-shown) + .input-label {
+  .input-float.has-value .input-label{
     top: 0;
     transform: translateY(-50%) scale(0.92);
     color: #1e73be;
@@ -284,11 +284,11 @@ const FloatingIconInput: React.FC<FloatingIconInputProps> = ({
     else setInner(e.target.value);
   };
 
-  const inputValue = isControlled ? (value as string) : inner;
+  const inputValue = isControlled ? (value ?? "") : inner;
 
   return (
     <IconFloatingStyles>
-      <div className="input-float">
+      <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
         <span className="icon-left" aria-hidden>
           <span style={{ width: 18, height: 18, display: "inline-flex" }}>{icon}</span>
         </span>
@@ -332,7 +332,7 @@ const ToggleIconStyles = styled.div`
     position: absolute; left: 42px; top: 50%; transform: translateY(-50%); color: #6b7280; background: #fff; padding: 0 6px; border-radius: 4px; pointer-events: none;
     transition: transform .15s ease, top .15s ease, font-size .15s ease, color .15s ease, background-color .15s ease;
   }
-  .input:focus + .input-label, .input:not(:placeholder-shown) + .input-label { top: 0; transform: translateY(-50%) scale(0.92); color: #1e73be; }
+  .input:focus + .input-label, .input-float.has-value .input-label{ top: 0; transform: translateY(-50%) scale(0.92); color: #1e73be; }
 
   .icon-left {
     position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
@@ -381,7 +381,7 @@ const PasswordToggleInput: React.FC<PasswordToggleInputProps> = ({
 
   return (
     <ToggleIconStyles>
-      <div className="input-float">
+      <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
         <span className="icon-left" aria-hidden>
           <HiLockClosed style={{ width: 18, height: 18 }} />
         </span>
@@ -439,7 +439,7 @@ const AvatarInputStyles = styled.div`
     transition: transform .15s ease, top .15s ease, font-size .15s ease, color .15s ease, background-color .15s ease;
   }
   .input:focus + .input-label,
-  .input:not(:placeholder-shown) + .input-label { top: 0; transform: translateY(-50%) scale(0.92); color: #1e73be; }
+  .input-float.has-value .input-label{ top: 0; transform: translateY(-50%) scale(0.92); color: #1e73be; }
 `;
 
 type AvatarInputProps = {
@@ -481,7 +481,7 @@ const AvatarInput: React.FC<AvatarInputProps> = ({
               avatarText
             )}
           </div>
-          <div className="input-float">
+          <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
             <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
@@ -523,7 +523,7 @@ const AvatarPlaceholderInput: React.FC<AvatarPlaceholderInputProps> = ({
               <HiUserCircle style={{ width: 20, height: 20 }} />
             </div>
           )}
-          <div className="input-float">
+          <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
             <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
@@ -552,7 +552,7 @@ const AvatarRingInput: React.FC<AvatarRingInputProps> = ({
           <div className="avatar" aria-hidden style={{ boxShadow: `0 0 0 2px ${ringColor}`, background: '#fff', color: '#1f2937' }}>
             {avatarText}
           </div>
-          <div className="input-float">
+          <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
             <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
@@ -584,7 +584,7 @@ const AvatarRingGapInput: React.FC<AvatarRingGapInputProps> = ({
           <div className="avatar-wrap" style={{ ['--ring-color' as any]: ringColor, padding: gapPx }} aria-hidden>
             <div className="avatar-inner">{avatarText}</div>
           </div>
-          <div className="input-float">
+          <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
             <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
@@ -617,7 +617,7 @@ const AvatarImageInput: React.FC<AvatarImageInputProps> = ({
           <div className="avatar-img" aria-hidden style={{ borderRadius: radius, boxShadow: useRing ? `0 0 0 2px ${ringColor}` : "0 0 0 1px #e5e7eb inset" }}>
             {avatarUrl ? <img src={avatarUrl} alt="" /> : <div style={{ width: '100%', height: '100%', background: '#d1d5db' }} />}
           </div>
-          <div className="input-float">
+          <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
             <MahatiInput className="input" type="text" name={name} value={val} onChange={handleChange} placeholder=" " autoComplete={autoComplete} />
             <label className="input-label">{label}</label>
           </div>
@@ -717,10 +717,30 @@ const StatePlainInput = styled.input<{ $empty: boolean }>`
 `;
 
 const ResizableTextarea = styled.textarea`
-  width: 300px; max-width: 100%; min-height: 120px; padding: 14px 12px; border: 1px solid #cbd5e1; border-radius: 8px;
-  background: #fff; font-size: 1rem; line-height: 1.5; resize: both; overflow: auto; box-sizing: border-box;
-  &:focus { outline: none; border-color: #1e73be; box-shadow: 0 0 0 3px rgba(30,115,190,0.15); }
+  width: 300px;
+  max-width: 100%;
+  min-height: 120px;
+  padding: 14px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  resize: both;
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+  white-space: pre;   /* 🔥 KEY FIX */
+
+  &:focus {
+    outline: none;
+    border-color: #1e73be;
+    box-shadow: 0 0 0 3px rgba(30,115,190,0.15);
+  }
 `;
+ 
 
 const FileBox = styled.div`
   width: 300px; max-width: 100%; padding: 16px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #ffffff;
@@ -1291,10 +1311,18 @@ export default function ForMahatiInputDemoPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const onFileBoxClick = () => fileInputRef.current?.click();
-  const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files ? Array.from(e.target.files) : [];
-    setFiles(list);
-  };
+const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFiles = e.target.files;
+
+  if (!selectedFiles) return;
+
+  const fileArray = Array.from(selectedFiles);
+
+  console.log("Selected files:", fileArray); 
+
+  setFiles(prev=>[...prev,...fileArray]);
+  e.target.value="";
+};
 
   const handleBasicFormChange = (e: React.ChangeEvent<HTMLInputElement>) => { const { name, value } = e.target; setBasicForm(p => ({ ...p, [name]: value })); };
   const handleValidationFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1430,6 +1458,7 @@ export default function ForMahatiInputDemoPage() {
       </div>
 
       {/* Basic Input Field with CodePreview */}
+      <div id="basic-input">
       <CodePreview
         title="Basic Input Field"
         description="Standard input field with placeholder text (no floating label)."
@@ -1451,11 +1480,15 @@ export default function ForMahatiInputDemoPage() {
               value={basicText}
               onChange={(e) => setBasicText(e.target.value)}
             />
+            
             <span className="text-sm text-gray-700 font-medium">Text Input</span>
+            
           </div>
+        
         }
+    
       />
-
+    </div>
       <br/>
 
       {/* Input States with CodePreview */}
@@ -1566,6 +1599,7 @@ export default function ForMahatiInputDemoPage() {
       <br/>
 
       {/* File Input with CodePreview */}
+      <div id="File Input">
       <CodePreview
         title="File Input"
         description="Three styles: a clickable box, inline input-like with button, and drag & drop."
@@ -1575,6 +1609,14 @@ export default function ForMahatiInputDemoPage() {
   <div className="title">Click to select files</div>
   <div className="hint">You can choose one or multiple files</div>
 </FileBox>
+{/* ✅ ADD THIS */}
+  <input
+    ref={fileInputRef}
+    type="file"
+    hidden
+    multiple
+    onChange={onFilesChange}
+  />
 
 {/* Inline File Input */}
 <InlineFileInput
@@ -1590,13 +1632,38 @@ export default function ForMahatiInputDemoPage() {
         preview={
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-4">
-              <FileBox onClick={onFileBoxClick} role="button" aria-label="Open file dialog">
+              <FileBox onClick={onFileBoxClick} role="button" tabIndex={0} aria-label="Open file dialog">
                 <HiFolderOpen className="icon" />
                 <div className="title">Click to select files</div>
                 <div className="hint">You can choose one or multiple files</div>
               </FileBox>
+              {/* ✅ ADD THIS */}
+  <input
+    ref={fileInputRef}
+    type="file"
+    style={{display:"none"}}
+    multiple
+    onChange={onFilesChange}
+
+    
+  />
+  {files.length > 0 && (
+  <FilesList>
+    {files.map((file, index) => (
+      <li key={index}>
+        {file.name}{" "}
+        <span style={{ color: "#9ca3af" }}>
+          ({Math.round(file.size / 1024)} KB)
+        </span>
+      </li>
+    ))}
+  </FilesList>
+)}
+  
               <span className="text-sm text-gray-700 font-medium">Clickable Box</span>
             </div>
+            
+
             
             <div className="flex flex-col items-center gap-4">
               <InlineFileInput
@@ -1616,10 +1683,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+    </div>
       <br/>
 
       {/* Form with Validation with CodePreview */}
+      <div id="form-with-validation">
       <CodePreview
         title="Form with Validation"
         description="Real-time validation with error messages and form submission handling."
@@ -1668,6 +1736,7 @@ export default function ForMahatiInputDemoPage() {
                 <FormDemo>
                   <InputClamp>
                   <FloatingIconInput 
+                   
                     type="email" 
                     name="email" 
                     label="Enter your email" 
@@ -1706,10 +1775,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Full Featured Form with CodePreview */}
+      <div id="full-featured-form">
       <CodePreview
         title="Full Featured Form"
         description="A complete registration form showcasing all input types and form functionality."
@@ -1765,10 +1835,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+      </div>
       <br/>
 
       {/* Login Form with Background Image with CodePreview */}
+      <div id="login-with-baground-image">
       <CodePreview
         title="Login Form with Background Image"
         description="Form container with background image overlay."
@@ -1838,10 +1909,11 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Avatar Input Variations with CodePreview */}
+      <div id="avatar-input-variations">
       <CodePreview
         title="Avatar Input Variations"
         description="Different avatar input styles with various configurations."
@@ -1882,10 +1954,11 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Rounded Inputs with CodePreview */}
+      <div id="rounded-inputs">
       <CodePreview
         title="Rounded Inputs"
         description="Adjust the input's radius using the 'rounded-*' utility class options."
@@ -1958,7 +2031,7 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+</div>
     </div>
   );
 }

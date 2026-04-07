@@ -49,6 +49,7 @@ export default function InputsPage() {
       <br />
 
       {/* ==================== BASIC INPUTS ==================== */}
+      <div id ="basic-input">
       <CodePreview
         title="Basic Inputs"
         code={`<MahatiFormContainer>
@@ -122,8 +123,9 @@ export default function InputsPage() {
           </MahatiFormContainer>
         }
       />
-
+      </div>
       {/* ==================== CUSTOM STYLE ==================== */}
+      <div id="inputs-with-custom-styling">
       <CodePreview
         title="Inputs With Custom Styling"
         code={`<MahatiFormContainer>
@@ -159,8 +161,10 @@ export default function InputsPage() {
           </MahatiFormContainer>
         }
       />
+      </div>
 
       {/* ====================== FILE INPUT ====================== */}
+      <div id ="file-upload">
       <CodePreview
         title="File Upload"
         code={`<div className=" w-full max-w-[438px]">
@@ -240,8 +244,10 @@ export default function InputsPage() {
           </MahatiFormContainer>
         }
       />
+      </div>
 
       {/* ==================== FLOATING LABEL ==================== */}
+      <div id="floating-label-input">
       <CodePreview
         title="Floating Label Style"
         code={`<div className="relative mb-6 w-full max-w-[438px]">
@@ -260,6 +266,9 @@ export default function InputsPage() {
       peer-focus:top-0
       peer-focus:text-sm
       peer-focus:text-blue-600
+      peer-[&:not(:placeholder-shown)]:top-0
+    peer-[&:not(:placeholder-shown)]:text-sm
+  
     "
   >
     Email Address
@@ -272,6 +281,7 @@ export default function InputsPage() {
                 placeholder=" "
                 value={form.email}
                 onChange={(e: any) => handleChange("email", e.target.value)}
+                className="peer"
               />
 
               <label
@@ -291,6 +301,8 @@ export default function InputsPage() {
           </MahatiFormContainer>
         }
       />
+      </div>
     </div>
+    
   );
 }

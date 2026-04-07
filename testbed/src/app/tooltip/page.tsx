@@ -361,7 +361,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </div>
 </div>`}
         preview={
-          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border  max-w-full border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-3">
               <div className="relative inline-block group cursor-help">
                 <div className="p-3 rounded-lg bg-red-100 border border-red-200">
@@ -432,7 +432,7 @@ import MahatiTooltip from "@/components/TooltipTailwindCSS";
   </div>
 </div>`}
         preview={
-          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border overflow-x-hidden max-w-full border-gray-200 rounded-lg bg-white">
+          <div className="flex flex-wrap gap-6 items-center justify-center p-4 md:p-6 border  max-w-full border-gray-200 rounded-lg bg-white break-words">
             <div className="flex flex-col items-center gap-3">
               <div className="relative inline-block group cursor-help">
                 <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity">

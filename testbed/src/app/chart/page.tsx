@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { ChartData } from "chart.js";
 import { MahatiChartAnalyticsWidget } from "@mahatisystems/mahati-ui-components";
 import chartDataJson from "./sample-chart-data.json";
+import { CodePreview } from "../CodePreview";
 
 /* ============================================================================
    STYLED COMPONENTS
@@ -68,9 +69,6 @@ const UploadHint = styled.p`
   line-height: 1.25rem;
 `;
 
-/* ============================================================================
-   TYPES
-   ============================================================================ */
 
 /* ============================================================================
    TYPES
@@ -100,9 +98,6 @@ const GANTT_COLOR_MAP = {
 type ChartType = "pie" | "doughnut" | "line" | "area" | "bar" | "bullet" | "gauge" | "gantt" | "calendarheatmap" | "horizontalbar"| "columnchart" | "groupbar" | "lollipop" | "kpi" | "riskgauge" | "stackbar";
 type TaskStatus = "Overdue" | "In Progress" | "On Target";
 
-/* ============================================================================
-   UTILITY FUNCTIONS
-   ============================================================================ */
 
 /* ============================================================================
    UTILITY FUNCTIONS
@@ -191,12 +186,11 @@ const getAreaChartData = (areaData: any, filters: Record<string, string>) => {
    MAIN COMPONENT
    ============================================================================ */
 
-/* ============================================================================
-   MAIN COMPONENT
-   ============================================================================ */
-
 export default function MahatiChart() {
   const [chartData, setChartData] = useState(chartDataJson);
+  const [appliedFiltersMap, setAppliedFiltersMap] = useState<Record<string, Record<string, string>>>({})
+  
+ 
   const [currentChartType, setCurrentChartType] = useState<ChartType>("area");
 
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>({
@@ -309,6 +303,11 @@ export default function MahatiChart() {
   });
 
   useEffect(() => {
+  setAppliedFiltersMap({[currentChartType]:
+    currentSelectedFilters});
+}, []);
+  
+  useEffect(() => {
    const initialMap: Record<ChartType, any> = {
   pie: chartData.chartData?.pie || {},
   doughnut: chartData.chartData?.doughnut || {},
@@ -327,7 +326,7 @@ export default function MahatiChart() {
 
   gantt: { labels: [], datasets: [] },
   calendarheatmap: { labels: [], datasets: [] },
-  horizontalbar: { labels: [], datasets: [] },
+  horizontalbar: (chartData.chartData as any)?.horizontalnar || {},
   columnchart: (chartData.chartData as any)?.columnchart || {},
 groupbar: (chartData.chartData as any)?.groupbar || {},
 stackbar: (chartData.chartData as any)?.stackbar || {},
@@ -341,20 +340,40 @@ kpi: (chartData.chartData as any)?.kpi || {},
     setCurrentStats((chartData.quickStats as any)?.[currentChartType] || chartData.quickStats?.pie || {});
   }, [chartData, currentChartType]);
 
-  const currentSelectedFilters = useMemo(() => {
-    switch (currentChartType) {
-      case 'gantt': return ganttSelectedFilters;
-      case 'horizontalbar': return horizontalBarSelectedFilters;
-      case 'calendarheatmap': return calendarHeatmapSelectedFilters;
-      case 'lollipop': return lollipopSelectedFilters;
-      case 'kpi': return kpiSelectedFilters;
-      case 'riskgauge': return riskGaugeSelectedFilters;
-      case 'bullet':
-      case 'gauge': return bulletGaugeSelectedFilters;
-      default: return selectedFilters;
-    }
-  }, [currentChartType, selectedFilters, bulletGaugeSelectedFilters, ganttSelectedFilters, horizontalBarSelectedFilters, calendarHeatmapSelectedFilters]);
+ const currentSelectedFilters = useMemo(() => {
+  switch (currentChartType) {
+    case 'gantt': return ganttSelectedFilters;
+    case 'horizontalbar': return horizontalBarSelectedFilters;
+    case 'calendarheatmap': return calendarHeatmapSelectedFilters;
+    case 'lollipop': return lollipopSelectedFilters;
+    case 'kpi': return kpiSelectedFilters;
+    case 'riskgauge': return riskGaugeSelectedFilters;
+    case 'bullet':
+    case 'gauge': return bulletGaugeSelectedFilters;
 
+    
+    case 'columnchart': return columnChartSelectedFilters;
+    case 'groupbar': return groupBarSelectedFilters;
+    case 'stackbar': return stackBarSelectedFilters;
+
+    default: return selectedFilters;
+  }
+}, [
+  currentChartType,
+  selectedFilters,
+  bulletGaugeSelectedFilters,
+  ganttSelectedFilters,
+  horizontalBarSelectedFilters,
+  calendarHeatmapSelectedFilters,
+  lollipopSelectedFilters,
+  kpiSelectedFilters,
+  riskGaugeSelectedFilters,
+
+
+  columnChartSelectedFilters,
+  groupBarSelectedFilters,
+  stackBarSelectedFilters
+]);
   const currentFilters = useMemo(() => {
     switch (currentChartType) {
       case 'gantt': return chartData.filters?.gantt || [];
@@ -363,6 +382,9 @@ kpi: (chartData.chartData as any)?.kpi || {},
       case 'lollipop': return chartData.filters?.lollipop || [];
       case 'kpi': return chartData.filters?.kpi || [];
       case 'riskgauge': return chartData.filters?.riskgauge || [];
+      case 'columnchart': return chartData.filters?.columnchart || [];
+case 'groupbar': return chartData.filters?.groupbar || [];
+case 'stackbar': return chartData.filters?.stackbar || [];
       case 'bullet':
       case 'gauge': return chartData.filters?.bulletGauge || [];
       default: return chartData.filters?.default || [];
@@ -375,43 +397,136 @@ kpi: (chartData.chartData as any)?.kpi || {},
   };
 
   const handleFiltersChange = (newFilters: Record<string, string>) => {
-    console.log('🔄 Filter Change - Chart Type:', currentChartType);
-    console.log('🔄 Filter Change - New Filters:', newFilters);
-    
-    if (currentChartType === 'kpi') {
-      console.log('✅ Setting KPI Filters:', newFilters);
-      setKpiSelectedFilters(newFilters);
-    } else if (currentChartType === 'gantt') {
-      setGanttSelectedFilters(newFilters);
-    } else if (currentChartType === 'horizontalbar') {
-      setHorizontalBarSelectedFilters(newFilters);
-    } else if (currentChartType === 'calendarheatmap') {
-      setCalendarHeatmapSelectedFilters(newFilters);
-    } else if (currentChartType === 'lollipop') {
-      setLollipopSelectedFilters(newFilters);
-    } else if (currentChartType === 'riskgauge') {
-      setRiskGaugeSelectedFilters(newFilters);
-    } else if (currentChartType === 'bullet' || currentChartType === 'gauge') {
-      setBulletGaugeSelectedFilters(newFilters);
-    } else {
-      setSelectedFilters(newFilters);
+  if (currentChartType === 'kpi') setKpiSelectedFilters(newFilters);
+  else if (currentChartType === 'gantt') setGanttSelectedFilters(newFilters);
+  else if (currentChartType === 'horizontalbar') setHorizontalBarSelectedFilters(newFilters);
+  else if (currentChartType === 'calendarheatmap') setCalendarHeatmapSelectedFilters(newFilters);
+  else if (currentChartType === 'lollipop') setLollipopSelectedFilters(newFilters);
+  else if (currentChartType === 'riskgauge') setRiskGaugeSelectedFilters(newFilters);
+  else if (currentChartType === 'columnchart') {
+  setColumnChartSelectedFilters(newFilters);
+}
+else if (currentChartType === 'groupbar') {
+  setGroupBarSelectedFilters(newFilters);
+}
+else if (currentChartType === 'stackbar') {
+  setStackBarSelectedFilters(newFilters);
+}
+  else if (currentChartType === 'bullet' || currentChartType === 'gauge') {
+    setBulletGaugeSelectedFilters(newFilters);
+  } else {
+    setSelectedFilters(newFilters);
+  }
 
-      if (currentChartType === 'area') {
-        const updatedData = getAreaChartData(chartData.chartData?.area, newFilters);
-        if (updatedData?.labels && updatedData?.datasets) {
-          setActiveChartDataMap(prev => ({
-            ...prev,
-            area: processAreaData(updatedData)
-          }));
-        }
-      }
+  
+
+  
+};
+   const getChartDataByFilters = (chartType: string, filters: any) => {
+  let data = (chartData.chartData as any)?.[chartType];
+
+  // ✅ special case for pieClient
+  if (chartType === "pie" && filters.Relationship === "Client") {
+    return (chartData.chartData as any)?.pieClient;
+  }
+
+  // ✅ DOUGHNUT FIX (IMPORTANT)
+if (chartType === "doughnut") {
+  return data[filters.Relationship] || data;
+}
+
+  if (!data) return null;
+
+  const keys = [
+    filters.SelectYear,
+    filters.SelectMonth,
+    filters.SelectWeek,
+    filters.SelectType
+  ];
+
+  for (let key of keys) {
+    if (key && data?.[key]) {
+      data = data[key];
     }
-  };
+  }
 
-  const handleApplyFilters = () => {
-    console.log(`Applying filters for ${currentChartType}:`, currentSelectedFilters);
-  };
+  return data?.labels ?  JSON.parse(JSON.stringify(data)) : null;
+};
 
+  // const handleApplyFilters = () => {
+  //   console.log(`Applying filters for ${currentChartType}:`, currentSelectedFilters);
+  // };
+ const handleApplyFilters = (
+  filters: Record<string, string>,
+  chartTypeFromUI?: ChartType
+) => {
+  const type = chartTypeFromUI || currentChartType;
+ setAppliedFiltersMap(prev => ({
+  ...prev,
+  [type]: filters
+}));
+
+  console.log("🔥 APPLY CLICKED");
+  console.log("Chart:", type);
+  console.log("Filters:", filters);
+
+  // ✅ update filters
+  if (type === 'kpi') setKpiSelectedFilters(filters);
+  else if (type === 'gantt') setGanttSelectedFilters(filters);
+  else if (type === 'horizontalbar') setHorizontalBarSelectedFilters(filters);
+  else if (type === 'calendarheatmap') setCalendarHeatmapSelectedFilters(filters);
+  else if (type === 'lollipop') setLollipopSelectedFilters(filters);
+  else if (type === 'riskgauge') setRiskGaugeSelectedFilters(filters);
+  else if (type === 'bullet' || type === 'gauge') {
+    setBulletGaugeSelectedFilters(filters);
+  } else {
+    setSelectedFilters(filters);
+  }
+
+  // ✅ update chart
+ setActiveChartDataMap(prev => {
+  let updatedData: any = null;
+
+  if (
+    type === "groupbar" ||
+    type === "stackbar" ||
+    type === "lollipop" ||
+    type === "kpi" ||
+    type === "columnchart"
+  ) {
+    // ✅ JUST PASS RAW DATA (NO MODIFICATION)
+    updatedData = (chartData.chartData as any)?.[type];
+
+    return {
+      ...prev,
+      [type]: updatedData,
+    };
+  }
+
+  
+  if (type === "area") {
+    const areaData = getAreaChartData(chartData.chartData?.area, filters);
+    if (areaData?.labels) {
+      updatedData = processAreaData(areaData);
+    }
+  } else {
+    updatedData = getChartDataByFilters(type, filters);
+  }
+
+  if (!updatedData) updatedData = prev[type];
+
+  return {
+    ...prev,
+    [type]: {
+      ...updatedData,
+      datasets: (updatedData.datasets || []).map((d: any) => ({
+        ...d,
+        data: [...(d.data || [])],
+      })),
+    },
+  };
+});
+};
   const currentDetails = useMemo((): DetailItem[] => {
     const data = activeChartDataMap[currentChartType];
     if (!data || !data.datasets?.length) return [];
@@ -635,7 +750,7 @@ kpi: (chartData.chartData as any)?.kpi || {},
 
   gantt: { labels: [], datasets: [] },
   calendarheatmap: { labels: [], datasets: [] },
-  horizontalbar: { labels: [], datasets: [] },
+  horizontalbar:uploaded.chartData.horizontalbar || {},
 
   columnchart:  { labels: [], datasets: [] },
   groupbar:  { labels: [], datasets: [] },
@@ -675,51 +790,111 @@ kpi: (chartData.chartData as any)?.kpi || {},
         </UploadHint>
       </UploadCard>
 
-      <MahatiChartAnalyticsWidget
-        title={chartData.metadata?.title || "Mahati Systems Chart Analytics"}
-        chartTypes={
-          [
-            "pie",
-            "doughnut",
-            "line",
-            "area",
-            "bar",
-            "bullet",
-            "gauge",
-            "gantt",
-            "calendarheatmap",
-            "horizontalbar",   "columnchart",   // ✅ added
-      "groupbar",      // ✅ added
-      "stackbar",      // ✅ added
-      "lollipop",      // ✅ added
-      "kpi",           // ✅ added
-      "riskgauge",     // ✅ added
-          ] as const
-        }
-        initialChartType="area"
-        filters={currentFilters}
-        chartFilters={chartFiltersConfig}
-        selectedFilters={currentSelectedFilters}
-        chartDataMap={activeChartDataMap}
-        bulletData={chartData.bullet}
-        gaugeData={chartData.gauge}
-        horizontalBarData={chartData.horizontalbar}
-        ganttData={chartData.gantt as any}
-        calendarheatmapData={chartData.calendarheatmap as any}
- 
+      <CodePreview
+  title="Mahati Chart Analytics Widget"
+  code={`<MahatiChartAnalyticsWidget
+title="Analytics Dashboard"
+
+/* ===== ALL CHART TYPES ===== */
+chartTypes={[
+"pie",
+"doughnut",
+"line",
+"area",
+"bar",
+"bullet",
+"gauge",
+"gantt",
+"calendarheatmap",
+"horizontalbar",
+"columnchart",
+"groupbar",
+"stackbar",
+"lollipop",
+"kpi",
+"riskgauge"
+]}
+
+initialChartType="area"
+
+/* ===== FILTERS ===== */
+filters={commonCharts.filters?.default || []}
+selectedFilters={{}}
+onFiltersChange={() => {}}
+onApplyFilters={() => {}}
+
+/* ===== COMMON CHART DATA (VERY IMPORTANT) ===== */
+chartDataMap={commonCharts.chartData}
+
+/* ===== ADVANCED CHART DATA ===== */
+bulletData={advancedCharts.bullet}
+gaugeData={advancedCharts.gauge}
+ganttData={advancedCharts.gantt}
+calendarheatmapData={advancedCharts.calendarheatmap}
+horizontalBarData={advancedCharts.horizontalbar}
+columnChartData={advancedCharts.columnchart}
+groupBarData={advancedCharts.groupbar}
+stackBarData={advancedCharts.stackbar}
+lollipopData={advancedCharts.lollipop}
+kpiData={advancedCharts.kpi}
+riskGaugeData={advancedCharts.riskgauge}
+
+/* ===== UI ===== */
+details={[]}
+quickStats={commonCharts.quickStats?.area || {}}
+
+/* ===== EVENTS ===== */
+onChartTypeChange={() => {}}
+/>`}
+  preview={
+    <MahatiChartAnalyticsWidget
+  key={currentChartType + JSON.stringify(currentSelectedFilters)}
+
+  title={chartData.metadata?.title || "Mahati Systems Chart Analytics"}
+
+  chartTypes={[
+    "pie","doughnut","line","area","bar","bullet","gauge",
+    "gantt","calendarheatmap","horizontalbar",
+    "columnchart","groupbar","stackbar","lollipop","kpi","riskgauge"
+  ]}
+
+  initialChartType={currentChartType}   // 🔥 IMPORTANT CHANGE
+
+  filters={currentFilters}
+  chartFilters={chartFiltersConfig}
+  selectedFilters={appliedFiltersMap[currentChartType] || currentSelectedFilters}
+  chartDataMap={activeChartDataMap}
+
+  bulletData={chartData.bullet}
+  gaugeData={chartData.gauge}
+  horizontalBarData={chartData.horizontalbar}
+  ganttData={chartData.gantt as any}
+  calendarheatmapData={chartData.calendarheatmap as any}
   lollipopData={(chartData as any).lollipop}
   columnChartData={(chartData as any).columnchart}
   groupBarData={(chartData as any).groupbar}
   stackBarData={(chartData as any).stackbar}
   kpiData={(chartData as any).kpi}
   riskGaugeData={(chartData as any).riskgauge}
-        onApplyFilters={handleApplyFilters}
-        onFiltersChange={handleFiltersChange}
-        details={currentDetails}
-        quickStats={currentStats}
-        onChartTypeChange={handleChartTypeChange}
-        actionButtons={actionButtons}
-      />
+
+  
+  onFiltersChange={handleFiltersChange}
+
+  
+  onApplyFilters={(filters) =>
+    handleApplyFilters(filters, currentChartType)
+  }
+
+  details={currentDetails}
+  quickStats={currentStats}
+
+  
+  onChartTypeChange={handleChartTypeChange}
+
+  actionButtons={actionButtons}
+/>
+  }
+/>
     </DemoContainer>
   );
 }

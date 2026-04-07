@@ -44,7 +44,11 @@ export default function LoadingDemo() {
           <CodePreview
             id="ring-spinner"
             title="Ring Spinner"
-            code={`<Spinner />`}
+            code={`<Spinner
+              size={24}
+              borderWidth={4}
+              borderRadius={50}
+             /> `}
             preview={
               <div className="flex items-center justify-center p-8">
                 <Spinner />
@@ -183,7 +187,11 @@ export default function LoadingDemo() {
   disabled 
   className="inline-flex items-center gap-3 px-6 py-3 rounded-lg font-medium opacity-75 cursor-not-allowed bg-blue-600 text-white"
 >
-  <Spinner size={20} borderWidth={3} primaryColor="rgba(255, 255, 255, 1)" backgroundColor="rgba(147, 197, 253, 0.5)" borderRadius={100} />
+  <Spinner size={20}
+   borderWidth={3} 
+   primaryColor="rgba(255, 255, 255, 1)" 
+   backgroundColor="rgba(147, 197, 253, 0.5)" 
+   borderRadius={100} />
   Loading...
 </button>`}
             preview={
@@ -275,7 +283,10 @@ export default function LoadingDemo() {
           <CodePreview
             id="loading-dots"
             title="Dots • Default (3 dots)"
-            code={`<LoadingDots />`}
+            code={`<LoadingDots 
+              size={8}
+              count={3}
+              />`}
             preview={
               <div className="flex items-center justify-center p-8">
                 <LoadingDots />
@@ -474,8 +485,12 @@ export default function LoadingDemo() {
           <CodePreview
             id="skeleton-card"
             title="Card • Skeleton Loading States"
-            code={`<CardWithLoading loading={true} />
-<CardWithLoading loading={false} />`}
+            code={`<CardWithLoading
+               loading={true} />
+               <CardWithLoading 
+               loading={false} 
+
+              />`}
             preview={
               <div className="flex flex-wrap items-center justify-center gap-8 p-8">
               <CardWithLoading loading={true} />

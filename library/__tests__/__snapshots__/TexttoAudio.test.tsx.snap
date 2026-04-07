@@ -34,7 +34,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="10 sec backward"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/ten-skip-backward.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              style="width: 16px; height: 16px; background-image: url("/icons/ten-skip-backward.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
             />
           </button>
           <button
@@ -42,7 +42,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="skip-backward-btn"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/Backward-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              style="width: 16px; height: 16px; background-image: url("/icons/Backward-icon.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
             />
           </button>
           <button
@@ -50,7 +50,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="play-pause-btn"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/play-btn.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              style="width: 16px; height: 16px; background-image: url("/icons/play-btn.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
             />
           </button>
           <button
@@ -58,7 +58,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="10-sec-forward-skip"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/ten-skip-forward.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              style="width: 16px; height: 16px; background-image: url("/icons/ten-skip-forward.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
             />
           </button>
           <button
@@ -66,7 +66,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="5-sec-forward-skip"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/Backward-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain; transform: scaleX(-1);"
+              style="width: 16px; height: 16px; background-image: url("/icons/Backward-icon.png"); background-repeat: no-repeat; background-position: center; background-size: contain; transform: scaleX(-1);"
             />
           </button>
           <button
@@ -74,7 +74,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             data-testid="force-stop"
           >
             <div
-              style="width: 16px; height: 16px; background-image: url(/icons/hard-stop.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+              style="width: 16px; height: 16px; background-image: url("/icons/hard-stop.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
             />
           </button>
           <button
@@ -86,7 +86,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
               style="position: relative;"
             >
               <div
-                style="width: 16px; height: 16px; background-image: url(/icons/repeat-icon.png); background-repeat: no-repeat; background-position: center; background-size: contain;"
+                style="width: 16px; height: 16px; background-image: url("/icons/repeat-icon.png"); background-repeat: no-repeat; background-position: center; background-size: contain;"
               />
             </div>
           </button>
@@ -100,6 +100,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             max="0"
             min="0"
             step="0.01"
+            style="accent-color: #4daf83; background: linear-gradient(90deg, rgba(23,97,163,1) 0%, rgba(77,175,131,1) 0%, #e5e7eb 0%, #e5e7eb 100%);"
             type="range"
             value="0"
           />
@@ -146,7 +147,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
           class="flex items-center gap-[10px]"
         >
           <div
-            style="width: 18px; height: 18px; background-image: url(/icons/sound-icon.png); background-size: contain; background-repeat: no-repeat; cursor: pointer;"
+            style="width: 18px; height: 18px; background-image: url("/icons/sound-icon.png"); background-size: contain; background-repeat: no-repeat; cursor: pointer;"
           />
           <input
             class="w-full appearance-none h-[6px] rounded-[5px]"
@@ -154,6 +155,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
             max="1"
             min="0"
             step="0.01"
+            style="accent-color: #4daf83; background: linear-gradient(90deg, rgba(23,97,163,1) 0%, rgba(77,175,131,1) 100%, #e5e7eb 100%, #e5e7eb 100%);"
             type="range"
             value="1"
           />
@@ -179,6 +181,7 @@ exports[`TexttoAudio — Snapshot matches snapshot with default props 1`] = `
           max="2"
           min="0.5"
           step="0.25"
+          style="accent-color: #4daf83; background: linear-gradient(90deg, rgba(23,97,163,1) 0%, rgba(77,175,131,1) 33.33333333333333%, #e5e7eb 33.33333333333333%, #e5e7eb 100%);"
           type="range"
           value="1"
         />

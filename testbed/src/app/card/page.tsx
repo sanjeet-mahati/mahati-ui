@@ -332,7 +332,7 @@ export default function CardPage() {
             <MahatiCard variant="elevated" className="max-w-sm p-0 overflow-hidden">
               <div className="relative h-48 w-full bg-white flex items-center justify-center p-4">
                 <Image 
-                  src="/logo.png"
+                  src="/resources/images/mahatilog.jpg"
                   alt="Product Logo"
                   width={100}
                   height={100}
@@ -423,8 +423,8 @@ export default function CardPage() {
 
       <CodePreview
         title="Spinning Card"
-        code={`<MahatiCard variant="subtle" className="max-w-sm perspective-1000 p-0 overflow-hidden">
-  <div className="animate-spin-slow preserve-3d">
+        code={`<MahatiCard variant="subtle" className="max-w-sm [perspective:1000px] p-0 overflow-hidden">
+  <div className="animate-spin [animation-duration:5s] [transform-style:preserve-3d]">
     <div className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
       <h3 className="text-xl font-semibold text-white mb-2">3D Spinning Card</h3>
       <p className="text-white/90">Watch the entire card spin in 3D space!</p>
@@ -438,8 +438,8 @@ export default function CardPage() {
 </MahatiCard>`}
         preview={
           <div className="flex justify-center">
-            <MahatiCard variant="subtle" className="max-w-sm perspective-1000 p-0 overflow-hidden">
-              <div className="animate-spin-slow preserve-3d">
+                <MahatiCard variant="subtle" className="max-w-sm [perspective:1000px] p-0 overflow-hidden">
+  <div className="animate-spin [animation-duration:5s] [transform-style:preserve-3d]">
                 <div className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
                   <h3 className="text-xl font-semibold text-white mb-2">3D Spinning Card</h3>
                   <p className="text-white/90">Watch the entire card spin in 3D space!</p>

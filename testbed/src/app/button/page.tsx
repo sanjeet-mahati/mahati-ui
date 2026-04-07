@@ -191,7 +191,7 @@ export default function ButtonPage() {
 
       <CodePreview
         title="Dotted & Pill Buttons"
-        code={`<MahatiButton variant="dotted">Dotted Button</MahatiButton>
+        code={` <div className="flex flex-wrap gap-4"><MahatiButton variant="dotted">Dotted Button</MahatiButton>
 <MahatiButton variant="dotted" size="sm">Small Dotted</MahatiButton>
 <MahatiButton variant="dotted" size="lg">Large Dotted</MahatiButton>
 
@@ -250,10 +250,27 @@ export default function ButtonPage() {
 
       <CodePreview
         title="Button States"
-        code={`<MahatiButton onClick={handleLoadingDemo} disabled={isLoading}>
-  {isLoading ? "Loading..." : "Click to Load"}
-</MahatiButton>
-<MahatiButton disabled>Disabled</MahatiButton>`}
+        code={`import { useState } from "react";;
+
+export default function Demo() {
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <>
+      <MahatiButton
+        onClick={() => {
+          setLoading(true);
+          setTimeout(() => setLoading(false), 3000);
+        }}
+        disabled={loading}
+      >
+        {loading ? "Loading..." : "Click to Load"}
+      </MahatiButton>
+
+      <MahatiButton disabled>Disabled</MahatiButton>
+    </>
+  );
+}`}
         preview={
           <div className="flex flex-wrap items-center justify-center gap-4">
             <MahatiButton onClick={handleLoadingDemo} disabled={isLoading}>

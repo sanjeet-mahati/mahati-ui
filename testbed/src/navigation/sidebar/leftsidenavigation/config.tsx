@@ -281,11 +281,11 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/form',
       position: 'top',
       subItems: [
+        { name: 'FormContainer Props', href: '/form#inputprops', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Basic Input', href: '/form#basic-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Error', href: '/form#input-with-error', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Form Example', href: '/form#form-example', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input Props', href: '/form#input-props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'FormContainer Props', href: '/form#formcontainer-props', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Inputs With Custom Styling', href: '/form#inputs-with-custom-styling', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Upload', href: '/form#file-upload', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Floating Label Style', href: '/form#floating-label-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
       ]
     },
     {
@@ -295,29 +295,18 @@ export const NavItems = (): NavItem[]  => {
       active: pathname === '/input',
       position: 'top',
       subItems: [
-        { name: 'Basic Input Fields', href: '/input#basic-input-fields', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Basic Input ', href: '/input#basic-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Input States', href: '/input#input-states', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Floating Label', href: '/input#floating-label', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Input Sizes', href: '/input#input-sizes', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Resizable Textarea', href: '/input#resizable-textarea', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'File Input - Click Box', href: '/input#file-input-click-box', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'File Input - Inline (Left Button)', href: '/input#file-input-inline-left-button', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'File Input - Inline (Right Button)', href: '/input#file-input-inline-right-button', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'File Input - Drag & Drop', href: '/input#file-input-drag-drop', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Avatar', href: '/input#input-with-avatar', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Avatar Placeholder', href: '/input#input-with-avatar-placeholder', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Avatar (Ring)', href: '/input#input-with-avatar-ring', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Avatar (Ring Gap)', href: '/input#input-with-avatar-ring-gap', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Input with Avatar Image', href: '/input#input-with-avatar-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Rounded Inputs', href: '/input#rounded-inputs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Form with Image Header', href: '/input#form-with-image-header', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Basic Form Container', href: '/input#basic-form-container', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Reset Password Form', href: '/input#reset-password-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Form with Validation', href: '/input#form-with-validation', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Form with Icons', href: '/input#form-with-icons', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'File Input', href: '/input#file-input', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Form with validation', href: '/input#form-with-validation', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Full Featured Form', href: '/input#full-featured-form', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Login Form Example', href: '/input#login-form-example', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Login Form with Background Image', href: '/input#login-form-with-background-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Login Form With Background Image', href: '/input#login-form-with-background-image', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Avatar Input Variations', href: '/input#avatar-input-variations', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Rounded Inputs', href: '/input#rounded-inputs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+       
       ]
     },
     {
@@ -355,14 +344,21 @@ export const NavItems = (): NavItem[]  => {
       position: 'top',
       subItems: [
         { name: 'Basic Table', href: '/table#basic-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Paginated', href: '/table#paginated', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Custom Cells', href: '/table#custom-cells', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Sorting', href: '/table#sorting', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Bordered', href: '/table#bordered', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Global Alignment', href: '/table#global-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Column Alignment', href: '/table#column-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Column Visibility', href: '/table#column-visibility', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'All-in-One', href: '/table#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Paginated', href: '/table#pagenated-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Custom Cells & Actions', href: '/table#custom-cells&actions', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Date & Time Sorting', href: '/table#Date&timesorting', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Bordered Table (Visible Edges)', href: '/table#Bordered-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Alignment Controls (Left / Center / Right)', href: '/table#Alignment-controls', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Per-Column Alignment', href: '/table#Per-column-alignment', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Column Visibility (Multi-Select)', href: '/table#column-visibility', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'All-in-One', href: '/table#All-in-one-table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Expandable Rows with Summary', href: '/table#Expandable-Multiple-Rows-with-Summary', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Expandable Multiple Rows with Summary', href: '/table#all-in-one', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Text Wrap Table (Summary Column)', href: '/table#Text-Wrap-Table-(Summary Column)', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Multi-Column Text Wrap Table', href: '/table#Multi-Column Text Wrap Table', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+      
+      
+        
       ]
     },
     {

@@ -145,7 +145,7 @@ useEffect(() => {
               onClose={() => setOpen(false)}
               title="Allow Location Access"
               description={`Mahati needs your location to show nearby services\nand personalize results.`}
-              image="resources/images/notifications/Location-graphics.png"
+              image="/resources/images/notifications/Location-graphics.png"
               allowText="Allow Access"
               denyText="Deny"
               onAllow={(coords:any) => console.log(coords)}
@@ -247,7 +247,7 @@ useEffect(() => {
                 onClose={() => setOpenCamera(false)}
                 title="Allow Camera Access"
                 description={`Mahati needs your camera to scan documents\nand upload photos.`}
-                image="resources/images/notifications/camera-graphics.png"
+                image="/resources/images/notifications/camera-graphics.png"
                 allowText="Allow Camera"
                 denyText="Deny"
                 onAllow={(stream) => console.log("Camera stream:", stream)}
@@ -349,7 +349,7 @@ useEffect(() => {
                 onClose={() => setOpenMic(false)}
                 title="Allow Microphone Access"
                 description={`Mahati needs your microphone\nfor voice input and calls.`}
-                image="resources/images/notifications/Audio-graphics.png"
+                image="/resources/images/notifications/Audio-graphics.png"
                 allowText="Allow Microphone"
                 denyText="Deny"
                 onAllow={(stream:any) => console.log("Mic stream:", stream)}
@@ -584,7 +584,7 @@ useEffect(() => {
                 description="Limited stock. Grab your premium items now."
                 ctaText="Claim Now"
                 showBadgeImage
-                badgeImageSrc="resources/images/notifications/discount-white.png"
+                badgeImageSrc="/resources/images/notifications/discount-white.png"
                 onCtaClick={() => {
                 console.log("Offer claimed");
                 // redirect / analytics / API
@@ -626,7 +626,7 @@ useEffect(() => {
                 description="Get exclusive updates, product news, and special discounts straight to your inbox."
                 ctaText="Join Now"
                 secondaryText="Later"
-                imageSrc="resources/images/notifications/newsletter-graphic.png"
+                imageSrc="/resources/images/notifications/newsletter-graphic.png"
                 onCtaClick={() => {
                 console.log("Newsletter joined");
                 }}
@@ -664,7 +664,7 @@ useEffect(() => {
                 description="Flat 40% OFF on premium items. Limited stock, grab yours now."
                 ctaText="Claim Now"
                 secondaryText="Later"
-                imageSrc="resources/images/notifications/discount-graphic.png"
+                imageSrc="/resources/images/notifications/discount-graphic.png"
                 onCtaClick={() => {
                 console.log("Offer claimed");
                 // redirect / analytics / API call
@@ -760,14 +760,14 @@ useEffect(() => {
                     <MahatiNotificationCard
                     title="New notification – Text"
                     description="Description of that notification."
-                    iconSrc="resources/images/notifications/notification-white.png"
+                    iconSrc="/resources/images/notifications/notification-white.png"
                     onClose={() => setShowNotifications(false)}
                     />
 
                     <MahatiNotificationCard
                     title="Liked by Luna"
                     description="You got a new like"
-                    avatarSrc="resources/images/notifications/avatar-1.jpg"
+                    avatarSrc="/resources/images/notifications/avatar-1.jpg"
                     badgeIconSrc="resources/images/notifications/heart-white.png"
                     badgeType="like"
                     time="1h ago"
@@ -777,8 +777,8 @@ useEffect(() => {
                     <MahatiNotificationCard
                     title="Followed by Anil"
                     description="You have one new follower"
-                    avatarSrc="resources/images/notifications/avatar-2.jpg"
-                    badgeIconSrc="resources/images/notifications/check-white.png"
+                    avatarSrc="/resources/images/notifications/avatar-2.jpg"
+                    badgeIconSrc="/resources/images/notifications/check-white.png"
                     badgeType="follow"
                     time="2h ago"
                     onClose={() => setShowNotifications(false)}
@@ -787,8 +787,8 @@ useEffect(() => {
                     <MahatiNotificationCard
                     title="Commented by Jane"
                     description="You have a new comment"
-                    avatarSrc="resources/images/notifications/avatar-3.jpg"
-                    badgeIconSrc="resources/images/notifications/chat-white.png"
+                    avatarSrc="/resources/images/notifications/avatar-3.jpg"
+                    badgeIconSrc="/resources/images/notifications/chat-white.png"
                     badgeType="comment"
                     time="1h ago"
                     onClose={() => setShowNotifications(false)}
@@ -797,8 +797,8 @@ useEffect(() => {
                     <MahatiNotificationCard
                     title="Someone mentioned you"
                     description="Check the conversation."
-                    avatarSrc="resources/images/notifications/avatar-4.jpg"
-                    badgeIconSrc="resources/images/notifications/sign-white.png"
+                    avatarSrc="/resources/images/notifications/avatar-4.jpg"
+                    badgeIconSrc="/resources/images/notifications/sign-white.png"
                     badgeType="mention"
                     time="2h ago"
                     onClose={() => setShowNotifications(false)}
@@ -807,8 +807,8 @@ useEffect(() => {
                     <MahatiNotificationCard
                     title="Live Chat Invitation"
                     description="An agent is available to assist you."
-                    avatarSrc="resources/images/notifications/avatar-5.jpg"
-                    badgeIconSrc="resources/images/notifications/add-white.png"
+                    avatarSrc="/resources/images/notifications/avatar-5.jpg"
+                    badgeIconSrc="/resources/images/notifications/add-white.png"
                     badgeType="add"
                     primaryActionText="Accept"
                     secondaryActionText="Decline"
@@ -955,7 +955,7 @@ useEffect(() => {
                 "more-copy.png",
                 "eye-copy.png",
             ].map((name) => {
-                const src = `resources/images/notifications/${name}`; // 🔁 change base path if needed
+                const src = `/resources/images/notifications/${name}`; // 🔁 change base path if needed
 
                 return (
                 <div

@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState,useEffect } from "react";
 import { ChartData } from "chart.js";
 import { ChartDropdown, DropdownOption } from "./ChartDropdown";
 
@@ -147,6 +147,8 @@ export interface MahatiChartAnalyticsWidgetProps {
   }[];
 }
 
+
+
 /* ============================================================================
    UTILITY FUNCTIONS
    ============================================================================ */
@@ -238,9 +240,15 @@ export const MahatiChartAnalyticsWidget = ({
   details,
 }: MahatiChartAnalyticsWidgetProps) => {
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
+  
   const [selectedGanttProject, setSelectedGanttProject] = useState<string>("Project 1");
   const [selectedCalendarHeatmapProject, setSelectedCalendarHeatmapProject] = useState<string>("Project 1");
-
+ 
+ 
+  const [localFilters, setLocalFilters] = useState(selectedFilters);
+  useEffect(() => {
+  setLocalFilters(selectedFilters);
+}, [selectedFilters]);
   const currentFilters = useMemo(() => {
     if (chartFilters && chartFilters[chartType]) return chartFilters[chartType] || [];
     return filters;
@@ -267,8 +275,8 @@ export const MahatiChartAnalyticsWidget = ({
 
   const currentGanttData = useMemo(() => {
     if (chartType === "gantt" && ganttData) {
-      const year = selectedFilters["SelectYear"] || "2026";
-      const type = selectedFilters["SelectType"] || "Development";
+      const year = localFilters["SelectYear"] || "2026";
+      const type = localFilters["SelectType"] || "Development";
       const baseData = ganttData[year]?.[type];
       if (!baseData) return undefined;
       if (selectedGanttProject === "Project 2") {
@@ -290,8 +298,8 @@ export const MahatiChartAnalyticsWidget = ({
 
   const currentHorizontalBarTopPerformer = useMemo(() => {
     if (chartType !== "horizontalbar" || !horizontalBarData) return undefined;
-    const selectedYear = selectedFilters["SelectYear"] || "2026";
-    const selectedMonth = selectedFilters["SelectMonth"] || "January";
+    const selectedYear = localFilters["SelectYear"] || "2026";
+    const selectedMonth =localFilters["SelectMonth"] || "January";
     const yearData = horizontalBarData[selectedYear] as Record<string, Record<string, { Revenue: number; Profit: number; Cost: number }>>;
     const monthData = yearData?.[selectedMonth];
     if (!monthData) return undefined;
@@ -320,8 +328,8 @@ export const MahatiChartAnalyticsWidget = ({
   const calendarPeakAndActiveDay = useMemo(() => {
     const empty = { peakDay: { date: "", dayName: "", value: 0 }, mostActiveDay: { dayName: "", count: 0, average: 0 } };
     if (chartType !== "calendarheatmap" || !calendarheatmapData) return empty;
-    const year = selectedFilters["SelectYear"] || "2026";
-    const type = selectedFilters["SelectType"] || "Development";
+    const year = localFilters["SelectYear"] || "2026";
+    const type =localFilters["SelectType"] || "Development";
     const project = selectedCalendarHeatmapProject;
     if (!calendarheatmapData[project]?.[year]?.[type]) return empty;
     const yearData = calendarheatmapData[project][year][type];
@@ -357,9 +365,9 @@ export const MahatiChartAnalyticsWidget = ({
 
   const currentBulletData = useMemo(() => {
     if (!bulletData) return null;
-    const year = selectedFilters.SelectYear || "2026";
-    const month = selectedFilters.SelectMonth || "January";
-    const type = selectedFilters.SelectType || "Sales";
+    const year = localFilters.SelectYear || "2026";
+    const month = localFilters.SelectMonth || "January";
+    const type = localFilters.SelectType || "Sales";
     const yearData = (bulletData as any)[year];
     if (yearData) {
       const typeData = yearData[type];
@@ -541,8 +549,12 @@ export const MahatiChartAnalyticsWidget = ({
               >
                 <ChartDropdown
                   options={options}
-                  value={selectedFilters[filter.id]}
-                  onSelect={(val) => onFiltersChange({ ...selectedFilters, [filter.id]: String(val) })}
+                  value={localFilters[filter.id]}
+                  onSelect={(val) => {
+  const updated = { ...localFilters, [filter.id]: String(val) };
+  setLocalFilters(updated);
+  //onFiltersChange(updated); // optional but better
+}}
                   variant="mahatiFilter"
                   label={filter.label}
                 />
@@ -551,7 +563,9 @@ export const MahatiChartAnalyticsWidget = ({
           })}
           <button
             type="button"
-            onClick={() => onApplyFilters?.(selectedFilters)}
+            onClick={() => {onApplyFilters?.(localFilters);
+              onFiltersChange(localFilters);
+            }}
             className="w-[77px] h-[30px] rounded border border-[rgba(23,97,163,1)] bg-gradient-to-r from-[rgba(23,97,163,1)] to-[rgba(77,175,131,1)] text-white text-sm font-medium cursor-pointer transition-opacity hover:opacity-90"
           >
             Apply
@@ -692,8 +706,8 @@ export const MahatiChartAnalyticsWidget = ({
             </div>
             <div className="flex flex-col gap-4 w-full lg:max-w-[276px] sm:gap-6">
               {(() => {
-                const sy = selectedFilters["SelectYear"] || "2026";
-                const sm2 = selectedFilters["SelectMonth"] || "January";
+                const sy = localFilters["SelectYear"] || "2026";
+                const sm2 = localFilters["SelectMonth"] || "January";
                 let currentGauge = gaugeData.gauges?.length > 0 ? gaugeData.gauges[0] : null;
                 if (gaugeData[sy]?.[sm2]?.length > 0) currentGauge = gaugeData[sy][sm2][0];
                 if (!currentGauge) return null;
@@ -754,9 +768,9 @@ export const MahatiChartAnalyticsWidget = ({
             </div>
             <div className="flex flex-col gap-4 w-full lg:max-w-[276px] sm:gap-6">
               {(() => {
-                const sy = selectedFilters["SelectYear"] || "2026";
-                const sm2 = selectedFilters["SelectMonth"] || "January";
-                const st = selectedFilters["SelectType"] || "Credit Score";
+                const sy = localFilters["SelectYear"] || "2026";
+                const sm2 = localFilters["SelectMonth"] || "January";
+                const st = localFilters["SelectType"] || "Credit Score";
                 let currentRiskGauge = riskGaugeData.gauges?.length > 0 ? riskGaugeData.gauges[0] : null;
                 if ((riskGaugeData as any)[sy]?.[sm2]?.[st]?.length > 0) currentRiskGauge = (riskGaugeData as any)[sy][sm2][st][0];
                 if (!currentRiskGauge) return null;
@@ -1003,9 +1017,9 @@ export const MahatiChartAnalyticsWidget = ({
                 <div className="text-xs font-semibold text-[rgba(17,24,39,1)] mb-8 font-[Poppins,sans-serif]">Total Volume</div>
                 {(() => {
                   if (!columnChartData) return null;
-                  const sy = selectedFilters["SelectYear"] || "2026";
-                  const sm2 = selectedFilters["SelectMonth"] || "January";
-                  const st = selectedFilters["SelectType"] || "Category A";
+                  const sy = localFilters["SelectYear"] || "2026";
+                  const sm2 = localFilters["SelectMonth"] || "January";
+                  const st = localFilters["SelectType"] || "Category A";
                   const typeData = (columnChartData as any)?.[sy]?.[sm2]?.[st] || [];
                   const currentTotal = typeData.reduce((sum: number, item: any) => sum + item.value, 0);
                   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1070,8 +1084,8 @@ export const MahatiChartAnalyticsWidget = ({
               {/* Top Performer */}
               {(() => {
                 if (!groupBarData) return null;
-                const sy = selectedFilters["SelectYear"] || "2026";
-                const sm2 = selectedFilters["SelectMonth"] || "January";
+                const sy = localFilters["SelectYear"] || "2026";
+                const sm2 = localFilters["SelectMonth"] || "January";
                 const groups: GroupBarItem[] = (groupBarData as any)?.[sy]?.[sm2] || [];
                 if (!groups.length) return null;
                 const legends: GroupBarLegendItem[] = groupBarData.legends || [];
@@ -1251,9 +1265,9 @@ export const MahatiChartAnalyticsWidget = ({
                 </div>
                 {(() => {
                   const f0 = currentFilters[0]?.id, f1 = currentFilters[1]?.id, f2 = currentFilters[2]?.id;
-                  const year = selectedFilters[f0] || currentFilters[0]?.options[0] || "2026";
-                  const month = selectedFilters[f1] || currentFilters[1]?.options[0] || "January";
-                  const category = selectedFilters[f2] || currentFilters[2]?.options[0] || "Category A";
+                  const year = localFilters[f0] || currentFilters[0]?.options[0] || "2026";
+                  const month = localFilters[f1] || currentFilters[1]?.options[0] || "January";
+                  const category = localFilters[f2] || currentFilters[2]?.options[0] || "Category A";
                   const yearData = ((lollipopData as any)?.[year] || {}) as Record<string, Record<string, LollipopItem[]>>;
                   const catData = yearData?.[month]?.[category] || [];
                   const bestItem = catData.length ? catData.reduce((max, i) => i.value > max.value ? i : max, catData[0]) : null;

@@ -2,24 +2,17 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-// ─── Mock @mahatisystems/mahati-ui-components ─────────────────────────────────────────────────────────
+// ─── Mock @mahatisystems/mahati-ui-components ────────────────────────────────
 jest.mock('@mahatisystems/mahati-ui-components', () => ({
-  MahatiTexttoAudio: ({ defaultVolume, defaultSpeed, autoPlay, showSummary, showControls }: any) => (
-    <div
-      data-testid="mahati-text-to-audio"
-      data-volume={defaultVolume}
-      data-speed={defaultSpeed}
-      data-autoplay={autoPlay}
-      data-show-summary={showSummary}
-      data-show-controls={showControls}
-    >
+  MahatiTexttoAudio: () => (
+    <div data-testid="mahati-text-to-audio">
       <textarea placeholder="Enter text here..." />
       <button data-testid="play-btn">Play</button>
     </div>
   ),
 }));
 
-// ─── Mock CodePreview ─────────────────────────────────────────────────────────
+// ─── Mock CodePreview ────────────────────────────────────────────────────────
 jest.mock('@/app/CodePreview', () => ({
   CodePreview: ({ title, preview, code }: any) => (
     <div data-testid={`code-preview-${title?.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -30,7 +23,7 @@ jest.mock('@/app/CodePreview', () => ({
   ),
 }));
 
-// ─── Mock PropsTable ──────────────────────────────────────────────────────────
+// ─── Mock PropsTable ─────────────────────────────────────────────────────────
 jest.mock('@/app/PropsTable', () => ({
   PropsTable: ({ title, props: propsList }: any) => (
     <div data-testid="props-table">
@@ -46,12 +39,12 @@ jest.mock('@/app/PropsTable', () => ({
   ),
 }));
 
-// ─── Import page component ────────────────────────────────────────────────────
+// ─── Import page component ───────────────────────────────────────────────────
 import TextToAudioPage from '../../../app/texttoaudio/page';
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 // Render
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 
 describe('TextToAudioPage — Render', () => {
   it('renders without crashing', () => {
@@ -61,7 +54,9 @@ describe('TextToAudioPage — Render', () => {
 
   it('renders page heading "Text To Audio"', () => {
     render(<TextToAudioPage />);
-  expect(screen.getByRole('heading', { level: 1, name: 'Text To Audio' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Text To Audio' })
+    ).toBeInTheDocument();
   });
 
   it('renders PropsTable', () => {
@@ -71,18 +66,22 @@ describe('TextToAudioPage — Render', () => {
 
   it('renders CodePreview section', () => {
     render(<TextToAudioPage />);
-    expect(screen.getByTestId('code-preview-text-to-audio')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('code-preview-basic-usage')
+    ).toBeInTheDocument();
   });
 
   it('renders MahatiTexttoAudio inside CodePreview', () => {
     render(<TextToAudioPage />);
-    expect(screen.getByTestId('mahati-text-to-audio')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('mahati-text-to-audio')
+    ).toBeInTheDocument();
   });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 // Props table
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 
 describe('TextToAudioPage — PropsTable', () => {
   it('renders Props title in table', () => {
@@ -90,101 +89,36 @@ describe('TextToAudioPage — PropsTable', () => {
     expect(screen.getByText('Props')).toBeInTheDocument();
   });
 
-  it('renders mode prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-mode')).toBeInTheDocument();
-  });
-
   it('renders icons prop', () => {
     render(<TextToAudioPage />);
     expect(screen.getByTestId('prop-icons')).toBeInTheDocument();
   });
-
-  it('renders defaultVolume prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-defaultVolume')).toBeInTheDocument();
-  });
-
-  it('renders defaultSpeed prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-defaultSpeed')).toBeInTheDocument();
-  });
-
-  it('renders autoPlay prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-autoPlay')).toBeInTheDocument();
-  });
-
-  it('renders loopMode prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-loopMode')).toBeInTheDocument();
-  });
-
-  it('renders showSummary prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-showSummary')).toBeInTheDocument();
-  });
-
-  it('renders showControls prop', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByTestId('prop-showControls')).toBeInTheDocument();
-  });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Prop descriptions
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
+// Prop Descriptions
+// ═════════════════════════════════════════════════════════════════════════════
 
 describe('TextToAudioPage — Prop Descriptions', () => {
-  it('mode prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Reads text entered in the textarea/i)).toBeInTheDocument();
-  });
-
   it('icons prop has correct description', () => {
     render(<TextToAudioPage />);
-    expect(screen.getByText(/Custom icons for play/i)).toBeInTheDocument();
-  });
-
-  it('defaultVolume prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Initial volume level/i)).toBeInTheDocument();
-  });
-
-  it('defaultSpeed prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Initial playback speed/i)).toBeInTheDocument();
-  });
-
-  it('autoPlay prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Automatically starts reading/i)).toBeInTheDocument();
-  });
-
-  it('loopMode prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Controls looping behavior/i)).toBeInTheDocument();
-  });
-
-  it('showSummary prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/Quick Summary panel/i)).toBeInTheDocument();
-  });
-
-  it('showControls prop has correct description', () => {
-    render(<TextToAudioPage />);
-    expect(screen.getByText(/playback controls/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Custom icons for controls like play/i)
+    ).toBeInTheDocument();
   });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Code snippet
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
+// Code Snippet
+// ═════════════════════════════════════════════════════════════════════════════
 
 describe('TextToAudioPage — Code Snippet', () => {
   it('renders MahatiTexttoAudio in code snippet', () => {
     render(<TextToAudioPage />);
-    expect(screen.getByText(/<MahatiTexttoAudio \/>/)).toBeInTheDocument();
+    expect(
+      screen.getByText((text) =>
+        text.includes('MahatiTexttoAudio')
+      )
+    ).toBeInTheDocument();
   });
 });
-

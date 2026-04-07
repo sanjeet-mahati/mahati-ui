@@ -12,6 +12,39 @@ import { PropsTable } from "../PropsTable";
 export default function CalendarDemo() {
   const [basic, setBasic] = useState<CalendarDate | null>(null);
   const [custom, setCustom] = useState<CalendarDate | null>(null);
+  const [calendar1, setCalendar1] = useState<CalendarDate | null>(null);
+const [calendar2, setCalendar2] = useState<CalendarDate | null>(null);
+const [calendar3, setCalendar3] = useState<CalendarDate | null>(null);
+const [calendar4, setCalendar4] = useState<CalendarDate | null>(null);
+ const [calendar5, setCalendar5] = useState<CalendarDate | null>(null);
+const [calendar6, setCalendar6] = useState<CalendarDate | null>(null);
+const [calendar7, setCalendar7] = useState<CalendarDate | null>(null);
+const [calendar8, setCalendar8] = useState<CalendarDate | null>(null);
+const [calendar9, setCalendar9] = useState<CalendarDate | null>(null);
+const [calendar10, setCalendar10] = useState<CalendarDate | null>(null);
+const [calendar11, setCalendar11] = useState<CalendarDate | null>(null);
+ const [calendar12, setCalendar12] = useState<CalendarDate | null>(null);
+const [calendar13, setCalendar13] = useState<CalendarDate | null>(null);
+const [calendar14, setCalendar14] = useState<CalendarDate | null>(null);
+const [calendar15, setCalendar15] = useState<CalendarDate | null>(null);
+const [calendar16, setCalendar16] = useState<CalendarDate | null>(null);
+const [calendar17, setCalendar17] = useState<CalendarDate | null>(null);
+const [calendar18, setCalendar18] = useState<CalendarDate | null>(null);
+const [time1, setTime1] = useState<CalendarTime | null>(null);
+const [time2, setTime2] = useState<CalendarTime | null>(null);
+const [time3, setTime3] = useState<CalendarTime | null>(null);
+const [time4, setTime4] = useState<CalendarTime | null>(null);
+const [time5, setTime5] = useState<CalendarTime | null>(null);
+const [time6, setTime6] = useState<CalendarTime | null>(null);
+const [time7, setTime7] = useState<CalendarTime | null>(null);
+const [time8, setTime8] = useState<CalendarTime | null>(null);
+const [time9, setTime9] = useState<CalendarTime | null>(null);
+const [time10, setTime10] = useState<CalendarTime | null>(null);
+
+
+
+
+
   const [customTime, setCustomTime] = useState<CalendarTime | null>(null);
   const [timeFormat, setTimeFormat] = useState<"12h" | "24h">("12h");
   const [dateFormat, setDateFormat] = useState("none");
@@ -33,7 +66,6 @@ export default function CalendarDemo() {
     { name: 'onRangeChange', type: '(range: CalendarDateRange) => void', description: 'Callback when date range changes.' },
     { name: 'enableTimeSelection', type: 'boolean', default: 'false', description: 'Enable time selection functionality.' },
     { name: 'timeValue', type: 'CalendarTime | null', description: 'Selected time value.' },
-    { name: 'onTimeChange', type: '(time: CalendarTime) => void', description: 'Callback when time changes.' },
     { name: 'showTimeFormatToggle', type: 'boolean', default: 'false', description: 'Show toggle between 12h/24h format.' },
     { name: 'timeFormat', type: "'12h' | '24h'", default: "'12h'", description: 'Time display format.' },
     { name: 'onTimeFormatChange', type: '(format: "12h" | "24h") => void', description: 'Callback when time format changes.' },
@@ -54,7 +86,13 @@ export default function CalendarDemo() {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
+    <div className="w-full max-w-6xl mx-auto p-6 text-black 
+[&_select]:w-full 
+[&_select]:min-w-[80px] 
+[&_select]:bg-white 
+[&_select]:text-black 
+[&_select]:border 
+[&_select]:border-gray-300">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">Calendar</h1>
         <p className="text-lg text-gray-600 leading-relaxed">
@@ -94,8 +132,8 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar1}
+              onChange={setCalendar1}
               showTodayButton
               showClearButton
             />
@@ -116,8 +154,8 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar2}
+              onChange={setCalendar2}
               autoHide
               placeholder="Select date (auto-hide)"
             />
@@ -140,11 +178,11 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar3}
+              onChange={setCalendar3}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time1}
+              onTimeChange={setTime1}
               placeholder="Select date and time"
             />
           </div>
@@ -168,11 +206,11 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar4}
+              onChange={setCalendar4}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time2}
+              onTimeChange={setTime2}
               showTodayButton
               showClearButton
               placeholder="Full featured date & time"
@@ -201,11 +239,11 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar5}
+              onChange={setCalendar5}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time3}
+              onTimeChange={setTime3}
               showTimeFormatToggle
               timeFormat={timeFormat}
               onTimeFormatChange={setTimeFormat}
@@ -243,11 +281,11 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar6}
+              onChange={setCalendar6}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time4}
+              onTimeChange={setTime4}
               showTimeFormatToggle
               timeFormat={timeFormat}
               onTimeFormatChange={setTimeFormat}
@@ -292,11 +330,11 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar7}
+              onChange={setCalendar7}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time5}
+              onTimeChange={setTime5}
               showTimeFormatToggle
               timeFormat={timeFormat}
               onTimeFormatChange={setTimeFormat}
@@ -330,8 +368,8 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar8}
+              onChange={setCalendar8}
               enableYearDropdown
               showTodayButton
               showClearButton
@@ -370,11 +408,11 @@ export default function CalendarDemo() {
           <div className="flex justify-center">
             <MahatiCalendar
               size="small"
-              value={custom}
-              onChange={setCustom}
+              value={calendar9}
+              onChange={setCalendar9}
               enableTimeSelection
-              timeValue={customTime}
-              onTimeChange={setCustomTime}
+              timeValue={time6}
+              onTimeChange={setTime6}
               showTimeFormatToggle
               timeFormat={timeFormat}
               onTimeFormatChange={setTimeFormat}
@@ -437,8 +475,8 @@ export default function CalendarDemo() {
         preview={
           <div className="flex justify-center">
             <MahatiCalendar
-              value={custom}
-              onChange={setCustom}
+              value={calendar10}
+              onChange={setCalendar10}
               blockDateConfig={{
                 startDate: { year: 2026, month: 2, day:20 },
                 days: 5,
@@ -507,11 +545,11 @@ export default function CalendarDemo() {
               <div className="w-full max-w-sm">
                 <MahatiCalendar
                   size="small"
-                  value={custom}
-                  onChange={setCustom}
+                  value={calendar11}
+                  onChange={setCalendar11}
                   enableTimeSelection
-                  timeValue={customTime}
-                  onTimeChange={setCustomTime}
+                  timeValue={time7}
+                  onTimeChange={setTime7}
                   showTimeFormatToggle
                   timeFormat={timeFormat}
                   onTimeFormatChange={setTimeFormat}
@@ -539,11 +577,11 @@ export default function CalendarDemo() {
               <div className="w-full max-w-sm">
                 <MahatiCalendar
                   size="medium"
-                  value={custom}
-                  onChange={setCustom}
+                  value={calendar12}
+                  onChange={setCalendar12}
                   enableTimeSelection
-                  timeValue={customTime}
-                  onTimeChange={setCustomTime}
+                  timeValue={time8}
+                  onTimeChange={setTime8}
                   showTimeFormatToggle
                   timeFormat={timeFormat}
                   onTimeFormatChange={setTimeFormat}
@@ -571,11 +609,11 @@ export default function CalendarDemo() {
               <div className="w-full max-w-sm">
                 <MahatiCalendar
                   size="large"
-                  value={custom}
-                  onChange={setCustom}
+                  value={calendar13}
+                  onChange={setCalendar13}
                   enableTimeSelection
-                  timeValue={customTime}
-                  onTimeChange={setCustomTime}
+                  timeValue={time9}
+                  onTimeChange={setTime9}
                   showTimeFormatToggle
                   timeFormat={timeFormat}
                   onTimeFormatChange={setTimeFormat}
@@ -603,11 +641,11 @@ export default function CalendarDemo() {
               <div className="w-full max-w-sm">
                 <MahatiCalendar
                   size="extra-large"
-                  value={custom}
-                  onChange={setCustom}
+                  value={calendar14}
+                  onChange={setCalendar14}
                   enableTimeSelection
-                  timeValue={customTime}
-                  onTimeChange={setCustomTime}
+                  timeValue={time10}
+                  onTimeChange={setTime10}
                   showTimeFormatToggle
                   timeFormat={timeFormat}
                   onTimeFormatChange={setTimeFormat}
@@ -670,8 +708,8 @@ export default function CalendarDemo() {
               <span className="mb-2 text-sm font-semibold text-gray-700">Small (65%)</span>
               <MahatiCalendar
                 size="small"
-                value={custom}
-                onChange={setCustom}
+                value={calendar16}
+                onChange={setCalendar16}
                 showTodayButton
                 showClearButton
               />
@@ -681,8 +719,8 @@ export default function CalendarDemo() {
               <span className="mb-2 text-sm font-semibold text-gray-700">Medium (80%)</span>
               <MahatiCalendar
                 size="medium"
-                value={custom}
-                onChange={setCustom}
+                value={calendar15}
+                onChange={setCalendar15}
                 showTodayButton
                 showClearButton
               />
@@ -692,8 +730,8 @@ export default function CalendarDemo() {
               <span className="mb-2 text-sm font-semibold text-gray-700">Large (90%)</span>
               <MahatiCalendar
                 size="large"
-                value={custom}
-                onChange={setCustom}
+                value={calendar17}
+                onChange={setCalendar17}
                 showTodayButton
                 showClearButton
               />
@@ -703,8 +741,8 @@ export default function CalendarDemo() {
               <span className="mb-2 text-sm font-semibold text-gray-700">Extra-Large (100%)</span>
               <MahatiCalendar
                 size="extra-large"
-                value={custom}
-                onChange={setCustom}
+                value={calendar18}
+                onChange={setCalendar18}
                 showTodayButton
                 showClearButton
               />

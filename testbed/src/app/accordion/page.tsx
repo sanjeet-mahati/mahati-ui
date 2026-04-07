@@ -121,7 +121,7 @@ const AccordionPage=()=> {
       <CodePreview
         title="Accordion with Multiple Items"
         code={`<Accordion
-  defaultOpenIndex={0}
+  multipleOpen
   items={[
     { title: "Item 1", content: "Content 1" },
     { title: "Item 2", content: "Content 2" },
@@ -202,7 +202,7 @@ const AccordionPage=()=> {
       <CodePreview
 
         title="Disabled Accordion"
-        code={`<div className="opacity-60 grayscale pointer-events-none">
+        code={`
           <Accordion
   items={[
     { title: "Enabled", content: "Works normally" },
