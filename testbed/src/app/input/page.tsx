@@ -1311,10 +1311,18 @@ export default function ForMahatiInputDemoPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const onFileBoxClick = () => fileInputRef.current?.click();
-  const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files ? Array.from(e.target.files) : [];
-    setFiles(list);
-  };
+const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFiles = e.target.files;
+
+  if (!selectedFiles) return;
+
+  const fileArray = Array.from(selectedFiles);
+
+  console.log("Selected files:", fileArray); 
+
+  setFiles(prev=>[...prev,...fileArray]);
+  e.target.value="";
+};
 
   const handleBasicFormChange = (e: React.ChangeEvent<HTMLInputElement>) => { const { name, value } = e.target; setBasicForm(p => ({ ...p, [name]: value })); };
   const handleValidationFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1591,6 +1599,7 @@ export default function ForMahatiInputDemoPage() {
       <br/>
 
       {/* File Input with CodePreview */}
+      <div id="File Input">
       <CodePreview
         title="File Input"
         description="Three styles: a clickable box, inline input-like with button, and drag & drop."
@@ -1623,7 +1632,7 @@ export default function ForMahatiInputDemoPage() {
         preview={
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border border-gray-200 rounded-lg bg-white">
             <div className="flex flex-col items-center gap-4">
-              <FileBox onClick={onFileBoxClick} role="button" aria-label="Open file dialog">
+              <FileBox onClick={onFileBoxClick} role="button" tabIndex={0} aria-label="Open file dialog">
                 <HiFolderOpen className="icon" />
                 <div className="title">Click to select files</div>
                 <div className="hint">You can choose one or multiple files</div>
@@ -1632,12 +1641,28 @@ export default function ForMahatiInputDemoPage() {
   <input
     ref={fileInputRef}
     type="file"
-    hidden
+    style={{display:"none"}}
     multiple
     onChange={onFilesChange}
+
+    
   />
+  {files.length > 0 && (
+  <FilesList>
+    {files.map((file, index) => (
+      <li key={index}>
+        {file.name}{" "}
+        <span style={{ color: "#9ca3af" }}>
+          ({Math.round(file.size / 1024)} KB)
+        </span>
+      </li>
+    ))}
+  </FilesList>
+)}
+  
               <span className="text-sm text-gray-700 font-medium">Clickable Box</span>
             </div>
+            
 
             
             <div className="flex flex-col items-center gap-4">
@@ -1658,10 +1683,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+    </div>
       <br/>
 
       {/* Form with Validation with CodePreview */}
+      <div id="form-with-validation">
       <CodePreview
         title="Form with Validation"
         description="Real-time validation with error messages and form submission handling."
@@ -1749,10 +1775,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Full Featured Form with CodePreview */}
+      <div id="full-featured-form">
       <CodePreview
         title="Full Featured Form"
         description="A complete registration form showcasing all input types and form functionality."
@@ -1808,10 +1835,11 @@ export default function ForMahatiInputDemoPage() {
           </div>
         }
       />
-
+      </div>
       <br/>
 
       {/* Login Form with Background Image with CodePreview */}
+      <div id="login-with-baground-image">
       <CodePreview
         title="Login Form with Background Image"
         description="Form container with background image overlay."
@@ -1881,10 +1909,11 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Avatar Input Variations with CodePreview */}
+      <div id="avatar-input-variations">
       <CodePreview
         title="Avatar Input Variations"
         description="Different avatar input styles with various configurations."
@@ -1925,10 +1954,11 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+     </div>
       <br/>
 
       {/* Rounded Inputs with CodePreview */}
+      <div id="rounded-inputs">
       <CodePreview
         title="Rounded Inputs"
         description="Adjust the input's radius using the 'rounded-*' utility class options."
@@ -2001,7 +2031,7 @@ const LOGIN_BG_OPACITY = 0.35;
           </div>
         }
       />
-
+</div>
     </div>
   );
 }

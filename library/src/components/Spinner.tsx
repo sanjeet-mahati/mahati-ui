@@ -100,10 +100,12 @@ export const CircularSpinner = ({
               left: offset,
               opacity,
               borderWidth: Math.max(2, ringSize / 12),
+              borderColor: "rgba(0,0,0,0.1)",
               borderTopColor: color,
-              animation: `circularSpin ${speed + i * 0.3}s linear infinite`,
+              animation: `spin ${speed + i * 0.3}s linear infinite`,
+              animationDelay:`${i*0.2}s`
             }}
-            className="absolute border border-transparent rounded-full"
+            className="absolute border border-solid rounded-full"
           />
         );
       })}
