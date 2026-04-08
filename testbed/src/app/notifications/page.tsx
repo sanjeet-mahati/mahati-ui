@@ -247,7 +247,7 @@ useEffect(() => {
                 onClose={() => setOpenCamera(false)}
                 title="Allow Camera Access"
                 description={`Mahati needs your camera to scan documents\nand upload photos.`}
-                image="/resources/images/notifications/camera-graphics.png"
+                image="/resources/images/notifications/Camera-graphics.png"
                 allowText="Allow Camera"
                 denyText="Deny"
                 onAllow={(stream) => console.log("Camera stream:", stream)}
@@ -768,7 +768,7 @@ useEffect(() => {
                     title="Liked by Luna"
                     description="You got a new like"
                     avatarSrc="/resources/images/notifications/avatar-1.jpg"
-                    badgeIconSrc="resources/images/notifications/heart-white.png"
+                    badgeIconSrc="/resources/images/notifications/heart-white.png"
                     badgeType="like"
                     time="1h ago"
                     onClose={() => setShowNotifications(false)}

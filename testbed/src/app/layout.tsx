@@ -15,8 +15,12 @@ import FloatingBetaBadge from '@/components/FloatingBetaBadge';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+
   title: 'Mahati UI Component ',
   description: 'Mahati Systems UI Design Component',
+  icons:{
+    icon:'/favicon.ico',
+  },
 };
 
 const SIDENAV_COOKIE_KEY = 'sidebarExpanded';
