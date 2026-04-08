@@ -73,6 +73,7 @@ const getColorByName = (name?: string): string => {
 const IconButtonGroup = React.forwardRef<HTMLDivElement, IconButtonGroupProps>(
   ({ className, direction = "row", gapClass, children, ...props }, ref) => {
     const gap = parseGap(gapClass);
+    
 
     return (
       <div
@@ -164,6 +165,20 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const color = getColorByName(name);
+    const getHoverStyles = () => {
+  if (iconButtonHoverBgClass) return {};
+
+  if (iconButtonHoverIntensity) {
+    const opacity = iconButtonHoverIntensity / 100;
+
+    return {
+      "--hover-bg": `rgba(0,0,0,${opacity})`,
+      "--active-bg": `rgba(0,0,0,${Math.min(opacity + 0.2, 1)})`,
+    } as React.CSSProperties;
+  }
+
+  return {};
+};
 
     /* ================= ICON BUTTON ================= */
 
@@ -180,18 +195,32 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
             minHeight: height,
             minWidth: width,
             color: color.startsWith("linear") ? "white" : color,
+            ...(iconButtonHoverIntensity && {
+    "--hover-bg": `rgba(0,0,0,${iconButtonHoverIntensity / 100})`,
+    "--active-bg": `rgba(0,0,0,${Math.min(
+      iconButtonHoverIntensity / 100 + 0.2,
+      1
+    )})`,
+  }),
             ...style,
           }}
-          className={`
-            inline-flex items-center justify-center
-            transition-all duration-200
-            focus-visible:outline focus-visible:outline-2 focus-visible:outline-white
-            ${iconButtonRadiusClass || "rounded-md"}
-            ${iconButtonBgPaddingClass || "p-[2px]"}
-            ${iconButtonBgClass || "bg-white/10"}
-            hover:opacity-85 active:opacity-70
-            ${className || ""}
-          `}
+         className={`
+  inline-flex items-center justify-center
+  transition-all duration-200
+  ${iconButtonRadiusClass || "rounded-md"}
+  ${iconButtonBgPaddingClass || "p-[2px]"}
+  ${iconButtonBgClass || "bg-white/10"}
+
+  ${
+  iconButtonHoverBgClass
+    ? iconButtonHoverBgClass
+    : iconButtonHoverIntensity
+    ? "hover:bg-[var(--hover-bg)] active:bg-[var(--active-bg)]"
+    : "hover:opacity-85 active:opacity-70"
+}
+
+  ${className || ""}
+`}
           {...props}
         >
           {children as any}
@@ -230,7 +259,10 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
         `}
         {...props}
       >
+        <span 
+        className={`${ iconButtonBgPaddingClass || "p-[2px]"} flex items-center justify-center`}>
         {children as any}
+        </span>
       </button>
     );
   }
