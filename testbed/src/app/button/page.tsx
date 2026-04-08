@@ -342,6 +342,7 @@ export default function Demo() {
                 iconButtonRadiusClass="rounded-[20px]"
                 iconButtonBgPaddingClass="p-[8px]"
                 aria-label="Refresh"
+                
               >
                 <FiRefreshCcw className="h-4 w-4" />
               </MahatiButton>
@@ -353,6 +354,7 @@ export default function Demo() {
                 iconButtonWidthClass="w-10"
                 iconButtonRadiusClass="rounded-[20px]"
                 iconButtonBgPaddingClass="p-[8px]"
+                
                 aria-label="Edit"
               >
                 <FiEdit2 className="h-4 w-4" />
