@@ -228,32 +228,18 @@ describe("SideNav (navigation/sidebar/leftsidenavigation/sidenav.tsx)", () => {
     expect(screen.queryByText("Yearly")).not.toBeInTheDocument();
   });
 
-  it("hover enter opens submenu and hover leave closes it after 500ms (expanded mode)", () => {
-    jest.useFakeTimers();
+  it("click toggles submenu open and close (expanded mode)", () => {
+  render(<SideNav initialExpanded={true} />);
 
-    render(<SideNav initialExpanded={true} />);
+  // Initially closed
+  expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
 
-    // Find the wrapper .nav-item that contains the "Reports" link text.
-    const reportsText = screen.getByText("Reports");
-    const navItem = reportsText.closest(".nav-item") as HTMLElement;
-    expect(navItem).toBeTruthy();
+  // Click → open
+  fireEvent.click(screen.getByText("Reports"));
+  expect(screen.getByText("Monthly")).toBeInTheDocument();
 
-    // Hover opens submenu immediately
-    fireEvent.mouseEnter(navItem);
-    expect(screen.getByText("Monthly")).toBeInTheDocument();
-
-    // Hover leave should close after 500ms
-    fireEvent.mouseLeave(navItem);
-
-    // Still open before timer
-    expect(screen.getByText("Monthly")).toBeInTheDocument();
-
-    act(() => {
-      jest.advanceTimersByTime(500);
-    });
-
-    expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
-
-    jest.useRealTimers();
-  });
+  // Click again → close
+  fireEvent.click(screen.getByText("Reports"));
+  expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
+});
 });
