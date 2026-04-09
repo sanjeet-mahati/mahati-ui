@@ -15,6 +15,7 @@ import {
 import { MahatiButton } from "@mahatisystems/mahati-ui-components";;
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
+import { Bold } from "lucide-react";
 
 export default function ButtonPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -290,6 +291,7 @@ export default function Demo() {
 
       <CodePreview
         title="Icon Buttons - Default Hover (Opacity Fade)"
+
         code={`{/* Default hover behavior - opacity fade */}
 <MahatiButton.IconButtonGroup direction="row" gapClass="gap-2">
   <MahatiButton
@@ -342,6 +344,7 @@ export default function Demo() {
                 iconButtonRadiusClass="rounded-[20px]"
                 iconButtonBgPaddingClass="p-[8px]"
                 aria-label="Refresh"
+                
               >
                 <FiRefreshCcw className="h-4 w-4" />
               </MahatiButton>
@@ -353,6 +356,7 @@ export default function Demo() {
                 iconButtonWidthClass="w-10"
                 iconButtonRadiusClass="rounded-[20px]"
                 iconButtonBgPaddingClass="p-[8px]"
+                
                 aria-label="Edit"
               >
                 <FiEdit2 className="h-4 w-4" />
@@ -373,9 +377,10 @@ export default function Demo() {
           </div>
         }
       />
-
+     
       <CodePreview
-        title="Icon Buttons - Custom Hover Colors"
+        title="Icon Buttons - Custom Hover Colors (Please Move The Cursor On The Icon Buttons To See The Custom Hover Effect)"
+       
         code={`{/* Custom hover/active background colors */}
 <MahatiButton
   iconButton
@@ -469,9 +474,9 @@ export default function Demo() {
           </div>
         }
       />
-
+  
       <CodePreview
-        title="Icon Buttons - Intensity Levels"
+        title="Icon Buttons - Intensity Levels (Please Move The Cursor On The Icon Buttons To Check The Intensity Levels)"
         code={`{/* Hover intensity from 0 (no effect) to 100 (strongest) */}
 <MahatiButton
   iconButton
@@ -580,9 +585,9 @@ export default function Demo() {
           </div>
         }
       />
-
+        
       <CodePreview
-        title="Icon Buttons - Different Background Padding"
+        title="Icon Buttons - Different Background Padding (This is padding Effect When we Increase The Padding The width of Padding Increases)"
         code={`{/* Control inner background size with iconButtonBgPaddingClass */}
 <MahatiButton
   iconButton

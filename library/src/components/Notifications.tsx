@@ -214,7 +214,7 @@ export const MahatiCameraAccessModal = ({
         onClick={onClose}
         className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
       >
-        <X size={16} />
+        <X size={16} color="black"/>
       </button>
 
       {/* Image */}
