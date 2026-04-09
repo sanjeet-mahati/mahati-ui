@@ -143,8 +143,8 @@ export default function SideNav({ initialExpanded }: SideNavProps) {
                     <Fragment key={idx}>
                       <div
                         className="nav-item"
-                        onMouseEnter={() => handleMouseEnter(itemKey)}
-                        onMouseLeave={() => handleMouseLeave(itemKey)}
+                        // onMouseEnter={() => handleMouseEnter(itemKey)}
+                        // onMouseLeave={() => handleMouseLeave(itemKey)}
                       >
                         <SideNavItem
                           label={item.name}
@@ -212,8 +212,8 @@ export const SideNavItem: React.FC<SideNavItemProps> = ({
         <div className="relative">
           <div
             className="w-full"
-            onMouseEnter={() => handleMouseEnter(itemKey)}
-            onMouseLeave={() => handleMouseLeave(itemKey)}
+            // onMouseEnter={() => handleMouseEnter(itemKey)}
+            // onMouseLeave={() => handleMouseLeave(itemKey)}
           >
             <div>
               <Link
