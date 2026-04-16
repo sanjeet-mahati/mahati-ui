@@ -189,7 +189,7 @@ export default function ButtonPage() {
           </div>
         }
       />
-
+     <div id="dotted&pilledbuttons"></div>
       <CodePreview
         title="Dotted & Pill Buttons"
         code={` <div className="flex flex-wrap gap-4"><MahatiButton variant="dotted">Dotted Button</MahatiButton>
@@ -288,7 +288,7 @@ export default function Demo() {
           </div>
         }
       />
-
+     <div id="icon-buttons-default-hover"></div>
       <CodePreview
         title="Icon Buttons - Default Hover (Opacity Fade)"
 
@@ -377,6 +377,7 @@ export default function Demo() {
           </div>
         }
       />
+      <div id="icon-buttons-custom-hover"></div>
      
       <CodePreview
         title="Icon Buttons - Custom Hover Colors (Please Move The Cursor On The Icon Buttons To See The Custom Hover Effect)"
@@ -474,7 +475,7 @@ export default function Demo() {
           </div>
         }
       />
-  
+     <div id="iconbuttonsintensitylevels"></div>
       <CodePreview
         title="Icon Buttons - Intensity Levels (Please Move The Cursor On The Icon Buttons To Check The Intensity Levels)"
         code={`{/* Hover intensity from 0 (no effect) to 100 (strongest) */}
@@ -585,7 +586,7 @@ export default function Demo() {
           </div>
         }
       />
-        
+       <div id="iconbuttonsdifferentpadding"></div>
       <CodePreview
         title="Icon Buttons - Different Background Padding (This is padding Effect When we Increase The Padding The width of Padding Increases)"
         code={`{/* Control inner background size with iconButtonBgPaddingClass */}
@@ -669,7 +670,7 @@ export default function Demo() {
           </div>
         }
       />
-
+      <div id="iconbuttonscolumn-layout"></div>
       <CodePreview
         title="Icon Buttons - Column Layout"
         code={`<MahatiButton.IconButtonGroup direction="col" gapClass="gap-2">
@@ -711,7 +712,7 @@ export default function Demo() {
           </div>
         }
       />
-
+     <div id="Custom-colors-with-classname"></div>
       <CodePreview
         title="Custom Colors with className"
         code={`<MahatiButton className="bg-emerald-500 hover:bg-emerald-600 text-white">
@@ -737,7 +738,7 @@ export default function Demo() {
           </div>
         }
       />
-
+      <div id="examples"></div>
       <CodePreview
         title="Practical Examples"
         code={`{/* Form Actions */}

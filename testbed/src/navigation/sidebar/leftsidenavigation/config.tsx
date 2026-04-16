@@ -21,7 +21,12 @@ import {
   faEnvelope,
   faEnvelopeOpenText,
   faPaperPlane,
-  faMessage, // Moved from regular to solid icons
+  faMessage,
+  faChartSimple,
+  faFolderOpen,
+  faPenSquare,
+  faClipboardList,
+  faTableCellsLarge, // Moved from regular to solid icons
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -66,17 +71,25 @@ export const NavItems = (): NavItem[]  => {
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
-        },     
+        },   
+          {
+          name: 'Button Variants',
+          href: '/button#button-variants',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },       
         {
-          name: 'Button Sizes',
-          href: '/button#button-sizes',
+          name: 'Dotted&Pilled Buttons',
+          href: '/button#dotted&pilledbuttons',
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
         },     
+      
         {
-          name: 'Button Variants',
-          href: '/button#button-variants',
+          name: 'Button Sizes',
+          href: '/button#button-sizes',
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
@@ -87,34 +100,51 @@ export const NavItems = (): NavItem[]  => {
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
-        },     
-        {
-          name: 'Combining Variants',
-          href: '/button#combining-variants',
+        },
+          {
+          name: 'Icon Buttons Default-Hover',
+          href: '/button#icon-buttons-default-hover',
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
         },
-        {
-          name: 'Dotted Button',
-          href: '/button#dotted-button',
-          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
-          // active: isNavItemActive(pathname, '/blogs/blog01'),
-        },
-        {
-          name: 'Pill Button',
-          href: '/button#pill-button',
-          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
-          // active: isNavItemActive(pathname, '/blogs/blog01'),
-        },     
-        {
-          name: 'Props',
-          href: '/button#props',
+          {
+          name: 'Icon Buttons Custom-Hover',
+          href: '/button#icon-buttons-custom-hover',
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
           // active: isNavItemActive(pathname, '/blogs/blog01'),
           // position: 'top',
-        },     
-        {
+        },
+          {
+          name: 'Icon Buttons Intensity-Levels',
+          href: '/button#iconbuttonsintensitylevels',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },
+           {
+          name: 'Icon Buttons-Different Background Padding',
+          href: '/button#iconbuttonsdifferentpadding',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },
+         {
+          name: 'Icon Buttons-Column-Layout',
+          href: '/button#iconbuttonscolumn-layout',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },
+          {
+          name: 'Custom Colors With ClassName',
+          href: '/button#Custom-colors-with-classname',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },
+  
+         {
           name: 'Examples',
           href: '/button#examples',
           icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
@@ -122,6 +152,16 @@ export const NavItems = (): NavItem[]  => {
           // position: 'top',
         },     
         
+        
+         
+        {
+          name: 'Props',
+          href: '/button#props',
+          icon: <FontAwesomeIcon icon={faHandPointer} size="sm" />,
+          // active: isNavItemActive(pathname, '/blogs/blog01'),
+          // position: 'top',
+        },     
+       
         
       ],
     },
@@ -136,6 +176,11 @@ export const NavItems = (): NavItem[]  => {
         {
           name: 'Basic Card',
           href: '/card#basic-card',
+          icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
+        },   
+         {
+          name: 'Card Variants',
+          href: '/card#card-variants',
           icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
         },     
         {
@@ -163,11 +208,27 @@ export const NavItems = (): NavItem[]  => {
           href: '/card#flippable-card',
           icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
         },
+          {
+          name: 'Spinning Card',
+          href: '/card#spinning-card',
+          icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
+        },  
+         {
+          name: 'Card Sizes',
+          href: '/card#card-sizes',
+          icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
+        },  
+         {
+          name: 'Custom Background Color',
+          href: '/card#custom-background-color',
+          icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
+        },  
         {
           name: 'Props',
           href: '/card#props',
           icon: <FontAwesomeIcon icon={faCreditCard} size="sm" />,
         },
+       
       ],
     },
     {
@@ -226,21 +287,16 @@ export const NavItems = (): NavItem[]  => {
   active: pathname === '/dropdown',
   position: 'top',
   subItems: [
-    { name: 'Basic', href: '/dropdown#basic', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Outline', href: '/dropdown#outline', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Pill', href: '/dropdown#pill', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Dark', href: '/dropdown#dark', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Underline', href: '/dropdown#underline', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Shadow', href: '/dropdown#shadow', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Glass', href: '/dropdown#glass', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-    { name: 'Gradient', href: '/dropdown#gradient', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-   { name: 'Searchable', href: ' dropdown/#searchable', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-  { name: 'MultiSelect', href: 'dropdown/#multiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-  { name: 'Cascading', href: 'dropdown/#cascading', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-  { name: 'Avatar', href: 'dropdown/#avatar', icon: <FontAwesomeIcon icon={faSquareCaretDown }size="sm" /> },
-  { name: 'AvatarMultiSelect', href:'dropdown/#avatarmultiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-  { name: 'Grouped', href: 'dropdown/#grouped', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
-  { name: 'Async', href: 'dropdown/#async', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Basic', href: '/dropdown#dropdown-variants', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Glass', href: '/dropdown#glass-dropdown', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+    { name: 'Disabled', href: '/dropdown#disabled-dropdown', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+   { name: 'Searchable', href: ' /dropdown#searchable', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'MultiSelect', href: '/dropdown#multiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'Cascading', href: '/dropdown#cascading', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'Avatar', href: '/dropdown#avatar', icon: <FontAwesomeIcon icon={faSquareCaretDown }size="sm" /> },
+  { name: 'AvatarMultiSelect', href:'/dropdown#avatarmultiselect', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'Grouped', href: '/dropdown#grouped', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
+  { name: 'Async', href: '/dropdown#async', icon: <FontAwesomeIcon icon={faSquareCaretDown} size="sm" /> },
     
     
   ],
@@ -277,7 +333,7 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Form',
       href: '/form',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg" />,
+      icon: <FontAwesomeIcon icon={faClipboardList} size="lg" />,
       active: pathname === '/form',
       position: 'top',
       subItems: [
@@ -291,7 +347,7 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Input',
       href: '/input',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg" />,
+      icon: <FontAwesomeIcon icon={faPenSquare} size="lg" />,
       active: pathname === '/input',
       position: 'top',
       subItems: [
@@ -317,10 +373,22 @@ export const NavItems = (): NavItem[]  => {
       position: 'top',
       subItems: [
         { name: 'Ring Spinner', href: '/spinner#ring-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
-        { name: 'Circular Spinner', href: '/spinner#circular-spinner', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
-        { name: 'Loading Dots', href: '/spinner#loading-dots', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
-        { name: 'Overlay Loader', href: '/spinner#overlay-loader', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
-        { name: 'Skeleton Card', href: '/spinner#skeleton-card', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Ring • Sizes', href: '/spinner#Ring-•-Sizes', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Ring • Colors', href: '/spinner#Ring-•-Colors', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Ring • Speeds', href: '/spinner#Ring-•-speeds', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Ring • In Button', href: '/spinner#Ring-•-In-Button', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+          { name: 'Circular Spinner • Multiple Rings', href: '/spinner#Circular Spinner • Multiple Rings', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Circular Spinner • Speeds', href: '/spinner#Circular-Spinner-•-Speeds', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Circular Spinner • In Button', href: '/spinner#Circular-Spinner-•-In-Button', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • Default (3 dots)', href: '/spinner#Dots • Default (3 dots)', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • Sizes & Count', href: '/spinner#Dots•Sizes&Count', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+             { name: 'Dots • Colors & Speed', href: '/spinner#Dots • Colors & Speed', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • Gap Variations', href: '/spinner#Dots • Gap Variations', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • In Button', href: '/spinner#Dots • In Button', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • Custom Count Examples', href: '/spinner#Dots • Custom Count Examples', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Dots • Linear Animation', href: '/spinner#Dots • Linear Animation', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+         { name: 'Card • Overlay Loader', href: '/spinner#', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
+        { name: 'Card • Skeleton Loading States', href: '/spinner#', icon: <FontAwesomeIcon icon={faSpinner} size="sm" /> },
       ]
     },
     {
@@ -364,12 +432,12 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Tab',
       href: '/tab',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faFolderOpen} size="lg"/>,
       active: pathname === '/tab',
       position: 'top',
       subItems: [
         { name: 'Basic Tabs', href: '/tab#basic-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
-        { name: 'Square', href: '/tab#square-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
+        { name: 'Outline', href: '/tab#outline-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Pill', href: '/tab#pill-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Dark', href: '/tab#dark-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
         { name: 'Underline', href: '/tab#underline-tabs', icon: <FontAwesomeIcon icon={faHandPointer} size="sm" /> },
@@ -381,7 +449,7 @@ export const NavItems = (): NavItem[]  => {
         {
       name: 'Chart',
       href: '/chart',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faChartSimple} size="lg"/>,
       active: pathname === '/chart',
       position: 'top',
     },
@@ -392,15 +460,14 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Table With Tab',
       href: '/tableWithTab',
-      icon: <FontAwesomeIcon icon={faHandPointer} size="lg"/>,
+      icon: <FontAwesomeIcon icon={faTableCellsLarge} size="lg"/>,
       active: pathname === '/tableWithTab',
       position: 'top',
       subItems: [
-        { name: 'Basic', href: '/tableWithTab#basic', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Rearrangeable', href: '/tableWithTab#rearrange', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Header Close Icon', href: '/tableWithTab#header-close-icon', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Vertical (Left)', href: '/tableWithTab#vertical-tabs', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
-        { name: 'Vertical (Right)', href: '/tableWithTab#vertical-tabs-right', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Tabs With Header Close Icon', href: '/tableWithTab#header-close-icon', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical Tabs ', href: '/tableWithTab#vertical-tabs-right', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+        { name: 'Vertical Tabs with Custom Label', href: '/tableWithTab#vertical-tabs-right-custom-label', icon: <FontAwesomeIcon icon={faTableList} size="sm" /> },
+       
       ]
     },
 
@@ -415,16 +482,16 @@ export const NavItems = (): NavItem[]  => {
         { name: 'With Today & Clear Buttons', href: '/calendar#with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Auto Hide Calendar', href: '/calendar#auto-hide-calendar', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Calendar with Time Selection', href: '/calendar#calendar-with-time-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
-        { name: 'Time Selection with Today & Clear Buttons', href: '/calendar#time-selection-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Time Selection with Today & Clear Buttons', href: '/calendar#Time-selection-today&clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Time Selection with Format Toggle (12h/24h)', href: '/calendar#time-selection-with-format-toggle-12h-24h', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Custom Preview Text Styling', href: '/calendar#custom-preview-text-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Global Typography Styling', href: '/calendar#global-typography-styling', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Year Dropdown Feature', href: '/calendar#year-dropdown-feature', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
-        { name: 'Date Format & Time Zone Selection', href: '/calendar#date-format-&-time-zone-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
-        { name: 'Date Range with Today & Clear Buttons', href: '/calendar#date-range-with-today-&-clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Format & Time Zone Selection', href: '/calendar#date-format&time-zone-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Date Range with Today & Clear Buttons', href: '/calendar#date-range-with-today&clear-buttons', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Block / Disable Dates', href: '/calendar#block-disable-dates', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Calendar Size Variations', href: '/calendar#calendar-size-variations', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
-        { name: 'Size Comparison (Side by Side)', href: '/calendar#size--comparison-side-by-side', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
+        { name: 'Size Comparison (Side by Side)', href: '/calendar#size-comparison-side-by-side', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
         { name: 'Size Prop with Date Range Selection', href: '/calendar#size-prop-with-date-range-selection', icon: <FontAwesomeIcon icon={faCalendarDays} size="sm" /> },
                 
       ]
@@ -439,7 +506,7 @@ export const NavItems = (): NavItem[]  => {
     {
       name: 'Basic Accordion',
       href: '/accordion#basic-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size="lg" />,
-    },{name: 'Multiple Items Accordion',href: '/accordion#multiple-items-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+    },{name: 'Multiple Items Accordion',href: '/accordion#multiple-accordion',icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
     },
     {
       name: 'Nested Accordion',
@@ -447,7 +514,7 @@ export const NavItems = (): NavItem[]  => {
     },
     {
       name:"Disabled Accordion",
-      href:"/accordion#diabled-accordian",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
+      href:"/accordion#Disabled-Accordion",icon:<FontAwesomeIcon icon={faLayerGroup} size='lg'/>
     },
     {
       name:"Accordion Group",

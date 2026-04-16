@@ -41,6 +41,7 @@ export default function LoadingDemo() {
         </p>
 
         <div className="grid gap-8">
+        
           <CodePreview
             id="ring-spinner"
             title="Ring Spinner"
@@ -55,25 +56,8 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
-          <CodePreview
-            title="Ring • Circle"
-            code={`<Spinner 
-  size={32} 
-  borderWidth={4}
-  borderRadius={100}
-/>`}
-            preview={
-              <div className="flex items-center justify-center p-8">
-                <Spinner 
-                  size={32} 
-                  borderWidth={4}
-                  borderRadius={100}
-                />
-              </div>
-            }
-          />
-
+        
+          <div id ="Ring-•-Sizes"></div>
           <CodePreview
             title="Ring • Sizes"
             code={`<Sized label="16px"><Spinner size={16} borderWidth={3} /></Sized>
@@ -97,7 +81,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Ring-•-Colors"></div>
           <CodePreview
             title="Ring • Colors"
             code={`<ColorLabel label="Blue">
@@ -160,7 +144,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Ring-•-speeds"></div>
           <CodePreview
             title="Ring • Speeds"
             code={`<Sized label="Fast (0.5s)"><Spinner speed={0.5} size={40} borderWidth={4} /></Sized>
@@ -180,7 +164,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Ring-•-In-Button"></div>
           <CodePreview
             title="Ring • In Button"
             code={`<button 
@@ -212,7 +196,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="Circular Spinner • Multiple Rings"></div>
           <CodePreview
             id="circular-spinner"
             title="Circular Spinner • Multiple Rings"
@@ -237,7 +221,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+        <div id="Circular-Spinner-•-Speeds"></div>
           <CodePreview
             title="Circular Spinner • Speeds"
             code={`<Sized label="Fast (0.8s)"><CircularSpinner speed={0.8} ringCount={2} /></Sized>
@@ -257,7 +241,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+        <div id="Circular-Spinner-•-In-Button"></div>
           <CodePreview
             title="Circular Spinner • In Button"
             code={`<button 
@@ -279,7 +263,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Dots • Default (3 dots)"></div>
           <CodePreview
             id="loading-dots"
             title="Dots • Default (3 dots)"
@@ -293,7 +277,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="Dots•Sizes&Count"></div>
           <CodePreview
             title="Dots • Sizes & Count"
             code={`<Sized label="size 6 • count 3"><LoadingDots size={6} count={3} /></Sized>
@@ -317,7 +301,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="Dots • Colors & Speed"></div>
           <CodePreview
             title="Dots • Colors & Speed"
             code={`<ColorLabel label="Blue (fast)"><LoadingDots color="rgba(37, 99, 235, 1)" speed={0.8} size={12} /></ColorLabel>
@@ -342,7 +326,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="Dots • Gap Variations"></div>
           <CodePreview
             title="Dots • Gap Variations"
             code={`<Sized label="gap 3px"><LoadingDots gap={3} size={10} /></Sized>
@@ -366,7 +350,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Dots • In Button"></div>
           <CodePreview
             title="Dots • In Button"
             code={`<button 
@@ -388,7 +372,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Dots • Custom Count Examples"></div>
           <CodePreview
             title="Dots • Custom Count Examples"
             code={`<Sized label="2 dots"><LoadingDots count={2} size={12} color="rgba(239, 68, 68, 1)" /></Sized>
@@ -412,7 +396,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+          <div id="Dots • Linear Animation"></div>
           <CodePreview
             title="Dots • Linear Animation"
             code={`<Sized label="3 dots"><LoadingDotsLinear count={3} size={10} /></Sized>
@@ -432,7 +416,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="overlay-loader"></div>
           <CodePreview
             id="overlay-loader"
             title="Card • Overlay Loader"
@@ -481,7 +465,7 @@ export default function LoadingDemo() {
               </div>
             }
           />
-
+         <div id="skeleton-card"></div>
           <CodePreview
             id="skeleton-card"
             title="Card • Skeleton Loading States"

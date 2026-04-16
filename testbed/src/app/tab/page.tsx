@@ -101,6 +101,7 @@ export default function TabDemoTailwindCSS() {
         <p className="mb-4 text-slate-500">
           Tabs are separated by thin borders, with the active tab highlighted using a border color.
         </p>
+        <div id="outline-tabs"></div>
         <CodePreview
           title="Outline Tabs"
           code={`<MahatiTabbedInterface tabs={tabs} variant="outline" />`}

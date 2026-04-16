@@ -116,7 +116,7 @@ const AccordionPage=()=> {
           </div>
         }
       />
-
+       <div id="multiple-accordion"></div>
       {/* 2️⃣ MULTIPLE ITEMS */}
       <CodePreview
         title="Accordion with Multiple Items"
@@ -199,6 +199,7 @@ const AccordionPage=()=> {
       />
 
       {/* 4️⃣ DISABLED ACCORDION */}
+      <div id="Disabled-Accordion"></div>
       <CodePreview
 
         title="Disabled Accordion"
@@ -272,6 +273,7 @@ const AccordionPage=()=> {
       />
 
       {/* 6️⃣ LONG CONTENT */}
+      <div id="long-content-accordion"></div>
       <CodePreview
         title="Accordion with Long Content"
         code={`<Accordion
