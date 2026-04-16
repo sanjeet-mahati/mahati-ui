@@ -114,7 +114,7 @@ describe('LoadingDemo — Sections', () => {
 
   it('renders Ring • Circle section', () => {
     render(<LoadingDemo />);
-    expect(screen.getByText('Ring • Circle')).toBeInTheDocument();
+    expect(screen.getByText('Ring Spinner')).toBeInTheDocument();
   });
 
   it('renders Ring • Sizes section', () => {
