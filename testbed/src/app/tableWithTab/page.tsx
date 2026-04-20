@@ -158,6 +158,7 @@ export default function TableWithTabDemo() {
         />
 
         {/* VERTICAL TABS RIGHT */}
+        <div id="vertical-tabs-right"></div>
         <CodePreview
           id="vertical-tabs-right"
           title="Vertical Tabs (Tabs on the Right)"
@@ -203,6 +204,7 @@ export default function TableWithTabDemo() {
         />
 
         {/* CUSTOM LABEL */}
+        <div id="vertical-tabs-right-custom-label"></div>
         <CodePreview
           id="vertical-tabs-right-custom-label"
           title="Vertical Tabs with Custom Label"

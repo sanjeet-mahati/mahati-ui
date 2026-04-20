@@ -59,7 +59,7 @@ export default function DropdownDemoPage() {
 
       <PropsTable props={dropdownProps} title="Props" />
       <br/>
-
+     <div id="dropdown-variants"></div>
       <CodePreview
         title="Dropdown Variants"
         code={`<MahatiDropdown variant="basic" options={[{ key: "Option 1", value: "1" }, { key: "Option 2", value: "2" }]}  onSelect={() => {}}/>
@@ -81,7 +81,7 @@ export default function DropdownDemoPage() {
           </div>
         }
       />
-
+      <div id="glass-dropdown"></div>
       <CodePreview
         title="Glass Dropdown"
         code={`<div className="p-8 rounded-lg bg-cover" style={{ backgroundImage: "url(...)" }}>
@@ -93,7 +93,7 @@ export default function DropdownDemoPage() {
           </div>
         }
       />
-
+     <div id="disabled-dropdown"></div>
       <CodePreview
         title="Disabled State"
         code={`<MahatiDropdown 

@@ -329,7 +329,7 @@ const [avatar,setAvatar] =useState("")
 </div>
 {/* 5️⃣ AVATAR MULTI SELECT */}
 <div className="section">
-  <div id="Avatarmultiselect"></div>
+  <div id="avatarmultiselect"></div>
   <CodePreview
     title="Avatar Multi Select Dropdown"
     code={`

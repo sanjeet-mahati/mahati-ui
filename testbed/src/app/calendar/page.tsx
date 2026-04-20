@@ -118,7 +118,7 @@ const [time10, setTime10] = useState<CalendarTime | null>(null);
           </div>
         }
       />
-
+       
       <CodePreview
         title="With Today & Clear Buttons"
         code={`
@@ -188,7 +188,8 @@ const [time10, setTime10] = useState<CalendarTime | null>(null);
           </div>
         }
       />
-
+      
+       <div id="Time-selection-today&clear-buttons"></div>
       <CodePreview
         title="Time Selection with Today & Clear Buttons"
         code={`
@@ -378,7 +379,7 @@ const [time10, setTime10] = useState<CalendarTime | null>(null);
           </div>
         }
       />
-
+      <div id="date-format&time-zone-selection"></div>
       <CodePreview
         title="Date Format & Time Zone Selection"
         code={`
@@ -430,7 +431,7 @@ const [time10, setTime10] = useState<CalendarTime | null>(null);
           </div>
         }
       />
-
+      <div id="date-range-with-today&clear-buttons"></div>
       <CodePreview
         title="Date Range with Today & Clear Buttons"
         code={`
@@ -664,7 +665,7 @@ const [time10, setTime10] = useState<CalendarTime | null>(null);
           </div>
         }
       />
-
+      <div id="size-comparison-side-by-side"></div>
       <CodePreview
         title="Size Comparison (Side by Side)"
         code={`

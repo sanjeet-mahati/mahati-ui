@@ -98,7 +98,7 @@ export default function CardPage() {
           </div>
         }
       />
-
+     <div id="card-variant"></div>
       <CodePreview
         title="Card Variants"
         code={`<MahatiCard variant="default">
@@ -146,7 +146,7 @@ export default function CardPage() {
           </div>
         }
       />
-
+      <div id="collapsible-card"></div>
       <CodePreview
         title="Collapsible Card with Arrow Toggle"
         code={`<MahatiCard 
@@ -420,7 +420,7 @@ export default function CardPage() {
           </div>
         }
       />
-
+     <div id="spinning-card"></div>
       <CodePreview
         title="Spinning Card"
         code={`<MahatiCard variant="subtle" className="max-w-sm [perspective:1000px] p-0 overflow-hidden">
@@ -454,7 +454,7 @@ export default function CardPage() {
           </div>
         }
       />
-
+      <div id="card-sizes"></div>
       <CodePreview
         title="Card Sizes"
         code={`<MahatiCard size="sm">
@@ -485,7 +485,7 @@ export default function CardPage() {
           </div>
         }
       />
-
+      <div id="cusrom-background-color"></div>
       <CodePreview
         title="Custom Background Color"
         code={`<MahatiCard 
