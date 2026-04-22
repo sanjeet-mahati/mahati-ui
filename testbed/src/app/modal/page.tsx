@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { MahatiModal, MahatiButton,MahatiCard, MahatiInput } from "@mahatisystems/mahati-ui-components";
+import { MahatiModal, MahatiButton,MahatiCard, MahatiInput,MahatiAdvancedFeedbackModal } from "@mahatisystems/mahati-ui-components";
 import { MinusIcon, PaperclipIcon, SendIcon, XIcon } from "lucide-react";
 import { MessageCircle, Users, Bot, Frown, Meh, Smile, Laugh, Angry, Star } from "lucide-react";
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
+import AdvancedFeedbackPage from "./advancedfeedbackmodal";
 
 export default function ModalPage() {
   const [basicOpen, setBasicOpen] = useState(false);
@@ -864,6 +865,11 @@ export default function FeedbackModalExample() {
       <div id="props" className="space-y-4">
         <PropsTable props={modalProps} />
       </div>
-    </div>
+      
+      
+        <AdvancedFeedbackPage/>
+      </div>
+    
+    
   );
 }

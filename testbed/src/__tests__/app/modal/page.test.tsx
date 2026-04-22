@@ -2,6 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
+jest.mock('../../../app/modal/advancedfeedbackmodal', () => ({
+  __esModule: true,
+  default: () => <div>Mocked Advanced Feedback</div>,
+}));
+
 // ─── Mock next/image ──────────────────────────────────────────────────────────
 jest.mock('next/image', () => ({
   __esModule: true,
