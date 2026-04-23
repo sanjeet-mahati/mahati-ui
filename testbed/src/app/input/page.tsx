@@ -288,7 +288,7 @@ const FloatingIconInput: React.FC<FloatingIconInputProps> = ({
 
   return (
     <IconFloatingStyles>
-      <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
+      <div className={`input-float ${inputValue && inputValue.length > 0 ? "has-value" : ""}`}>
         <span className="icon-left" aria-hidden>
           <span style={{ width: 18, height: 18, display: "inline-flex" }}>{icon}</span>
         </span>
@@ -381,7 +381,7 @@ const PasswordToggleInput: React.FC<PasswordToggleInputProps> = ({
 
   return (
     <ToggleIconStyles>
-      <div className={`input-float $ {inputValue ? "has-value" : ""}`}>
+      <div className={`input-float ${val && val.length > 0 ? "has-value" : ""}`}>
         <span className="icon-left" aria-hidden>
           <HiLockClosed style={{ width: 18, height: 18 }} />
         </span>

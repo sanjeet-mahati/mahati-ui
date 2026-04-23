@@ -747,7 +747,7 @@ export const MahatiPromotionModalV3Modal = ({
       data-testid={testId}
       ref={ref}
       onClick={(e) => e.stopPropagation()}
-      className="w-full rounded-[8px] bg-gradient-to-r from-[#1761a3] to-[#4daf83] py-3 text-[14px] font-medium text-white hover:bg-gradient-to-r hover:from-[#174f8a] hover:to-[#4ca676] hover:shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      className="relative w-[420px] max-w-[90%] rounded-[16px] bg-white p-6 text-center shadow-[0_10px_30px_rgba(0,0,0,0.2)] border border-[#CFE8DC]"
     >
 
       {/* Close */}
