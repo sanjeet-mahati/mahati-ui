@@ -77,6 +77,8 @@ const ratings = [
     }
   }, [isOpen]);
  
+  const parts = title.split("give");
+ 
  
   return (
     <div className={`fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"} bg-black/40 backdrop-blur-sm`}>
@@ -121,43 +123,48 @@ const ratings = [
                 <>
                   {/* TITLE */}
                   <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0f2a44] mb-6">
-                    {title.split(" ")[0]} {title.split(" ")[1]}{" "}
+                    {parts[0]}
                     <span className="bg-gradient-to-r from-[#16a34a] to-[#1761a3] bg-clip-text text-transparent">
-                      {title.split(" ")[2] || "Feedback"}
+                      give{parts[1] || ""}
                     </span>
                   </h2>
  
                   {/* RATING */}
                   <div className="flex flex-col items-center gap-4 mb-6">
                     {/* ⭐ STEP 1: STAR RATING */}
-                    <div className="flex justify-center gap-6 mb-6 w-full">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => {
-                            setRating(star);
-                          }}
-                          className="transition-transform hover:scale-110"
-                        >
-                          <div
-                            className={`w-8 h-8 bg-center bg-no-repeat transition-all duration-200 ${
-                              star <= (rating || 0)? "opacity-100 scale-110" : "opacity-70 hover:opacity-100"
-                            }`}
-                            style={{
-                              backgroundImage: `url(${
-                                star <= (rating || 0)
-                                  ? "/icons/yellowstaremoji.png"
-                                  : "/icons/staremoji.png"
-                              })`,
-                              backgroundSize: "contain",
+                    {/* ⭐ STEP 1: STAR RATING */}
+                    {(ratingType === "star" || optionalRating) && (
+                      <div className="flex justify-center gap-6 mb-6 w-full">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => {
+                              setRating(star);
                             }}
-                          />
-                        </button>
-                      ))}
-                    </div>
+                            className="transition-transform hover:scale-110"
+                          >
+                            <div
+                              className={`w-8 h-8 bg-center bg-no-repeat transition-all duration-200 ${
+                                star <= (rating || 0)
+                                  ? "opacity-100 scale-110"
+                                  : "opacity-70 hover:opacity-100"
+                              }`}
+                              style={{
+                                backgroundImage: `url(${
+                                  star <= (rating || 0)
+                                    ? "/icons/yellowstaremoji.png"
+                                    : "/icons/staremoji.png"
+                                })`,
+                                backgroundSize: "contain",
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
  
                     {/* 😀 STEP 2: EMOJI SELECTION */}
-                    {rating !== null && (
+                    {(ratingType === "emoji" || rating !== null) && (
                     <div className="flex justify-center gap-4 mb-4 w-full">
                       {ratings.map((item) => {
                         const isActive = emojiRating === item.id;
