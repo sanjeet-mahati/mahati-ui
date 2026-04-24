@@ -7,9 +7,16 @@ export interface MahatiChatbotProps {
   isOpen: boolean;
   onClose: () => void;
   onSend?:(msg:any)=>void;
+  showForm?:boolean;
+  title?:string;
 }
 
-export function Chatbot({ isOpen, onClose }: MahatiChatbotProps) {
+export function Chatbot({ isOpen, 
+  onClose,
+  showForm,
+  title,
+  onSend,
+ }: MahatiChatbotProps) {
   const [step, setStep] = useState<"form" | "chat">("form");
 
   const [messages, setMessages] = useState([

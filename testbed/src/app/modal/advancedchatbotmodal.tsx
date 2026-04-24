@@ -44,31 +44,21 @@ export default function ChatbotPage() {
   ];
 
   const chatbotCode = `
-import { useState } from "react";
+
 import { MahatiAdvancedChatbotModal } from "@mahatisystems/mahati-ui-components";
-
-export default function Example() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}>
-        Open Chatbot
-      </button>
-
-      <MahatiAdvancedChatbotModal
+<MahatiAdvancedChatbotModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onSend={(msg) => console.log(msg)}
+         onSend={(msg) => console.log("User:", msg)}
+        title="Mahati Assistant"
+        showForm={true}
       />
-    </>
-  );
-}
+    
 `;
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6">
-      
+
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">
@@ -84,30 +74,30 @@ export default function Example() {
 
       {/* DEMO */}
       <div id="Advanced-chatbot-modal">
-      <CodePreview
-        title="Chatbot Usage"
-        code={chatbotCode}
-        preview={
-          <div className="flex justify-center">
-            <button
-              onClick={() => setOpen(true)}
-              className="w-14 h-14 rounded-full bg-gradient-to-r from-[#1761a3] to-[#4daf83] flex items-center justify-center shadow-lg"
-            >
-              <img src="/images/chatbot-icon.svg" className="w-6 h-6" />
-            </button>
-          </div>
-        }
-      />
+        <CodePreview
+          title="Chatbot Usage"
+          code={chatbotCode}
+          preview={
+            <div className="flex justify-center">
+              <button
+                onClick={() => setOpen(true)}
+                className="w-14 h-14 rounded-full bg-gradient-to-r from-[#1761a3] to-[#4daf83] flex items-center justify-center shadow-lg"
+              >
+                <img src="/images/chatbot-icon.svg" className="w-6 h-6" />
+              </button>
+            </div>
+          }
+        />
 
-      {/* INSTANCE */}
-      <MahatiAdvancedChatbotModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onSend={(msg) => console.log("User:", msg)}
-        title="Mahati Assistant"
-        showForm={true}
-      />
-    </div>
+        {/* INSTANCE */}
+        <MahatiAdvancedChatbotModal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          onSend={(msg) => console.log("User:", msg)}
+          title="Mahati Assistant"
+          showForm={true}
+        />
+      </div>
     </div>
   );
 }

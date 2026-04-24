@@ -47,19 +47,8 @@ const advancedFeedbackProps = [
   },
 ];
   const advancedFeedbackCode = `
-import { useState } from "react";
 import { MahatiAdvancedFeedbackModal } from "@mahatisystems/mahati-ui-components";
-
-export default function Example() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}>
-        Open Feedback
-      </button>
-
-      <MahatiAdvancedFeedbackModal
+<MahatiAdvancedFeedbackModal
         isOpen={open}
         title={"Share Your Feedback"}
         ratingType="star"
@@ -68,9 +57,7 @@ export default function Example() {
         onSubmit={handleSubmit}
         
       />
-    </>
-  );
-}
+    
 `;
 
   return (

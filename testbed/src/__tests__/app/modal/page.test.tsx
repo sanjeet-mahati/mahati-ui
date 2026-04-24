@@ -6,6 +6,11 @@ jest.mock('../../../app/modal/advancedfeedbackmodal', () => ({
   __esModule: true,
   default: () => <div>Mocked Advanced Feedback</div>,
 }));
+jest.mock('../../../app/modal/advancedchatbotmodal', () => ({
+  __esModule: true,
+  default: () => <div>Mocked Advanced Chatbot</div>,
+}));
+
 
 // ─── Mock next/image ──────────────────────────────────────────────────────────
 jest.mock('next/image', () => ({
