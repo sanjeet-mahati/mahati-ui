@@ -61,10 +61,12 @@ export default function Example() {
 
       <MahatiAdvancedFeedbackModal
         isOpen={open}
+        title={"Share Your Feedback"}
+        ratingType="star"
+        optionalRating={true}
         onClose={() => setOpen(false)}
-        onSubmit={({ rating, feedback }) => {
-          console.log(rating, feedback);
-
+        onSubmit={handleSubmit}
+        
       />
     </>
   );
@@ -108,6 +110,8 @@ export default function Example() {
         onSubmit={handleSubmit}
         ratingType="star"
         optionalRating={true}
+        title={`Share Your Feedback`}
+
       />
     
     </div>
