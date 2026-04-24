@@ -106,6 +106,8 @@ export default function Example() {
         isOpen={open}
         onClose={() => setOpen(false)}
         onSubmit={handleSubmit}
+        ratingType="star"
+        optionalRating={true}
       />
     
     </div>

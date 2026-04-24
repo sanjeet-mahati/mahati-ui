@@ -72,3 +72,4 @@ export {
 } from './components/Notifications';
 
 export{ AdvancedFeedbackModal as MahatiAdvancedFeedbackModal} from './components/AdvancedFeedbackModal'
+export {Chatbot as MahatiAdvancedChatbotModal} from './components/AdvancedChatbot'

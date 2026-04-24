@@ -7,6 +7,7 @@ import { MessageCircle, Users, Bot, Frown, Meh, Smile, Laugh, Angry, Star } from
 import { CodePreview } from "../CodePreview";
 import { PropsTable } from "../PropsTable";
 import AdvancedFeedbackPage from "./advancedfeedbackmodal";
+import ChatbotPage from "./advancedchatbotmodal";
 
 export default function ModalPage() {
   const [basicOpen, setBasicOpen] = useState(false);
@@ -868,6 +869,7 @@ export default function FeedbackModalExample() {
       
       
         <AdvancedFeedbackPage/>
+        <ChatbotPage/>
       </div>
     
     
