@@ -83,6 +83,7 @@ export default function Example() {
       <PropsTable props={chatbotProps} title="Props" />
 
       {/* DEMO */}
+      <div id="Advanced-chatbot-modal">
       <CodePreview
         title="Chatbot Usage"
         code={chatbotCode}
@@ -106,6 +107,7 @@ export default function Example() {
         title="Mahati Assistant"
         showForm={true}
       />
+    </div>
     </div>
   );
 }

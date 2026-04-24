@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 export interface MahatiChatbotProps {
   isOpen: boolean;
   onClose: () => void;
+  onSend?:(msg:any)=>void;
 }
 
 export function Chatbot({ isOpen, onClose }: MahatiChatbotProps) {
