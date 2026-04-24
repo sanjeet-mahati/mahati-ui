@@ -77,7 +77,12 @@ const ratings = [
     }
   }, [isOpen]);
  
-  const parts = title.split("give");
+  const words = title.trim().split(/\s+/);
+ 
+  const mid = Math.floor(words.length / 2);
+ 
+  const firstPart = words.slice(0, mid).join(" ");
+  const secondPart = words.slice(mid).join(" ");
  
  
   return (
@@ -122,10 +127,12 @@ const ratings = [
               {step !== "success" && (
                 <>
                   {/* TITLE */}
-                  <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0f2a44] mb-6">
-                    {parts[0]}
+                  <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+                    <span className="text-[#0f2a44]">
+                      {firstPart}
+                    </span>{" "}
                     <span className="bg-gradient-to-r from-[#16a34a] to-[#1761a3] bg-clip-text text-transparent">
-                      give{parts[1] || ""}
+                      {secondPart}
                     </span>
                   </h2>
  
@@ -287,4 +294,5 @@ const ratings = [
   );
 }
 export {AdvancedFeedbackModal}
+ 
  
