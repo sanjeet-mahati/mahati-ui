@@ -8,6 +8,7 @@ import {
   Meh,
   Smile,
   Laugh,
+  ArrowLeft
 } from "lucide-react";
  
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
   title?: string;
   ratingType?: "emoji" | "star";
   optionalRating?: boolean;
+  sessionData?: { label: string; value: string | number | null }[];
 };
  
 const ratings = [
@@ -36,6 +38,7 @@ const ratings = [
   title = "Share Your Feedback",
   ratingType = "emoji",
   optionalRating = false,
+  sessionData,
 }: Props) {
   const [step, setStep] = useState<
     "rating" | "emoji" | "confirm" | "form" | "success"
@@ -47,13 +50,14 @@ const ratings = [
   const [emojiRating, setEmojiRating] = useState<number | null>(null);
  
   const remaining = maxChars - message.length;
-  const isValid = optionalRating? message.trim().length > 0 : rating !== null && message.trim().length > 0;
+  const isValid = optionalRating? message.trim().length > 0: (rating !== null || emojiRating !== null) && message.trim().length > 0;
  
   const handleSubmit = () => {
-    if (!optionalRating && !rating) return;
+    if (!optionalRating && !(rating || emojiRating)) return;
+   
  
     onSubmit?.({
-      rating: rating ?? 0,
+      rating: rating ?? emojiRating ?? 0,
       feedback: message,
     });
  
@@ -63,6 +67,9 @@ const ratings = [
   const resetAndClose = () => {
     setStep("rating");
     setRating(null);
+    setEmojiRating(null);
+    setShowConfirm(false);
+    setShowForm(false);
     setMessage("");
     onClose();
   };
@@ -116,13 +123,33 @@ const ratings = [
             >
               ✕
             </button>
- 
+            {/* BACK BUTTON */}
+{step !== "rating" && step !== "success" && (
+  <button
+    onClick={() => {
+      if (step === "form") {
+        setStep("confirm");
+        setShowForm(false);
+      } else if (step === "confirm") {
+        setStep("emoji");
+        setShowConfirm(false);
+      } else if (step === "emoji") {
+        setStep("rating");
+        setEmojiRating(null);
+        setRating(null);
+      }
+    }}
+    className="absolute top-4 left-4 text-gray-500 hover:text-black z-10"
+  >
+    <ArrowLeft size={20} />
+  </button>
+)}
             {/* GLOW BALLS */}
             <div className="absolute -top-20 -left-20 w-60 h-60 bg-[#1761a3]/20 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-[#1761a3]/20 rounded-full blur-3xl"></div>
  
             {/* ===== FORM ===== */}
-            <div className="relative p-6 md:p-8 min-h-[350px] flex flex-col justify-start">
+            <div className="relative p-6 md:p-8 min-h-[350px] flex flex-col justify-center">
  
               {step !== "success" && (
                 <>
@@ -147,6 +174,7 @@ const ratings = [
                             key={star}
                             onClick={() => {
                               setRating(star);
+                              setStep("emoji");
                             }}
                             className="transition-transform hover:scale-110"
                           >
@@ -182,6 +210,7 @@ const ratings = [
                             onClick={() => {
                               setEmojiRating(item.id);
                               setShowConfirm(true);
+                              setStep("confirm")
                             }}
                             className={`flex flex-col items-center gap-1 flex-1 py-3 rounded-xl transition-all duration-300
                               ${
@@ -213,7 +242,9 @@ const ratings = [
  
                       <div className="flex gap-4 justify-center mt-3">
                         <button
-                          onClick={() => setShowForm(true)}
+                          onClick={() => {setShowForm(true);
+                            setStep("form")}}
+                          
                           className="px-6 py-2 rounded-xl text-white bg-gradient-to-r from-[#16a34a] to-[#1761a3]"
                         >
                           Yes
@@ -232,6 +263,28 @@ const ratings = [
                   {/* FORM */}
                   {showForm && (
                     <>
+                      {sessionData && sessionData.length > 0 && (
+                        <div className="w-full mt-3 mb-3 rounded-xl p-[1px]
+                                        bg-gradient-to-r from-[#16a34a]/40 via-transparent to-[#1761a3]/40">
+ 
+                          <div className="rounded-xl bg-white/70 backdrop-blur-md
+                                          border border-white/30 p-4 text-sm text-gray-800">
+ 
+                            {sessionData.map((item, index) => (
+                              item.value && (
+                                <p key={index}>
+                                  <span className="font-semibold text-[#0f2a44]">
+                                    {item.label}:
+                                  </span>{" "}
+                                  {item.value}
+                                </p>
+                              )
+                            ))}
+ 
+                          </div>
+                        </div>
+                      )}
+ 
                       <textarea
                         value={message}
                         onChange={(e) => {
@@ -294,5 +347,6 @@ const ratings = [
   );
 }
 export {AdvancedFeedbackModal}
+ 
  
  
