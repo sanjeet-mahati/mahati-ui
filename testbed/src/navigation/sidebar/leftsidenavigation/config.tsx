@@ -274,6 +274,16 @@ export const NavItems = (): NavItem[]  => {
           icon: <FontAwesomeIcon icon={faWindowMaximize} size="sm" />,
         },
         {
+          name:'Advanced Feedback Modal',
+          href: '/modal#Advanced-Feedback-Modal',
+          icon:<FontAwesomeIcon icon={faWindowMaximize} size="sm"/>
+        },
+        {
+          name:'Advanced Chatbot Modal',
+          href: '/modal#Advanced-Chatbot-Modal',
+          icon:<FontAwesomeIcon icon={faWindowMaximize} size="sm"/>
+        },
+        {
           name: 'Props',
           href: '/modal#props',
           icon: <FontAwesomeIcon icon={faWindowMaximize} size="sm" />,

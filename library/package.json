@@ -1,6 +1,6 @@
 {
   "name": "@mahatisystems/mahati-ui-components",
-  "version": "5.3.2",
+  "version": "6.1.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@mahatisystems/mahati-ui-components": "^5.3.3",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",

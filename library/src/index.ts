@@ -70,3 +70,6 @@ export {
   MahatiPromotionModalV2Modal as MahatiPromotionModal_V2,
   MahatiPromotionModalV3Modal as MahatiPromotionModal_V3,
 } from './components/Notifications';
+
+export{ AdvancedFeedbackModal as MahatiAdvancedFeedbackModal} from './components/AdvancedFeedbackModal'
+export {Chatbot as MahatiAdvancedChatbotModal} from './components/AdvancedChatbot'

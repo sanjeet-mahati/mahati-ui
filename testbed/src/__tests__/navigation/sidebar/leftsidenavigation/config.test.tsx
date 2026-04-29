@@ -88,7 +88,7 @@ describe('leftsidenavigation/config.tsx (NavItems)', () => {
       { name: 'Card', href: '/card', position: 'top', active: false, subItemsCount: 11 },
 
       // Updated: Modal has 8 subItems in your current config.tsx
-      { name: 'Modal', href: '/modal', position: 'top', active: false, subItemsCount: 8 },
+      { name: 'Modal', href: '/modal', position: 'top', active: false, subItemsCount: 10 },
 
       { name: 'Dropdown', href: '/dropdown', position: 'top', active: false, subItemsCount: 10 },
 
