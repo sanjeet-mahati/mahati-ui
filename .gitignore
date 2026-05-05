@@ -10,3 +10,6 @@ lib
 
 # typescript
 *.tsbuildinfo
+
+# environment variables
+.env
