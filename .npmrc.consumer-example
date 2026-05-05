@@ -1,0 +1,21 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .npmrc for projects that consume @mahatisystems/mahati-ui-components
+#
+# Place this file in the ROOT of your consuming project (next to package.json).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Route @mahatisystems-scoped packages to GitHub Packages registry.
+# All other packages continue to resolve from the default npm registry.
+@mahatisystems:registry=https://npm.pkg.github.com
+
+# Authenticate with GitHub Packages.
+# Create a Personal Access Token (classic) at:
+#   https://github.com/settings/tokens
+# Required scopes: read:packages
+#
+# Option A — environment variable (recommended for CI and local dev):
+#   export NODE_AUTH_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+#
+# Option B — hardcode (NOT recommended, never commit to git):
+# //npm.pkg.github.com/:_authToken=ghp_xxxxxxxxxxxxxxxxxxxx
